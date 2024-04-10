@@ -12,7 +12,7 @@ public class FixedLen extends BaseSingeSizeofPrecision{
 
     @Override
     public int getPrecision(int index) {
-        return 0;
+        return sizeof;
     }
 
     @Override

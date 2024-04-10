@@ -1,4 +1,4 @@
-package org.lee.node.Literal;
+package org.lee.node.literal;
 
 import org.lee.node.NodeType;
 import org.lee.node.base.BaseLiteral;

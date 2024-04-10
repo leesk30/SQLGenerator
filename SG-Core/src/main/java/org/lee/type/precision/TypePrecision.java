@@ -4,6 +4,7 @@ public interface TypePrecision {
     public static int VARLENA_FLAG = -1;
     public static int UNDEFINED_FLAG = -2;
     public static int NON_PRECISION_SIZE = 0;
+    public static int MULTI_PRECISION_FLAG = -3;
 
     public static int INT1_SIZE = 1;
     public static int INT2_SIZE = 2;

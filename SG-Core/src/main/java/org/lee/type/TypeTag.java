@@ -4,7 +4,9 @@ public enum TypeTag {
     STRING("string", "text"),
     INTEGER("integer", "int1", "int2", "int4", "int8", "int"),
     DATE("date"),
-    BOOLEAN("boolean", "bool")
+    BOOLEAN("boolean", "bool"),
+    CHAR("character", "char"),
+    DECIMAL("decimal", "number", "numeric"),
 
     ;
     private final String[] names;

@@ -3,7 +3,7 @@ package org.lee.type.precision;
 public class NonPrecision implements TypePrecision{
     @Override
     public int getPrecision(int index) {
-        return -2;
+        return UNDEFINED_FLAG;
     }
 
     @Override

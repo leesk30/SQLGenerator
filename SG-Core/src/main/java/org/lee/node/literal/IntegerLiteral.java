@@ -1,4 +1,4 @@
-package org.lee.node.Literal;
+package org.lee.node.literal;
 
 public class IntegerLiteral {
 }
