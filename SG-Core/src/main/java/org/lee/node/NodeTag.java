@@ -1,8 +1,6 @@
 package org.lee.node;
 
-import java.util.List;
-
-public enum NodeType {
+public enum NodeTag {
     scalar("scalar"),
     record("record"),
     array("array"),
@@ -15,42 +13,42 @@ public enum NodeType {
     ;
 
     private final String name;
-    private final NodeType[] parentKinds;
+    private final NodeTag[] parentKinds;
 
-    NodeType(String name){
+    NodeTag(String name){
         this.name = name;
         this.parentKinds = null;
     }
 
-    NodeType(String name, NodeType ... parentKinds){
+    NodeTag(String name, NodeTag... parentKinds){
         this.name = name;
         this.parentKinds = parentKinds;
     }
 
-    public boolean isAnyKindOf(NodeType ... nodeTypes){
-        for(NodeType each: nodeTypes){
+    public boolean isAnyKindOf(NodeTag... nodeTags){
+        for(NodeTag each: nodeTags){
             if(each == this)
                 return true;
         }
         return false;
     }
 
-    public boolean isSubKindOf(NodeType nodeType){
-        if(this == nodeType)
+    public boolean isSubKindOf(NodeTag nodeTag){
+        if(this == nodeTag)
             return true;
 
         if(parentKinds == null)
             return false;
 
-        for(NodeType parent: parentKinds){
-            if(parent.isSubKindOf(nodeType))
+        for(NodeTag parent: parentKinds){
+            if(parent.isSubKindOf(nodeTag))
                 return true;
         }
         return false;
     }
 
-    public boolean isAnySubKindOf(NodeType ... nodeTypes){
-        for(NodeType each: nodeTypes){
+    public boolean isAnySubKindOf(NodeTag... nodeTags){
+        for(NodeTag each: nodeTags){
             if(this.isSubKindOf(each))
                 return true;
         }

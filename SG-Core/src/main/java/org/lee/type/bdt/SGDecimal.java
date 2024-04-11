@@ -6,7 +6,7 @@ import org.lee.type.precision.NumericVarlena;
 
 public class SGDecimal extends AbstractBasicDataType {
     public SGDecimal() {
-        super(TypeTag.DECIMAL, new NumericVarlena());
+        super(TypeTag.DECIMAL, NumericVarlena.defaultNumericVarlena);
     }
 
     public SGDecimal(int head) {

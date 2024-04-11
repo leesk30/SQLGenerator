@@ -1,12 +1,11 @@
 package org.lee.node.literal;
 
-import org.lee.node.NodeType;
-import org.lee.node.base.BaseLiteral;
+import org.lee.node.NodeTag;
 import org.lee.node.base.Node;
 
-public class NodeLiteral extends BaseLiteral<Node> {
+public class NodeLiteral<T extends Node> extends BaseLiteral<T> {
 
-    protected NodeLiteral(Node literalValue) {
+    protected NodeLiteral(T literalValue) {
         super(literalValue);
     }
 
@@ -16,7 +15,7 @@ public class NodeLiteral extends BaseLiteral<Node> {
     }
 
     @Override
-    public NodeType getNodeType() {
+    public NodeTag getNodeType() {
         return null;
     }
 

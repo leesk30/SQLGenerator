@@ -1,7 +1,6 @@
 package org.lee.node.literal;
 
-import org.lee.node.NodeType;
-import org.lee.node.base.BaseLiteral;
+import org.lee.node.NodeTag;
 
 public class StringLiteral extends BaseLiteral<String> {
     public StringLiteral(String literalValue){
@@ -15,8 +14,8 @@ public class StringLiteral extends BaseLiteral<String> {
     }
 
     @Override
-    public NodeType getNodeType() {
-        return NodeType.literal;
+    public NodeTag getNodeType() {
+        return NodeTag.literal;
     }
 
 }

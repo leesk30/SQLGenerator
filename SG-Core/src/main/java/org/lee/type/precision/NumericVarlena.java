@@ -3,6 +3,7 @@ package org.lee.type.precision;
 public final class NumericVarlena implements TypePrecision{
     private final int head;
     private final int tail;
+    public final static NumericVarlena defaultNumericVarlena = new NumericVarlena();
 
     public NumericVarlena(int head, int tail) {
         if(head != VARLENA_FLAG && head < tail){
