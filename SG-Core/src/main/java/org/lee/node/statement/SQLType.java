@@ -4,7 +4,7 @@ public enum SQLType {
     select,
     scalar,
     subquery,
-    sublink,
+    collection,
 
     update,
     delete,
@@ -15,7 +15,7 @@ public enum SQLType {
     public boolean isDML(){
         switch (this){
             case scalar:
-            case sublink:
+            case collection:
             case subquery:
             case select:
                 return false;
