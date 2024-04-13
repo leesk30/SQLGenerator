@@ -15,7 +15,7 @@ public class NodeLiteral<T extends Node> extends BaseLiteral<T> {
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return null;
     }
 

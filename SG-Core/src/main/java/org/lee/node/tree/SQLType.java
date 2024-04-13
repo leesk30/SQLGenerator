@@ -1,4 +1,4 @@
-package org.lee.node.statement;
+package org.lee.node.tree;
 
 public enum SQLType {
     select,

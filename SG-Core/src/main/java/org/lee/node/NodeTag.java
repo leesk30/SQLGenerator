@@ -9,7 +9,12 @@ public enum NodeTag {
     literal("literal", scalar),
     string("string", literal),
 
-    relation("")
+    relation("relation"),
+    field("field"),
+
+    rangeTableReference("rangeTableReference"),
+
+
     ;
 
     private final String name;

@@ -2,14 +2,15 @@ package org.lee.node.entry.relation;
 
 import org.lee.node.NodeTag;
 import org.lee.node.entry.scalar.Field;
+import org.lee.node.entry.scalar.Scalar;
 
 import java.util.List;
 
-public class Partition<P extends RangeTableEntry> implements RangeTableEntry {
-    private P parent;
+public class Partition implements RangeTableEntry {
+    protected final Relation parent;
 
-    public Partition(P parent){
-        this.isSubPartition = parent instanceof Partition;
+    public Partition(Relation parent){
+        this.parent = parent;
     }
 
     @Override
@@ -18,16 +19,20 @@ public class Partition<P extends RangeTableEntry> implements RangeTableEntry {
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return null;
     }
 
-    boolean isSubPartition(){
-        return parent instanceof Partition;
+    public boolean isSubPartition(){
+        return false;
     }
 
     @Override
     public List<Field> getFields() {
         return parent.getFields();
+    }
+
+    public RangeTableEntry getParent() {
+        return parent;
     }
 }

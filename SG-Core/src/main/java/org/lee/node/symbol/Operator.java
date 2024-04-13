@@ -14,7 +14,7 @@ public class Operator implements Node, Signature {
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return null;
     }
 

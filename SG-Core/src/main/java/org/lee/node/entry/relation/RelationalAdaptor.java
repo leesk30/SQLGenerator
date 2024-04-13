@@ -2,13 +2,13 @@ package org.lee.node.entry.relation;
 
 import org.lee.node.NodeTag;
 import org.lee.node.base.Node;
-import org.lee.node.entry.scalar.Field;
+import org.lee.node.entry.scalar.Scalar;
 
 import java.util.List;
 
 public class RelationalAdaptor<R extends Node> implements RangeTableEntry{
 
-    public RelationalAdaptor(){
+    public RelationalAdaptor(R node){
         // todo: S can be join_clause/subquery statement
     }
 
@@ -18,12 +18,12 @@ public class RelationalAdaptor<R extends Node> implements RangeTableEntry{
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return null;
     }
 
     @Override
-    public List<Field> getFields() {
+    public List<Scalar> getFields() {
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package org.lee.node.statement.statement;
+package org.lee.node.tree.statement;
 
 
 import org.lee.context.decription.SQLContext;
@@ -11,7 +11,7 @@ public class SelectStatement implements SQLStatement {
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return null;
     }
 

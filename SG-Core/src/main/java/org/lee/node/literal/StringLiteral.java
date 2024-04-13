@@ -14,7 +14,7 @@ public class StringLiteral extends BaseLiteral<String> {
     }
 
     @Override
-    public NodeTag getNodeType() {
+    public NodeTag getNodeTag() {
         return NodeTag.literal;
     }
 

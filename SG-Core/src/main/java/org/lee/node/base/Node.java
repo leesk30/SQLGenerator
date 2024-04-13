@@ -4,5 +4,5 @@ import org.lee.node.NodeTag;
 
 public interface Node {
     String getString();
-    NodeTag getNodeType();
+    NodeTag getNodeTag();
 }

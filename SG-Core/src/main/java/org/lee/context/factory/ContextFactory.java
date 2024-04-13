@@ -5,7 +5,7 @@ import org.lee.context.decription.SQLContext;
 import org.lee.context.decription.SelectContext;
 import org.lee.context.decription.SelectScalarContext;
 import org.lee.context.decription.SubqueryContext;
-import org.lee.node.statement.SQLType;
+import org.lee.node.tree.SQLType;
 
 public class ContextFactory {
 
