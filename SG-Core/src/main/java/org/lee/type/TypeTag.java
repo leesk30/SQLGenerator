@@ -8,6 +8,7 @@ public enum TypeTag {
     CHAR("character", "char"),
     DECIMAL("decimal", "number", "numeric"),
 
+    NULL("null", "nan", "none", "nil")
     ;
     private final String[] names;
     TypeTag(String ... names){

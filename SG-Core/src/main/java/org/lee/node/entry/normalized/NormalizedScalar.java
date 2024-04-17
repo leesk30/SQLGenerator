@@ -1,10 +1,11 @@
-package org.lee.node.entry.scalar;
+package org.lee.node.entry.normalized;
 
 import org.lee.node.NodeTag;
-import org.lee.node.entry.DatabaseEntryNodeAdaptor;
+import org.lee.node.base.Node;
+import org.lee.node.entry.scalar.Scalar;
 import org.lee.type.base.SGType;
 
-public class ScalarAdaptor<S> implements DatabaseEntryNodeAdaptor, Scalar {
+public class NormalizedScalar<S extends Node> implements NormalizedEntryNode<S>, Scalar {
     @Override
     public String getString() {
         return null;
@@ -22,6 +23,11 @@ public class ScalarAdaptor<S> implements DatabaseEntryNodeAdaptor, Scalar {
 
     @Override
     public String getName() {
+        return null;
+    }
+
+    @Override
+    public S getOriginalNode() {
         return null;
     }
 }

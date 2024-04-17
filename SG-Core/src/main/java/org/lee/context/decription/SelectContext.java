@@ -3,7 +3,7 @@ package org.lee.context.decription;
 import org.lee.common.Parameter;
 import org.lee.context.grammar.Grammar;
 
-public class SelectContext implements SQLContext{
+public class SelectContext implements SQLContext {
     @Override
     public Grammar getGrammar() {
         return null;
