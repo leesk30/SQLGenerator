@@ -19,6 +19,10 @@ public enum NodeTag {
     aggregate("aggregate"),
     function("function"),
 
+    expression("expression"),
+    assignment("assignment"),
+    qualification("qualification"),
+
     ;
 
     private final String name;

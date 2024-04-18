@@ -9,4 +9,10 @@ public interface TreeNode extends Node {
         // todo: implement recursion walk
         return null;
     }
+
+    default boolean isLeaf(){
+        return getChildNodes().isEmpty();
+    }
+
+    List<? extends Node> getChildNodes();
 }

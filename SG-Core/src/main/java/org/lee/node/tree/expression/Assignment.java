@@ -1,4 +1,8 @@
 package org.lee.node.tree.expression;
 
-public class Assignment {
+public class Assignment  {
+
+    private static class Builder{
+
+    }
 }
