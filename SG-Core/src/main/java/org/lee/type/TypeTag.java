@@ -7,6 +7,7 @@ public enum TypeTag {
     BOOLEAN("boolean", "bool"),
     CHAR("character", "char"),
     DECIMAL("decimal", "number", "numeric"),
+    FLOAT("double", "float", "float4", "float8", "real"),
 
     NULL("null", "nan", "none", "nil")
     ;

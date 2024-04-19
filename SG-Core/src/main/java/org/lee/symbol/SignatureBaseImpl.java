@@ -22,22 +22,12 @@ public class SignatureBaseImpl implements Signature{
     }
 
     @Override
-    public List<List<SGType>> getArgType() {
+    public List<TypeTag> getArgType() {
         return null;
     }
 
     @Override
-    public boolean hasOverwrite() {
-        return false;
-    }
-
-    @Override
-    public SGType getReturnType() {
+    public TypeTag getReturnType() {
         return null;
-    }
-
-    @Override
-    public TypeTag getReturnTypeTag() {
-        return Signature.super.getReturnTypeTag();
     }
 }
