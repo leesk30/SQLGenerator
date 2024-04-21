@@ -7,7 +7,7 @@ import org.lee.type.precision.TypePrecision;
 
 public class SGInteger extends AbstractBasicDataType {
     private SGInteger(int sizeof) {
-        super(TypeTag.INTEGER, new FixedLen(sizeof));
+        super(TypeTag.int_, new FixedLen(sizeof));
     }
 
     private final static SGInteger INSTANCE_INT1 = new SGInteger(TypePrecision.INT1_SIZE);
