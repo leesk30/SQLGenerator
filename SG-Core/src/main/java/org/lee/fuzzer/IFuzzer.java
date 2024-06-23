@@ -3,5 +3,8 @@ package org.lee.fuzzer;
 import org.lee.node.base.Node;
 
 public interface IFuzzer {
-    Node fuzz();
+    Node fuzzy();
+    IFuzzer next();
+    boolean hasNext();
+    void terminate();
 }

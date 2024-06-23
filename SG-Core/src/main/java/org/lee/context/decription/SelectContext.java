@@ -3,7 +3,7 @@ package org.lee.context.decription;
 import org.lee.common.Parameter;
 import org.lee.context.grammar.Grammar;
 
-public class SelectContext implements SQLContext {
+public abstract class SelectContext extends SQLContext {
     @Override
     public Grammar getGrammar() {
         return null;
@@ -14,15 +14,10 @@ public class SelectContext implements SQLContext {
         return null;
     }
 
-    @Override
-    public int getRecursionLevel() {
-        return 0;
-    }
 
-    @Override
-    public int getCollectionLevel() {
-        return 0;
-    }
+    abstract public int getRecursionLevel();
+
+    abstract public int getCollectionLevel();
 
     @Override
     public Integer getNextTraceIndex() {
