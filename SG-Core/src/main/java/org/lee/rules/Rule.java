@@ -1,6 +1,6 @@
 package org.lee.rules;
 
-import org.lee.node.NodeTag;
+import org.lee.statement.node.NodeTag;
 
 public interface Rule {
     default boolean pass(){

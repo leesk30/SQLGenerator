@@ -5,11 +5,7 @@ import org.lee.type.TypeTag;
 
 import java.util.List;
 
-public class SignatureBaseImpl implements Signature{
-    public SignatureBaseImpl(){
-
-    }
-
+public class BuiltinFunction  implements Signature{
     @Override
     public String getString() {
         return null;

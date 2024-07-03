@@ -1,5 +1,8 @@
 package org.lee.type;
 
+import org.lee.type.base.SGType;
+import org.lee.type.bdt.SGDate;
+
 public enum TypeTag {
     string(TypeCategory.STRING, "string", "text"),
     varchar(TypeCategory.STRING,"varchar"),

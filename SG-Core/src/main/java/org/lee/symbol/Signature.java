@@ -1,8 +1,7 @@
 package org.lee.symbol;
 
-import org.lee.node.base.Node;
+import org.lee.statement.node.Node;
 import org.lee.type.TypeTag;
-import org.lee.type.base.SGType;
 
 import java.util.List;
 
