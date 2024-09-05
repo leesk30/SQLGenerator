@@ -2,9 +2,9 @@ package org.lee.server;
 
 import io.grpc.*;
 import io.grpc.stub.StreamObserver;
-import org.lee.protos.Hello.MyRequest;
-import org.lee.protos.Hello.MyResponse;
-import org.lee.protos.MyServiceGrpc;
+//import org.lee.protos.Hello.MyRequest;
+//import org.lee.protos.Hello.MyResponse;
+//import org.lee.protos.MyServiceGrpc;
 import org.lee.session.SessionContext;
 import org.lee.session.SessionContextManager;
 
@@ -33,11 +33,11 @@ public class SGServer {
     }
 
     public void start() throws IOException {
-        server = ServerBuilder.forPort(serverProperty.getSgPort())
-                .addService((BindableService) new MyServiceImpl())
-                .intercept(new SessionInterceptor())
-                .build()
-                .start();
+//        server = ServerBuilder.forPort(serverProperty.getSgPort())
+//                .addService((BindableService) new MyServiceImpl())
+//                .intercept(new SessionInterceptor())
+//                .build()
+//                .start();
 
         System.out.println("Server started, listening on port 9090");
         Runtime.getRuntime()
@@ -67,14 +67,14 @@ public class SGServer {
         sgServer.blockUntilShutdown();
     }
 
-    static class MyServiceImpl extends MyServiceGrpc.MyServiceImplBase {
-        @Override
-        public void myMethod(MyRequest request, StreamObserver<MyResponse> responseObserver) {
-
-            MyResponse response = MyResponse.newBuilder().setMessage("Hello " + request.getName()).build();
-            responseObserver.onNext(response);
-            responseObserver.onCompleted();
-            System.out.println("I am calling by " + request.getName());
-        }
-    }
+//    static class MyServiceImpl extends MyServiceGrpc.MyServiceImplBase {
+//        @Override
+//        public void myMethod(MyRequest request, StreamObserver<MyResponse> responseObserver) {
+//
+//            MyResponse response = MyResponse.newBuilder().setMessage("Hello " + request.getName()).build();
+//            responseObserver.onNext(response);
+//            responseObserver.onCompleted();
+//            System.out.println("I am calling by " + request.getName());
+//        }
+//    }
 }

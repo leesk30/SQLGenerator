@@ -1,24 +1,27 @@
 package org.lee.statement.syntax;
 
+import org.lee.fuzzer.Fuzzer;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
+import org.lee.statement.select.SelectStatement;
 
-public abstract class SQLSyntax {
+public abstract class SQLSyntax implements Fuzzer {
+    protected final SQLStatement statement;
+
     protected boolean enableCTE;
     protected boolean isModifyTable;
-    protected final SQLType sqlType;
-    protected SQLSyntax(SQLType sqlType){
-        this.sqlType = sqlType;
+    protected SQLSyntax(SQLStatement statement){
+        this.statement = statement;
     }
 
-    public static SQLSyntax newSyntaxController(SQLType sqlType){
-        SelectSyntax sqlGrammar;
+    public static SQLSyntax newSyntax(SQLStatement statement){
+        SQLType sqlType = statement.getSqlType();
         switch (sqlType){
             case select:
-            case scalar:
-            case setop:
-            case simple:
-                return new SelectSyntax(sqlType);
+                return new SelectSyntax((SelectStatement) statement);
+            default:
+                throw new RuntimeException("Not support create syntax for sql type: " + sqlType);
         }
-        return null;
     }
+
 }

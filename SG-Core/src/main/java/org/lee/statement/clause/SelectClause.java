@@ -1,22 +1,26 @@
 package org.lee.statement.clause;
 
-import org.lee.statement.node.NodeTag;
+import org.lee.statement.entry.scalar.TargetEntry;
 import org.lee.statement.node.Node;
+import org.lee.statement.node.NodeTag;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.SQLStatement;
+import org.lee.statement.select.SelectStatement;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class SelectClause implements Clause{
-    private final List<Expression> projection = new ArrayList<>();
+public class SelectClause extends Clause<TargetEntry> {
     private final List<Expression> orderByTargetList = new ArrayList<>();
     private final List<Expression> outputTargetList = new ArrayList<>();
 
+    public SelectClause(SelectStatement statement) {
+        super(statement);
+    }
 
     @Override
     public String getString() {
-        return null;
+        return this.nodeArrayToString(children);
     }
 
     @Override
@@ -25,17 +29,12 @@ public class SelectClause implements Clause{
     }
 
     @Override
-    public List<? extends Node> getChildNodes() {
-        return null;
+    public Iterator<TargetEntry> walk() {
+        return children.iterator();
     }
 
     @Override
-    public boolean isEmptyClause() {
-        return projection.isEmpty();
-    }
-
-    @Override
-    public void generate(SQLStatement scopeContext) {
+    public void fuzz() {
 
     }
 }

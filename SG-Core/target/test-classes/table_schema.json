@@ -1,0 +1,35 @@
+{
+  "db1": [
+    {
+      "identifier": "t1" ,
+      "schema": [
+        { "name": "a1", "type": "int", "constraint": null },
+        { "name": "a2", "type": "int" }
+      ],
+      "index": [
+        { "name": "index1", "fields": ["a1", "a2"], "isUnique": true }
+      ],
+      "primaryKey": [],
+      "partitionKey": [],
+      "subpartitionKey": []
+    }
+  ],
+  "db2": [
+    {
+      "identifier": "t2" ,
+      "schema": [
+        { "name": "b1", "type": "int"},
+        { "name": "b2", "type": "varchar(255)" }
+      ]
+    },
+    {
+      "identifier": "t3" ,
+      "schema": [
+        { "name": "b1", "type": "decimal(10)"},
+        { "name": "b2", "type": "decimal" },
+        { "name": "b3", "type": "decimal(10, 1)" }
+      ]
+    }
+  ],
+  "db3": []
+}

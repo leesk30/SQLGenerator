@@ -1,8 +1,10 @@
 package org.lee.statement.entry.relation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lee.statement.node.NodeTag;
 import org.lee.statement.entry.scalar.Field;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Relation implements RangeTableEntry {
@@ -10,6 +12,7 @@ public class Relation implements RangeTableEntry {
     private final String namespace;
     private final String name;
     private final List<Field> fields;
+    private final List<Partition> partitions = new ArrayList<>();
 
     public Relation(String namespace, String name, List<Field> fields){
         this.namespace = namespace;
@@ -41,6 +44,10 @@ public class Relation implements RangeTableEntry {
 
     @Override
     public String getName() {
-        return name;
+        return namespace != null ? namespace + "." + name: name;
+    }
+
+    public List<Partition> getPartitions(){
+        return partitions;
     }
 }

@@ -2,25 +2,15 @@ package org.lee.statement;
 
 public enum SQLType {
     select,
-    simple,
-    scalar,
-    setop,
-    clause,
-
     update,
     delete,
     insert,
     merge,
+
+    values,
     ;
 
     public boolean isDML(){
-        switch (this){
-            case scalar:
-            case setop:
-            case select:
-                return false;
-            default:
-                return true;
-        }
+        return this != SQLType.select && this != SQLType.values;
     }
 }

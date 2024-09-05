@@ -6,6 +6,6 @@ import org.lee.type.precision.NonPrecision;
 
 public class SGDate extends AbstractBasicDataType {
     protected SGDate() {
-        super(TypeTag.date, new NonPrecision());
+        super(TypeTag.date, NonPrecision.instance);
     }
 }

@@ -1,8 +1,41 @@
 package org.lee.statement.clause;
 
-import org.lee.fuzzer.FuzzGenerator;
+import org.lee.fuzzer.Fuzzer;
+import org.lee.statement.SQLStatement;
+import org.lee.statement.node.Node;
 import org.lee.statement.node.TreeNode;
 
-public interface Clause extends TreeNode, FuzzGenerator {
-    boolean isEmptyClause();
+import java.util.ArrayList;
+import java.util.List;
+
+public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer {
+    protected final SQLStatement statement;
+    protected final List<T> children;
+    protected static int defaultChildrenInitialCapacity = 8;
+    protected Clause(SQLStatement statement){
+        this.statement = statement;
+        this.children = new ArrayList<>(defaultChildrenInitialCapacity);
+    }
+
+    protected Clause(SQLStatement statement, int childrenInitialCapacity){
+        this.statement = statement;
+        this.children = new ArrayList<>(childrenInitialCapacity);
+    }
+
+    public SQLStatement statement() {
+        return statement;
+    }
+
+    public boolean isEmpty(){
+        return children.isEmpty();
+    }
+
+    public int size(){
+        return children.size();
+    }
+
+    @Override
+    public List<T> getChildNodes() {
+        return children;
+    }
 }

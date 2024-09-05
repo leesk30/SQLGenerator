@@ -5,7 +5,7 @@ import org.lee.type.precision.NonPrecision;
 
 public abstract class AbstractUserDefinedDataType extends AbstractDataType{
     protected AbstractUserDefinedDataType(TypeTag typeTag){
-        super(typeTag, new NonPrecision());
+        super(typeTag, NonPrecision.instance);
     }
 
     @Override

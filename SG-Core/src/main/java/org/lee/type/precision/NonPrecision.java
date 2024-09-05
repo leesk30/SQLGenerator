@@ -1,6 +1,11 @@
 package org.lee.type.precision;
 
 public class NonPrecision implements TypePrecision{
+    public static final NonPrecision instance = new NonPrecision();
+
+    private NonPrecision(){
+    }
+
     @Override
     public int getPrecision(int index) {
         return UNDEFINED_FLAG;

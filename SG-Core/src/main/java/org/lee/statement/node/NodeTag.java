@@ -11,6 +11,7 @@ public enum NodeTag {
 
     relation("relation"),
     field("field"),
+    targetEntry("targetEntry"),
 
     rangeTableReference("rangeTableReference"),
 
@@ -22,6 +23,11 @@ public enum NodeTag {
     expression("expression"),
     assignment("assignment"),
     qualification("qualification"),
+
+    statement("statement"),
+    clause("clause"),
+
+    pivoted("pivoted")
 
     ;
 

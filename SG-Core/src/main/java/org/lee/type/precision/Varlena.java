@@ -5,6 +5,7 @@ package org.lee.type.precision;
  * */
 public class Varlena implements TypePrecision {
     private final int sizeof;
+    public final static Varlena unlimited = new Varlena(VARLENA_FLAG);
 
     public Varlena(int sizeof){
         this.sizeof = sizeof;

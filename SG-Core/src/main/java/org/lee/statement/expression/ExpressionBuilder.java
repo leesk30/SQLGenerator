@@ -56,5 +56,5 @@ public abstract class ExpressionBuilder{
             throw new RuntimeException("Current has already been set");
     }
 
-    abstract IExpression build();
+    abstract public IExpression build();
 }

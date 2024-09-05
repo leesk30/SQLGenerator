@@ -6,15 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SymbolFinder {
-    private static final class BuiltinNormalOperationHolder {
+    private static final class BuiltinOperatorHolder {
         static final SymbolTrieTree finder = new SymbolTrieTree();
         static final Map<TypeTag, Signature> reverseFinder = new HashMap<>();
     }
-    private static final class BuiltinAggregateOperationHolder {
+    private static final class BuiltinFunctionHolder {
         static final SymbolTrieTree finder = new SymbolTrieTree();
         static final Map<TypeTag, Signature> reverseFinder = new HashMap<>();
     }
-    private static final class BuiltinWindowOperationHolder {
+    private static final class BuiltinAggregatorHolder {
+        static final SymbolTrieTree finder = new SymbolTrieTree();
+        static final Map<TypeTag, Signature> reverseFinder = new HashMap<>();
+    }
+    private static final class BuiltinWindowHolder {
         static final SymbolTrieTree finder = new SymbolTrieTree();
         static final Map<TypeTag, Signature> reverseFinder = new HashMap<>();
     }
@@ -23,38 +27,51 @@ public class SymbolFinder {
         static final Map<TypeTag, Signature> reverseFinder = new HashMap<>();
     }
 
+    public static SymbolTrieTree getFunctionFinder() {
+        return BuiltinFunctionHolder.finder;
+    }
+    public static SymbolTrieTree getOperatorFinder(){
+        return BuiltinOperatorHolder.finder;
+    }
+    public static SymbolTrieTree getAggregatorFinder(){
+        return BuiltinAggregatorHolder.finder;
+    }
+    public static SymbolTrieTree getWindowFinder(){
+        return BuiltinWindowHolder.finder;
+    }
 
-    public static SymbolTrieTree getBuiltinNormalOperationFinder(){
-        return BuiltinNormalOperationHolder.finder;
-    }
-    public static SymbolTrieTree getBuiltinAggregateOperationFinder(){
-        return BuiltinAggregateOperationHolder.finder;
-    }
-    public static SymbolTrieTree getBuiltinWindowOperationFinder(){
-        return BuiltinWindowOperationHolder.finder;
-    }
-    public static SymbolTrieTree getUserDefinedNormalOperationFinder(){
+    public static SymbolTrieTree getUDFFinder(){
         return UserDefinedNormalOperationHolder.finder;
     }
+    public static SymbolTrieTree getUDAFFinder(){
+        return UserDefinedNormalOperationHolder.finder;
+    }
+
     public static Map<TypeTag, Signature> getBuiltinNormalOperationReverseFinder(){
-        return SymbolFinder.BuiltinNormalOperationHolder.reverseFinder;
+        return BuiltinOperatorHolder.reverseFinder;
     }
     public static Map<TypeTag, Signature> getBuiltinAggregateOperationReverseFinder(){
-        return SymbolFinder.BuiltinAggregateOperationHolder.reverseFinder;
+        return BuiltinAggregatorHolder.reverseFinder;
     }
     public static Map<TypeTag, Signature> getBuiltinWindowOperationReverseFinder(){
-        return SymbolFinder.BuiltinWindowOperationHolder.reverseFinder;
+        return BuiltinWindowHolder.reverseFinder;
     }
     public static Map<TypeTag, Signature> getUserDefinedNormalOperationReverseFinder(){
         return SymbolFinder.UserDefinedNormalOperationHolder.reverseFinder;
     }
 
-    protected static void put(BuiltinOperation builtinOperation){
-
+    protected static void put(Operator operator){
+        getAggregatorFinder().put(operator);
     }
 
     protected static void put(UserDefinedFunction userDefinedFunction){
 
     }
+
+    private SymbolFinder(){
+
+    }
+
+
 
 }
