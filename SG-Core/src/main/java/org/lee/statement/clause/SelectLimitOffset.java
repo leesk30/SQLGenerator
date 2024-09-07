@@ -1,38 +1,33 @@
 package org.lee.statement.clause;
 
-import org.lee.statement.SQLStatement;
-import org.lee.statement.entry.literal.Literal;
-import org.lee.statement.node.NodeTag;
-
-import java.util.Iterator;
+import org.lee.common.DevTempConf;
+import org.lee.rules.RuleName;
+import org.lee.statement.select.SelectStatement;
+import org.lee.util.FuzzUtil;
 
 public class SelectLimitOffset extends LimitOffset {
 
-    public SelectLimitOffset(SQLStatement statement) {
+    public SelectLimitOffset(SelectStatement statement) {
         super(statement);
-    }
-
-    public SelectLimitOffset(SQLStatement statement, int initialCapacity) {
-        super(statement, initialCapacity);
-    }
-
-    @Override
-    public String getString() {
-        return null;
-    }
-
-    @Override
-    public NodeTag getNodeTag() {
-        return null;
     }
 
     @Override
     public void fuzz() {
+        if(!FuzzUtil.probability(DevTempConf.LIMIT_OFFSET_CLAUSE_FUZZ_PROBABILITY)){
+            return;
+        }
 
-    }
+        if(statement.confirmByRuleName(RuleName.REQUIRE_SCALA)){
+            limitNode.set(1);
+        }else {
+            limitNode.set(FuzzUtil.randomIntFromRange(1, 100));
+        }
 
-    @Override
-    public Iterator<Literal<Number>> walk() {
-        return null;
+        if(!FuzzUtil.probability(DevTempConf.LIMIT_OFFSET_WITH_OFFSET_PROBABILITY)){
+            return;
+        }
+
+        offsetNode.set(FuzzUtil.randomIntFromRange(1, 100));
+
     }
 }

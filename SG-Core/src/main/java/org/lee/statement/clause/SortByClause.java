@@ -1,40 +1,31 @@
 package org.lee.statement.clause;
 
+import org.lee.entry.complex.SortEntry;
 import org.lee.statement.SQLStatement;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.scalar.Scalar;
-import org.lee.statement.node.NodeTag;
+import org.lee.entry.scalar.Scalar;
+import org.lee.node.NodeTag;
 
 import java.util.Iterator;
-import java.util.List;
 
-public class SortByClause extends Clause<Scalar>{
+public abstract class SortByClause extends Clause<SortEntry>{
 
     public SortByClause(SQLStatement statement) {
         super(statement);
     }
 
-    public SortByClause(SQLStatement statement, int initialCapacity) {
-        super(statement, initialCapacity);
-    }
-
     @Override
     public String getString() {
-        return null;
+        return "ORDER BY " + nodeArrayToString(children);
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
+        return NodeTag.sortByClause;
     }
 
     @Override
-    public Iterator<Scalar> walk() {
-        return null;
+    public Iterator<SortEntry> walk() {
+        return children.iterator();
     }
 
-    @Override
-    public void fuzz() {
-
-    }
 }

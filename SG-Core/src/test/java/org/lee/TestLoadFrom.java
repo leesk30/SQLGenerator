@@ -31,4 +31,5 @@ public class TestLoadFrom {
         MetaEntry.load(jsonObject);
         System.out.println(MetaEntry.class);
     }
+
 }

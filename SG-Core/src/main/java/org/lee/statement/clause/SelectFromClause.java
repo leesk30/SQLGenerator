@@ -1,48 +1,38 @@
 package org.lee.statement.clause;
 
 import org.lee.common.DevTempConf;
-import org.lee.common.MetaEntry;
-import org.lee.statement.SQLStatement;
-import org.lee.statement.ValuesStatement;
-import org.lee.statement.common.Projectable;
-import org.lee.statement.entry.relation.*;
-import org.lee.statement.entry.RangeTableReference;
-import org.lee.statement.node.NodeTag;
-import org.lee.statement.complex.RTEJoin;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.RangeTableReference;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.stream.IntStream;
 
 public final class SelectFromClause extends FromClause{
-    private List<List<RangeTableReference>> candidatesList;
-
     public SelectFromClause(SelectStatement statement){
         super(statement);
-
-    }
-
-    @Override
-    public String getString() {
-        return null;
-    }
-
-    @Override
-    public NodeTag getNodeTag() {
-        return null;
-    }
-
-    @Override
-    public Iterator<RangeTableReference> walk() {
-        return null;
     }
 
     @Override
     public void fuzz() {
-
-        merge();
+        final int rteJoinNumber = FuzzUtil.randomIntFromRange(1, DevTempConf.MAX_FROM_CLAUSE_RTE_JOIN_NUM);
+        final RangeTableReference[][] candidatesArray = new RangeTableReference[rteJoinNumber][];
+        IntStream.range(0, rteJoinNumber).parallel().forEach(
+                i -> {
+                    final int rteJoinEntryNumber = FuzzUtil.randomIntFromRange(1, DevTempConf.MAX_RTE_JOIN_ENTRY_NUM);
+                    final RangeTableReference[] candidates = new RangeTableReference[rteJoinEntryNumber];
+                    candidatesArray[i] = candidates;
+                    IntStream.range(0, rteJoinEntryNumber).parallel().forEach(
+                            j -> {
+                                RangeTableEntry entry = randomlyGetRangeTable();
+                                RangeTableReference reference = new RangeTableReference(entry);
+                                reference.setAlias();
+                                candidates[j] = reference;
+                            }
+                    );
+                    candidatesArray[i] = candidates;
+                }
+        );
+        merge(candidatesArray);
     }
 }

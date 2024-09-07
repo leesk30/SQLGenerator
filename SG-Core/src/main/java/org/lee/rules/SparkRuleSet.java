@@ -1,32 +1,16 @@
 package org.lee.rules;
 
-import org.lee.statement.node.Node;
-
 public class SparkRuleSet extends RuleSet{
     static {
-        String className = SparkRuleSet.class.getName();
-        SparkRuleSet.registerRuleToDefault(className, new Rule() {
-            @Override
-            public boolean pass(Node judgement) {
-                return false;
-            }
+        registerRule(RuleName.ENABLE_CTE_RULE, true);
+        registerRule(RuleName.ENABLE_FILTER_USING_PROJECTION_ALIAS, false);
+        registerRule(RuleName.SUPPORT_CTE_MATERIALIZED, false);
+        registerRule(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS, true);
+        registerRule(RuleName.ORDER_DEFAULT_DESC, false);
+        registerRule(RuleName.ORDER_DEFAULT_NULL_FIRST, true);
+    }
 
-            @Override
-            public String getName() {
-                return Rule.N_ENABLE_FILTER_USING_PROJECTION_ALIAS;
-            }
-        });
-
-        SparkRuleSet.registerRuleToDefault(className, new Rule() {
-            @Override
-            public boolean pass(Node judgement) {
-                return false;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        });
+    protected static void registerRule(RuleName ruleName, boolean value){
+        RuleSet.registerRule(SparkRuleSet.class.getName(), ruleName, value);
     }
 }

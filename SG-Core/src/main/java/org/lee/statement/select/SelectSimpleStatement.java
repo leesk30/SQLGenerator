@@ -13,11 +13,6 @@ public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
     }
 
     @Override
-    public String getString() {
-        return "";
-    }
-
-    @Override
     public void fuzz() {
 
     }

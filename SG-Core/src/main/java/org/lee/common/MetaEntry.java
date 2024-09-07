@@ -2,10 +2,9 @@ package org.lee.common;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.lee.statement.entry.relation.Relation;
-import org.lee.statement.entry.scalar.Field;
+import org.lee.entry.relation.Relation;
+import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
-import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.HashMap;

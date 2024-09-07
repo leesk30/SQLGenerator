@@ -1,7 +1,7 @@
 package org.lee.statement.expression;
 
-import org.lee.statement.node.Node;
-import org.lee.statement.entry.scalar.Scalar;
+import org.lee.node.Node;
+import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Signature;
 
 import java.util.ArrayList;
@@ -34,19 +34,26 @@ public abstract class ExpressionBuilder{
         return this;
     }
 
-    public ExpressionBuilder add(IExpression expression){
+    public ExpressionBuilder addChild(IExpression expression){
         childExprBuilders.add(expression.newBuilder().setCurrent(expression));
         return this;
     }
 
-    public ExpressionBuilder add(List<IExpression> expressions){
+    public ExpressionBuilder addChild(List<IExpression> expressions){
         for(IExpression expression: expressions){
             childExprBuilders.add(expression.newBuilder().setCurrent(expression));
         }
         return this;
     }
 
-    public ExpressionBuilder add(ExpressionBuilder builder){
+    public ExpressionBuilder addChild(IExpression[] expressions){
+        for(IExpression expression: expressions){
+            childExprBuilders.add(expression.newBuilder().setCurrent(expression));
+        }
+        return this;
+    }
+
+    public ExpressionBuilder addChild(ExpressionBuilder builder){
         childExprBuilders.add(builder);
         return this;
     }

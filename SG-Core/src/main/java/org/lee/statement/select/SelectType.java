@@ -3,7 +3,6 @@ package org.lee.statement.select;
 public enum SelectType {
     normal,
     simple,
-    scalar,
     setop,
     clause,
     ;

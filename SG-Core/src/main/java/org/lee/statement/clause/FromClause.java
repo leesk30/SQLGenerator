@@ -3,24 +3,22 @@ package org.lee.statement.clause;
 import org.lee.common.DevTempConf;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
-import org.lee.statement.common.Projectable;
-import org.lee.statement.complex.RTEJoin;
-import org.lee.statement.entry.relation.Partition;
-import org.lee.statement.entry.relation.Pivoted;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.RangeTableReference;
-import org.lee.statement.entry.relation.Relation;
-import org.lee.statement.node.NodeTag;
+import org.lee.statement.support.Projectable;
+import org.lee.entry.complex.RTEJoin;
+import org.lee.entry.relation.Partition;
+import org.lee.entry.relation.Pivoted;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.RangeTableReference;
+import org.lee.entry.relation.Relation;
+import org.lee.node.NodeTag;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public abstract class FromClause extends Clause<RangeTableReference>{
     protected final List<RangeTableEntry> rawEntryList = new ArrayList<>();
-    protected List<List<RangeTableReference>> candidatesList;
+//    protected List<List<RangeTableReference>> candidatesList;
     protected FromClause(SQLStatement statement) {
         super(statement);
     }
@@ -33,19 +31,32 @@ public abstract class FromClause extends Clause<RangeTableReference>{
         return rawEntryList;
     }
 
-    protected void merge(){
-        for (List<RangeTableReference> joinCandidate: candidatesList){
-            List<RangeTableReference> template = new ArrayList<>(joinCandidate.size());
-            Collections.copy(template, joinCandidate);
-            while (template.size() > 1){
-                Collections.shuffle(template);
-                RangeTableReference left = template.remove(0);
-                RangeTableReference right = template.remove(0);
-                RTEJoin join = new RTEJoin(statement, left, right);
-                RangeTableReference refJoin = new RangeTableReference(join);
-                template.add(refJoin);
-            }
-            children.add(template.get(0));
+    @Override
+    public String getString() {
+        return "FROM " + nodeArrayToString(children);
+    }
+
+    @Override
+    public NodeTag getNodeTag() {
+        return NodeTag.fromClause;
+    }
+
+    @Override
+    public Iterator<RangeTableReference> walk() {
+        return null;
+    }
+
+    protected void merge(RangeTableReference[][] candidatesList){
+        for(RangeTableReference[] joinCandidate: candidatesList){
+            final List<RangeTableReference> template = Arrays.asList(joinCandidate);
+            final Optional<RangeTableReference> optionalResult =
+                    template.stream().reduce((left, right) -> {
+                        RTEJoin join = new RTEJoin(statement, left, right);
+                        join.fuzz();
+                        Collections.shuffle(template);
+                        return new RangeTableReference(join);
+            });
+            children.add(optionalResult.orElseThrow(() -> new RuntimeException("NPE happen after reduce")));
         }
     }
 
@@ -53,14 +64,15 @@ public abstract class FromClause extends Clause<RangeTableReference>{
         SelectStatement currentStatement = (SelectStatement) this.statement;
         RangeTableEntry entry;
 
-        if(currentStatement.subqueryDepth < DevTempConf.MAX_SUBQUERY_RECURSION_DEPTH){
+        if(currentStatement.subqueryDepth < DevTempConf.MAX_SUBQUERY_RECURSION_DEPTH
+                && FuzzUtil.probability(DevTempConf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
             Projectable projectableStatement;
             if(FuzzUtil.probability(DevTempConf.USING_VALUES_IN_FROM_PROBABILITY)){
                 ValuesStatement valuesStatement = ValuesStatement.newStatement();
                 valuesStatement.fuzz();
                 projectableStatement = valuesStatement;
             }else {
-                SelectStatement selectStatement = SelectStatement.randomlyGetStatement();
+                SelectStatement selectStatement = SelectStatement.randomlyGetStatement(this.statement);
                 selectStatement.fuzz();
                 projectableStatement = selectStatement;
                 rawEntryList.addAll(selectStatement.getRawRTEList());

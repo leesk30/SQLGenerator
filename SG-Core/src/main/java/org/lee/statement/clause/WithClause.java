@@ -1,8 +1,11 @@
 package org.lee.statement.clause;
 
+import org.lee.common.DevTempConf;
+import org.lee.rules.RuleName;
 import org.lee.statement.SQLStatement;
-import org.lee.statement.entry.relation.CTE;
-import org.lee.statement.node.NodeTag;
+import org.lee.entry.relation.CTE;
+import org.lee.node.NodeTag;
+import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -23,6 +26,9 @@ public class WithClause extends Clause<CTE> {
 
     @Override
     public String getString() {
+        if(cteList.isEmpty()){
+            return "";
+        }
         return (materialized ? "WITH MATERIALIZED " : "WITH ") + nodeArrayToString(",\n", cteList);
     }
 
@@ -38,6 +44,10 @@ public class WithClause extends Clause<CTE> {
 
     @Override
     public void fuzz() {
+        if(statement.confirmByRuleName(RuleName.SUPPORT_CTE_MATERIALIZED)
+                && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
+            materialized = false;
+        }
 
     }
 }

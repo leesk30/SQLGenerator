@@ -1,31 +1,35 @@
 package org.lee.statement.clause;
 
-import org.lee.statement.entry.scalar.TargetEntry;
-import org.lee.statement.node.Node;
-import org.lee.statement.node.NodeTag;
+import org.lee.common.SGException;
+import org.lee.rules.RuleName;
+import org.lee.entry.FieldReference;
+import org.lee.entry.RangeTableReference;
+import org.lee.entry.complex.TargetEntry;
+import org.lee.node.NodeTag;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
+import org.lee.statement.select.SelectType;
+import org.lee.type.TypeTag;
+import org.lee.util.ListUtil;
+import org.lee.util.FuzzUtil;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.IntStream;
 
 public class SelectClause extends Clause<TargetEntry> {
-    private final List<Expression> orderByTargetList = new ArrayList<>();
-    private final List<Expression> outputTargetList = new ArrayList<>();
-
     public SelectClause(SelectStatement statement) {
         super(statement);
     }
 
     @Override
     public String getString() {
-        return this.nodeArrayToString(children);
+        return "SELECT " + this.nodeArrayToString(children);
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
+        return NodeTag.selectClause;
     }
 
     @Override
@@ -35,6 +39,50 @@ public class SelectClause extends Clause<TargetEntry> {
 
     @Override
     public void fuzz() {
+        SelectStatement statement = (SelectStatement) this.statement;
+        if(statement.getSelectType() == SelectType.clause){
+            return;
+        }
+        Clause<RangeTableReference> fromClause = ((AbstractSimpleSelectStatement) statement).getFromClause();
+        simpleFuzzProjections(fromClause.getChildNodes());
+        return;
+    }
 
+    private void fuzzProjections(List<RangeTableReference> rangeTableReferences){
+        // todo: combine choose
+    }
+
+    private void fuzzProjections(List<RangeTableReference> rangeTableReferences, List<TypeTag> typeLimitations){
+        // todo: combine choose by limitations
+    }
+
+    private void simpleFuzzProjections(List<RangeTableReference> rangeTableReferences){
+        final List<RangeTableReference> shuffledReferences = ListUtil.copyListShuffle(rangeTableReferences);
+        final int[] numOfEachCandidate = shuffledReferences.stream().mapToInt(reference -> reference.getFieldReferences().size()).toArray();
+        final int numOfCandidate = Arrays.stream(numOfEachCandidate).sum();
+        final int mayChooseNum = FuzzUtil.randomIntFromRange(1, numOfCandidate + 1);
+        final int averageChooseRoundNum = Math.max((numOfCandidate / numOfEachCandidate.length), 1);
+        final boolean enableDuplicateProjections = statement.confirmByRuleName(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS);
+//        final int[] mutableFactor = {mayChooseNum};
+        final List<FieldReference> fieldReferences = new ArrayList<>(mayChooseNum);
+
+        IntStream.range(0, numOfEachCandidate.length).forEach(i -> {
+            final List<FieldReference> shuffledCandidates = ListUtil.copyListShuffle(shuffledReferences.get(i).getFieldReferences());
+            if(enableDuplicateProjections){
+                final int fromThisChooseNum = Math.min(shuffledCandidates.size(), averageChooseRoundNum);
+                IntStream.range(0, fromThisChooseNum).forEach(j -> {
+                    FieldReference choose = FuzzUtil.randomlyChooseFrom(shuffledCandidates);
+                    fieldReferences.add(choose);
+                });
+            }else {
+                throw new SGException.NotImplementedException("Not implement for disable duplicate projections");
+            }
+        });
+
+        fieldReferences.forEach(reference -> {
+            TargetEntry entry = new TargetEntry(reference);
+            entry.setAlias();
+            children.add(entry);
+        });
     }
 }

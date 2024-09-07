@@ -1,0 +1,71 @@
+package org.lee.entry.complex;
+
+import org.apache.commons.lang3.StringUtils;
+import org.lee.entry.FieldReference;
+import org.lee.entry.scalar.Field;
+import org.lee.entry.scalar.Scalar;
+import org.lee.statement.expression.IExpression;
+import org.lee.statement.support.Alias;
+import org.lee.node.NodeTag;
+import org.lee.type.TypeTag;
+import org.lee.util.FuzzUtil;
+
+public class TargetEntry implements Scalar, Alias {
+    private String alias = null;
+    private final Scalar target;
+
+    public TargetEntry(FieldReference targetScalar){
+        this.target = targetScalar;
+    }
+
+    public TargetEntry(IExpression expression){
+        this.target = expression;
+    }
+
+    @Override
+    public boolean hasAlias() {
+        return alias != null && !(StringUtils.isBlank(alias) || StringUtils.isEmpty(alias));
+    }
+
+    @Override
+    public String getAlias() {
+        return alias != null ? alias: "";
+    }
+
+    @Override
+    public void setAlias() {
+        if(hasAlias()){
+            throw new RuntimeException("The alias has already been set.");
+        }
+        alias = FuzzUtil.getRandomName("te");
+    }
+
+    @Override
+    public String getString() {
+        if(hasAlias()){
+            return String.format("%s as %s", target.getString(), alias);
+        }
+        return target.getString();
+    }
+
+    @Override
+    public String getStringWithoutAlias() {
+        return target.getString();
+    }
+
+    @Override
+    public NodeTag getNodeTag() {
+        return NodeTag.targetEntry;
+    }
+
+    public Field toField(){
+        String fieldName = hasAlias() ? alias : target.getString();
+        TypeTag fieldType = target.getType();
+        return new Field(fieldName, fieldType);
+    }
+
+    @Override
+    public TypeTag getType() {
+        return target.getType();
+    }
+}

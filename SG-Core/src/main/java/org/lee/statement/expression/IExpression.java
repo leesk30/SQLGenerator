@@ -1,9 +1,8 @@
 package org.lee.statement.expression;
 
-import org.lee.statement.clause.Clause;
-import org.lee.statement.node.Node;
-import org.lee.statement.node.TreeNode;
-import org.lee.statement.entry.scalar.Scalar;
+import org.lee.node.Node;
+import org.lee.node.TreeNode;
+import org.lee.entry.scalar.Scalar;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,10 +18,10 @@ public interface IExpression extends Scalar, TreeNode<Node> {
 
     IExpression safeShallowCopy();
     @Override
-    List<? extends IExpression> getChildNodes();
+    List<IExpression> getChildNodes();
 
     @Override
-    default Iterator<Node> walk() {
+    default ExpressionIterator walk() {
         return new ExpressionIterator(this);
     }
 
@@ -65,5 +64,4 @@ public interface IExpression extends Scalar, TreeNode<Node> {
             return childrenIterators.get(childIndex).next();
         }
     }
-
 }

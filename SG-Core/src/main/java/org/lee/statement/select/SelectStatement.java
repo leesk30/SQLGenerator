@@ -1,26 +1,27 @@
 package org.lee.statement.select;
 
 
+import org.lee.rules.DynamicRule;
+import org.lee.rules.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.common.Projectable;
-import org.lee.statement.entry.relation.SubqueryRelation;
-import org.lee.statement.node.Node;
-import org.lee.statement.node.NodeTag;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.util.FuzzUtil;
+import org.lee.statement.support.Projectable;
+import org.lee.statement.SQLStatementWalker;
+import org.lee.entry.relation.SubqueryRelation;
+import org.lee.node.Node;
+import org.lee.node.NodeTag;
+import org.lee.entry.relation.RangeTableEntry;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public abstract class SelectStatement extends SQLStatement implements Projectable {
     protected final SelectType selectType;
     protected final boolean withLogicalParentheses;
-    protected List<Clause<? extends Node>> children = new ArrayList<>(10);
+    protected Map<NodeTag, Clause<? extends Node>> childrenMap = new HashMap<>(10);
     public final int subqueryDepth;
     public final int setopDepth;
+
     public SelectStatement(SelectType selectType){
         this(selectType, null);
     }
@@ -42,7 +43,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
             }else {
                 this.setopDepth = selectParent.setopDepth;
                 this.subqueryDepth = selectParent.selectType == SelectType.setop ? selectParent.subqueryDepth: (selectParent.subqueryDepth + 1);
-                this.withLogicalParentheses = true;
+                this.withLogicalParentheses = this.selectType != SelectType.simple;
             }
         }else {
             this.subqueryDepth = 1;
@@ -50,19 +51,18 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
             this.withLogicalParentheses = true;
         }
 
+        ruleSetConstruct();
     }
 
     @Override
     public List<Clause<? extends Node>> getChildNodes() {
-        return children;
+        return new ArrayList<>(childrenMap.values());
     }
 
     @Override
     public RangeTableEntry toRelation(){
         return new SubqueryRelation(this);
     }
-
-    abstract public boolean isScalar();
 
     public SelectType getSelectType() {
         return selectType;
@@ -75,7 +75,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
 
     @Override
     public Iterator<Clause<? extends Node>> walk() {
-        return children.iterator();
+        return new SQLStatementWalker(this.childrenMap);
     }
 
     public boolean isShell(){
@@ -111,8 +111,24 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     }
 
     public static SelectStatement randomlyGetStatement(SQLStatement parent){
-        return getStatementBySelectType(FuzzUtil.randomlyChooseFrom(SelectType.ALL), parent);
+//        return getStatementBySelectType(FuzzUtil.randomlyChooseFrom(SelectType.ALL), parent);
+        return getStatementBySelectType(SelectType.normal, parent);
     }
 
     public abstract List<RangeTableEntry> getRawRTEList();
+
+    private void ruleSetConstruct(){
+        ruleSet.put(new DynamicRule(RuleName.ENABLE_CTE_RULE, () -> this.selectType == SelectType.normal));
+    }
+
+    @Override
+    public String getString() {
+        if(this.withLogicalParentheses){
+            return "(" + nodeArrayToString(" ", this.walk()) + ")";
+        }
+        if(this.isFinished()){
+            return nodeArrayToString(" ", this.walk()) + ";";
+        }
+        return nodeArrayToString(" ", this.walk());
+    }
 }

@@ -2,7 +2,7 @@ package org.lee.statement;
 
 import org.lee.common.Parameter;
 import org.lee.rules.RuleSet;
-import org.lee.statement.entry.literal.Traceable;
+import org.lee.entry.literal.Traceable;
 
 import java.util.ArrayList;
 import java.util.List;

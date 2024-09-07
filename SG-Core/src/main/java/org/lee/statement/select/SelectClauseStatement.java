@@ -3,13 +3,11 @@ package org.lee.statement.select;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.SelectClause;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.scalar.Field;
-import org.lee.statement.entry.scalar.TargetEntry;
-import org.lee.symbol.SymbolFinder;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.scalar.Field;
+import org.lee.entry.complex.TargetEntry;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,19 +22,17 @@ public final class SelectClauseStatement extends SelectStatement{
 
     public SelectClauseStatement(SQLStatement parent) {
         super(SelectType.clause, parent);
-        this.children.add(targetList);
+        this.childrenMap.put(targetList.getNodeTag(), targetList);
     }
 
     @Override
     public String getString() {
-        return "SELECT " + targetList.getString();
+        return targetList.getString();
     }
 
     @Override
-    public List<Field> project() {
-        final List<Field> projects = new ArrayList<>(targetList.size());
-        targetList.getChildNodes().forEach(item -> projects.add(item.toField()));
-        return projects;
+    public List<TargetEntry> project() {
+        return targetList.getChildNodes();
     }
 
     public Clause<TargetEntry> getSelectClause() {

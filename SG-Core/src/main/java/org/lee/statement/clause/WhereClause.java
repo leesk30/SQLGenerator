@@ -1,11 +1,10 @@
 package org.lee.statement.clause;
 
 import org.lee.statement.SQLStatement;
-import org.lee.statement.complex.Filter;
-import org.lee.statement.node.NodeTag;
+import org.lee.entry.complex.Filter;
+import org.lee.node.NodeTag;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class WhereClause extends Clause<Filter> {
     public WhereClause(SQLStatement statement) {
@@ -18,12 +17,12 @@ public class WhereClause extends Clause<Filter> {
 
     @Override
     public String getString() {
-        return null;
+        return "WHERE " + nodeArrayToString(children);
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
+        return NodeTag.whereClause;
     }
 
     @Override

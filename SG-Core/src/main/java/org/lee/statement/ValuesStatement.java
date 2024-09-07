@@ -1,11 +1,12 @@
 package org.lee.statement;
 
+import org.lee.entry.complex.TargetEntry;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.common.Projectable;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.scalar.Field;
-import org.lee.statement.node.Node;
-import org.lee.statement.node.NodeTag;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.scalar.Field;
+import org.lee.node.Node;
+import org.lee.node.NodeTag;
+import org.lee.statement.support.Projectable;
 
 import java.util.Iterator;
 import java.util.List;
@@ -49,12 +50,17 @@ public class ValuesStatement extends SQLStatement implements Projectable {
     }
 
     @Override
-    public List<Field> project() {
+    public List<TargetEntry> project() {
         return null;
     }
 
     @Override
     public RangeTableEntry toRelation() {
         return null;
+    }
+
+    @Override
+    public boolean isScalar() {
+        return false;
     }
 }

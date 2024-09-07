@@ -1,11 +1,10 @@
 package org.lee.statement.clause;
 
 import org.lee.statement.SQLStatement;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.node.NodeTag;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.node.NodeTag;
 
 import java.util.Iterator;
-import java.util.List;
 
 public class ModifyTableClause extends Clause<RangeTableEntry>{
     protected ModifyTableClause(SQLStatement statement) {
@@ -33,11 +32,6 @@ public class ModifyTableClause extends Clause<RangeTableEntry>{
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
-    }
-
-    @Override
-    public List<RangeTableEntry> getChildNodes() {
         return null;
     }
 

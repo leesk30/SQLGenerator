@@ -2,27 +2,26 @@ package org.lee.statement.select;
 
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.*;
-import org.lee.statement.entry.relation.CTE;
-import org.lee.statement.entry.scalar.Scalar;
-import org.lee.statement.entry.literal.Literal;
-import org.lee.statement.node.Node;
+import org.lee.entry.relation.CTE;
+import org.lee.entry.scalar.Scalar;
+import org.lee.entry.literal.Literal;
+import org.lee.node.NodeTag;
+import org.lee.statement.support.Sortable;
 
-import java.util.Iterator;
-
-public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement{
+public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement implements Sortable {
     protected WithClause withClause = new WithClause(this);
-    protected SortByClause sortByClause = new SortByClause(this);
+    protected SortByClause sortByClause = new SelectOrderByClause(this);
     protected LimitOffset limitOffset = new SelectLimitOffset(this);
 
     public AbstractNormalSelectStatement(SelectType selectType) {
-        super(selectType);
-        this.children.add(withClause);
-        this.children.add(sortByClause);
-        this.children.add(limitOffset);
+        this(selectType, null);
     }
 
     public AbstractNormalSelectStatement(SelectType selectType, SQLStatement parent) {
         super(selectType, parent);
+        this.childrenMap.put(NodeTag.withClause, withClause);
+        this.childrenMap.put(NodeTag.sortByClause, sortByClause);
+        this.childrenMap.put(NodeTag.limitOffset, limitOffset);
     }
 
     @Override
@@ -30,29 +29,23 @@ public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement
         return false;
     }
 
-    @Override
-    public String getString() {
-        StringBuilder builder = new StringBuilder();
-        Iterator<Clause<? extends Node>> it = this.walk();
-        while (it.hasNext())
-            builder.append(it.next().getString());
-        return builder.toString();
-    }
-
     public Clause<CTE> getWithClause() {
         return withClause;
     }
 
-    public Clause<Scalar> getSortByClause() {
+    public SortByClause getSortByClause() {
         return sortByClause;
     }
 
-    public Clause<Literal<Number>> getLimitOffset() {
+    public LimitOffset getLimitOffset() {
         return limitOffset;
     }
 
     @Override
     public void fuzz() {
-
+        fromClause.fuzz();
+        targetList.fuzz();
+        sortByClause.fuzz();
+        limitOffset.fuzz();
     }
 }

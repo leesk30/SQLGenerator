@@ -1,15 +1,12 @@
 package org.lee.statement.clause;
 
 import org.lee.statement.SQLStatement;
-import org.lee.statement.entry.RangeTableReference;
+import org.lee.entry.RangeTableReference;
+import org.lee.util.FuzzUtil;
 
 public abstract class JoinClause extends Clause<RangeTableReference> {
     public JoinClause(SQLStatement statement) {
-        super(statement);
-    }
-
-    public JoinClause(SQLStatement statement, int childrenInitialCapacity) {
-        super(statement, childrenInitialCapacity);
+        super(statement, 2);
     }
 
     public static enum Pattern {
@@ -18,4 +15,9 @@ public abstract class JoinClause extends Clause<RangeTableReference> {
         RIGHT,
         NATUAL
     }
+
+    protected Pattern getRandomJoinPattern(){
+        return FuzzUtil.randomlyChooseFrom(new Pattern[]{Pattern.LEFT, Pattern.RIGHT, Pattern.INNER});
+    }
+
 }

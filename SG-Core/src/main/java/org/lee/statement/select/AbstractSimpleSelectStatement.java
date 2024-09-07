@@ -2,12 +2,13 @@ package org.lee.statement.select;
 
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.*;
-import org.lee.statement.complex.Filter;
-import org.lee.statement.entry.RangeTableReference;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.scalar.Field;
-import org.lee.statement.entry.scalar.Scalar;
-import org.lee.statement.entry.scalar.TargetEntry;
+import org.lee.entry.complex.Filter;
+import org.lee.entry.RangeTableReference;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.scalar.Field;
+import org.lee.entry.scalar.Scalar;
+import org.lee.entry.complex.TargetEntry;
+import org.lee.node.NodeTag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +29,13 @@ public abstract class AbstractSimpleSelectStatement extends SelectStatement {
 
     public AbstractSimpleSelectStatement(SelectType selectType, SQLStatement parent) {
         super(selectType, parent);
+        this.childrenMap.put(NodeTag.selectClause, targetList);
+        this.childrenMap.put(NodeTag.fromClause, fromClause);
+        this.childrenMap.put(NodeTag.whereClause, whereClause);
+        this.childrenMap.put(NodeTag.startWithClause, startWithClause);
+        this.childrenMap.put(NodeTag.connectByClause, connectByClause);
+        this.childrenMap.put(NodeTag.groupByClause, groupByClause);
+        this.childrenMap.put(NodeTag.havingClause, havingClause);
     }
 
     public Clause<Filter> getConnectByClause() {
@@ -59,10 +67,8 @@ public abstract class AbstractSimpleSelectStatement extends SelectStatement {
     }
 
     @Override
-    public List<Field> project() {
-        final List<Field> projects = new ArrayList<>();
-        targetList.getChildNodes().forEach(item -> projects.add(item.toField()));
-        return projects;
+    public List<TargetEntry> project() {
+        return targetList.getChildNodes();
     }
 
     @Override

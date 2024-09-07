@@ -1,10 +1,11 @@
 package org.lee.statement.expression;
 
-import org.lee.statement.entry.scalar.Pseudo;
-import org.lee.statement.node.NodeTag;
-import org.lee.statement.node.Node;
+import org.lee.entry.scalar.Pseudo;
+import org.lee.node.NodeTag;
+import org.lee.node.Node;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
+import org.lee.symbol.Window;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
@@ -13,14 +14,14 @@ import java.util.List;
 public class Expression implements IExpression {
 
     private final Node current;
-    private final List<Expression> childNodes;
+    private final List<IExpression> childNodes;
 
     protected Expression(Node current){
         this.current = current;
         this.childNodes = new ArrayList<>();
     }
 
-    protected Expression(Node current, List<Expression> childNodes){
+    protected Expression(Node current, List<IExpression> childNodes){
         this.current = current;
         this.childNodes = childNodes;
     }
@@ -29,29 +30,29 @@ public class Expression implements IExpression {
         return new Expression(current, null);
     }
 
-    private static class Builder extends ExpressionBuilder {
+    public static class Builder extends ExpressionBuilder {
         @Override
         public Expression build() {
-            List<Expression> childNodes = new ArrayList<>();
+            List<IExpression> childNodes = new ArrayList<>();
             for(ExpressionBuilder builder: childExprBuilders){
-                childNodes.add((Expression)builder.build());
+                childNodes.add(builder.build());
             }
             return new Expression(this.currentNode, childNodes);
         }
     }
 
     @Override
-    public List<Expression> getChildNodes() {
+    public List<IExpression> getChildNodes() {
         return childNodes;
     }
 
     @Override
     public String getString() {
         if(current instanceof Signature){
-            return String.format(current.getString(), childNodes.stream().map(Expression::getString).toArray());
+            return String.format(current.getString(), childNodes.stream().map(IExpression::getString).toArray());
         }
-        assert childNodes.size() == 1;
-        return childNodes.get(0).getString();
+        assert childNodes.isEmpty();
+        return current.getString();
     }
 
     @Override
@@ -84,8 +85,8 @@ public class Expression implements IExpression {
             return true;
         }
 
-        for(Expression child: childNodes){
-            if(child.isIncludingAggregation()){
+        for(IExpression child: childNodes){
+            if(child instanceof Expression && ((Expression)child).isIncludingAggregation()){
                 return true;
             }
         }
@@ -93,13 +94,27 @@ public class Expression implements IExpression {
     }
 
     public boolean isIncludingPseudo(){
-        if(current instanceof Pseudo){
-            return true;
+        if(isLeaf()){
+            return current instanceof Pseudo;
+        }
+        for(IExpression child: childNodes){
+            if(child instanceof Expression && ((Expression)child).isIncludingPseudo()){
+                return true;
+            }
         }
         return false;
     }
 
     public boolean isIncludingWindow(){
+        if (current instanceof Window){
+            return true;
+        }
+
+        for(IExpression child: childNodes){
+            if(child instanceof Expression && ((Expression)child).isIncludingWindow()){
+                return true;
+            }
+        }
         return false;
     }
 

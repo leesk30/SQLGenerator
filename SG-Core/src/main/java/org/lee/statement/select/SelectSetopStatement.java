@@ -1,21 +1,23 @@
 package org.lee.statement.select;
 
+import org.lee.entry.complex.TargetEntry;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.*;
-import org.lee.statement.common.Projectable;
-import org.lee.statement.entry.relation.RangeTableEntry;
-import org.lee.statement.entry.scalar.Field;
+import org.lee.statement.support.Projectable;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.scalar.Field;
+import org.lee.statement.support.Sortable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SelectSetopStatement extends SelectStatement {
+public final class SelectSetopStatement extends SelectStatement implements Sortable {
     private Projectable left;
     private Projectable right;
     private SetOperation setop;
     private boolean all;
     private final WithClause withClause = new WithClause(this);
-    private final SortByClause sortByClause = new SortByClause(this);
+    private final SortByClause sortByClause = new SelectOrderByClause(this);
     private final LimitOffset limitOffset = new SelectLimitOffset(this);
 
 
@@ -33,7 +35,7 @@ public final class SelectSetopStatement extends SelectStatement {
     }
 
     @Override
-    public List<Field> project() {
+    public List<TargetEntry> project() {
         return left.project();
     }
 
@@ -49,7 +51,7 @@ public final class SelectSetopStatement extends SelectStatement {
 
     @Override
     public List<RangeTableEntry> getRawRTEList() {
-        assert left!=null && right != null;
+        assert left != null && right != null;
         List<RangeTableEntry> rawRTEList = new ArrayList<>();
         if(left instanceof SelectStatement){
             rawRTEList.addAll(((SelectStatement) left).getRawRTEList());
@@ -58,5 +60,15 @@ public final class SelectSetopStatement extends SelectStatement {
             rawRTEList.addAll(((SelectStatement) right).getRawRTEList());
         }
         return rawRTEList;
+    }
+
+    @Override
+    public SortByClause getSortByClause() {
+        return sortByClause;
+    }
+
+    @Override
+    public LimitOffset getLimitOffset() {
+        return limitOffset;
     }
 }
