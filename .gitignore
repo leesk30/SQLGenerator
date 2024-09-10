@@ -1,4 +1,4 @@
-**/*.class
 **/*.gitignore
 **/*.log
 **/.idea
+**/target
