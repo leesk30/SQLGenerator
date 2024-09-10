@@ -2,15 +2,15 @@ package org.lee.entry.literal;
 
 import org.lee.type.TypeTag;
 
-public final class LiteralNumber extends Literal<Number> implements Traceable{
+public abstract class LiteralNumber<T extends Number> extends Literal<T> implements Traceable{
     private int index;
 
-    public LiteralNumber(TypeTag literalType, Number literalValue){
+    public LiteralNumber(TypeTag literalType, T literalValue){
         super(literalType, literalValue);
         this.index = 0;
     }
 
-    public LiteralNumber(TypeTag literalType, Number literalValue, int index){
+    public LiteralNumber(TypeTag literalType, T literalValue, int index){
         super(literalType, literalValue);
         this.index = index;
     }

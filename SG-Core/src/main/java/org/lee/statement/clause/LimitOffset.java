@@ -1,5 +1,6 @@
 package org.lee.statement.clause;
 
+import org.lee.entry.literal.LiteralInt;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.literal.LiteralNumber;
@@ -8,9 +9,9 @@ import org.lee.type.TypeTag;
 
 import java.util.Iterator;
 
-public abstract class LimitOffset extends Clause<Literal<Number>>{
-    protected final Literal<Number> limitNode = new LiteralNumber(TypeTag.int_, 0);
-    protected final Literal<Number> offsetNode = new LiteralNumber(TypeTag.int_, 0);
+public abstract class LimitOffset extends Clause<Literal<Integer>>{
+    protected final Literal<Integer> limitNode = new LiteralInt(0);
+    protected final Literal<Integer> offsetNode = new LiteralInt(0);
     protected LimitOffset(SQLStatement statement) {
         super(statement, 2);
         children.add(limitNode);
@@ -18,10 +19,10 @@ public abstract class LimitOffset extends Clause<Literal<Number>>{
     }
 
     public int getOffset(){
-        return offsetNode.getLiteral().intValue();
+        return offsetNode.asJava();
     }
     public int getLimit(){
-        return limitNode.getLiteral().intValue();
+        return limitNode.asJava();
     }
 
     @Override
@@ -60,7 +61,7 @@ public abstract class LimitOffset extends Clause<Literal<Number>>{
     }
 
     @Override
-    public Iterator<Literal<Number>> walk(){
+    public Iterator<Literal<Integer>> walk(){
         return children.iterator();
     }
 }

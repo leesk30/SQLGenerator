@@ -2,7 +2,7 @@ package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lee.fuzzer.Generator;
-import org.lee.fuzzer.SpecificJoinerQualificationGenerator;
+import org.lee.fuzzer.qualification.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Field;
@@ -70,7 +70,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
 
     @Override
     public void fuzz() {
-        Generator<Qualification> generator = new SpecificJoinerQualificationGenerator(left, right);
+        Generator<Qualification> generator = new JoinerQualificationGenerator(left, right);
         filter.put(generator.generate());
         filter.fuzz();
     }

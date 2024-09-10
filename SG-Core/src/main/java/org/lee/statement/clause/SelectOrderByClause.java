@@ -4,6 +4,7 @@ import org.lee.common.DevTempConf;
 import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.literal.Literal;
+import org.lee.entry.literal.LiteralInt;
 import org.lee.entry.literal.LiteralNumber;
 import org.lee.rules.RuleName;
 import org.lee.rules.RuleSet;
@@ -22,19 +23,19 @@ public class SelectOrderByClause extends SortByClause{
         super(statement);
     }
 
-    IntConsumer orderByIndex(){
+    private IntConsumer orderByIndex(){
         final SelectStatement selectStatement = (SelectStatement) this.statement;
         final int projectionLength = selectStatement.width();
         return i -> {
             final int orderByIndex = FuzzUtil.randomIntFromRange(1, projectionLength+1);
-            final Literal<Number> literal = new LiteralNumber(TypeTag.int_, orderByIndex);
+            final Literal<Integer> literal = new LiteralInt(orderByIndex);
             final SortEntry sortEntry = new SortEntry(literal, ruleSetRef);
             sortEntry.fuzz();
             children.add(sortEntry);
         };
     }
 
-    IntConsumer orderByTarget(){
+    private IntConsumer orderByTarget(){
         final SelectStatement selectStatement = (SelectStatement) this.statement;
         final List<TargetEntry> targetEntries = selectStatement.project();
         final RuleSet ruleSet = selectStatement.getRuleSet();
@@ -55,17 +56,17 @@ public class SelectOrderByClause extends SortByClause{
         assert this.statement instanceof SelectStatement;
         final SelectStatement selectStatement = (SelectStatement) this.statement;
         final int projectionLength = selectStatement.width();
-        final int orderNumber = FuzzUtil.randomIntFromRange(1, 2 * projectionLength);
+        final int orderNumber = FuzzUtil.randomIntFromRange(1, (int)(1.5D * projectionLength));
 
         if(ruleSetRef.confirm(RuleName.REQUIRE_SCALA)){
-            final SortEntry sortEntry = new SortEntry(new LiteralNumber(TypeTag.int_, 1), ruleSetRef);
+            final SortEntry sortEntry = new SortEntry(new LiteralInt(1), ruleSetRef);
             sortEntry.fuzz();
             children.add(sortEntry);
             return;
         }
 
         final IntStream streamer = IntStream.range(0, orderNumber).parallel();
-        final IntConsumer consumer = FuzzUtil.probability(50)? orderByIndex(): orderByTarget();
+        final IntConsumer consumer = FuzzUtil.probability(50) ? orderByIndex(): orderByTarget();
         streamer.forEach(consumer);
     }
 }

@@ -1,55 +1,56 @@
 package org.lee.statement.expression;
 
+import org.lee.common.SGException;
 import org.lee.entry.scalar.Pseudo;
+import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
 import org.lee.node.Node;
+import org.lee.node.TreeNode;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.symbol.Window;
 import org.lee.type.TypeTag;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class Expression implements IExpression {
+public class Expression implements Scalar, TreeNode<Node> {
 
-    private final Node current;
-    private final List<IExpression> childNodes;
+    protected final Node current;
+    protected final List<Expression> childNodes;
 
     protected Expression(Node current){
         this.current = current;
-        this.childNodes = new ArrayList<>();
+        this.childNodes = new Vector<>();
     }
 
-    protected Expression(Node current, List<IExpression> childNodes){
+    protected Expression(Node current, List<Expression> childNodes){
         this.current = current;
         this.childNodes = childNodes;
     }
 
-    public Expression newLeafExpr(Node current){
-        return new Expression(current, null);
+    public Expression newChild(Node current){
+        if(current instanceof Expression){
+            this.childNodes.add((Expression)current);
+        }else {
+            this.childNodes.add(new Expression(current));
+        }
+        return this;
     }
 
-    public static class Builder extends ExpressionBuilder {
-        @Override
-        public Expression build() {
-            List<IExpression> childNodes = new ArrayList<>();
-            for(ExpressionBuilder builder: childExprBuilders){
-                childNodes.add(builder.build());
-            }
-            return new Expression(this.currentNode, childNodes);
-        }
+    public void extractChildren(Expression expression){
+        this.childNodes.addAll(expression.getChildNodes());
     }
 
     @Override
-    public List<IExpression> getChildNodes() {
+    public List<Expression> getChildNodes() {
         return childNodes;
     }
 
     @Override
     public String getString() {
         if(current instanceof Signature){
-            return String.format(current.getString(), childNodes.stream().map(IExpression::getString).toArray());
+            return String.format(current.getString(), childNodes.stream().map(Expression::getString).toArray());
         }
         assert childNodes.isEmpty();
         return current.getString();
@@ -65,19 +66,12 @@ public class Expression implements IExpression {
         return null;
     }
 
-    @Override
-    public ExpressionBuilder newBuilder() {
-        return new Builder();
-    }
-
-    @Override
     public Node getCurrentNode() {
         return current;
     }
 
-    @Override
-    public IExpression safeShallowCopy() {
-        return newBuilder().setCurrent(this).build();
+    public Expression safeShallowCopy() {
+        return new Expression(current, childNodes);
     }
 
     public boolean isIncludingAggregation(){
@@ -85,8 +79,8 @@ public class Expression implements IExpression {
             return true;
         }
 
-        for(IExpression child: childNodes){
-            if(child instanceof Expression && ((Expression)child).isIncludingAggregation()){
+        for(Expression child: childNodes){
+            if(child.isIncludingAggregation()){
                 return true;
             }
         }
@@ -97,8 +91,8 @@ public class Expression implements IExpression {
         if(isLeaf()){
             return current instanceof Pseudo;
         }
-        for(IExpression child: childNodes){
-            if(child instanceof Expression && ((Expression)child).isIncludingPseudo()){
+        for(Expression child: childNodes){
+            if(child.isIncludingPseudo()){
                 return true;
             }
         }
@@ -110,12 +104,67 @@ public class Expression implements IExpression {
             return true;
         }
 
-        for(IExpression child: childNodes){
-            if(child instanceof Expression && ((Expression)child).isIncludingWindow()){
+        for(Expression child: childNodes){
+            if(child.isIncludingWindow()){
                 return true;
             }
         }
         return false;
     }
 
+    static class ExpressionIterator implements Iterator<Node> {
+        private final Expression expr;
+        private final List<ExpressionIterator> childrenIterators = new Vector<>();
+        private final AtomicInteger childIndex = new AtomicInteger(-1);
+
+        public ExpressionIterator(Expression expr){
+            this.expr = expr;
+            expr.getChildNodes().forEach(child -> this.childrenIterators.add((ExpressionIterator) child.walk()));
+        }
+
+        @Override
+        public boolean hasNext() {
+            if(childIndex.get() ==-1 || childrenIterators.get(childIndex.get()).hasNext()){
+                return true;
+            }
+            if(expr.isLeaf()){
+                return false;
+            }
+            if(childIndex.incrementAndGet() < childrenIterators.size()){
+                return childrenIterators.get(childIndex.get()).hasNext();
+            }
+            return false;
+        }
+
+        @Override
+        public Node next() {
+            if(childIndex.get() != -1){
+                return childrenIterators.get(childIndex.get()).next();
+            }
+            childIndex.incrementAndGet();
+            return expr.getCurrentNode();
+        }
+    }
+
+    public boolean isLeaf(){
+        return this.childNodes.isEmpty();
+    }
+
+    public Node getCurrent() {
+        return current;
+    }
+
+    public List<Expression> getLeafs(){
+        if(isLeaf()){
+            return Collections.singletonList(this);
+        }
+        final List<Expression> leafs = new Vector<>();
+        getChildNodes().stream().parallel().forEachOrdered(child -> leafs.addAll(child.getLeafs()));
+        return leafs;
+    }
+
+    @Override
+    public Iterator<Node> walk() {
+        return new ExpressionIterator(this);
+    }
 }

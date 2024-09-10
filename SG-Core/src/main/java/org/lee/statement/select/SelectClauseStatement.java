@@ -22,7 +22,7 @@ public final class SelectClauseStatement extends SelectStatement{
 
     public SelectClauseStatement(SQLStatement parent) {
         super(SelectType.clause, parent);
-        this.childrenMap.put(targetList.getNodeTag(), targetList);
+        addClause(targetList);
     }
 
     @Override

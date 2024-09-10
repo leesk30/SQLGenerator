@@ -2,7 +2,7 @@ package org.lee.entry.complex;
 
 import org.lee.fuzzer.Fuzzer;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.IExpression;
+import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
 import org.lee.node.NodeTag;
 import org.lee.node.TreeNode;
@@ -14,9 +14,9 @@ import org.lee.util.FuzzUtil;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Filter implements Scalar, TreeNode<IExpression>, Fuzzer {
-    private final List<IExpression> rawQualifications = new ArrayList<>();
-    private IExpression combinedQualifications;
+public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
+    private final List<Expression> rawQualifications = new Vector<>();
+    private Expression combinedQualifications;
     public Filter(){
 
     }
@@ -37,12 +37,12 @@ public class Filter implements Scalar, TreeNode<IExpression>, Fuzzer {
     }
 
     @Override
-    public List<IExpression> getChildNodes() {
+    public List<Expression> getChildNodes() {
         return combinedQualifications.getChildNodes();
     }
 
     @Override
-    public Iterator<IExpression> walk() {
+    public Iterator<Expression> walk() {
         return null;
     }
 
@@ -53,7 +53,7 @@ public class Filter implements Scalar, TreeNode<IExpression>, Fuzzer {
     @Override
     public void fuzz() {
         assert !rawQualifications.isEmpty();
-        List<IExpression> merged = rawQualifications;
+        List<Expression> merged = rawQualifications;
         while (merged.size() > 1){
             merged = randomlyMerge(merged);
         }
@@ -61,27 +61,31 @@ public class Filter implements Scalar, TreeNode<IExpression>, Fuzzer {
         combinedQualifications = merged.get(0);
     }
 
-    private List<IExpression> randomlyMerge(List<IExpression> qualifications){
+    public boolean isEmpty(){
+        return rawQualifications.isEmpty();
+    }
+
+    private List<Expression> randomlyMerge(List<Expression> qualifications){
         if(qualifications.size() < 2){
             return qualifications;
         }
         if(qualifications.size() == 2){
             return Collections.singletonList(combine(qualifications.get(0), qualifications.get(1)));
         }
-        final List<IExpression> result = new ArrayList<>();
-        final List<IExpression> template = ListUtil.copyListShuffle(qualifications);
+        final List<Expression> result = new ArrayList<>();
+        final List<Expression> template = ListUtil.copyListShuffle(qualifications);
         final int splitIndex = FuzzUtil.randomIntFromRange(1, template.size() - 1);
-        final List<IExpression> lhs = template.subList(0, splitIndex);
-        final List<IExpression> rhs = template.subList(splitIndex, template.size());
+        final List<Expression> lhs = template.subList(0, splitIndex);
+        final List<Expression> rhs = template.subList(splitIndex, template.size());
         result.addAll(randomlyMerge(lhs));
         result.addAll(randomlyMerge(rhs));
         return result;
     }
 
-    private IExpression combine(IExpression left, IExpression right){
-        Qualification.Builder builder = new Qualification.Builder();
+    private Expression combine(Expression left, Expression right){
+        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? StaticSymbol.AND:StaticSymbol.OR);
         final AtomicInteger counter = new AtomicInteger(0);
-        java.util.function.Function<IExpression, IExpression> tryToNegative = (qual) -> {
+        java.util.function.Function<Expression, Expression> tryToNegative = (qual) -> {
             if(qual instanceof Qualification && FuzzUtil.probability(3 - counter.get())){
                 counter.set(counter.get() + 1);
                 return ((Qualification) qual).toNegative();
@@ -89,9 +93,10 @@ public class Filter implements Scalar, TreeNode<IExpression>, Fuzzer {
                 return qual;
             }
         };
-        builder.setCurrent(FuzzUtil.probability(50) ? StaticSymbol.AND:StaticSymbol.OR)
-                .addChild(tryToNegative.apply(left))
-                .addChild(tryToNegative.apply(right));;
-        return tryToNegative.apply(builder.build());
+        return tryToNegative.apply(
+                qualification
+                        .newChild(tryToNegative.apply(left))
+                        .newChild(tryToNegative.apply(right))
+        );
     }
 }

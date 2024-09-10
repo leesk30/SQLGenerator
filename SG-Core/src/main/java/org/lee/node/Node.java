@@ -9,8 +9,10 @@ public interface Node {
 
     default <T extends Node> String nodeArrayToString(final String separator, final List<T> nodeList){
         final String reducerSeparator = "%s" + separator + "%s";
-        final Optional<String> optional = nodeList.parallelStream().map(Node::getString).reduce((s1, s2) -> String.format(reducerSeparator, s1, s2));
-        return optional.orElse("");
+        return nodeList.parallelStream()
+                .map(Node::getString)
+                .reduce((s1, s2) -> String.format(reducerSeparator, s1, s2))
+                .orElse("null");
     }
 
     default <T extends Node> String nodeArrayToString(final List<T> nodeList) {
@@ -19,8 +21,10 @@ public interface Node {
 
     default <T extends Node> String nodeArrayToString(final String separator, final T[] nodeArr){
         final String reducerSeparator = "%s" + separator + "%s";
-        final Optional<String> optional = Arrays.stream(nodeArr).parallel().map(Node::getString).reduce((s1, s2) -> String.format(reducerSeparator, s1, s2));
-        return optional.orElse("");
+        return Arrays.stream(nodeArr).parallel()
+                .map(Node::getString)
+                .reduce((s1, s2) -> String.format(reducerSeparator, s1, s2))
+                .orElse("null");
     }
 
     default <T extends Node> String nodeArrayToString(final T[] nodeArr){

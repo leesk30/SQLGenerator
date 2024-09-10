@@ -41,5 +41,8 @@ public final class FieldReference implements Scalar {
         return new Field(getString(), getType());
     }
 
+    public Scalar getReference(){
+        return scalar;
+    }
 
 }

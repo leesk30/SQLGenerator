@@ -47,4 +47,8 @@ public enum TypeTag {
     public TypeCategory getCategory(){
         return category;
     }
+
+    public boolean isSimilarWith(TypeTag typeTag){
+        return typeTag != null && (typeTag == this || typeTag.category == this.category);
+    }
 }

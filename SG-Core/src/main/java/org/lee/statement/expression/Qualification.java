@@ -9,65 +9,24 @@ import org.lee.type.TypeTag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Qualification implements IExpression {
+public class Qualification extends Expression {
 
-    private final Node current;
-    private final List<IExpression> childNodes;
-
-    protected Qualification(Node current){
-        this.current = current;
-        this.childNodes = new ArrayList<>();
+    public Qualification(Node current){
+        super(current);
     }
 
-    protected Qualification(Node current, List<IExpression> childNodes){
-        this.current = current;
-        this.childNodes = childNodes;
+    public Qualification(Node current, List<Expression> childNodes){
+        super(current, childNodes);
     }
 
-    public static class Builder extends ExpressionBuilder {
-
-        @Override
-        public Qualification build() {
-            List<IExpression> childNodes = new ArrayList<>();
-            for(ExpressionBuilder builder: childExprBuilders){
-                childNodes.add(builder.build());
-            }
-            return new Qualification(this.currentNode, childNodes);
-        }
+    public Qualification newChild(Node current){
+        super.newChild(current);
+        return this;
     }
 
     @Override
     public TypeTag getType() {
         return TypeTag.boolean_;
-    }
-
-    @Override
-    public ExpressionBuilder newBuilder() {
-        return new Builder();
-    }
-
-    @Override
-    public Node getCurrentNode() {
-        return current;
-    }
-
-    @Override
-    public IExpression safeShallowCopy() {
-        return null;
-    }
-
-    @Override
-    public List<IExpression> getChildNodes() {
-        return childNodes;
-    }
-
-    @Override
-    public String getString() {
-        if(current instanceof Signature){
-            return String.format(current.getString(), childNodes.stream().map(IExpression::getString).toArray());
-        }
-        assert childNodes.isEmpty();
-        return current.getString();
     }
 
     @Override
@@ -77,7 +36,7 @@ public class Qualification implements IExpression {
 
     public Qualification toNegative(){
         boolean shouldWithParentheses = false;
-        for(IExpression child: this.childNodes){
+        for(Expression child: this.childNodes){
             if(child instanceof Qualification){
                 shouldWithParentheses = true;
                 break;
@@ -92,10 +51,10 @@ public class Qualification implements IExpression {
     }
 
     private Qualification toNegativeWithParentheses(){
-        return (Qualification)newBuilder().setCurrent(StaticSymbol.PARENTHESES).addChild(toNegativeWithoutParentheses()).build();
+        return new Qualification(StaticSymbol.PARENTHESES).newChild(toNegativeWithoutParentheses());
     }
 
     private Qualification toNegativeWithoutParentheses(){
-        return (Qualification)newBuilder().setCurrent(StaticSymbol.NOT).addChild(this).build();
+        return new Qualification(StaticSymbol.NOT).newChild(this);
     }
 }

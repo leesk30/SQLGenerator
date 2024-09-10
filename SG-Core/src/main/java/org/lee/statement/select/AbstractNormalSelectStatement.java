@@ -19,9 +19,9 @@ public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement
 
     public AbstractNormalSelectStatement(SelectType selectType, SQLStatement parent) {
         super(selectType, parent);
-        this.childrenMap.put(NodeTag.withClause, withClause);
-        this.childrenMap.put(NodeTag.sortByClause, sortByClause);
-        this.childrenMap.put(NodeTag.limitOffset, limitOffset);
+        addClause(withClause);
+        addClause(sortByClause);
+        addClause(limitOffset);
     }
 
     @Override
@@ -45,6 +45,7 @@ public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement
     public void fuzz() {
         fromClause.fuzz();
         targetList.fuzz();
+        whereClause.fuzz();
         sortByClause.fuzz();
         limitOffset.fuzz();
     }

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.IExpression;
+import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
@@ -18,7 +18,7 @@ public class TargetEntry implements Scalar, Alias {
         this.target = targetScalar;
     }
 
-    public TargetEntry(IExpression expression){
+    public TargetEntry(Expression expression){
         this.target = expression;
     }
 

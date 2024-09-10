@@ -1,0 +1,4 @@
+**/*.class
+**/*.gitignore
+**/*.log
+**/.idea

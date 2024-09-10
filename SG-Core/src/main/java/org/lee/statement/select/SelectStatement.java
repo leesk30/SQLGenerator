@@ -18,7 +18,6 @@ import java.util.*;
 public abstract class SelectStatement extends SQLStatement implements Projectable {
     protected final SelectType selectType;
     protected final boolean withLogicalParentheses;
-    protected Map<NodeTag, Clause<? extends Node>> childrenMap = new HashMap<>(10);
     public final int subqueryDepth;
     public final int setopDepth;
 
