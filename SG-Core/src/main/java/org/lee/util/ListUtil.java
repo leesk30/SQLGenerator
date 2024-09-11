@@ -3,6 +3,7 @@ package org.lee.util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Vector;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -12,7 +13,7 @@ public class ListUtil {
         if(source.isEmpty()){
             return Collections.emptyList();
         }
-        final List<T> dest = new ArrayList<>(source.size());
+        final List<T> dest = new Vector<>(source.size());
         source.parallelStream().forEach(dest::add);
         return dest;
     }

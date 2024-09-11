@@ -29,11 +29,6 @@ public abstract class WhereClause extends Clause<Filter> {
         return NodeTag.whereClause;
     }
 
-    @Override
-    public Iterator<Filter> walk() {
-        return null;
-    }
-
     protected void joinCondInWhere(){
         final FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         final int length = fromClause.size();

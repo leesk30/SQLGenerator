@@ -14,6 +14,8 @@ import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 
 import java.util.*;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class SelectStatement extends SQLStatement implements Projectable {
     protected final SelectType selectType;
@@ -73,8 +75,11 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     }
 
     @Override
-    public Iterator<Clause<? extends Node>> walk() {
-        return new SQLStatementWalker(this.childrenMap);
+    public Stream<Clause<? extends Node>> walk() {
+        return StreamSupport.stream(
+                Spliterators.spliterator(new SQLStatementWalker(this.childrenMap), childrenMap.size(), 0),
+                false
+        );
     }
 
     public boolean isShell(){

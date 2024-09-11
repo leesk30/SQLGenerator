@@ -13,10 +13,11 @@ import org.lee.util.FuzzUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
-public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
-    private final List<Expression> rawQualifications = new Vector<>();
-    private Expression combinedQualifications;
+public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
+    private final List<Qualification> rawQualifications = new Vector<>();
+    private Qualification combinedQualifications;
     public Filter(){
 
     }
@@ -28,6 +29,9 @@ public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
 
     @Override
     public String getString() {
+        if(combinedQualifications == null){
+            System.out.println("=================!!!!!===================");
+        }
         return combinedQualifications.getString();
     }
 
@@ -42,7 +46,7 @@ public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
     }
 
     @Override
-    public Iterator<Expression> walk() {
+    public Stream<Qualification> walk() {
         return null;
     }
 
@@ -53,7 +57,7 @@ public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
     @Override
     public void fuzz() {
         assert !rawQualifications.isEmpty();
-        List<Expression> merged = rawQualifications;
+        List<Qualification> merged = rawQualifications;
         while (merged.size() > 1){
             merged = randomlyMerge(merged);
         }
@@ -65,30 +69,30 @@ public class Filter implements Scalar, TreeNode<Expression>, Fuzzer {
         return rawQualifications.isEmpty();
     }
 
-    private List<Expression> randomlyMerge(List<Expression> qualifications){
+    private List<Qualification> randomlyMerge(List<Qualification> qualifications){
         if(qualifications.size() < 2){
             return qualifications;
         }
         if(qualifications.size() == 2){
             return Collections.singletonList(combine(qualifications.get(0), qualifications.get(1)));
         }
-        final List<Expression> result = new ArrayList<>();
-        final List<Expression> template = ListUtil.copyListShuffle(qualifications);
+        final List<Qualification> result = new ArrayList<>();
+        final List<Qualification> template = ListUtil.copyListShuffle(qualifications);
         final int splitIndex = FuzzUtil.randomIntFromRange(1, template.size() - 1);
-        final List<Expression> lhs = template.subList(0, splitIndex);
-        final List<Expression> rhs = template.subList(splitIndex, template.size());
+        final List<Qualification> lhs = template.subList(0, splitIndex);
+        final List<Qualification> rhs = template.subList(splitIndex, template.size());
         result.addAll(randomlyMerge(lhs));
         result.addAll(randomlyMerge(rhs));
         return result;
     }
 
-    private Expression combine(Expression left, Expression right){
+    private Qualification combine(Qualification left, Qualification right){
         Qualification qualification = new Qualification(FuzzUtil.probability(50) ? StaticSymbol.AND:StaticSymbol.OR);
         final AtomicInteger counter = new AtomicInteger(0);
-        java.util.function.Function<Expression, Expression> tryToNegative = (qual) -> {
-            if(qual instanceof Qualification && FuzzUtil.probability(3 - counter.get())){
+        java.util.function.Function<Qualification, Qualification> tryToNegative = (qual) -> {
+            if(FuzzUtil.probability(3 - counter.get())){
                 counter.set(counter.get() + 1);
-                return ((Qualification) qual).toNegative();
+                return qual.toNegative();
             }else {
                 return qual;
             }

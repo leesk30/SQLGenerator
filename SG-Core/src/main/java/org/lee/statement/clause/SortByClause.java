@@ -23,9 +23,4 @@ public abstract class SortByClause extends Clause<SortEntry>{
         return NodeTag.sortByClause;
     }
 
-    @Override
-    public Iterator<SortEntry> walk() {
-        return children.iterator();
-    }
-
 }

@@ -15,10 +15,12 @@ public class TargetEntry implements Scalar, Alias {
     private final Scalar target;
 
     public TargetEntry(FieldReference targetScalar){
+        assert targetScalar != null;
         this.target = targetScalar;
     }
 
     public TargetEntry(Expression expression){
+        assert expression != null;
         this.target = expression;
     }
 
@@ -67,5 +69,9 @@ public class TargetEntry implements Scalar, Alias {
     @Override
     public TypeTag getType() {
         return target.getType();
+    }
+
+    public Scalar getTarget(){
+        return target;
     }
 }

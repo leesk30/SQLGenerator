@@ -3,26 +3,35 @@ package org.lee.symbol;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
-import java.util.List;
-
 public class Function implements Signature{
+
+    protected final String body;
+    protected final TypeTag returnType;
+    protected final TypeTag[] arguments;
+    public Function(String func, TypeTag returnType, TypeTag... argsType){
+        this.body = func;
+        this.returnType = returnType;
+        this.arguments = argsType;
+        check();
+    }
+
     @Override
     public String getString() {
-        return null;
+        return body;
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
+        return NodeTag.function;
     }
 
     @Override
-    public List<TypeTag> getArgType() {
-        return null;
+    public int argsNum() {
+        return arguments.length;
     }
 
     @Override
     public TypeTag getReturnType() {
-        return null;
+        return returnType;
     }
 }

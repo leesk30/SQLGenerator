@@ -14,6 +14,7 @@ import org.lee.statement.clause.JoinClause;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 
 public class RTEJoin extends JoinClause implements RangeTableEntry {
     private final RangeTableReference left;
@@ -28,7 +29,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
         this.right = right;
         this.children.add(left);
         this.children.add(right);
-        this.fieldList = new ArrayList<>(left.getFieldReferences().size() + right.getFieldReferences().size());
+        this.fieldList = new Vector<>(left.getFieldReferences().size() + right.getFieldReferences().size());
     }
 
     @Override
@@ -39,11 +40,6 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
     @Override
     public NodeTag getNodeTag() {
         return NodeTag.joinClause;
-    }
-
-    @Override
-    public Iterator<RangeTableReference> walk() {
-        return null;
     }
 
     @Override

@@ -9,12 +9,13 @@ import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public final class RangeTableReference implements NormalizedEntryNode<RangeTableEntry>, Alias {
 
     private String refName = null;
     private final RangeTableEntry entry;
-    private final List<FieldReference> fieldReferences = new ArrayList<>();
+    private final List<FieldReference> fieldReferences = new Vector<>();
 
     public RangeTableReference(RangeTableEntry rangeTableEntry){
         this(null, rangeTableEntry);
@@ -70,6 +71,9 @@ public final class RangeTableReference implements NormalizedEntryNode<RangeTable
 
     @Override
     public void setAlias() {
+        if(this.entry instanceof RTEJoin){
+            return;
+        }
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }

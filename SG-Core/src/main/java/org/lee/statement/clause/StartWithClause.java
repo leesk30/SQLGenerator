@@ -26,11 +26,6 @@ public class StartWithClause extends Clause<Filter> {
     }
 
     @Override
-    public Iterator<Filter> walk() {
-        return null;
-    }
-
-    @Override
     public void fuzz() {
 
     }

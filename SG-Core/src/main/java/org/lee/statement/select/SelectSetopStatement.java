@@ -1,17 +1,19 @@
 package org.lee.statement.select;
 
 import org.lee.entry.complex.TargetEntry;
+import org.lee.entry.relation.CTE;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.*;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.support.Sortable;
+import org.lee.statement.support.SupportCommonTableExpression;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class SelectSetopStatement extends SelectStatement implements Sortable {
+public final class SelectSetopStatement extends SelectStatement implements Sortable, SupportCommonTableExpression {
     private Projectable left;
     private Projectable right;
     private SetOperation setop;
@@ -41,6 +43,9 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
 
     @Override
     public void fuzz() {
+        if(left instanceof AbstractNormalSelectStatement){
+            withClause.fuzz();
+        }
 
     }
 
@@ -70,5 +75,10 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
     @Override
     public LimitOffset getLimitOffset() {
         return limitOffset;
+    }
+
+    @Override
+    public List<CTE> getCTEs() {
+        return withClause.getChildNodes();
     }
 }

@@ -16,27 +16,12 @@ public class ModifyTableClause extends Clause<RangeTableEntry>{
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
-    }
-
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
     public String getString() {
         return null;
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
-    }
-
-    @Override
-    public Iterator<RangeTableEntry> walk() {
         return null;
     }
 

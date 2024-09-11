@@ -15,8 +15,9 @@ public class StaticSymbol implements Signature {
     public static final StaticSymbol OR = new StaticSymbol("%s or %s", AND_OR_INPUT, TypeTag.boolean_);
     public static final StaticSymbol NOT = new StaticSymbol("NOT %s", Collections.singletonList(TypeTag.boolean_), TypeTag.boolean_);
     public static final StaticSymbol PARENTHESES = new StaticSymbol("( %s )", UNCONFIRMED_INPUT, TypeTag.null_);
-    public static final StaticSymbol BETWEEN = new StaticSymbol("between %s and %s", UNCONFIRMED_INPUT, TypeTag.boolean_);
-    public static final StaticSymbol EQUAL_ASSIGN = new StaticSymbol("%s = %s", UNCONFIRMED_INPUT, TypeTag.boolean_);
+    public static final StaticSymbol BETWEEN = new StaticSymbol("%s between %s and %s", UNCONFIRMED_INPUT3, TypeTag.boolean_);
+    public static final StaticSymbol EQUALS = new StaticSymbol("%s = %s", UNCONFIRMED_INPUT2, TypeTag.boolean_);
+    public static final StaticSymbol ASSIGN = new StaticSymbol("%s = %s", UNCONFIRMED_INPUT2, TypeTag.null_);
 
     private final List<TypeTag> arguments;
     private final String symbolBody;
@@ -25,6 +26,7 @@ public class StaticSymbol implements Signature {
         this.arguments = arguments;
         this.symbolBody = symbolBody;
         this.returnType = returnType;
+        check();
     }
 
     @Override
@@ -38,8 +40,8 @@ public class StaticSymbol implements Signature {
     }
 
     @Override
-    public List<TypeTag> getArgType() {
-        return arguments;
+    public int argsNum() {
+        return arguments.size();
     }
 
     @Override

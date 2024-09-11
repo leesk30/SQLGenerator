@@ -38,11 +38,6 @@ public class WithClause extends Clause<CTE> {
     }
 
     @Override
-    public Iterator<CTE> walk() {
-        return cteList.iterator();
-    }
-
-    @Override
     public void fuzz() {
         if(statement.confirmByRuleName(RuleName.SUPPORT_CTE_MATERIALIZED)
                 && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){

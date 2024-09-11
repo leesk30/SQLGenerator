@@ -2,15 +2,9 @@ package org.lee.node;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
-public interface TreeNode<T extends Node> extends Node, Iterable<T> {
+public interface TreeNode<T extends Node> extends Node {
     List<? extends Node> getChildNodes();
-
-    Iterator<T> walk();
-
-    @Override
-    default Iterator<T> iterator(){
-        assert this.walk() != null;
-        return this.walk();
-    }
+    Stream<T> walk();
 }

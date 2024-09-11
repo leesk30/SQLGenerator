@@ -18,6 +18,10 @@ public abstract class Literal<T> implements Scalar {
         return literalValue.toString();
     }
 
+    public T getLiteral(){
+        return literalValue;
+    }
+
     @Override
     public TypeTag getType(){
         return literalType;

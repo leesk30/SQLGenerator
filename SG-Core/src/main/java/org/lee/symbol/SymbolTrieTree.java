@@ -49,4 +49,13 @@ public class SymbolTrieTree {
         // todo
     }
 
+    protected List<Signature> get(List<TypeTag> types){
+        return null;
+    }
+
+    protected List<Signature> get(TypeTag ... types){
+        return null;
+    }
+
+
 }

@@ -1,6 +1,6 @@
 package org.lee.symbol;
 
-public enum UDFKind {
+public enum Language {
     java,
     scala,
     python,

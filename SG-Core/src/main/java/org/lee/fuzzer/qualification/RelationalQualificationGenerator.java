@@ -65,12 +65,19 @@ public abstract class RelationalQualificationGenerator extends QualificationGene
         }
     }
 
+
+    private Qualification fallbackToLiteralHashEquals(){
+        final RangeTableReference randomRTE = FuzzUtil.randomlyChooseFrom(candidateRelations);
+        final FieldReference randomFieldReference = FuzzUtil.randomlyChooseFrom(randomRTE.getFieldReferences());
+        return compareToLiteral(randomFieldReference);
+    }
+
     public Qualification simplifiedHashEquals(){
         Pair<FieldReference, FieldReference> pair = consumPair();
         if(pair == null || !pair.getFirst().isPresent() || !pair.getSecond().isPresent()){
-            return null;
+            return fallbackToLiteralHashEquals();
         }
-        Qualification qualification = new Qualification(StaticSymbol.EQUAL_ASSIGN);
+        Qualification qualification = new Qualification(StaticSymbol.EQUALS);
         qualification.newChild(pair.getFirst().get());
         qualification.newChild(pair.getSecond().get());
         return qualification;

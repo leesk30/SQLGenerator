@@ -8,6 +8,7 @@ import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
 import java.util.Iterator;
+import java.util.stream.Stream;
 
 public abstract class LimitOffset extends Clause<Literal<Integer>>{
     protected final Literal<Integer> limitNode = new LiteralInt(0);
@@ -58,10 +59,5 @@ public abstract class LimitOffset extends Clause<Literal<Integer>>{
             builder.append(getOffset());
         }
         return builder.toString();
-    }
-
-    @Override
-    public Iterator<Literal<Integer>> walk(){
-        return children.iterator();
     }
 }

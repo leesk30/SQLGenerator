@@ -3,8 +3,6 @@ package org.lee.symbol;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
-import java.util.List;
-
 public class SignatureBaseImpl implements Signature{
     public SignatureBaseImpl(){
 
@@ -21,8 +19,8 @@ public class SignatureBaseImpl implements Signature{
     }
 
     @Override
-    public List<TypeTag> getArgType() {
-        return null;
+    public int argsNum() {
+        return 0;
     }
 
     @Override

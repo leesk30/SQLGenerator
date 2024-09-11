@@ -1,9 +1,9 @@
 package org.lee.symbol;
 
 class Pattern {
-    protected final static String plus = "? + ?";
-    protected final static String sub = "? - ?";
-    protected final static String mul = "? * ?";
-    protected final static String div = "? / ?";
-    protected final static String concat = "? || ?";
+    protected final static String plus = "%s + %s";
+    protected final static String sub = "%s - %s";
+    protected final static String mul = "%s * %s";
+    protected final static String div = "%s / %s";
+    protected final static String concat = "%s || %s";
 }

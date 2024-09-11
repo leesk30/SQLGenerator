@@ -56,8 +56,8 @@ public enum Operator implements Signature{
         this.nodeTag = nodeTag;
         this.returnType = returnType;
         this.arguments = Arrays.asList(arguments);
-
-        SymbolFinder.put(this);
+        check();
+        Finder.getFinder().put(this);
     }
 
     @Override
@@ -71,12 +71,16 @@ public enum Operator implements Signature{
     }
 
     @Override
-    public List<TypeTag> getArgType() {
-        return null;
+    public int argsNum() {
+        return arguments.size();
     }
 
     @Override
     public NodeTag getNodeTag() {
         return nodeTag;
+    }
+
+    public static void callEmpty(){
+        // do nothing but init
     }
 }

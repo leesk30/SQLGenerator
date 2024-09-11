@@ -8,6 +8,7 @@ import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Qualification extends Expression {
 
@@ -56,5 +57,9 @@ public class Qualification extends Expression {
 
     private Qualification toNegativeWithoutParentheses(){
         return new Qualification(StaticSymbol.NOT).newChild(this);
+    }
+
+    public Qualification and(final Qualification rhs){
+        return new Qualification(StaticSymbol.AND).newChild(this).newChild(rhs);
     }
 }

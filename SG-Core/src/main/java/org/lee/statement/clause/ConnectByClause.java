@@ -22,11 +22,6 @@ public class ConnectByClause extends Clause<Filter> {
     }
 
     @Override
-    public Iterator<Filter> walk() {
-        return null;
-    }
-
-    @Override
     public void fuzz() {
 
     }

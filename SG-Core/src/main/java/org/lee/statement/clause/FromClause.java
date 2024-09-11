@@ -1,23 +1,23 @@
 package org.lee.statement.clause;
 
 import org.lee.common.DevTempConf;
+import org.lee.common.MetaEntry;
+import org.lee.entry.relation.*;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.complex.RTEJoin;
-import org.lee.entry.relation.Partition;
-import org.lee.entry.relation.Pivoted;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.RangeTableReference;
-import org.lee.entry.relation.Relation;
 import org.lee.node.NodeTag;
 import org.lee.statement.select.SelectStatement;
+import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.util.FuzzUtil;
 
 import java.util.*;
 
 public abstract class FromClause extends Clause<RangeTableReference>{
-    protected final List<RangeTableEntry> rawEntryList = new ArrayList<>();
+    protected final List<RangeTableEntry> rawEntryList = new Vector<>();
+    protected final List<RangeTableEntry> candidatesAll = new Vector<>();
 //    protected List<List<RangeTableReference>> candidatesList;
     protected FromClause(SQLStatement statement) {
         super(statement);
@@ -41,11 +41,6 @@ public abstract class FromClause extends Clause<RangeTableReference>{
         return NodeTag.fromClause;
     }
 
-    @Override
-    public Iterator<RangeTableReference> walk() {
-        return null;
-    }
-
     protected void merge(RangeTableReference[][] candidatesList){
         for(RangeTableReference[] joinCandidate: candidatesList){
             final List<RangeTableReference> template = Arrays.asList(joinCandidate);
@@ -60,7 +55,7 @@ public abstract class FromClause extends Clause<RangeTableReference>{
         }
     }
 
-    protected RangeTableEntry randomlyGetRangeTable(){
+    protected RangeTableReference randomlyGetRangeReference(){
         SelectStatement currentStatement = (SelectStatement) this.statement;
         RangeTableEntry entry;
 
@@ -79,15 +74,41 @@ public abstract class FromClause extends Clause<RangeTableReference>{
             }
             entry = projectableStatement.toRelation();
         }else {
-            entry = randomlyConvertToPartition(FuzzUtil.getRandomRelationFromMetaEntry());
+            entry = randomlyGetRangeTable();
+            entry = randomlyConvertToPartition(entry);
             rawEntryList.add(entry);
         }
 //        return randomlyConvertToPivoted(entry);
-        return entry;
+        return new RangeTableReference(entry);
     }
 
-    protected RangeTableEntry randomlyConvertToPartition(Relation relation){
-        List<Partition> partitions = relation.getPartitions();
+    protected RangeTableEntry randomlyGetRangeTable(){
+        cacheCandidateAll();
+        return FuzzUtil.randomlyChooseFrom(candidatesAll);
+    }
+
+    protected void cacheCandidateAll(){
+        if(!candidatesAll.isEmpty()){
+            return;
+        }
+        // related with parent cte
+        if(FuzzUtil.probability(50)){
+            candidatesAll.addAll(statement.recursiveGetCTEs());
+        }else {
+            // repeat self cte
+            if(statement instanceof SupportCommonTableExpression){
+                candidatesAll.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
+            }
+        }
+        candidatesAll.addAll(MetaEntry.relationMap.values());
+    }
+
+    protected RangeTableEntry randomlyConvertToPartition(RangeTableEntry entry){
+        if(!(entry instanceof Relation)){
+            return entry;
+        }
+        final Relation relation = (Relation) entry;
+        final List<Partition> partitions = relation.getPartitions();
         if (relation.getPartitions().isEmpty() ||
                 !FuzzUtil.probability(DevTempConf.CONVERT_TO_PARTITION_PROB)){
             return relation;

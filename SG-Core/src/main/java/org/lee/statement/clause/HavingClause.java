@@ -22,11 +22,6 @@ public class HavingClause extends Clause<Scalar> {
     }
 
     @Override
-    public Iterator<Scalar> walk() {
-        return null;
-    }
-
-    @Override
     public void fuzz() {
 
     }

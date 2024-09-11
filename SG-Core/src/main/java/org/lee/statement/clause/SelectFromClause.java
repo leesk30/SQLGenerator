@@ -24,8 +24,7 @@ public final class SelectFromClause extends FromClause{
                     candidatesArray[i] = candidates;
                     IntStream.range(0, rteJoinEntryNumber).parallel().forEach(
                             j -> {
-                                RangeTableEntry entry = randomlyGetRangeTable();
-                                RangeTableReference reference = new RangeTableReference(entry);
+                                RangeTableReference reference = randomlyGetRangeReference();
                                 reference.setAlias();
                                 candidates[j] = reference;
                             }

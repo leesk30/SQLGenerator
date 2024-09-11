@@ -16,6 +16,7 @@ import org.lee.util.FuzzUtil;
 
 import java.util.*;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 public class SelectClause extends Clause<TargetEntry> {
     public SelectClause(SelectStatement statement) {
@@ -30,11 +31,6 @@ public class SelectClause extends Clause<TargetEntry> {
     @Override
     public NodeTag getNodeTag() {
         return NodeTag.selectClause;
-    }
-
-    @Override
-    public Iterator<TargetEntry> walk() {
-        return children.iterator();
     }
 
     @Override
@@ -64,10 +60,11 @@ public class SelectClause extends Clause<TargetEntry> {
         final int averageChooseRoundNum = Math.max((numOfCandidate / numOfEachCandidate.length), 1);
         final boolean enableDuplicateProjections = statement.confirmByRuleName(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS);
 //        final int[] mutableFactor = {mayChooseNum};
-        final List<FieldReference> fieldReferences = new ArrayList<>(mayChooseNum);
+        final List<FieldReference> fieldReferences = new Vector<>(mayChooseNum);
 
-        IntStream.range(0, numOfEachCandidate.length).forEach(i -> {
+        IntStream.range(0, numOfEachCandidate.length).parallel().forEach(i -> {
             final List<FieldReference> shuffledCandidates = ListUtil.copyListShuffle(shuffledReferences.get(i).getFieldReferences());
+            assert !shuffledCandidates.isEmpty();
             if(enableDuplicateProjections){
                 final int fromThisChooseNum = Math.min(shuffledCandidates.size(), averageChooseRoundNum);
                 IntStream.range(0, fromThisChooseNum).forEach(j -> {

@@ -1,6 +1,7 @@
 package org.lee.statement.expression;
 
-import org.lee.common.SGException;
+import org.lee.entry.FieldReference;
+import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
@@ -10,21 +11,23 @@ import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.symbol.Window;
 import org.lee.type.TypeTag;
+import org.lee.util.Pair;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-public class Expression implements Scalar, TreeNode<Node> {
+public class Expression implements Scalar, TreeNode<Expression> {
 
     protected final Node current;
     protected final List<Expression> childNodes;
 
-    protected Expression(Node current){
+    public Expression(Node current){
         this.current = current;
         this.childNodes = new Vector<>();
     }
 
-    protected Expression(Node current, List<Expression> childNodes){
+    public Expression(Node current, List<Expression> childNodes){
         this.current = current;
         this.childNodes = childNodes;
     }
@@ -63,7 +66,10 @@ public class Expression implements Scalar, TreeNode<Node> {
 
     @Override
     public TypeTag getType() {
-        return null;
+        if(current instanceof Signature){
+            return ((Signature) current).getReturnType();
+        }
+        return ((Scalar) current).getType();
     }
 
     public Node getCurrentNode() {
@@ -112,40 +118,6 @@ public class Expression implements Scalar, TreeNode<Node> {
         return false;
     }
 
-    static class ExpressionIterator implements Iterator<Node> {
-        private final Expression expr;
-        private final List<ExpressionIterator> childrenIterators = new Vector<>();
-        private final AtomicInteger childIndex = new AtomicInteger(-1);
-
-        public ExpressionIterator(Expression expr){
-            this.expr = expr;
-            expr.getChildNodes().forEach(child -> this.childrenIterators.add((ExpressionIterator) child.walk()));
-        }
-
-        @Override
-        public boolean hasNext() {
-            if(childIndex.get() ==-1 || childrenIterators.get(childIndex.get()).hasNext()){
-                return true;
-            }
-            if(expr.isLeaf()){
-                return false;
-            }
-            if(childIndex.incrementAndGet() < childrenIterators.size()){
-                return childrenIterators.get(childIndex.get()).hasNext();
-            }
-            return false;
-        }
-
-        @Override
-        public Node next() {
-            if(childIndex.get() != -1){
-                return childrenIterators.get(childIndex.get()).next();
-            }
-            childIndex.incrementAndGet();
-            return expr.getCurrentNode();
-        }
-    }
-
     public boolean isLeaf(){
         return this.childNodes.isEmpty();
     }
@@ -159,12 +131,47 @@ public class Expression implements Scalar, TreeNode<Node> {
             return Collections.singletonList(this);
         }
         final List<Expression> leafs = new Vector<>();
-        getChildNodes().stream().parallel().forEachOrdered(child -> leafs.addAll(child.getLeafs()));
+        getChildNodes().forEach(child -> leafs.addAll(child.getLeafs()));
         return leafs;
     }
 
     @Override
-    public Iterator<Node> walk() {
-        return new ExpressionIterator(this);
+    public Stream<Expression> walk() {
+        return midTraverseExpression().stream();
     }
+
+    protected List<Expression> midTraverseExpression(){
+        final List<Expression> expressionList = new Vector<>();
+        final List<Expression> fifo = new LinkedList<>();
+        fifo.add(this);
+        while (!fifo.isEmpty()){
+            final Expression current = fifo.remove(0);
+            fifo.addAll(current.getChildNodes());
+            expressionList.add(current);
+        }
+        return expressionList;
+    }
+
+    public List<FieldReference> extractFieldReferences(){
+        return this.getLeafs()
+                .stream()
+                .parallel()
+                .map(Expression::getCurrentNode)
+                .filter(each -> each instanceof FieldReference)
+                .filter(each -> {
+                    final Scalar referenced = ((FieldReference) each).getReference();
+                    return referenced instanceof Field || referenced instanceof Pseudo;
+                })
+                .map(each -> (FieldReference) each)
+                .collect(Collectors.toList());
+    }
+
+    public Pair<List<FieldReference>, List<FieldReference>> extractAggregate(){
+        final List<FieldReference> inAggregator = new Vector<>();
+        final List<FieldReference> notInAggregator = new Vector<>();
+        final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
+
+        return pair;
+    }
+
 }

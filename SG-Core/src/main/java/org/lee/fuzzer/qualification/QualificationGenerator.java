@@ -14,16 +14,27 @@ public abstract class QualificationGenerator implements Generator<Qualification>
     protected Qualification compareToLiteral(FieldReference fieldReference){
         TypeTag typeTag = fieldReference.getType();
         Literal<?> literal = Literal.fromType(typeTag);
-        return (Qualification) new Qualification(StaticSymbol.EQUAL_ASSIGN).newChild(fieldReference).newChild(literal);
+        return new Qualification(StaticSymbol.EQUALS).newChild(fieldReference).newChild(literal);
     }
 
     protected Qualification compareToRangeLiteral(FieldReference fieldReference){
         TypeTag typeTag = fieldReference.getType();
         Literal<?> b1 = Literal.fromType(typeTag);
         Literal<?> b2 = Literal.fromType(typeTag);
-        Literal<?> lhs = ((Comparable) b1.getLiteralString()).compareTo((Comparable) b2.getLiteralString()) > 0 ? b1 : b2;
-//      return (Qualification) new Qualification.Builder().setCurrent(StaticSymbol.BETWEEN).addChild(fieldReference).addChild(lhs).addChild(rhs).build();
-        return null;
+        Literal<?> lhs;
+        Literal<?> rhs;
+        if(!(b1.getLiteral() instanceof Comparable)){
+            // fallback to
+            return compareToLiteral(fieldReference);
+        }
+        if(((Comparable) b1.getLiteral()).compareTo(b2.getLiteral()) > 0){
+            lhs = b2;
+            rhs = b1;
+        }else {
+            lhs = b1;
+            rhs = b2;
+        }
+        return new Qualification(StaticSymbol.BETWEEN).newChild(fieldReference).newChild(lhs).newChild(rhs);
     }
 
 }

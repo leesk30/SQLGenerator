@@ -1,5 +1,6 @@
 package org.lee.statement;
 
+import org.lee.entry.relation.CTE;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
 import org.lee.rules.Rule;
@@ -9,11 +10,10 @@ import org.lee.rules.SparkRuleSet;
 import org.lee.statement.clause.Clause;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
+import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.syntax.SQLSyntax;
 
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, Fuzzer {
@@ -90,5 +90,18 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
 
     public Clause<? extends Node> getClause(NodeTag key){
         return childrenMap.get(key);
+    }
+
+    public List<CTE> recursiveGetCTEs(){
+        List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : null;
+        if(this instanceof SupportCommonTableExpression){
+            List<CTE> cteList = new Vector<>(((SupportCommonTableExpression) this).getCTEs());
+            if(parentCTEList != null){
+                cteList.addAll(parentCTEList);
+            }
+            return cteList;
+        }else {
+            return parentCTEList;
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.lee.statement.support.Projectable;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class ValuesStatement extends SQLStatement implements Projectable {
     protected ValuesStatement() {
@@ -45,7 +46,7 @@ public class ValuesStatement extends SQLStatement implements Projectable {
     }
 
     @Override
-    public Iterator<Clause<? extends Node>> walk() {
+    public Stream<Clause<? extends Node>> walk() {
         return null;
     }
 

@@ -8,6 +8,7 @@ import org.lee.node.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+import java.util.stream.Stream;
 
 public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer {
     protected final SQLStatement statement;
@@ -38,5 +39,10 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer {
     @Override
     public List<T> getChildNodes() {
         return children;
+    }
+
+    @Override
+    public Stream<T> walk() {
+        return children.stream();
     }
 }
