@@ -77,7 +77,7 @@ public final class RangeTableReference implements NormalizedEntryNode<RangeTable
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }
-        refName = FuzzUtil.getRandomName("r");
+        refName = FuzzUtil.getRandomName("r_");
     }
 
     @Override

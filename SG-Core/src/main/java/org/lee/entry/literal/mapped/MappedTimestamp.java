@@ -18,11 +18,11 @@ public final class MappedTimestamp extends MappedType<Timestamp> {
 
     @Override
     public LiteralTimestamp generate() {
-        return null;
+        return new LiteralTimestamp(new Timestamp(System.currentTimeMillis()));
     }
 
     @Override
     public LiteralTimestamp generate(int partial) {
-        return null;
+        return new LiteralTimestamp(new Timestamp(System.currentTimeMillis() + partial));
     }
 }

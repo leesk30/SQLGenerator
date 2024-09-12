@@ -6,8 +6,10 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
 import org.lee.statement.expression.Qualification;
 import org.lee.symbol.Signature;
-import org.lee.symbol.StaticSymbol;
+import org.lee.symbol.Comparator;
+import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
+import org.lee.util.DevSupplier;
 import org.lee.util.FuzzUtil;
 import org.lee.util.Pair;
 
@@ -16,8 +18,19 @@ import java.util.List;
 public interface QualificationGenerator extends Generator<Qualification> {
     Qualification generate();
     Qualification fallback();
-
     Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
+
+    default Comparator fastGetComparatorByCategory(TypeCategory category){
+        if(category == TypeCategory.STRING && FuzzUtil.probability(90)){
+            return FuzzUtil.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
+        }
+
+        if(category.isComparable()){
+            return FuzzUtil.randomlyChooseFrom(Comparator.ALL);
+        }else {
+            return FuzzUtil.randomlyChooseFrom(Comparator.BASE_EQ);
+        }
+    }
     Pair<Scalar, Scalar> getTwoSide(TypeTag target);
     default Pair<Scalar, Scalar> getTwoSide(){
         return getTwoSide(FuzzUtil.randomlyChooseFrom(TypeTag.ALL));
@@ -47,31 +60,28 @@ public interface QualificationGenerator extends Generator<Qualification> {
     default <T> Qualification compareToLiteral(Scalar fieldReference){
         TypeTag typeTag = fieldReference.getType();
         Literal<T> literal = Literal.fromType(typeTag);
-        return new Qualification(StaticSymbol.EQUALS)
+        assert typeTag.getCategory() == literal.getType().getCategory();
+        Comparator comparator = fastGetComparatorByCategory(typeTag.getCategory());
+        return new Qualification(comparator)
                 .newChild(fieldReference)
                 .newChild(literal);
     }
 
     default <T> Qualification compareToRangeLiteral(Scalar fieldReference){
+        if(!(fieldReference instanceof FieldReference)){
+            return compareToLiteral(fieldReference);
+        }
         final TypeTag typeTag = fieldReference.getType();
         final Literal<T> b1 = Literal.fromType(typeTag);
         final Literal<T> b2 = Literal.fromType(typeTag);
-        Literal<T> lhs;
-        Literal<T> rhs;
-        if(!(b1.getLiteral() instanceof Comparable) && b1.getType().isComparable()){
-            // fallback to
-            return compareToLiteral(fieldReference);
+        Pair<Literal<T>, Literal<T>> ordered = Pair.OrderedPair(b1, b2);
+        if(ordered == null){
+            return fallback();
         }
-        assert b2.getLiteral() instanceof Comparable;
-        Comparable<T> comparable = (Comparable<T>) b1.getLiteral();
-        if(comparable.compareTo(b2.getLiteral()) > 0){
-            lhs = b2;
-            rhs = b1;
-        }else {
-            lhs = b1;
-            rhs = b2;
-        }
-        return new Qualification(StaticSymbol.BETWEEN).newChild(fieldReference).newChild(lhs).newChild(rhs);
+        return new Qualification(Comparator.BETWEEN_AND)
+                .newChild(fieldReference)
+                .newChild(ordered.getFirst().orElseThrow(DevSupplier.impossible))
+                .newChild(ordered.getFirst().orElseThrow(DevSupplier.impossible));
     }
 
     default Qualification tryWithPredicateAddition(final Qualification qualification){

@@ -1,5 +1,7 @@
 package org.lee.statement;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -26,6 +28,8 @@ public class SQLFormatter {
         BEGIN_CLAUSES.add( "outer" );
         BEGIN_CLAUSES.add( "group" );
         BEGIN_CLAUSES.add( "order" );
+        BEGIN_CLAUSES.add( "limit" );
+        BEGIN_CLAUSES.add( "offset" );
 
         END_CLAUSES.add( "where" );
         END_CLAUSES.add( "set" );
@@ -65,6 +69,7 @@ public class SQLFormatter {
 
     private static class FormatProcess {
         boolean beginLine = true;
+        boolean afterBy;
         boolean afterBeginBeforeEnd;
         boolean afterByOrSetOrFromOrSelect;
         boolean afterValues;
@@ -190,6 +195,9 @@ public class SQLFormatter {
 
         private void commaAfterByOrFromOrSelect() {
             out();
+            if(afterBy && token.matches("^[0-9]*,$")){
+                return;
+            }
             newline();
         }
 
@@ -274,7 +282,8 @@ public class SQLFormatter {
             }
             newline();
             afterBeginBeforeEnd = false;
-            afterByOrSetOrFromOrSelect = "by".equals( lcToken )
+            afterBy = "by".equals( lcToken );
+            afterByOrSetOrFromOrSelect = afterBy
                     || "set".equals( lcToken )
                     || "from".equals( lcToken );
         }

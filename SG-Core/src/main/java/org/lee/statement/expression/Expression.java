@@ -11,6 +11,7 @@ import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.symbol.Window;
 import org.lee.type.TypeTag;
+import org.lee.util.DevSupplier;
 import org.lee.util.Pair;
 
 import java.util.*;
@@ -45,6 +46,17 @@ public class Expression implements Scalar, TreeNode<Expression> {
             this.childNodes.add(new Expression(current));
         }
         return this;
+    }
+
+    protected int getTotalDegree(){
+        if(isLeaf()){
+            return 1;
+        }
+        return childNodes
+                .stream()
+                .map(Expression::getTotalDegree)
+                .max(Integer::compare)
+                .orElseThrow(DevSupplier.impossible) + 1;
     }
 
     public static Expression newExpression(Node current){
@@ -151,11 +163,11 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     protected List<Expression> midTraverseExpression(){
-        final List<Expression> expressionList = new Vector<>();
-        final List<Expression> fifo = new LinkedList<>();
+        final List<Expression> expressionList = new Vector<>(getTotalDegree() * childNodes.size());
+        final LinkedList<Expression> fifo = new LinkedList<>();
         fifo.add(this);
         while (!fifo.isEmpty()){
-            final Expression current = fifo.remove(0);
+            final Expression current = fifo.removeFirst();
             fifo.addAll(current.getChildNodes());
             expressionList.add(current);
         }

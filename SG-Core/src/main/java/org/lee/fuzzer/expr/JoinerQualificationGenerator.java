@@ -4,6 +4,7 @@ import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Qualification;
+import org.lee.symbol.Comparator;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
@@ -36,12 +37,22 @@ public class JoinerQualificationGenerator extends RelationalGenerator<Qualificat
 
     @Override
     public Signature getCompareOperator(TypeTag lhs, TypeTag rhs) {
-        return null;
+        // todo:
+        return fastGetComparatorByCategory(lhs.getCategory());
     }
 
     @Override
     public Pair<Scalar, Scalar> getTwoSide(TypeTag target) {
         return null;
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> getTwoSide(){
+        if(relatedPair != null && !relatedPair.isEmpty() && FuzzUtil.probability(50)){
+            return consumPair();
+        }else {
+            return QualificationGenerator.super.getTwoSide();
+        }
     }
 
     public RangeTableReference getLeft() { return left; }

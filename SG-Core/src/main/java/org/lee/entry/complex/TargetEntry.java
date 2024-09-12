@@ -13,15 +13,21 @@ import org.lee.util.FuzzUtil;
 public class TargetEntry implements Scalar, Alias {
     private String alias = null;
     private final Scalar target;
+    private final boolean isTargetEntryExpression;
+    private final boolean isTargetEntryAggregate;
 
     public TargetEntry(FieldReference targetScalar){
         assert targetScalar != null;
         this.target = targetScalar;
+        this.isTargetEntryExpression = false;
+        this.isTargetEntryAggregate = false;
     }
 
     public TargetEntry(Expression expression){
         assert expression != null;
         this.target = expression;
+        this.isTargetEntryExpression = true;
+        this.isTargetEntryAggregate = expression.isIncludingAggregation();
     }
 
     @Override
@@ -39,7 +45,7 @@ public class TargetEntry implements Scalar, Alias {
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }
-        alias = FuzzUtil.getRandomName("te");
+        alias = FuzzUtil.getRandomName("te_");
     }
 
     @Override

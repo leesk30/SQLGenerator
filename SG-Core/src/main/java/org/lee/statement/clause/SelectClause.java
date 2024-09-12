@@ -76,7 +76,7 @@ public class SelectClause extends Clause<TargetEntry> {
             }
         });
 
-        fieldReferences.forEach(reference -> {
+        fieldReferences.stream().parallel().forEach(reference -> {
             TargetEntry entry = new TargetEntry(reference);
             entry.setAlias();
             children.add(entry);

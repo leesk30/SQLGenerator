@@ -68,6 +68,6 @@ public class FuzzUtil {
     }
 
     public static String getRandomName(String prefix){
-        return prefix + "_" + UUID.randomUUID().toString().replace("-", "").substring(0, 6);
+        return prefix + UUID.randomUUID().toString().replace("-", "").substring(0, 6);
     }
 }

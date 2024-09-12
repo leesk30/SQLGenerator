@@ -12,7 +12,7 @@ import java.io.InputStream;
 public class TestSingleSQLGenerator implements Generator<SelectStatement> {
 
     public TestSingleSQLGenerator(){
-        InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("table_schema.json");
+        InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("tpcds.json");
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
         MetaEntry.load(jsonObject);
@@ -23,5 +23,9 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
         SelectStatement statement = new SelectNormalStatement();
         statement.fuzz();
         return statement;
+    }
+
+    public static String outputPath(){
+        return "src/test/resources/temp_result.sql";
     }
 }

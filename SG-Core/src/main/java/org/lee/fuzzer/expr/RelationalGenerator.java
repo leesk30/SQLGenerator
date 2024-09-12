@@ -3,6 +3,7 @@ package org.lee.fuzzer.expr;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.literal.Literal;
+import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
@@ -19,7 +20,7 @@ import java.util.stream.IntStream;
 public abstract class RelationalGenerator<T extends Expression> implements Generator<T> {
     protected final List<RangeTableReference> candidateRelations;
 
-    protected List<Pair<FieldReference, FieldReference>> relatedPair = null;
+    protected List<Pair<Scalar, Scalar>> relatedPair = null;
 
 
     protected RelationalGenerator(RangeTableReference ... references){
@@ -59,9 +60,9 @@ public abstract class RelationalGenerator<T extends Expression> implements Gener
         );
     }
 
-    protected Pair<FieldReference, FieldReference> consumPair(){
+    protected Pair<Scalar, Scalar> consumPair(){
         doCache();
-        final List<Pair<FieldReference, FieldReference>> safetyRef = relatedPair;
+        final List<Pair<Scalar, Scalar>> safetyRef = relatedPair;
         assert safetyRef != null;
         synchronized (safetyRef){
             if(safetyRef.isEmpty())

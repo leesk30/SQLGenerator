@@ -12,6 +12,7 @@ import org.lee.entry.relation.SubqueryRelation;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
+import org.lee.util.FuzzUtil;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -96,6 +97,9 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     }
 
     public static SelectStatement getStatementBySelectType(SelectType selectType, SQLStatement parent){
+        if(selectType == null){
+            selectType = FuzzUtil.randomlyChooseFrom(SelectType.ALL);
+        }
         switch (selectType){
             case normal:
                 return new SelectNormalStatement(parent);

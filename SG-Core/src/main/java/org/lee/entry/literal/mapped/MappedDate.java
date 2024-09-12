@@ -2,6 +2,7 @@ package org.lee.entry.literal.mapped;
 
 import org.lee.entry.literal.LiteralDate;
 import org.lee.type.TypeTag;
+import org.lee.util.FuzzUtil;
 
 import java.sql.Date;
 
@@ -16,11 +17,11 @@ public class MappedDate extends MappedType<Date> {
 
     @Override
     public LiteralDate generate() {
-        return null;
+        return new LiteralDate(new Date(System.currentTimeMillis()));
     }
 
     @Override
     public LiteralDate generate(int partial) {
-        return null;
+        return new LiteralDate(new Date(System.currentTimeMillis() + partial));
     }
 }

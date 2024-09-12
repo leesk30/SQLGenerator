@@ -1,6 +1,7 @@
 package org.lee.symbol;
 
 import org.lee.node.Node;
+import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
 import java.util.Arrays;
@@ -14,7 +15,6 @@ public interface Signature extends Node {
     List<TypeTag> UNCONFIRMED_INPUT3 = Arrays.asList(TypeTag.null_, TypeTag.null_, TypeTag.null_);
     String EQUAL_OR_ASSIGN = "%s = %s";
     String PLACEHOLDER = "%s";
-
 
     int argsNum();
     TypeTag getReturnType();
