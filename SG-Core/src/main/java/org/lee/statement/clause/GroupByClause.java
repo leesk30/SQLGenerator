@@ -27,7 +27,7 @@ public class GroupByClause extends Clause<Scalar> {
 
     @Override
     public String getString() {
-        return null;
+        return "GROUP BY " + nodeArrayToString(children);
     }
 
     @Override

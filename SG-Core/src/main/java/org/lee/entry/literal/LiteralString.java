@@ -1,11 +1,10 @@
 package org.lee.entry.literal;
 
-import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
-public final class LiteralString extends Literal<String> implements Traceable, Escapable {
-    public LiteralString(TypeTag literalType, String literalValue){
-        super(literalType, literalValue);
+public final class LiteralString extends Literal<String> implements Traceable, Inescapable {
+    public LiteralString(String literalValue){
+        super(TypeTag.string, literalValue);
     }
 
     @Override
@@ -19,7 +18,7 @@ public final class LiteralString extends Literal<String> implements Traceable, E
     }
 
     @Override
-    public String getUnescapeString() {
+    public String getInescapeString() {
         return String.format("'%s'", literalValue);
     }
 }

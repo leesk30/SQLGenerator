@@ -2,7 +2,7 @@ package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lee.fuzzer.Generator;
-import org.lee.fuzzer.qualification.JoinerQualificationGenerator;
+import org.lee.fuzzer.expr.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Field;
@@ -11,8 +11,6 @@ import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.clause.JoinClause;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 

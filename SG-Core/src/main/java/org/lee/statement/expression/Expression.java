@@ -23,11 +23,17 @@ public class Expression implements Scalar, TreeNode<Expression> {
     protected final List<Expression> childNodes;
 
     public Expression(Node current){
+        if(current == null){
+            System.out.println(1);
+        }
         this.current = current;
         this.childNodes = new Vector<>();
     }
 
     public Expression(Node current, List<Expression> childNodes){
+        if(current == null){
+            System.out.println(1);
+        }
         this.current = current;
         this.childNodes = childNodes;
     }
@@ -39,6 +45,10 @@ public class Expression implements Scalar, TreeNode<Expression> {
             this.childNodes.add(new Expression(current));
         }
         return this;
+    }
+
+    public static Expression newExpression(Node current){
+        return new Expression(current);
     }
 
     public void extractChildren(Expression expression){

@@ -2,15 +2,13 @@ package org.lee.statement.clause;
 
 import org.lee.entry.RangeTableReference;
 import org.lee.fuzzer.Generator;
-import org.lee.fuzzer.qualification.JoinerQualificationGenerator;
+import org.lee.fuzzer.expr.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.complex.Filter;
 import org.lee.node.NodeTag;
 import org.lee.statement.expression.Qualification;
 import org.lee.util.FuzzUtil;
 
-import java.util.Iterator;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 public abstract class WhereClause extends Clause<Filter> {

@@ -1,16 +1,17 @@
 package org.lee.entry.literal;
 
+import org.lee.entry.literal.mapped.MappedType;
 import org.lee.entry.scalar.Scalar;
-import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
 
 public abstract class Literal<T> implements Scalar {
+    protected final MappedType<T> mappedType;
     protected T literalValue;
     protected final TypeTag literalType;
     protected Literal(TypeTag literalType, T literalValue){
+        this.mappedType = literalType.asMapped();
         this.literalType = literalType;
         this.literalValue = literalValue;
     }
@@ -36,16 +37,15 @@ public abstract class Literal<T> implements Scalar {
         this.literalValue = literalValue;
     }
 
-    public static Literal<?> fromType(TypeTag typeTag){
-        switch (typeTag.getCategory()){
-            case NUMBER:
-                return new LiteralInt(FuzzUtil.randomIntFromRange(0, 100));
-            case STRING:
-             default:
-                return new LiteralString(typeTag, FuzzUtil.getRandomName(""));
-        }
+//    @SuppressWarnings("unchecked")
+    public static <T> Literal<T> fromType(TypeTag typeTag){
+        MappedType<T> mapped = typeTag.asMapped();
+        return mapped.generate();
     }
 
+    public T asJava(){
+        return literalValue;
+    }
 
     @Override
     public String getString() {
@@ -55,9 +55,9 @@ public abstract class Literal<T> implements Scalar {
                 return "$" + self.getIndex();
             }
         }
-        if(this instanceof Escapable){
-            Escapable self = (Escapable) this;
-            return self.getUnescapeString();
+        if(this instanceof Inescapable){
+            Inescapable self = (Inescapable) this;
+            return self.getInescapeString();
         }
 
         T javaInstance = this.asJava();
@@ -68,7 +68,7 @@ public abstract class Literal<T> implements Scalar {
         return asJava().toString();
     }
 
-    public T asJava(){
-        return literalValue;
+    public static LiteralNull asNull(){
+        return LiteralNull.NULL;
     }
 }

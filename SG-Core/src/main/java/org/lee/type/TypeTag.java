@@ -1,7 +1,6 @@
 package org.lee.type;
 
-import org.lee.type.base.SGType;
-import org.lee.type.bdt.SGDate;
+import org.lee.entry.literal.mapped.MappedType;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -21,7 +20,7 @@ public enum TypeTag {
     null_(TypeCategory.NIL,1, "null", "nan", "none", "nil"),
     ;
 
-    private final static TypeTag[] ALL = {
+    public final static TypeTag[] ALL = {
             string, int_, bigint, date, timestamp, boolean_, char_, float_, decimal, null_,
     };
 
@@ -76,5 +75,9 @@ public enum TypeTag {
 
     public static Stream<TypeTag> stream(){
         return Arrays.stream(ALL);
+    }
+
+    public <T> MappedType<T> asMapped(){
+        return MappedType.get(this);
     }
 }

@@ -49,6 +49,8 @@ public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement
         fromClause.fuzz();
         targetList.fuzz();
         whereClause.fuzz();
+        groupByClause.fuzz();
+        havingClause.fuzz();
         sortByClause.fuzz();
         limitOffset.fuzz();
     }

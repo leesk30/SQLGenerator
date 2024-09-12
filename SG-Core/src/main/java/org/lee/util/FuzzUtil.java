@@ -3,6 +3,7 @@ package org.lee.util;
 import org.lee.common.MetaEntry;
 import org.lee.entry.relation.Relation;
 
+import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.UUID;
@@ -56,6 +57,14 @@ public class FuzzUtil {
         if(beginInclusive == endExclusive) return beginInclusive;
         if(beginInclusive > endExclusive) throw new IndexOutOfBoundsException("The end index must be greater than begin index.");
         return secureRandom.nextInt(endExclusive - beginInclusive) + beginInclusive;
+    }
+
+    public static BigDecimal randomDecimalFromRange(int beginInclusive, int endExclusive){
+        if(beginInclusive == endExclusive) return new BigDecimal(beginInclusive);
+        if(beginInclusive > endExclusive) throw new IndexOutOfBoundsException("The end index must be greater than begin index.");
+        String intPart = String.valueOf(secureRandom.nextInt(endExclusive - beginInclusive) + beginInclusive);
+        String floatPart = new StringBuffer(String.valueOf(secureRandom.nextInt(100000000))).reverse().toString();
+        return new BigDecimal(intPart + floatPart);
     }
 
     public static String getRandomName(String prefix){
