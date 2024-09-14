@@ -15,7 +15,7 @@ import org.lee.util.Pair;
 
 import java.util.List;
 
-public interface QualificationGenerator extends Generator<Qualification> {
+public interface QualificationGenerator extends IExpressionGenerator<Qualification> {
     Qualification generate();
     Qualification fallback();
     Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
@@ -33,7 +33,7 @@ public interface QualificationGenerator extends Generator<Qualification> {
     }
     Pair<Scalar, Scalar> getTwoSide(TypeTag target);
     default Pair<Scalar, Scalar> getTwoSide(){
-        return getTwoSide(FuzzUtil.randomlyChooseFrom(TypeTag.ALL));
+        return getTwoSide(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
     }
 
     default Qualification simplifyCompare(){

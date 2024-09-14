@@ -1,6 +1,8 @@
 package org.lee.statement.clause;
 
 import org.lee.common.SGException;
+import org.lee.fuzzer.Generator;
+import org.lee.fuzzer.expr.GeneralExpressionGenerator;
 import org.lee.rules.RuleName;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
@@ -76,10 +78,16 @@ public class SelectClause extends Clause<TargetEntry> {
             }
         });
 
-        fieldReferences.stream().parallel().forEach(reference -> {
-            TargetEntry entry = new TargetEntry(reference);
-            entry.setAlias();
-            children.add(entry);
-        });
+        Generator<Expression> generator = new GeneralExpressionGenerator(fieldReferences);
+        final int max = Math.max(numOfEachCandidate.length, averageChooseRoundNum / 2);
+        final int projectionNums = FuzzUtil.randomIntFromRange(numOfEachCandidate.length, max);
+        IntStream.range(0, projectionNums).sequential().forEach(
+                i-> {
+                    Expression expression = generator.generate();
+                    TargetEntry entry = new TargetEntry(expression);
+                    entry.setAlias();
+                    children.add(entry);
+                }
+        );
     }
 }

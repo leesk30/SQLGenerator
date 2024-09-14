@@ -19,6 +19,13 @@ public class FuzzUtil {
         return secureRandom.nextInt(100) < prob;
     }
 
+    public static <T> T randomlyPop(List<T> list){
+        if(list == null || list.isEmpty()){
+            return null;
+        }
+        return list.remove(0);
+    }
+
     public static <T> T randomlyChooseFrom(List<T> list){
         if(list == null || list.isEmpty()){
             return null;

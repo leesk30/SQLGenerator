@@ -22,7 +22,7 @@ public final class SelectFromClause extends FromClause{
                     final int rteJoinEntryNumber = FuzzUtil.randomIntFromRange(1, DevTempConf.MAX_RTE_JOIN_ENTRY_NUM);
                     final RangeTableReference[] candidates = new RangeTableReference[rteJoinEntryNumber];
                     candidatesArray[i] = candidates;
-                    IntStream.range(0, rteJoinEntryNumber).parallel().forEach(
+                    IntStream.range(0, rteJoinEntryNumber).forEach(
                             j -> {
                                 RangeTableReference reference = randomlyGetRangeReference();
                                 reference.setAlias();

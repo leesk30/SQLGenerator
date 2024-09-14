@@ -3,7 +3,7 @@ package org.lee.entry.scalar;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
-public class Pseudo implements Scalar{
+public class Pseudo extends ScalarWithinRelation {
     @Override
     public TypeTag getType() {
         return null;
@@ -18,4 +18,5 @@ public class Pseudo implements Scalar{
     public NodeTag getNodeTag() {
         return null;
     }
+
 }

@@ -1,7 +1,6 @@
 package org.lee.fuzzer.expr;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.fuzzer.Generator;
 import org.lee.statement.expression.Expression;
 import org.lee.symbol.Finder;
 import org.lee.symbol.Function;
@@ -12,51 +11,29 @@ import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 import org.lee.util.ListUtil;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public interface ExpressionGenerator extends Generator<Expression> {
+public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
-    default Scalar scalarSubqueryGenerate(){
-        return null;
-    }
-
-    default Scalar getLiteral(TypeTag typeTag){
-        return typeTag.asMapped().generate();
-    }
-
-    default Scalar getLiteral(){
-        return getLiteral(FuzzUtil.randomlyChooseFrom(TypeTag.ALL));
-    }
-
-    default Scalar getLiteral(int partial){
-        return getLiteral(FuzzUtil.randomlyChooseFrom(TypeTag.ALL), partial);
-    }
-
-    default Scalar getLiteral(TypeTag typeTag, int partial){
-        return typeTag.asMapped().generate(partial);
-    }
+    Expression generate(TypeTag required);
+    Expression fallback(TypeTag required);
 
     default List<Expression> tryMergeToExpression(Scalar ... scalars){
         return tryMergeToExpression(Arrays.asList(scalars));
     }
 
-    default Expression fallbackUnit(Scalar ... anyInputs){
-        return fallbackUnit(Arrays.asList(anyInputs));
+    default Expression fallback(Scalar ... anyInputs){
+        return fallback(Arrays.asList(anyInputs));
     }
 
-    default Expression fallbackUnit(List<Scalar> anyInputs){
+    default Expression fallback(List<? extends Scalar> anyInputs){
         if(anyInputs != null && !anyInputs.isEmpty() && FuzzUtil.probability(50)){
             Scalar choose = FuzzUtil.randomlyChooseFrom(anyInputs);
-            if(choose instanceof Expression){
-                return (Expression) choose;
-            }
-            return new Expression(choose);
+            return choose.toExpression();
         }
-        return new Expression(getLiteral());
+        return getLiteral().toExpression();
     }
 
     default Expression operateUnit(Scalar left, Scalar right){
@@ -65,7 +42,7 @@ public interface ExpressionGenerator extends Generator<Expression> {
         if(op != null){
             return new Expression(op).newChild(left).newChild(right);
         }else {
-            return fallbackUnit(left, right);
+            return fallback(left, right);
         }
     }
 
@@ -78,7 +55,7 @@ public interface ExpressionGenerator extends Generator<Expression> {
         final List<Signature> candidate = finder.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
         Function function = (Function) FuzzUtil.randomlyChooseFrom(candidate);
         if(function == null){
-            return fallbackUnit(scalars);
+            return fallback(scalars);
         }
         final Expression result = new Expression(function);
         for (Scalar scalar : scalars) {
@@ -125,5 +102,116 @@ public interface ExpressionGenerator extends Generator<Expression> {
             }
         }while (FuzzUtil.probability(50/epoch));
         return template.parallelStream().map(scalar -> scalar instanceof Expression? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
+    }
+
+    static class Statistic{
+        private final List<TypeTag> requiredType;
+        private final List<? extends Scalar> candidateList;
+        private final Map<TypeTag, Integer> numOfScalar = new HashMap<>();
+        private final Map<TypeTag, Integer> numOfType = new HashMap<>();
+
+        private final int findMatchedNum;
+        private final int totalTypeSize;
+        private final int totalScalarSize;
+        private final double chooseFactor;
+        private final double averageDistinctFactor;
+
+        public Statistic(List<TypeTag> requiredType, List<? extends Scalar> candidateList){
+            this.requiredType = requiredType;
+            this.totalTypeSize = requiredType.size();
+            this.candidateList = candidateList;
+            this.totalScalarSize = candidateList.size();
+            this.findMatchedNum = collect();
+            this.chooseFactor = (double) totalScalarSize / (double) totalTypeSize;
+            this.averageDistinctFactor = collectAverageDistinctFactor();
+        }
+
+        private int collect(){
+            int count = 0;
+            for(TypeTag required: requiredType){
+                if(!numOfScalar.containsKey(required)){
+                    int numOfThisType = IExpressionGenerator.containsHowMany(candidateList, required);
+                    numOfScalar.put(required, numOfThisType);
+                }
+                if(numOfScalar.get(required) != 0){
+                    count++;
+                }
+
+                if(!numOfType.containsKey(required)){
+                    numOfType.put(required, 1);
+                }else {
+                    numOfType.put(required, numOfType.get(required) + 1);
+                }
+            }
+            return count;
+        }
+
+        private double collectAverageDistinctFactor(){
+            double avgValue = 0D;
+            for(TypeTag typeTag: numOfScalar.keySet()){
+                int typeNum = numOfType.get(typeTag);
+                int fieldNum = numOfScalar.get(typeTag);
+                avgValue += (double) fieldNum / (double) typeNum;
+            }
+            return avgValue / numOfScalar.keySet().size();
+        }
+
+        public int getFindMatchedNum() {
+            return findMatchedNum;
+        }
+
+        public int getHowManyRequiredType(TypeTag tag){
+            return numOfScalar.containsKey(tag) ? 0: numOfScalar.get(tag);
+        }
+
+        public int getHowManyExistsTypeInCandidate(TypeTag tag){
+            return numOfType.containsKey(tag) ? 0: numOfType.get(tag);
+        }
+
+        public Set<TypeTag> distinctType(){
+            return numOfScalar.keySet();
+        }
+
+        public double getAverageDistinctFactor() {
+            return averageDistinctFactor;
+        }
+
+        public double getChooseFactor() {
+            return chooseFactor;
+        }
+
+        public int getTotalScalarSize() {
+            return totalScalarSize;
+        }
+
+        public int getTotalTypeSize() {
+            return totalTypeSize;
+        }
+
+        public int suitableFactorProb(){
+            double base = getChooseFactor() > 1 ? 1 : getChooseFactor();
+            double factor = getAverageDistinctFactor() > 1 ? 1 : getAverageDistinctFactor();
+            return (int)(base * 100 * factor);
+        }
+
+        public Scalar[] findForAll(){
+            Scalar[] result = new Scalar[totalTypeSize];
+            int count = 0;
+            Map<TypeTag, Integer> copiedCounter = new HashMap<>(numOfType);
+            for(Scalar scalar: candidateList){
+                final TypeTag type = scalar.getType();
+                if(count < totalTypeSize && type == requiredType.get(count)){
+                    if(copiedCounter.containsKey(type) && copiedCounter.get(type)!=0){
+                        result[count] = scalar;
+                    }else {
+                        result[count] = null;
+                    }
+                    count++;
+                    continue;
+                }
+                break;
+            }
+            return result;
+        }
     }
 }

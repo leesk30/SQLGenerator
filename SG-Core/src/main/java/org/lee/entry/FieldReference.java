@@ -3,12 +3,13 @@ package org.lee.entry;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
+import org.lee.entry.scalar.ScalarWithinRelation;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
 public final class FieldReference implements Scalar {
     private final RangeTableReference parentRtr;
-    private final Scalar scalar;
+    private final ScalarWithinRelation scalar;
 
     public FieldReference(RangeTableReference parentRtr, Field field){
         this.parentRtr = parentRtr;
@@ -20,10 +21,10 @@ public final class FieldReference implements Scalar {
         this.scalar = pseudo;
     }
 
-    public FieldReference(RangeTableReference parentRtr, int index){
-        this.parentRtr = parentRtr;
-        this.scalar = parentRtr.getFieldReferences().get(index);
-    }
+//    public FieldReference(RangeTableReference parentRtr, int index){
+//        this.parentRtr = parentRtr;
+//        this.scalar = parentRtr.getFieldReferences().get(index);
+//    }
 
     @Override
     public String getString() {

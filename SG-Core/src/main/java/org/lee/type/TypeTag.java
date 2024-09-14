@@ -24,6 +24,10 @@ public enum TypeTag {
             string, int_, bigint, date, timestamp, boolean_, char_, float_, decimal, null_,
     };
 
+    public final static TypeTag[] GENERATE_PREFER_CHOOSE = {
+            string, int_, bigint, date, timestamp, char_, float_, decimal,
+    };
+
     private final TypeCategory category;
     private final String[] names;
     private final int priority;

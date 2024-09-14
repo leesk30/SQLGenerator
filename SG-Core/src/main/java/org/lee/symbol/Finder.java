@@ -3,6 +3,7 @@ package org.lee.symbol;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.type.TypeTag;
+import org.lee.util.FuzzUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;

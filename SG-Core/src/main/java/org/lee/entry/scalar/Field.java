@@ -4,7 +4,7 @@ import org.lee.node.NodeTag;
 import org.lee.type.TypeDescriptor;
 import org.lee.type.TypeTag;
 
-public class Field implements Scalar {
+public class Field extends ScalarWithinRelation {
     private final String fieldName;
     private final TypeTag fieldType;
     private final TypeDescriptor descriptor;

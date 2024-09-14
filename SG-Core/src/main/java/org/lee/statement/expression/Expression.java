@@ -89,6 +89,11 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     @Override
+    public Expression toExpression(){
+        return this;
+    }
+
+    @Override
     public TypeTag getType() {
         if(current instanceof Signature){
             return ((Signature) current).getReturnType();
@@ -183,6 +188,19 @@ public class Expression implements Scalar, TreeNode<Expression> {
         final List<Expression> leafs = new Vector<>();
         getChildNodes().forEach(child -> leafs.addAll(child.getLeafs()));
         return leafs;
+    }
+
+    public List<TypeTag> getLeafRequired(){
+        if(isLeaf()){
+            if(!isTerminateNode){
+                return new Vector<>(((Signature) current).getArgumentsTypes());
+            }else {
+                return Collections.emptyList();
+            }
+        }
+        final List<TypeTag> types = new Vector<>();
+        childNodes.stream().parallel().forEach(child -> types.addAll(child.getLeafRequired()));
+        return types;
     }
 
     @Override

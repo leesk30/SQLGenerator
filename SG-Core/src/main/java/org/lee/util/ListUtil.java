@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 public class ListUtil {
 
     public static <T> List<T> copyList(final List<T> source){
-        if(source.isEmpty()){
+        if(source == null || source.isEmpty()){
             return Collections.emptyList();
         }
         final List<T> dest = new Vector<>(source.size());
@@ -22,6 +22,10 @@ public class ListUtil {
         List<T> dest = copyList(source);
         Collections.shuffle(dest);
         return dest;
+    }
+
+    public static <T> List<T> copyFrozenList(final List<T> source){
+        return Collections.unmodifiableList(source);
     }
 
 }

@@ -82,6 +82,10 @@ public final class RangeTableReference implements NormalizedEntryNode<RangeTable
 
     @Override
     public RangeTableEntry getRawNode() {
-        return null;
+        return entry;
+    }
+
+    public String getBody() {
+        return entry.getString();
     }
 }
