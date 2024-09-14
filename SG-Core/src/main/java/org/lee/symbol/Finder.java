@@ -1,9 +1,20 @@
 package org.lee.symbol;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.lee.type.TypeTag;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public class Finder {
 
@@ -59,29 +70,106 @@ public class Finder {
     }
 
     public static Finder getFinder(){
-        return finder;
+        return singleton;
     }
 
-    public static final Finder finder = new Finder();
+    public static final Finder singleton = new Finder();
     private static boolean isLoad = false;
     private Finder(){}
 
-    public static void load(){
+    public synchronized static void load(){
         if(isLoad){
             return;
         }
         isLoad = true;
-        TypeTag.stream().parallel()
-                .peek(typeTag -> finder.put(Aggregation.buildCount(typeTag)))
-                .peek(typeTag -> {
-                    if(!typeTag.isComparable())
-                        return;
-                    finder.put(Aggregation.buildMax(typeTag));
-                    finder.put(Aggregation.buildMin(typeTag));
-                })
-                .filter(TypeTag::isComputable)
-                .peek(typeTag -> finder.put(Aggregation.buildSum(typeTag)))
-                .forEach(typeTag -> finder.put(Aggregation.buildAvg(typeTag)))
-                ;
+        InputStream stream = Finder.class.getClassLoader().getResourceAsStream("symbol.json");
+        JSONObject symbols = new JSONObject(inputStreamToString(stream));
+        JSONArray aggregationList = symbols.getJSONArray("aggregate");
+        JSONArray functionList = symbols.getJSONArray("function");
+        build(aggregationList, Finder::jsonToAggregation);
+        build(functionList, Finder::jsonToFunction);
+    }
+
+    private static void build(JSONArray symbolArray, Consumer<JSONObject> process){
+        long start = System.currentTimeMillis();
+        StreamSupport.stream(symbolArray.spliterator(), true).forEach(
+                json -> {
+                    JSONObject aggregate = (JSONObject) json;
+                    process.accept(aggregate);
+                }
+        );
+        System.out.println("Build symbol elapse: " + (System.currentTimeMillis() - start));
+    }
+
+    private static void jsonToFunction(JSONObject function){
+        final String body = function.getString("body");
+        final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
+        final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
+        singleton.put(new Function(body, returnType, arguments));
+    }
+
+    private static void jsonToAggregation(JSONObject aggregate){
+        final String body = aggregate.getString("body");
+        final TypeTag returnType = TypeTag.getEnum(aggregate.getString("return"));
+        final TypeTag[] arguments = jsonArrayToTypeTags(aggregate.getJSONArray("args"));
+        singleton.put(new Aggregation(body, returnType, arguments));
+    }
+
+    private static TypeTag[] jsonArrayToTypeTags(JSONArray arr){
+        TypeTag[] typeTags = new TypeTag[arr.length()];
+        IntStream.range(0, arr.length()).parallel().forEach(i->typeTags[i] = TypeTag.getEnum(arr.getString(i)));
+        return typeTags;
+    }
+
+    public static String inputStreamToString(InputStream input){
+        StringBuilder builder = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+        String line;
+        try {
+            while ((line = reader.readLine()) != null){
+                builder.append(line).append("\n");
+            }
+        }catch (IOException e){
+            throw new RuntimeException(e);
+        }
+        return builder.toString();
+    }
+
+    public List<Signature> getAggregate(TypeTag input){
+        return BUILTIN_AGGREGATE_HOLDER.finder.get(input);
+    }
+
+    public List<Signature> getOperator(TypeTag lhs, TypeTag rhs){
+        return BUILTIN_OPERATOR_HOLDER.finder.get(lhs, rhs);
+    }
+
+    public List<Signature> getFunction(List<TypeTag> tags){
+        return BUILTIN_FUNCTION_HOLDER.finder.get(tags);
+    }
+
+    public List<Signature> getFunction(TypeTag ... tags){
+        return BUILTIN_FUNCTION_HOLDER.finder.get(tags);
+    }
+
+
+    public List<Signature> getAggregateByReturn(TypeTag returnType){
+        return BUILTIN_AGGREGATE_HOLDER.reverseFinder.get(returnType);
+    }
+
+    public List<Signature> getOperatorByReturn(TypeTag returnType){
+        return BUILTIN_OPERATOR_HOLDER.reverseFinder.get(returnType);
+    }
+
+    public List<Signature> getFunctionByReturn(TypeTag returnType){
+        return BUILTIN_FUNCTION_HOLDER.reverseFinder.get(returnType);
+    }
+
+    public List<Signature> getFunctionInPartial(List<TypeTag> tags){
+        // todo:
+        return null;
+    }
+
+    public int maxFunctionArgWidth(){
+        return BUILTIN_FUNCTION_HOLDER.finder.maxWidth();
     }
 }

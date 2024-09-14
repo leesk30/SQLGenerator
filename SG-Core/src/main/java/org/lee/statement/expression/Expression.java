@@ -22,19 +22,21 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     protected final Node current;
     protected final List<Expression> childNodes;
+    protected final boolean isTerminateNode;
 
     public Expression(Node current){
-        if(current == null){
-            System.out.println(1);
-        }
+        this.isTerminateNode = !(current instanceof Signature);
         this.current = current;
-        this.childNodes = new Vector<>();
+        if(this.isTerminateNode){
+            this.childNodes = Collections.emptyList();
+        }else {
+            int size = ((Signature) current).argsNum();
+            this.childNodes = size > 0 ? new Vector<>(size) : Collections.emptyList();
+        }
     }
 
     public Expression(Node current, List<Expression> childNodes){
-        if(current == null){
-            System.out.println(1);
-        }
+        this.isTerminateNode = !(current instanceof Signature);
         this.current = current;
         this.childNodes = childNodes;
     }
@@ -74,7 +76,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     @Override
     public String getString() {
-        if(current instanceof Signature){
+        if(!isTerminateNode){
             return String.format(current.getString(), childNodes.stream().map(Expression::getString).toArray());
         }
         assert childNodes.isEmpty();
@@ -98,12 +100,38 @@ public class Expression implements Scalar, TreeNode<Expression> {
         return current;
     }
 
-    public Expression safeShallowCopy() {
+    public Expression shallowCopy() {
         return new Expression(current, childNodes);
     }
 
+    public boolean isCurrentComplete(){
+        return isTerminateNode || ((Signature) current).argsNum() == childNodes.size();
+    }
+
+    public boolean isComplete(){
+        if(!isCurrentComplete()){
+            return false;
+        }
+        if(isLeaf()){
+            return true;
+        }
+        return childNodes.parallelStream().allMatch(Expression::isComplete);
+    }
+
+    public boolean isCurrentAggregation(){
+        return current instanceof Aggregation;
+    }
+
+    public boolean isCurrentPseudo(){
+        return current instanceof Pseudo;
+    }
+
+    public boolean isCurrentWindow(){
+        return current instanceof Window;
+    }
+
     public boolean isIncludingAggregation(){
-        if (current instanceof Aggregation){
+        if (isCurrentAggregation()){
             return true;
         }
 
@@ -117,7 +145,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     public boolean isIncludingPseudo(){
         if(isLeaf()){
-            return current instanceof Pseudo;
+            return isCurrentPseudo();
         }
         for(Expression child: childNodes){
             if(child.isIncludingPseudo()){
@@ -128,7 +156,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public boolean isIncludingWindow(){
-        if (current instanceof Window){
+        if (isCurrentWindow()){
             return true;
         }
 
@@ -174,10 +202,14 @@ public class Expression implements Scalar, TreeNode<Expression> {
         return expressionList;
     }
 
-    public List<FieldReference> extractFieldReferences(){
-        return this.getLeafs()
-                .stream()
-                .parallel()
+    public List<FieldReference> extractField(){
+        return extractField(false);
+    }
+
+    public List<FieldReference> extractField(boolean parallel){
+        final List<Expression> leaf = this.getLeafs();
+        final Stream<Expression> stream = parallel ? leaf.parallelStream() : leaf.stream();
+        return stream
                 .map(Expression::getCurrentNode)
                 .filter(each -> each instanceof FieldReference)
                 .filter(each -> {
@@ -193,6 +225,27 @@ public class Expression implements Scalar, TreeNode<Expression> {
         final List<FieldReference> notInAggregator = new Vector<>();
         final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
 
+        if(isLeaf()){
+            return pair;
+        }
+
+        if(!isIncludingAggregation()){
+            notInAggregator.addAll(extractField(true));
+        }
+
+        childNodes.stream().parallel().forEach(
+                expression -> {
+                    if(expression.isCurrentAggregation()){
+                        inAggregator.addAll(expression.extractField());
+                    }else if(expression.isIncludingAggregation()) {
+                        final Pair<List<FieldReference>, List<FieldReference>> subpair = expression.extractAggregate();
+                        inAggregator.addAll(subpair.getFirstOrElse(Collections.emptyList()));
+                        notInAggregator.addAll(subpair.getSecondOrElse(Collections.emptyList()));
+                    }else {
+                        notInAggregator.addAll(expression.extractField());
+                    }
+                }
+        );
         return pair;
     }
 

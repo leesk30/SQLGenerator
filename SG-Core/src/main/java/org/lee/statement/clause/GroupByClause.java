@@ -54,8 +54,12 @@ public class GroupByClause extends Clause<Scalar> {
                     if(scalar instanceof Expression){
                         Expression expression = (Expression) scalar;
                         Pair<List<FieldReference>, List<FieldReference>> extracted = expression.extractAggregate();
-                        extracted.getFirst().orElse(Collections.emptyList()).forEach(fieldReference -> inAggregate.put(fieldReference.getString(), fieldReference));
-                        extracted.getSecond().orElse(Collections.emptyList()).forEach(fieldReference -> nonAggregate.put(fieldReference.getString(), fieldReference));
+                        extracted.getFirst().orElse(Collections.emptyList()).forEach(
+                                fieldReference -> inAggregate.put(fieldReference.getString(), fieldReference)
+                        );
+                        extracted.getSecond().orElse(Collections.emptyList()).forEach(
+                                fieldReference -> nonAggregate.put(fieldReference.getString(), fieldReference)
+                        );
                     }else {
                         nonAggregate.put(scalar.getString(), scalar);
                     }
@@ -70,10 +74,10 @@ public class GroupByClause extends Clause<Scalar> {
         }
         List<String> keys = new Vector<>(intersected);
         Collections.shuffle(keys);
-        // todo: choose random
-//        IntStream.range(0, FuzzUtil.randomIntFromRange(0, intersected.size())).parallel().forEach(
-//                keys
-//        );
+
+        children.addAll(nonAggregate.values());
+        Collection<Scalar> groupByMustInclude = nonAggregate.values();
+
 
     }
 

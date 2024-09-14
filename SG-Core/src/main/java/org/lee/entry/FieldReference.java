@@ -1,6 +1,7 @@
 package org.lee.entry;
 
 import org.lee.entry.scalar.Field;
+import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
@@ -9,9 +10,14 @@ public final class FieldReference implements Scalar {
     private final RangeTableReference parentRtr;
     private final Scalar scalar;
 
-    public <T extends Scalar> FieldReference(RangeTableReference parentRtr, T scalar){
+    public FieldReference(RangeTableReference parentRtr, Field field){
         this.parentRtr = parentRtr;
-        this.scalar = scalar;
+        this.scalar = field;
+    }
+
+    public FieldReference(RangeTableReference parentRtr, Pseudo pseudo){
+        this.parentRtr = parentRtr;
+        this.scalar = pseudo;
     }
 
     public FieldReference(RangeTableReference parentRtr, int index){

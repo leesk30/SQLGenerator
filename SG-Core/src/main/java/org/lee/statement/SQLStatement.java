@@ -24,6 +24,11 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     protected final SQLSyntax sqlSyntax;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
 
+    protected static final String ENDING = ";";
+    protected static final String LP = "(";
+    protected static final String RP = ")";
+    protected static final String SEPARATOR = " ";
+
     protected SQLStatement(SQLType sqlType){
         this(sqlType, null);
     }

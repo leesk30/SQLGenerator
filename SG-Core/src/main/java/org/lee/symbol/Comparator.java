@@ -3,6 +3,9 @@ package org.lee.symbol;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 
+import java.util.List;
+import java.lang.Math;
+
 public enum Comparator implements Signature{
     NOT_EQ("%s != %s"),
     EQ("%s = %s"),
@@ -52,5 +55,20 @@ public enum Comparator implements Signature{
     @Override
     public TypeTag getReturnType() {
         return TypeTag.boolean_;
+    }
+
+    @Override
+    public List<TypeTag> getArgumentsTypes() {
+        // just hack implements for comparator
+        switch (argNum){
+            case 1:
+                return UNCONFIRMED_INPUT1;
+            case 2:
+                return UNCONFIRMED_INPUT2;
+            case 3:
+                return UNCONFIRMED_INPUT3;
+            default:
+                throw new RuntimeException("The comparator receive two many arguments");
+        }
     }
 }

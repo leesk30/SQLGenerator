@@ -46,7 +46,7 @@ public enum TypeTag {
             case "date": return date;
             case "timestamp": return timestamp;
             case "char": return char_;
-            case "float4": case "float8": case "double": case "real": return float_;
+            case "float": case "float4": case "float8": case "double": case "real": return float_;
             case "boolean": case "bool": return boolean_;
             case "null": case "nan": case "none": case "nil": return null_;
             default: return null;

@@ -129,14 +129,18 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
         ruleSet.put(new DynamicRule(RuleName.ENABLE_CTE_RULE, () -> this.selectType == SelectType.normal));
     }
 
+    private String body(){
+        return nodeArrayToString(SEPARATOR, this.walk());
+    }
+
     @Override
     public String getString() {
         if(this.withLogicalParentheses){
-            return "(" + nodeArrayToString(" ", this.walk()) + ")";
+            return LP + body() + RP;
         }
         if(this.isFinished()){
-            return nodeArrayToString(" ", this.walk()) + ";";
+            return body() + ENDING;
         }
-        return nodeArrayToString(" ", this.walk());
+        return body();
     }
 }

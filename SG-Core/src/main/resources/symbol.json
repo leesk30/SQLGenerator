@@ -1,0 +1,272 @@
+{
+  "aggregate": [
+    {"body": "count(%s)", "return": "bigint", "args": ["int"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["bigint"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["decimal"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["float"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["bool"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["date"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["timestamp"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["string"]},
+    {"body": "count(%s)", "return": "bigint", "args": ["char"]},
+
+    {"body": "sum(%s)", "return": "bigint", "args": ["int"]},
+    {"body": "sum(%s)", "return": "bigint", "args": ["bigint"]},
+    {"body": "sum(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "sum(%s)", "return": "float", "args": ["float"]},
+
+    {"body": "avg(%s)", "return": "float", "args": ["int"]},
+    {"body": "avg(%s)", "return": "float", "args": ["bigint"]},
+    {"body": "avg(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "avg(%s)", "return": "float", "args": ["float"]},
+
+    {"body": "max(%s)", "return": "int", "args": ["int"]},
+    {"body": "max(%s)", "return": "bigint", "args": ["bigint"]},
+    {"body": "max(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "max(%s)", "return": "float", "args": ["float"]},
+    {"body": "max(%s)", "return": "char", "args": ["char"]},
+    {"body": "max(%s)", "return": "string", "args": ["string"]},
+    {"body": "max(%s)", "return": "date", "args": ["date"]},
+    {"body": "max(%s)", "return": "timestamp", "args": ["timestamp"]},
+
+    {"body": "min(%s)", "return": "int", "args": ["int"]},
+    {"body": "min(%s)", "return": "bigint", "args": ["bigint"]},
+    {"body": "min(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "min(%s)", "return": "float", "args": ["float"]},
+    {"body": "min(%s)", "return": "char", "args": ["char"]},
+    {"body": "min(%s)", "return": "string", "args": ["string"]},
+    {"body": "min(%s)", "return": "date", "args": ["date"]},
+    {"body": "min(%s)", "return": "timestamp", "args": ["timestamp"]},
+
+    {"body": "stddev(%s)", "return": "float", "args": ["int"]},
+    {"body": "stddev(%s)", "return": "float", "args": ["bigint"]},
+    {"body": "stddev(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "stddev(%s)", "return": "float", "args": ["float"]},
+
+    {"body": "variance(%s)", "return": "float", "args": ["int"]},
+    {"body": "variance(%s)", "return": "float", "args": ["bigint"]},
+    {"body": "variance(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "variance(%s)", "return": "float", "args": ["float"]},
+
+    {"body": "skewness(%s)", "return": "float", "args": ["int"]},
+    {"body": "skewness(%s)", "return": "float", "args": ["bigint"]},
+    {"body": "skewness(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "skewness(%s)", "return": "float", "args": ["float"]}
+  ],
+  "function": [
+    {"body": "current_date()", "return": "date", "args": []},
+    {"body": "current_timestamp()", "return": "timestamp", "args": []},
+    {"body": "unix_timestamp()", "return": "bigint", "args": []},
+    {"body": "now()", "return": "timestamp", "args": []},
+    {"body": "pi()", "return": "decimal", "args": []},
+    {"body": "pi()", "return": "float", "args": []},
+    {"body": "e()", "return": "decimal", "args": []},
+    {"body": "e()", "return": "float", "args": []},
+    {"body": "reflect('java.util.UUID', 'randomUUID')", "return": "string", "args": []},
+
+    {"body": "string(%s)", "return": "string", "args": ["decimal"]},
+    {"body": "string(%s)", "return": "string", "args": ["char"]},
+    {"body": "string(%s)", "return": "string", "args": ["int"]},
+    {"body": "string(%s)", "return": "string", "args": ["bigint"]},
+    {"body": "string(%s)", "return": "string", "args": ["float"]},
+    {"body": "string(%s)", "return": "string", "args": ["date"]},
+    {"body": "string(%s)", "return": "string", "args": ["timestamp"]},
+    {"body": "string(%s)", "return": "string", "args": ["bool"]},
+
+    {"body": "decimal(%s)", "return": "decimal", "args": ["float"]},
+    {"body": "decimal(%s)", "return": "decimal", "args": ["bigint"]},
+    {"body": "decimal(%s)", "return": "decimal", "args": ["int"]},
+
+    {"body": "double(%s)", "return": "float", "args": ["decimal"]},
+    {"body": "double(%s)", "return": "float", "args": ["bigint"]},
+    {"body": "double(%s)", "return": "float", "args": ["int"]},
+
+    {"body": "int(%s)", "return": "int", "args": ["float"]},
+
+    {"body": "bigint(%s)", "return": "bigint", "args": ["double"]},
+    {"body": "bigint(%s)", "return": "bigint", "args": ["float"]},
+    {"body": "bigint(%s)", "return": "bigint", "args": ["int"]},
+
+    {"body": "negative(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "negative(%s)", "return": "float", "args": ["float"]},
+    {"body": "negative(%s)", "return": "int", "args": ["int"]},
+    {"body": "negative(%s)", "return": "bigint", "args": ["bigint"]},
+
+    {"body": "positive(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "positive(%s)", "return": "float", "args": ["float"]},
+    {"body": "positive(%s)", "return": "int", "args": ["int"]},
+    {"body": "positive(%s)", "return": "bigint", "args": ["bigint"]},
+
+    {"body":  "unix_seconds(%s)", "return": "bigint", "args": ["timestamp"]},
+
+    {"body":  "timestamp(%s)", "return": "timestamp", "args": ["date"]},
+    {"body":  "date(%s)", "return": "date", "args": ["timestamp"]},
+
+    {"body":  "timestamp_millis(%s)", "return": "timestamp", "args": ["int"]},
+    {"body":  "timestamp_seconds(%s)", "return": "timestamp", "args": ["bigint"]},
+
+    {"body": "abs(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "abs(%s)", "return": "int", "args": ["int"]},
+    {"body": "abs(%s)", "return": "bigint", "args": ["bigint"]},
+    {"body": "abs(%s)", "return": "float", "args": ["float"]},
+
+    {"body": "ascii(%s)", "return": "int", "args": ["string"]},
+    {"body": "ascii(%s)", "return": "int", "args": ["char"]},
+
+    {"body": "chr(%s)", "return": "char", "args": ["decimal"]},
+    {"body": "chr(%s)", "return": "char", "args": ["int"]},
+    {"body": "chr(%s)", "return": "char", "args": ["bigint"]},
+    {"body": "chr(%s)", "return": "char", "args": ["float"]},
+    {"body": "chr(%s)", "return": "string", "args": ["decimal"]},
+    {"body": "chr(%s)", "return": "string", "args": ["int"]},
+    {"body": "chr(%s)", "return": "string", "args": ["bigint"]},
+    {"body": "chr(%s)", "return": "string", "args": ["float"]},
+
+    {"body": "sin(%s)", "return": "float", "args": ["decimal"]},
+    {"body": "sin(%s)", "return": "float", "args": ["int"]},
+    {"body": "sin(%s)", "return": "float", "args": ["float"]},
+    {"body": "sin(%s)", "return": "float", "args": ["bigint"]},
+
+    {"body": "cos(%s)", "return": "float", "args": ["decimal"]},
+    {"body": "cos(%s)", "return": "float", "args": ["int"]},
+    {"body": "cos(%s)", "return": "float", "args": ["float"]},
+    {"body": "cos(%s)", "return": "float", "args": ["bigint"]},
+
+    {"body": "hex(%s)", "return": "string", "args": ["decimal"]},
+    {"body": "hex(%s)", "return": "string", "args": ["int"]},
+    {"body": "hex(%s)", "return": "string", "args": ["float"]},
+    {"body": "hex(%s)", "return": "string", "args": ["bigint"]},
+
+    {"body": "hash(%s)", "return": "int", "args": ["decimal"]},
+    {"body": "hash(%s)", "return": "int", "args": ["int"]},
+    {"body": "hash(%s)", "return": "int", "args": ["float"]},
+    {"body": "hash(%s)", "return": "int", "args": ["bigint"]},
+    {"body": "hash(%s)", "return": "int", "args": ["string"]},
+    {"body": "hash(%s)", "return": "int", "args": ["char"]},
+    {"body": "hash(%s)", "return": "int", "args": ["date"]},
+    {"body": "hash(%s)", "return": "int", "args": ["bool"]},
+    {"body": "hash(%s)", "return": "int", "args": ["timestamp"]},
+
+    {"body": "date_from_unix_date(%s)", "return": "date", "args": ["bigint"]},
+    {"body": "date_from_unix_date(%s)", "return": "date", "args": ["int"]},
+
+    {"body": "decimal(%s)", "return": "decimal", "args": ["int"]},
+    {"body": "decimal(%s)", "return": "decimal", "args": ["bigint"]},
+    {"body": "decimal(%s)", "return": "decimal", "args": ["float"]},
+
+    {"body": "int(%s)", "return": "decimal", "args": ["decimal"]},
+    {"body": "int(%s)", "return": "decimal", "args": ["bigint"]},
+    {"body": "int(%s)", "return": "decimal", "args": ["float"]},
+
+    {"body": "to_char(%s, '999')", "return": "decimal", "args": ["int"]},
+    {"body": "to_char(%s, '999')", "return": "decimal", "args": ["bigint"]},
+    {"body": "to_char(%s, '999')", "return": "decimal", "args": ["decimal"]},
+    {"body": "to_char(%s, '000D00')", "return": "decimal", "args": ["float"]},
+    {"body": "to_char(%s, '000D00')", "return": "decimal", "args": ["decimal"]},
+
+    {"body": "length(%s)", "return": "int", "args": ["string"]},
+    {"body": "length(%s)", "return": "int", "args": ["char"]},
+    {"body": "char_length(%s)", "return": "int", "args": ["string"]},
+    {"body": "char_length(%s)", "return": "int", "args": ["char"]},
+    {"body": "character_length(%s)", "return": "int", "args": ["string"]},
+    {"body": "character_length(%s)", "return": "int", "args": ["char"]},
+
+    {"body": "reverse(%s)", "return": "string", "args": ["string"]},
+    {"body": "reverse(%s)", "return": "char", "args": ["char"]},
+
+    {"body": "second(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "hour(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "minute(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "year(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "month(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "day(%s)", "return": "int", "args": ["timestamp"]},
+    {"body": "year(%s)", "return": "int", "args": ["date"]},
+    {"body": "month(%s)", "return": "int", "args": ["date"]},
+    {"body": "day(%s)", "return": "int", "args": ["date"]},
+
+    {"body": "btrim(%s)", "return": "string", "args": ["string"]},
+    {"body": "btrim(%s)", "return": "char", "args": ["char"]},
+
+    {"body": "add_months(%s, %s)", "return": "date", "args": ["date", "int"]},
+    {"body": "add_months(%s, %s)", "return": "date", "args": ["date", "bigint"]},
+    {"body": "date_add(%s, %s)", "return": "date", "args": ["date", "int"]},
+    {"body": "date_add(%s, %s)", "return": "date", "args": ["date", "bigint"]},
+    {"body": "date_sub(%s, %s)", "return": "date", "args": ["date", "int"]},
+    {"body": "date_sub(%s, %s)", "return": "date", "args": ["date", "bigint"]},
+    {"body": "date_diff(%s, %s)", "return": "int", "args": ["date", "date"]},
+    {"body": "date_diff(%s, %s)", "return": "int", "args": ["date", "date"]},
+
+    {"body": "mod(%s, %s)", "return": "decimal", "args": ["int", "decimal"]},
+    {"body": "mod(%s, %s)", "return": "decimal", "args": ["bigint", "decimal"]},
+    {"body": "mod(%s, %s)", "return": "int", "args": ["int", "int"]},
+    {"body": "mod(%s, %s)", "return": "int", "args": ["bigint", "int"]},
+    {"body": "mod(%s, %s)", "return": "bigint", "args": ["int", "bigint"]},
+    {"body": "mod(%s, %s)", "return": "bigint", "args": ["bigint", "bigint"]},
+    {"body": "mod(%s, %s)", "return": "double", "args": ["int", "double"]},
+    {"body": "mod(%s, %s)", "return": "double", "args": ["bigint", "double"]},
+
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["int", "int"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["float", "float"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["decimal", "decimal"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["bigint", "bigint"]},
+
+    {"body": "substring(%s, %s)", "return": "string", "args": ["string", "int"]},
+    {"body": "substring(%s, %s)", "return": "string", "args": ["string", "bigint"]},
+
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["bigint", "int"]},
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["int", "int"]},
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["bigint", "bigint"]},
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["int", "bigint"]},
+
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["date", "int"]},
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["int", "date"]},
+
+    {"body": "try_add(%s, %s)", "return": "int", "args": ["string", "int"]},
+
+    {"body": "hash(%s, %s)", "return": "int", "args": ["string", "string"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["char", "string"]},
+
+    {"body": "hash(%s, %s)", "return": "int", "args": ["int", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["decimal", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["float", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bigint", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["string", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["char", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["date", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bool", "date"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["timestamp", "date"]},
+
+    {"body": "hash(%s, %s)", "return": "int", "args": ["int", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["decimal", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["float", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bigint", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["string", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["char", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["date", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bool", "bool"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["timestamp", "bool"]},
+
+    {"body": "hash(%s, %s)", "return": "int", "args": ["int", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["decimal", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["float", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bigint", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["string", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["char", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["date", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["bool", "timestamp"]},
+    {"body": "hash(%s, %s)", "return": "int", "args": ["timestamp", "timestamp"]},
+
+    {"body": "make_date(%s, %s, %s)", "return": "date", "args": ["int", "int", "int"]},
+    {"body": "make_date(%s, %s, %s)", "return": "date", "args": ["int", "int", "int"]},
+    {"body": "make_date(%s, %s, %s)", "return": "date", "args": ["int", "int", "int"]},
+
+    {"body": "overlay(%s PLACING %s FROM %s)", "return": "string", "args": ["string", "int", "int"]},
+
+    {"body": "mask(%s, %s, %s, %s)", "return": "string", "args": ["string", "char", "char", "char"]},
+
+    {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "int"]},
+    {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "decimal"]},
+    {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "float"]},
+
+  ]
+}

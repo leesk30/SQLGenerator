@@ -83,4 +83,9 @@ public enum Operator implements Signature{
     public static void callEmpty(){
         // do nothing but init
     }
+
+    @Override
+    public List<TypeTag> getArgumentsTypes() {
+        return arguments;
+    }
 }

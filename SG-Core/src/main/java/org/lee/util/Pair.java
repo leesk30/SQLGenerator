@@ -40,6 +40,5 @@ public class Pair<T1, T2> {
             return null;
         }
         return result > 0 ? new Pair<>(v2, v1):new Pair<>(v1, v2);
-
     }
 }

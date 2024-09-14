@@ -88,7 +88,7 @@ public interface QualificationGenerator extends Generator<Qualification> {
         if(!FuzzUtil.probability(5)){
             return qualification;
         }
-        final List<FieldReference> referenceList = qualification.extractFieldReferences();
+        final List<FieldReference> referenceList = qualification.extractField();
         final FieldReference addPredicateLhs = FuzzUtil.randomlyChooseFrom(referenceList);
 
         if(addPredicateLhs == null)
