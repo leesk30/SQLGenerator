@@ -11,7 +11,7 @@ public class ListUtil {
 
     public static <T> List<T> copyList(final List<T> source){
         if(source == null || source.isEmpty()){
-            return Collections.emptyList();
+            return new Vector<>();
         }
         final List<T> dest = new Vector<>(source.size());
         source.parallelStream().forEach(dest::add);

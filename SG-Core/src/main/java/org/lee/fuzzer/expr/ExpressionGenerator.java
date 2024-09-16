@@ -29,7 +29,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression fallback(List<? extends Scalar> anyInputs){
-        if(anyInputs != null && !anyInputs.isEmpty() && FuzzUtil.probability(50)){
+        if(anyInputs != null && !anyInputs.isEmpty()){
             Scalar choose = FuzzUtil.randomlyChooseFrom(anyInputs);
             return choose.toExpression();
         }
@@ -148,12 +148,12 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
         private double collectAverageDistinctFactor(){
             double avgValue = 0D;
-            for(TypeTag typeTag: numOfScalar.keySet()){
+            for(TypeTag typeTag: numOfType.keySet()){
                 int typeNum = numOfType.get(typeTag);
                 int fieldNum = numOfScalar.get(typeTag);
                 avgValue += (double) fieldNum / (double) typeNum;
             }
-            return avgValue / numOfScalar.keySet().size();
+            return avgValue / numOfType.keySet().size();
         }
 
         public int getFindMatchedNum() {
@@ -189,9 +189,11 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         }
 
         public int suitableFactorProb(){
-            double base = getChooseFactor() > 1 ? 1 : getChooseFactor();
-            double factor = getAverageDistinctFactor() > 1 ? 1 : getAverageDistinctFactor();
-            return (int)(base * 100 * factor);
+//            System.out.println(getChooseFactor() + " " + getAverageDistinctFactor());
+//            double base = getChooseFactor() > 1 ? 1 : getChooseFactor();
+//            double factor = getAverageDistinctFactor() > 1 ? 1 : getAverageDistinctFactor();
+//            System.out.println((int)((factor/base) * 100));
+            return (int)((averageDistinctFactor/chooseFactor) * 100);
         }
 
         public Scalar[] findForAll(){
@@ -203,6 +205,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                 if(count < totalTypeSize && type == requiredType.get(count)){
                     if(copiedCounter.containsKey(type) && copiedCounter.get(type)!=0){
                         result[count] = scalar;
+                        copiedCounter.put(type, copiedCounter.get(type) - 1);
                     }else {
                         result[count] = null;
                     }

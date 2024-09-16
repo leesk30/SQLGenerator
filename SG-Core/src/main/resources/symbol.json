@@ -53,6 +53,9 @@
     {"body": "skewness(%s)", "return": "decimal", "args": ["decimal"]},
     {"body": "skewness(%s)", "return": "float", "args": ["float"]}
   ],
+  "operator": {
+
+  },
   "function": [
     {"body": "current_date()", "return": "date", "args": []},
     {"body": "current_timestamp()", "return": "timestamp", "args": []},
@@ -266,7 +269,7 @@
 
     {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "int"]},
     {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "decimal"]},
-    {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "float"]},
+    {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "float"]}
 
   ]
 }

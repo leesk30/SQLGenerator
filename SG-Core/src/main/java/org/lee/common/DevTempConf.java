@@ -25,4 +25,7 @@ public class DevTempConf {
     public final static short GROUP_BY_CLAUSE_FUZZ_PROBABILITY = 5;
     public final static short HAVING_CLAUSE_FUZZ_PROBABILITY = 5;
     public final static short SORT_BY_CLAUSE_FUZZ_PROBABILITY = 10;
+
+    public final static short EXPRESSION_APPEND_AGGREGATION_PROB = 10;
+    public final static short EXPRESSION_RECURSION_PROBABILITY = 10;
 }

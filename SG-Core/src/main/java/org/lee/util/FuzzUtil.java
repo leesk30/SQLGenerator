@@ -5,6 +5,7 @@ import org.lee.entry.relation.Relation;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,10 +20,18 @@ public class FuzzUtil {
         return secureRandom.nextInt(100) < prob;
     }
 
+    public static <T> T pop(List<T> list){
+        if(list == null || list.isEmpty()){
+            return null;
+        }
+        return list.remove(0);
+    }
+
     public static <T> T randomlyPop(List<T> list){
         if(list == null || list.isEmpty()){
             return null;
         }
+        Collections.shuffle(list);
         return list.remove(0);
     }
 
