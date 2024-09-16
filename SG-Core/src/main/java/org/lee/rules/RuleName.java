@@ -17,7 +17,7 @@ public enum RuleName {
     private final boolean isLimitation;
 
     private RuleName(){
-        this.rewritable = false;
+        this.rewritable = true;
         this.isLimitation = false;
     }
 

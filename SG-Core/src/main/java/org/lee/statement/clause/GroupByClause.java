@@ -72,12 +72,9 @@ public class GroupByClause extends Clause<Scalar> {
         if(nonAggregate.isEmpty() && intersected.isEmpty()){
             return;
         }
-        List<String> keys = new Vector<>(intersected);
-        Collections.shuffle(keys);
-
         children.addAll(nonAggregate.values());
-        Collection<Scalar> groupByMustInclude = nonAggregate.values();
-
+        intersected.stream().parallel().filter(s -> FuzzUtil.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
+        Collections.shuffle(children);
 
     }
 
@@ -89,12 +86,11 @@ public class GroupByClause extends Clause<Scalar> {
             return;
         }
         final List<TargetEntry> targetEntries = ((SelectStatement)statement).project();
-
-        if(!isAggregateRequiredGroupBy){
-            groupByAll(targetEntries.size());
+        if(isAggregateRequiredGroupBy){
+            groupByNonAgg(targetEntries);
             return;
         }
-        groupByNonAgg(targetEntries);
+        groupByAll(targetEntries.size());
 
     }
 }

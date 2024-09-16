@@ -136,16 +136,10 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public boolean isIncludingAggregation(){
-        if (isCurrentAggregation()){
+        if (!isTerminateNode && isCurrentAggregation()){
             return true;
         }
-
-        for(Expression child: childNodes){
-            if(child.isIncludingAggregation()){
-                return true;
-            }
-        }
-        return false;
+        return childNodes.stream().parallel().anyMatch(Expression::isIncludingAggregation);
     }
 
     public boolean isIncludingPseudo(){

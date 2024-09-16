@@ -3,11 +3,14 @@ package org.lee.statement.clause;
 import org.lee.common.SGException;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
+import org.lee.rules.ConstRule;
+import org.lee.rules.Rule;
 import org.lee.rules.RuleName;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.node.NodeTag;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
@@ -81,9 +84,14 @@ public class SelectClause extends Clause<TargetEntry> {
         Generator<Expression> generator = new GeneralExpressionGenerator(fieldReferences);
         final int max = Math.max(numOfEachCandidate.length, averageChooseRoundNum / 2);
         final int projectionNums = FuzzUtil.randomIntFromRange(numOfEachCandidate.length, max);
-        IntStream.range(0, projectionNums).sequential().forEach(
+        IntStream.range(0, projectionNums).parallel().forEach(
                 i-> {
                     Expression expression = generator.generate();
+                    if(expression.isIncludingAggregation() && !statement.confirmByRuleName(RuleName.AGGREGATION_REQUIRED_GROUP_BY)){
+                        synchronized (statement.getRuleSet()){
+                            statement.getRuleSet().put(new ConstRule(RuleName.AGGREGATION_REQUIRED_GROUP_BY, true));
+                        }
+                    }
                     TargetEntry entry = new TargetEntry(expression);
                     entry.setAlias();
                     children.add(entry);
