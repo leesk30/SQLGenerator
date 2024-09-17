@@ -27,7 +27,7 @@ public class RuleSet {
 
     public boolean confirm(RuleName name){
         final Rule rule = name.isRewritable() ? this.getOrDefault(name) : this.getDefault(name);
-        return rule != null && rule.pass();
+        return rule != null && rule.get();
     }
 
     protected static void registerRule(String className, Rule rule){

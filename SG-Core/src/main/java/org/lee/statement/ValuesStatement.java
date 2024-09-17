@@ -7,6 +7,7 @@ import org.lee.entry.scalar.Field;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.statement.support.Projectable;
+import org.lee.type.TypeTag;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,5 +64,15 @@ public class ValuesStatement extends SQLStatement implements Projectable {
     @Override
     public boolean isScalar() {
         return false;
+    }
+
+    @Override
+    public void withProjectTypeLimitation(List<TypeTag> limitation) {
+
+    }
+
+    @Override
+    public List<TypeTag> getProjectTypeLimitation() {
+        return null;
     }
 }

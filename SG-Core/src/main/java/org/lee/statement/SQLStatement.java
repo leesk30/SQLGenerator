@@ -67,16 +67,6 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
         return ruleSet;
     }
 
-    public void withLimitation(Rule rule){
-        ruleSet.put(rule);
-    }
-
-    public void withLimitations(Rule ... rules){
-        for(Rule rule: rules){
-            ruleSet.put(rule);
-        }
-    }
-
     public boolean confirmByRuleName(RuleName ruleName){
         return ruleSet.confirm(ruleName);
     }

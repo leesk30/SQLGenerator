@@ -1,6 +1,6 @@
 package org.lee.rules;
 
 public interface Rule {
-    boolean pass();
+    boolean get();
     RuleName getName();
 }

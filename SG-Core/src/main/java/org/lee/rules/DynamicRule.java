@@ -12,7 +12,7 @@ public class DynamicRule implements Rule{
     }
 
     @Override
-    public boolean pass() {
+    public boolean get() {
         return dynamicState.get();
     }
 

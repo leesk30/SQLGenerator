@@ -4,6 +4,7 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.node.Node;
+import org.lee.type.TypeTag;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface Projectable extends Node {
         return project().size();
     }
 
+    void withProjectTypeLimitation(List<TypeTag> limitation);
+    List<TypeTag> getProjectTypeLimitation();
 }

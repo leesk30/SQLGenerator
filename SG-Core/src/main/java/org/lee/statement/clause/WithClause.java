@@ -43,6 +43,5 @@ public class WithClause extends Clause<CTE> {
                 && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
-
     }
 }

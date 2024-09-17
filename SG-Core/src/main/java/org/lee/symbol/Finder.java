@@ -87,8 +87,10 @@ public class Finder {
         JSONObject symbols = new JSONObject(inputStreamToString(stream));
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");
+        JSONArray operatorList = symbols.getJSONArray("operator");
         build(aggregationList, Finder::jsonToAggregation);
         build(functionList, Finder::jsonToFunction);
+        build(operatorList, Finder::jsonToOperator);
     }
 
     private static void build(JSONArray symbolArray, Consumer<JSONObject> process){
@@ -107,6 +109,13 @@ public class Finder {
         final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
         singleton.put(new Function(body, returnType, arguments));
+    }
+
+    private static void jsonToOperator(JSONObject function){
+        final String body = function.getString("body");
+        final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
+        final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
+        singleton.put(new Operator(body, returnType, arguments));
     }
 
     private static void jsonToAggregation(JSONObject aggregate){

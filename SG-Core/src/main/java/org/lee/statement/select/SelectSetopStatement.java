@@ -1,5 +1,6 @@
 package org.lee.statement.select;
 
+import org.lee.common.DevTempConf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.SQLStatement;
@@ -9,9 +10,11 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
+import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class SelectSetopStatement extends SelectStatement implements Sortable, SupportCommonTableExpression {
     private Projectable left;
@@ -36,6 +39,16 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
         return left.getString() + "\n" + setop.toString(all, context.getParameter().syntaxMode) + "\n" + right.getString();
     }
 
+    private SelectType getSubSelectType(){
+        SelectType[] candidate;
+        if(setopDepth < DevTempConf.MAX_SETOP_RECURSION_DEPTH){
+            candidate = new SelectType[]{SelectType.simple, SelectType.normal, SelectType.setop};
+        }else {
+            candidate = new SelectType[]{SelectType.simple, SelectType.normal};
+        }
+        return FuzzUtil.randomlyChooseFrom(candidate);
+    }
+
     @Override
     public List<TargetEntry> project() {
         return left.project();
@@ -43,10 +56,17 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
 
     @Override
     public void fuzz() {
+        left = getStatementBySelectType(getSubSelectType());
+        right = getStatementBySelectType(getSubSelectType());
+        ((SelectStatement)left).fuzz();
+        right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
         if(left instanceof AbstractNormalSelectStatement){
             withClause.fuzz();
         }
-
+        setop = FuzzUtil.randomlyChooseFrom(SetOperation.values());
+        all = FuzzUtil.probability(50);
+        sortByClause.fuzz();
+        limitOffset.fuzz();
     }
 
     @Override

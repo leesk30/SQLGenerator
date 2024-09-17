@@ -9,7 +9,7 @@ public class ConstRule implements Rule{
     }
 
     @Override
-    public boolean pass() {
+    public boolean get() {
         return optionValue;
     }
 

@@ -12,6 +12,7 @@ import org.lee.entry.relation.SubqueryRelation;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
+import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 
 import java.util.*;
@@ -23,6 +24,8 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     protected final boolean withLogicalParentheses;
     public final int subqueryDepth;
     public final int setopDepth;
+
+    protected final List<TypeTag> limitationsTypes = new Vector<>();
 
     public SelectStatement(SelectType selectType){
         this(selectType, null);
@@ -131,6 +134,20 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
 
     private String body(){
         return nodeArrayToString(SEPARATOR, this.walk());
+    }
+
+    @Override
+    public void withProjectTypeLimitation(List<TypeTag> limitation){
+        if(limitationsTypes.isEmpty()){
+            limitationsTypes.addAll(limitation);
+        }else {
+            throw new RuntimeException("Duplicate project limitations");
+        }
+    }
+
+    @Override
+    public List<TypeTag> getProjectTypeLimitation() {
+        return limitationsTypes;
     }
 
     @Override
