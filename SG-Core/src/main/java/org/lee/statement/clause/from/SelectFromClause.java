@@ -1,14 +1,13 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.from;
 
 import org.lee.common.DevTempConf;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.RangeTableReference;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
 import java.util.stream.IntStream;
 
-public final class SelectFromClause extends FromClause{
+public final class SelectFromClause extends FromClause {
     public SelectFromClause(SelectStatement statement){
         super(statement);
     }

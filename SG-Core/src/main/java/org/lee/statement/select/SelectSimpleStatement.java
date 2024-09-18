@@ -14,7 +14,11 @@ public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
 
     @Override
     public void fuzz() {
-
+        fromClause.fuzz();
+        whereClause.fuzz();
+        targetList.fuzz();
+        groupByClause.fuzz();
+        havingClause.fuzz();
     }
 
     @Override

@@ -1,10 +1,11 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.from;
 
 import org.lee.common.DevTempConf;
 import org.lee.common.MetaEntry;
 import org.lee.entry.relation.*;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.RangeTableReference;
@@ -15,7 +16,7 @@ import org.lee.util.FuzzUtil;
 
 import java.util.*;
 
-public abstract class FromClause extends Clause<RangeTableReference>{
+public abstract class FromClause extends Clause<RangeTableReference> {
     protected final List<RangeTableEntry> rawEntryList = new Vector<>();
     protected final List<RangeTableEntry> candidatesAll = new Vector<>();
 //    protected List<List<RangeTableReference>> candidatesList;

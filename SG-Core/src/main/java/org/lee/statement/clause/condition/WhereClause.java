@@ -1,4 +1,4 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.condition;
 
 import org.lee.entry.RangeTableReference;
 import org.lee.fuzzer.Generator;
@@ -6,6 +6,8 @@ import org.lee.fuzzer.expr.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.complex.Filter;
 import org.lee.node.NodeTag;
+import org.lee.statement.clause.Clause;
+import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
 import org.lee.util.FuzzUtil;
 
@@ -38,8 +40,8 @@ public abstract class WhereClause extends Clause<Filter> {
             if(i+1 >= length){
                 return;
             }
-            final RangeTableReference left = fromClause.children.get(i);
-            final RangeTableReference right = fromClause.children.get(i+1);
+            final RangeTableReference left = fromClause.getChildNodes().get(i);
+            final RangeTableReference right = fromClause.getChildNodes().get(i+1);
             final Generator<Qualification> generator = new JoinerQualificationGenerator(left, right);
             // todo: add counting randomly
             final int generateCount = FuzzUtil.randomIntFromRange(1, 2);

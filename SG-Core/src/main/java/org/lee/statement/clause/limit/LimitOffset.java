@@ -1,16 +1,17 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.limit;
 
 import org.lee.entry.literal.LiteralInt;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.literal.LiteralNumber;
 import org.lee.node.NodeTag;
+import org.lee.statement.clause.Clause;
 import org.lee.type.TypeTag;
 
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public abstract class LimitOffset extends Clause<Literal<Integer>>{
+public abstract class LimitOffset extends Clause<Literal<Integer>> {
     protected final Literal<Integer> limitNode = new LiteralInt(0);
     protected final Literal<Integer> offsetNode = new LiteralInt(0);
     protected LimitOffset(SQLStatement statement) {
@@ -51,11 +52,12 @@ public abstract class LimitOffset extends Clause<Literal<Integer>>{
         StringBuilder builder = new StringBuilder();
         final boolean hasLimit = hasLimit();
         if(hasLimit){
-            builder.append("LIMIT ");
+            builder.append(LIMIT);
+            builder.append(SPACE);
             builder.append(getLimit());
         }
         if(hasOffset()){
-            builder.append(hasLimit ? " OFFSET ": "OFFSET ");
+            builder.append(hasLimit ? SPACE + OFFSET + SPACE: OFFSET + SPACE);
             builder.append(getOffset());
         }
         return builder.toString();

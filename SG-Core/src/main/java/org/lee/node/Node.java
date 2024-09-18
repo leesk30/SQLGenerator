@@ -1,10 +1,35 @@
 package org.lee.node;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Node {
+    String ENDING = ";";
+    String LP = "(";
+    String RP = ")";
+    String SPACE = " ";
+    String COMMA = ", ";
+    String SELECT = "SELECT";
+    String INSERT = "INSERT";
+    String VALUES = "VALUES";
+    String DELETE = "DELETE";
+    String UPDATE = "UPDATE";
+    String MERGE = "MERGE";
+    String INTO = "INTO";
+    String FROM = "FROM";
+    String WITH = "WITH";
+    String WHERE = "WHERE";
+    String ORDER = "ORDER";
+    String GROUP = "GROUP";
+    String BY = "BY";
+    String PIVOT = "PIVOT";
+    String UNPIVOT = "UNPIVOT";
+    String LIMIT = "LIMIT";
+    String OFFSET = "OFFSET";
+
     String getString();
     NodeTag getNodeTag();
 
@@ -12,6 +37,7 @@ public interface Node {
         final String reducerSeparator = "%s" + separator + "%s";
         return nodeStream.parallel()
                 .map(Node::getString)
+                .filter(s -> !StringUtils.isEmpty(s) && !StringUtils.isBlank(s))
                 .reduce((s1, s2) -> String.format(reducerSeparator, s1, s2))
                 .orElse("null");
     }

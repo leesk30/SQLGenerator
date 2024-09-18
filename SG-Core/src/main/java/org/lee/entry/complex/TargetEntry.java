@@ -3,6 +3,7 @@ package org.lee.entry.complex;
 import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
+import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
@@ -23,11 +24,25 @@ public class TargetEntry implements Scalar, Alias {
         this.isTargetEntryAggregate = false;
     }
 
+    public TargetEntry(NameProxy targetScalar){
+        assert targetScalar != null;
+        this.target = targetScalar;
+        this.isTargetEntryExpression = false;
+        this.isTargetEntryAggregate = false;
+    }
+
     public TargetEntry(Expression expression){
         assert expression != null;
         this.target = expression;
         this.isTargetEntryExpression = true;
         this.isTargetEntryAggregate = expression.isIncludingAggregation();
+    }
+
+    public static TargetEntry newNamedEntry(TypeTag typeTag){
+        return new TargetEntry(new NameProxy(
+                FuzzUtil.getRandomName("n_"),
+                typeTag
+        ));
     }
 
     @Override
@@ -79,5 +94,13 @@ public class TargetEntry implements Scalar, Alias {
 
     public Scalar getTarget(){
         return target;
+    }
+
+    public boolean isTargetEntryAggregate() {
+        return isTargetEntryAggregate;
+    }
+
+    public boolean isTargetEntryExpression() {
+        return isTargetEntryExpression;
     }
 }

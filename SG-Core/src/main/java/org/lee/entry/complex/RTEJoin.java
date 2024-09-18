@@ -9,7 +9,7 @@ import org.lee.entry.scalar.Field;
 import org.lee.statement.expression.Qualification;
 import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.statement.clause.JoinClause;
+import org.lee.statement.clause.from.JoinClause;
 
 import java.util.List;
 import java.util.Vector;

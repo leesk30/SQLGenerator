@@ -2,12 +2,10 @@ package org.lee.statement.select;
 
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.clause.SelectClause;
+import org.lee.statement.clause.project.SelectClause;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.scalar.Field;
 import org.lee.entry.complex.TargetEntry;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

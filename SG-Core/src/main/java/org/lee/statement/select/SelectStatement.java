@@ -7,7 +7,6 @@ import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
-import org.lee.statement.SQLStatementWalker;
 import org.lee.entry.relation.SubqueryRelation;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
@@ -16,8 +15,6 @@ import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 
 import java.util.*;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public abstract class SelectStatement extends SQLStatement implements Projectable {
     protected final SelectType selectType;
@@ -78,14 +75,6 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
         return NodeTag.statement;
     }
 
-    @Override
-    public Stream<Clause<? extends Node>> walk() {
-        return StreamSupport.stream(
-                Spliterators.spliterator(new SQLStatementWalker(this.childrenMap), childrenMap.size(), 0),
-                false
-        );
-    }
-
     public boolean isShell(){
         // the statement just ref another statement in its struct.
         return this.selectType == SelectType.setop;
@@ -133,7 +122,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     }
 
     private String body(){
-        return nodeArrayToString(SEPARATOR, this.walk());
+        return nodeArrayToString(SPACE, this.walk());
     }
 
     @Override

@@ -4,10 +4,13 @@ import org.lee.common.DevTempConf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.SQLStatement;
-import org.lee.statement.clause.*;
+import org.lee.statement.clause.from.WithClause;
+import org.lee.statement.clause.limit.LimitOffset;
+import org.lee.statement.clause.limit.SelectLimitOffset;
+import org.lee.statement.clause.sort.SelectOrderByClause;
+import org.lee.statement.clause.sort.SortByClause;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.scalar.Field;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.util.FuzzUtil;
@@ -58,7 +61,7 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
     public void fuzz() {
         left = getStatementBySelectType(getSubSelectType());
         right = getStatementBySelectType(getSubSelectType());
-        ((SelectStatement)left).fuzz();
+        left.fuzz();
         right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
         if(left instanceof AbstractNormalSelectStatement){
             withClause.fuzz();

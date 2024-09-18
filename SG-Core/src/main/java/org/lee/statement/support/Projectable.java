@@ -1,14 +1,21 @@
 package org.lee.statement.support;
 
+import org.lee.common.DevTempConf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.scalar.Field;
+import org.lee.fuzzer.Fuzzer;
 import org.lee.node.Node;
+import org.lee.statement.ValuesStatement;
+import org.lee.statement.select.SelectClauseStatement;
+import org.lee.statement.select.SelectNormalStatement;
+import org.lee.statement.select.SelectSetopStatement;
+import org.lee.statement.select.SelectSimpleStatement;
 import org.lee.type.TypeTag;
+import org.lee.util.FuzzUtil;
 
 import java.util.List;
 
-public interface Projectable extends Node {
+public interface Projectable extends Node, Fuzzer {
     List<TargetEntry> project();
     RangeTableEntry toRelation();
 
@@ -20,4 +27,20 @@ public interface Projectable extends Node {
 
     void withProjectTypeLimitation(List<TypeTag> limitation);
     List<TypeTag> getProjectTypeLimitation();
+
+    static Projectable newRandomlyProjectable(){
+        if(FuzzUtil.probability(DevTempConf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY)){
+            return new ValuesStatement();
+        }
+        if(FuzzUtil.probability(DevTempConf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY)){
+            return new SelectSetopStatement();
+        }
+        if(FuzzUtil.probability(DevTempConf.PURE_SELECT_AS_SUBQUERY_PROBABILITY)){
+            return new SelectClauseStatement();
+        }
+        if(FuzzUtil.probability(10)){
+            return new SelectSimpleStatement();
+        }
+        return new SelectNormalStatement();
+    }
 }

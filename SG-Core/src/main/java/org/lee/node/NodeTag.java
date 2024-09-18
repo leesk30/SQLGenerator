@@ -38,6 +38,7 @@ public enum NodeTag {
     startWithClause("startWithClause", clause),
     connectByClause("connectByClause", clause),
     limitOffset("limitOffset", clause),
+    valuesClause("valuesClause", clause),
 
 
     pivoted("pivoted"),

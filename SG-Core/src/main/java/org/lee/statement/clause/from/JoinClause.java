@@ -1,7 +1,8 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.from;
 
 import org.lee.statement.SQLStatement;
 import org.lee.entry.RangeTableReference;
+import org.lee.statement.clause.Clause;
 import org.lee.util.FuzzUtil;
 
 public abstract class JoinClause extends Clause<RangeTableReference> {

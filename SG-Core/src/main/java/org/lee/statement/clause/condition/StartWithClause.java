@@ -1,8 +1,9 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.condition;
 
 import org.lee.statement.SQLStatement;
 import org.lee.entry.complex.Filter;
 import org.lee.node.NodeTag;
+import org.lee.statement.clause.Clause;
 
 import java.util.Iterator;
 

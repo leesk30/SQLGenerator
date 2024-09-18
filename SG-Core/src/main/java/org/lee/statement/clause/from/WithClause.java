@@ -1,10 +1,11 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.from;
 
 import org.lee.common.DevTempConf;
 import org.lee.rules.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
 import org.lee.node.NodeTag;
+import org.lee.statement.clause.Clause;
 import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
@@ -39,9 +40,18 @@ public class WithClause extends Clause<CTE> {
 
     @Override
     public void fuzz() {
+        if(!FuzzUtil.probability(DevTempConf.WITH_CTE_PROBABILITY)){
+            return;
+        }
+        final int numOfCTEs = FuzzUtil.randomIntFromRange(0, 3);
+        if(numOfCTEs == 0){
+            return;
+        }
         if(statement.confirmByRuleName(RuleName.SUPPORT_CTE_MATERIALIZED)
                 && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
+
+
     }
 }

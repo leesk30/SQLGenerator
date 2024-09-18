@@ -1,8 +1,8 @@
 package org.lee.statement.support;
 
 import org.lee.node.Node;
-import org.lee.statement.clause.LimitOffset;
-import org.lee.statement.clause.SortByClause;
+import org.lee.statement.clause.limit.LimitOffset;
+import org.lee.statement.clause.sort.SortByClause;
 
 public interface Sortable extends Node {
 

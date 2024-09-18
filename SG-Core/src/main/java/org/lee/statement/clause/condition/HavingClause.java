@@ -1,7 +1,8 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.condition;
 
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.select.SelectStatement;
 
 import java.util.Iterator;

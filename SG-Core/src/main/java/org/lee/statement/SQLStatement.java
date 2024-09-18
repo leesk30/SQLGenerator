@@ -3,7 +3,6 @@ package org.lee.statement;
 import org.lee.entry.relation.CTE;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
-import org.lee.rules.Rule;
 import org.lee.rules.RuleName;
 import org.lee.rules.RuleSet;
 import org.lee.rules.SparkRuleSet;
@@ -15,6 +14,8 @@ import org.lee.statement.syntax.SQLSyntax;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, Fuzzer {
     protected final SQLGenerateContext context;
@@ -23,11 +24,6 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     protected final RuleSet ruleSet;
     protected final SQLSyntax sqlSyntax;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
-
-    protected static final String ENDING = ";";
-    protected static final String LP = "(";
-    protected static final String RP = ")";
-    protected static final String SEPARATOR = " ";
 
     protected SQLStatement(SQLType sqlType){
         this(sqlType, null);
@@ -99,4 +95,13 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
             return parentCTEList;
         }
     }
+
+    @Override
+    public Stream<Clause<? extends Node>> walk() {
+        return StreamSupport.stream(
+                Spliterators.spliterator(new SQLClauseWalker(this.sqlType, this.childrenMap), childrenMap.size(), 0),
+                false
+        );
+    }
+
 }

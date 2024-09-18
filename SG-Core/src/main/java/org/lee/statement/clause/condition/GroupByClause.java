@@ -1,4 +1,4 @@
-package org.lee.statement.clause;
+package org.lee.statement.clause.condition;
 
 import org.lee.common.DevTempConf;
 import org.lee.entry.FieldReference;
@@ -7,6 +7,7 @@ import org.lee.entry.literal.LiteralInt;
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
 import org.lee.rules.RuleName;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;

@@ -3,9 +3,11 @@ package org.lee.statement.select;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.*;
 import org.lee.entry.relation.CTE;
-import org.lee.entry.scalar.Scalar;
-import org.lee.entry.literal.Literal;
-import org.lee.node.NodeTag;
+import org.lee.statement.clause.from.WithClause;
+import org.lee.statement.clause.limit.LimitOffset;
+import org.lee.statement.clause.limit.SelectLimitOffset;
+import org.lee.statement.clause.sort.SelectOrderByClause;
+import org.lee.statement.clause.sort.SortByClause;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
 
@@ -46,6 +48,7 @@ public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement
 
     @Override
     public void fuzz() {
+        withClause.fuzz();
         fromClause.fuzz();
         targetList.fuzz();
         whereClause.fuzz();
