@@ -28,7 +28,6 @@ public final class SelectFromClause extends FromClause {
                                 candidates[j] = reference;
                             }
                     );
-                    candidatesArray[i] = candidates;
                 }
         );
         merge(candidatesArray);

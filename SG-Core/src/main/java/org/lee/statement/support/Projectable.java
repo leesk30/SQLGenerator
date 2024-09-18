@@ -5,6 +5,7 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.Node;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectNormalStatement;
@@ -28,19 +29,23 @@ public interface Projectable extends Node, Fuzzer {
     void withProjectTypeLimitation(List<TypeTag> limitation);
     List<TypeTag> getProjectTypeLimitation();
 
-    static Projectable newRandomlyProjectable(){
+    default SQLStatement asStatement(){
+        return (SQLStatement) this;
+    }
+
+    static Projectable newRandomlyProjectable(SQLStatement parent){
         if(FuzzUtil.probability(DevTempConf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY)){
-            return new ValuesStatement();
+            return new ValuesStatement(parent);
         }
         if(FuzzUtil.probability(DevTempConf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY)){
-            return new SelectSetopStatement();
+            return new SelectSetopStatement(parent);
         }
         if(FuzzUtil.probability(DevTempConf.PURE_SELECT_AS_SUBQUERY_PROBABILITY)){
-            return new SelectClauseStatement();
+            return new SelectClauseStatement(parent);
         }
         if(FuzzUtil.probability(10)){
-            return new SelectSimpleStatement();
+            return new SelectSimpleStatement(parent);
         }
-        return new SelectNormalStatement();
+        return new SelectNormalStatement(parent);
     }
 }

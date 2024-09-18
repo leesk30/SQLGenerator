@@ -6,15 +6,16 @@ import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
+import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.IntStream;
 
-public class WithClause extends Clause<CTE> {
-
-    private final List<CTE> cteList = new ArrayList<>();
+public class WithClause extends Clause<CTE> implements SupportGenerateProjectable {
     private boolean materialized = false;
 
     public WithClause(SQLStatement statement) {
@@ -27,10 +28,10 @@ public class WithClause extends Clause<CTE> {
 
     @Override
     public String getString() {
-        if(cteList.isEmpty()){
+        if(children.isEmpty()){
             return "";
         }
-        return (materialized ? "WITH MATERIALIZED " : "WITH ") + nodeArrayToString(",\n", cteList);
+        return (materialized ? WITH + SPACE + MATERIALIZED : WITH + SPACE) + nodeArrayToString(children);
     }
 
     @Override
@@ -51,7 +52,6 @@ public class WithClause extends Clause<CTE> {
                 && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
-
-
+        IntStream.range(0, numOfCTEs).parallel().forEach(i -> children.add(new CTE(generate(this.statement))));
     }
 }

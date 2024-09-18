@@ -32,7 +32,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
         this(null);
     }
 
-    protected ValuesStatement(SQLStatement parentStatement) {
+    public ValuesStatement(SQLStatement parentStatement) {
         super(SQLType.values, parentStatement);
         withLogicalParentheses = (parentStatement != null && parentStatement.getSqlType() == SQLType.select);
     }
@@ -86,7 +86,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
         if(limitations.isEmpty()){
             limitations.addAll(limitation);
         }else {
-            throw new RuntimeException("Duplicate type limiations");
+            throw new RuntimeException("Duplicate type limitations");
         }
     }
 

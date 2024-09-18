@@ -1,6 +1,7 @@
 package org.lee.entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lee.entry.relation.CTE;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.node.NodeTag;
@@ -13,7 +14,7 @@ import java.util.Vector;
 
 public final class RangeTableReference implements NormalizedEntryNode<RangeTableEntry>, Alias {
 
-    private String refName = null;
+    private String refName;
     private final RangeTableEntry entry;
     private final List<FieldReference> fieldReferences = new Vector<>();
 
@@ -22,8 +23,8 @@ public final class RangeTableReference implements NormalizedEntryNode<RangeTable
     }
 
     public RangeTableReference(String refName, RangeTableEntry rangeTableEntry){
-        this.refName = refName;
         this.entry = rangeTableEntry;
+        this.refName = refName;
         if(entry instanceof RTEJoin){
             ((RTEJoin) entry).getChildNodes().parallelStream().forEach(child -> fieldReferences.addAll(child.getFieldReferences()));
         }else {

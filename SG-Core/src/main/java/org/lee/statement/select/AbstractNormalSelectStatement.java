@@ -14,9 +14,9 @@ import org.lee.statement.support.SupportCommonTableExpression;
 import java.util.List;
 
 public class AbstractNormalSelectStatement extends AbstractSimpleSelectStatement implements Sortable, SupportCommonTableExpression {
-    protected WithClause withClause = new WithClause(this);
-    protected SortByClause sortByClause = new SelectOrderByClause(this);
-    protected LimitOffset limitOffset = new SelectLimitOffset(this);
+    protected final WithClause withClause = new WithClause(this);
+    protected final SortByClause sortByClause = new SelectOrderByClause(this);
+    protected final LimitOffset limitOffset = new SelectLimitOffset(this);
 
     public AbstractNormalSelectStatement(SelectType selectType) {
         this(selectType, null);

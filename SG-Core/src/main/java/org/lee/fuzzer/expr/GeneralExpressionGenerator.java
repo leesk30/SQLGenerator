@@ -21,6 +21,8 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
         operator,
     }
 
+    public static final GeneralExpressionGenerator EmptyCandidateExpressionGenerator = new GeneralExpressionGenerator(Collections.emptyList());
+
     public GeneralExpressionGenerator(Scalar ... scalars){
         super(scalars);
     }

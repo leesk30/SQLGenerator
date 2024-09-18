@@ -11,12 +11,13 @@ import org.lee.statement.clause.condition.*;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.clause.from.SelectFromClause;
 import org.lee.statement.clause.project.SelectClause;
+import org.lee.statement.clause.project.SelectClauseWithinFrom;
 
 import java.util.List;
 
 public abstract class AbstractSimpleSelectStatement extends SelectStatement {
 
-    protected SelectClause targetList = new SelectClause(this);
+    protected SelectClause targetList = new SelectClauseWithinFrom(this);
     protected FromClause fromClause = new SelectFromClause(this);
     protected WhereClause whereClause = new SelectWhereClause(this);
     protected StartWithClause startWithClause = new StartWithClause(this);

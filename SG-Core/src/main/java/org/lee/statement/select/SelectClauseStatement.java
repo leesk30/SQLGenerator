@@ -5,6 +5,7 @@ import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.project.SelectClause;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.TargetEntry;
+import org.lee.statement.clause.project.SelectClauseWithoutFrom;
 
 import java.util.Collections;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.List;
 public final class SelectClauseStatement extends SelectStatement{
     private static final List<RangeTableEntry> nonEntryList = Collections.emptyList();
 
-    private final SelectClause targetList = new SelectClause(this);
+    private final SelectClause targetList = new SelectClauseWithoutFrom(this);
 
     public SelectClauseStatement() {
         this(null);
@@ -39,7 +40,7 @@ public final class SelectClauseStatement extends SelectStatement{
 
     @Override
     public void fuzz() {
-        // todo
+        targetList.fuzz();
     }
 
     @Override

@@ -8,17 +8,17 @@ public class CTE extends SubEntry {
     protected String cteName;
     public CTE(Projectable statement){
         super(statement);
-        this.cteName = Alias.getRandomName("SC");
+        this.cteName = Alias.getRandomName("CTE_");
     }
 
     @Override
     public String getString() {
-        return null;
+        return cteName + LP + nodeArrayToString(fieldList) + RP + SPACE + AS + SPACE + projectable.getString();
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
+        return NodeTag.cte;
     }
 
     @Override

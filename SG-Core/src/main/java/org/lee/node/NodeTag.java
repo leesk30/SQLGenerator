@@ -44,6 +44,7 @@ public enum NodeTag {
     pivoted("pivoted"),
     rteJoin("rteJoin"),
     fieldReference("fieldReference"),
+    cte("cte")
 
     ;
 

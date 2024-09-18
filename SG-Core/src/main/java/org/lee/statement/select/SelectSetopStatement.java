@@ -13,13 +13,16 @@ import org.lee.statement.support.Projectable;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
+import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public final class SelectSetopStatement extends SelectStatement implements Sortable, SupportCommonTableExpression {
+public final class SelectSetopStatement
+        extends SelectStatement
+        implements Sortable, SupportCommonTableExpression, SupportGenerateProjectable {
     private Projectable left;
     private Projectable right;
     private SetOperation setop;
@@ -59,8 +62,8 @@ public final class SelectSetopStatement extends SelectStatement implements Sorta
 
     @Override
     public void fuzz() {
-        left = getStatementBySelectType(getSubSelectType());
-        right = getStatementBySelectType(getSubSelectType());
+        left = generate();
+        right = generate();
         left.fuzz();
         right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
         if(left instanceof AbstractNormalSelectStatement){

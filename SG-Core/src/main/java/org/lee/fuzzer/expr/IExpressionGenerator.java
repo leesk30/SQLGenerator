@@ -37,6 +37,9 @@ public interface IExpressionGenerator<T extends Expression> extends Generator<T>
     }
 
     static int containsHowMany(List<? extends Scalar> scalarList, TypeTag check){
+        if(scalarList.isEmpty()){
+            return 0;
+        }
         return (int)scalarList.stream()
                 .map(Scalar::getType)
                 .filter(type -> type == check)

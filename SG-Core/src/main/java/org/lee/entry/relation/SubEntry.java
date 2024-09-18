@@ -15,7 +15,7 @@ public abstract class SubEntry implements NormalizedEntryNode<Projectable>, Rang
     protected SubEntry(Projectable projectable){
         this.projectable = projectable;
         this.fieldList = new Vector<>(this.projectable.width());
-        this.projectable.project().parallelStream().forEach(element -> fieldList.add(element.toField()));
+        this.projectable.project().parallelStream().forEachOrdered(element -> fieldList.add(element.toField()));
     }
     @Override
     public List<Field> getFields() {

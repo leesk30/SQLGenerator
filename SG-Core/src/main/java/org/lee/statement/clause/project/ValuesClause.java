@@ -27,20 +27,28 @@ public class ValuesClause extends Clause<Record> {
     @Override
     public void fuzz() {
         final List<TypeTag> limitations = ((Projectable)this.statement).getProjectTypeLimitation();
-        final boolean withLimitations = limitations.isEmpty();
+        final boolean withLimitations = !limitations.isEmpty();
         if(this.statement.confirmByRuleName(RuleName.REQUIRE_SCALA)){
             length = 1;
-            width = withLimitations? 1: limitations.size();
+            width = withLimitations ? limitations.size(): 1;
             assert width == 1;
         }else {
             length = FuzzUtil.randomIntFromRange(1, 10);
-            width = withLimitations? FuzzUtil.randomIntFromRange(1, 7): limitations.size();
+            width = withLimitations ? limitations.size() : FuzzUtil.randomIntFromRange(1, 7);
         }
         assert length > 0 && width > 0;
-        final List<TypeTag> targetType = withLimitations?limitations: IntStream.range(0, width).mapToObj(i -> FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE)).collect(Collectors.toList());
+        final List<TypeTag> targetType;
+        if(withLimitations){
+            targetType = limitations;
+        }else {
+            targetType = IntStream.range(0, width).parallel().mapToObj(
+                    i -> FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE)).collect(Collectors.toList()
+            );
+        }
+        assert targetType.size() == width;
         IntStream.range(0, length).parallel().forEach(
                 i -> {
-                    Record record = new Record(width);
+                    final Record record = new Record(width);
                     targetType.forEach(t -> record.add(t.asMapped().generate()));
                     children.add(record);
                 }

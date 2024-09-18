@@ -22,7 +22,7 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     protected final SQLType sqlType;
     protected final SQLStatement parent;
     protected final RuleSet ruleSet;
-    protected final SQLSyntax sqlSyntax;
+//    protected final SQLSyntax sqlSyntax;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
 
     protected SQLStatement(SQLType sqlType){
@@ -40,7 +40,7 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
             this.parent = parentStatement;
         }
         this.ruleSet = new SparkRuleSet();
-        this.sqlSyntax = SQLSyntax.newSyntax(this);
+//        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
 
     protected boolean isFinished(){
@@ -84,7 +84,7 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     }
 
     public List<CTE> recursiveGetCTEs(){
-        List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : null;
+        List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : Collections.emptyList();
         if(this instanceof SupportCommonTableExpression){
             List<CTE> cteList = new Vector<>(((SupportCommonTableExpression) this).getCTEs());
             if(parentCTEList != null){

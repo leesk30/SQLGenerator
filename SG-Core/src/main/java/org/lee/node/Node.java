@@ -10,6 +10,7 @@ public interface Node {
     String ENDING = ";";
     String LP = "(";
     String RP = ")";
+    String AS = "AS";
     String SPACE = " ";
     String COMMA = ", ";
     String SELECT = "SELECT";
@@ -29,6 +30,7 @@ public interface Node {
     String UNPIVOT = "UNPIVOT";
     String LIMIT = "LIMIT";
     String OFFSET = "OFFSET";
+    String MATERIALIZED = "MATERIALIZED";
 
     String getString();
     NodeTag getNodeTag();
