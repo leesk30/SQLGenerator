@@ -75,6 +75,11 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
         return NodeTag.statement;
     }
 
+    @Override
+    public boolean isWithLogicalParentheses() {
+        return withLogicalParentheses;
+    }
+
     public boolean isShell(){
         // the statement just ref another statement in its struct.
         return this.selectType == SelectType.setop;
@@ -121,7 +126,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
         ruleSet.put(new DynamicRule(RuleName.ENABLE_CTE_RULE, () -> this.selectType == SelectType.normal));
     }
 
-    private String body(){
+    public String body(){
         return nodeArrayToString(SPACE, this.walk());
     }
 
@@ -137,16 +142,5 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     @Override
     public List<TypeTag> getProjectTypeLimitation() {
         return limitationsTypes;
-    }
-
-    @Override
-    public String getString() {
-        if(this.withLogicalParentheses){
-            return LP + body() + RP;
-        }
-        if(this.isFinished()){
-            return body() + ENDING;
-        }
-        return body();
     }
 }

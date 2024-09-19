@@ -17,13 +17,13 @@ import java.util.List;
 
 public abstract class AbstractSimpleSelectStatement extends SelectStatement {
 
-    protected SelectClause targetList = new SelectClauseWithinFrom(this);
-    protected FromClause fromClause = new SelectFromClause(this);
-    protected WhereClause whereClause = new SelectWhereClause(this);
-    protected StartWithClause startWithClause = new StartWithClause(this);
-    protected ConnectByClause connectByClause = new ConnectByClause(this);
-    protected GroupByClause groupByClause = new GroupByClause(this);
-    protected HavingClause havingClause = new HavingClause(this);
+    protected final SelectClause targetList = new SelectClauseWithinFrom(this);
+    protected final FromClause fromClause = new SelectFromClause(this);
+    protected final WhereClause whereClause = new SelectWhereClause(this);
+    protected final StartWithClause startWithClause = new StartWithClause(this);
+    protected final ConnectByClause connectByClause = new ConnectByClause(this);
+    protected final GroupByClause groupByClause = new GroupByClause(this);
+    protected final HavingClause havingClause = new HavingClause(this);
 
     public AbstractSimpleSelectStatement(SelectType selectType) {
         this(selectType, null);

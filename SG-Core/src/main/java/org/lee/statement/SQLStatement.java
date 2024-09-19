@@ -22,7 +22,6 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     protected final SQLType sqlType;
     protected final SQLStatement parent;
     protected final RuleSet ruleSet;
-//    protected final SQLSyntax sqlSyntax;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
 
     protected SQLStatement(SQLType sqlType){
@@ -43,7 +42,7 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
 //        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
 
-    protected boolean isFinished(){
+    public boolean isFinished(){
         return this.parent == null;
     }
 

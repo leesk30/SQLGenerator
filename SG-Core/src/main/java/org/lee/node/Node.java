@@ -3,6 +3,8 @@ package org.lee.node;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -35,40 +37,73 @@ public interface Node {
     String getString();
     NodeTag getNodeTag();
 
-    default <T extends Node> String nodeArrayToString(final String separator, final Stream<T> nodeStream){
+    default <T extends Node> String nodeArrayToString(final String separator, final Stream<T> nodeStream, final Function<T, String> toStringMethod) {
         final String reducerSeparator = "%s" + separator + "%s";
         return nodeStream.parallel()
-                .map(Node::getString)
+                .map(toStringMethod)
                 .filter(s -> !StringUtils.isEmpty(s) && !StringUtils.isBlank(s))
                 .reduce((s1, s2) -> String.format(reducerSeparator, s1, s2))
                 .orElse("null");
     }
 
+    default <T extends Node> String nodeArrayToString(final String separator, final Stream<T> nodeStream){
+        return nodeArrayToString(separator, nodeStream, Node::getString);
+    }
+
     default <T extends Node> String nodeArrayToString(final Stream<T> nodeStream){
-        return nodeArrayToString(", ", nodeStream);
+        return nodeArrayToString(", ", nodeStream, Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final String separator, final List<T> nodeList){
-        return nodeArrayToString(separator, nodeList.stream());
+        return nodeArrayToString(separator, nodeList.stream(), Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final List<T> nodeList) {
-        return nodeArrayToString(", ", nodeList);
+        return nodeArrayToString(", ", nodeList.stream(), Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final String separator, final T[] nodeArr){
-        return nodeArrayToString(separator, Arrays.stream(nodeArr));
+        return nodeArrayToString(separator, Arrays.stream(nodeArr), Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final T[] nodeArr){
-        return nodeArrayToString(", ", nodeArr);
+        return nodeArrayToString(", ", Arrays.stream(nodeArr), Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final String separator, final Iterator<T> nodeIterator){
-        return nodeArrayToString(separator, StreamSupport.stream(Spliterators.spliteratorUnknownSize(nodeIterator, 0), false));
+        return nodeArrayToString(separator, StreamSupport.stream(Spliterators.spliteratorUnknownSize(nodeIterator, 0), false), Node::getString);
     }
 
     default <T extends Node> String nodeArrayToString(final Iterator<T> nodeIterator){
-        return nodeArrayToString(", ", nodeIterator);
+        return nodeArrayToString(", ", nodeIterator, Node::getString);
+    }
+
+
+    default <T extends Node> String nodeArrayToString(final Stream<T> nodeStream, final Function<T, String> toStringMethod){
+        return nodeArrayToString(", ", nodeStream, toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final String separator, final List<T> nodeList, final Function<T, String> toStringMethod){
+        return nodeArrayToString(separator, nodeList.stream(), toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final List<T> nodeList, final Function<T, String> toStringMethod) {
+        return nodeArrayToString(", ", nodeList, toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final String separator, final T[] nodeArr, final Function<T, String> toStringMethod){
+        return nodeArrayToString(separator, Arrays.stream(nodeArr), toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final T[] nodeArr, final Function<T, String> toStringMethod){
+        return nodeArrayToString(", ", nodeArr, toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final String separator, final Iterator<T> nodeIterator, final Function<T, String> toStringMethod){
+        return nodeArrayToString(separator, StreamSupport.stream(Spliterators.spliteratorUnknownSize(nodeIterator, 0), false), toStringMethod);
+    }
+
+    default <T extends Node> String nodeArrayToString(final Iterator<T> nodeIterator, final Function<T, String> toStringMethod){
+        return nodeArrayToString(", ", nodeIterator, toStringMethod);
     }
 }

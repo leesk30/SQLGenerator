@@ -25,11 +25,6 @@ public final class SelectClauseStatement extends SelectStatement{
     }
 
     @Override
-    public String getString() {
-        return targetList.getString();
-    }
-
-    @Override
     public List<TargetEntry> project() {
         return targetList.getChildNodes();
     }
@@ -51,5 +46,10 @@ public final class SelectClauseStatement extends SelectStatement{
     @Override
     public List<RangeTableEntry> getRawRTEList() {
         return nonEntryList;
+    }
+
+    @Override
+    public String body(){
+        return targetList.getString();
     }
 }

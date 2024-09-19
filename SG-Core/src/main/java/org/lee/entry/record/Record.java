@@ -4,6 +4,7 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -23,7 +24,7 @@ public class Record extends Vector<Scalar> implements Node {
 
     @Override
     public String getString() {
-        return LP + nodeArrayToString(", ", (Node[])this.elementData) + RP;
+        return LP + nodeArrayToString(", ", Arrays.stream(this.elementData).map(item -> (Node) item)) + RP;
     }
 
     @Override

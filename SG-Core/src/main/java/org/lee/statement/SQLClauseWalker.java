@@ -54,7 +54,7 @@ public class SQLClauseWalker implements Iterator<Clause<? extends Node>> {
         this.isAssemble = isAssemble;
         switch (sqlType){
             case select:
-                this.router = isAssemble? selectAssembler: selectGenerator;
+                this.router = isAssemble ? selectAssembler: selectGenerator;
                 break;
             case values:
                 this.router = isAssemble ? valuesAssembler: valuesGenerator;

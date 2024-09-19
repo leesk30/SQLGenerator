@@ -35,6 +35,9 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
     public ValuesStatement(SQLStatement parentStatement) {
         super(SQLType.values, parentStatement);
         withLogicalParentheses = (parentStatement != null && parentStatement.getSqlType() == SQLType.select);
+        addClause(valuesClause);
+        addClause(sortByClause);
+        addClause(limitOffset);
     }
 
     public static ValuesStatement newStatement(){
@@ -42,15 +45,15 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
     }
 
     @Override
+    public boolean isWithLogicalParentheses() {
+        return withLogicalParentheses;
+    }
+
+    @Override
     public void fuzz() {
         valuesClause.fuzz();
         sortByClause.fuzz();
         limitOffset.fuzz();
-    }
-
-    @Override
-    public String getString() {
-        return nodeArrayToString(SPACE, this.walk());
     }
 
     @Override
@@ -107,5 +110,10 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
 
     public ValuesClause getValuesClause() {
         return valuesClause;
+    }
+
+    @Override
+    public String body() {
+        return nodeArrayToString(SPACE, this.walk());
     }
 }

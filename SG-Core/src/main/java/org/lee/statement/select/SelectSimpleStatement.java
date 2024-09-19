@@ -23,6 +23,12 @@ public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
 
     @Override
     public boolean isScalar() {
-        return false;
+        if(targetList.size() != 1){
+            return false;
+        }
+        //  Eg. `Avg(a)` `Avg(a + b)` is scalar,
+        //      but the  Avg(a) + b is not a scalar because `b` is not including in aggregator,
+        //      there is more than for distinct b value
+        return targetList.getChildNodes().get(0).toExpression().isCurrentAggregation();
     }
 }

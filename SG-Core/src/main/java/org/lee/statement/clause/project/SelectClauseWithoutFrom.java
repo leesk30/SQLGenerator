@@ -1,10 +1,8 @@
 package org.lee.statement.clause.project;
 
 import org.lee.entry.complex.TargetEntry;
-import org.lee.fuzzer.expr.EmptyCandidateExpressionGenerator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
 import org.lee.statement.select.SelectClauseStatement;
-import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
 import java.util.ConcurrentModificationException;

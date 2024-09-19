@@ -21,7 +21,8 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
         operator,
     }
 
-    public static final GeneralExpressionGenerator EmptyCandidateExpressionGenerator = new GeneralExpressionGenerator(Collections.emptyList());
+    public static final List<Scalar> unmodifiableEmptyList = Collections.unmodifiableList(new Vector<>(0));
+    public static final GeneralExpressionGenerator EmptyCandidateExpressionGenerator = new GeneralExpressionGenerator(unmodifiableEmptyList);
 
     public GeneralExpressionGenerator(Scalar ... scalars){
         super(scalars);
@@ -151,8 +152,11 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
 
     @Override
     public Expression fallback(TypeTag required) {
-        List<Expression> matchedList = replicated.stream().parallel().filter(
-                expression -> expression.getType() == required).collect(Collectors.toList());
+        if(replicated.isEmpty()){
+            return getLiteral(required).toExpression();
+        }
+        // On concurrency without ListUtil.copyList(replicated) may cause ConcurrencyModificationException
+        List<Expression> matchedList = ListUtil.copyList(replicated).stream().parallel().filter(expression -> expression.getType() == required).collect(Collectors.toList());
         if(matchedList.isEmpty()){
             return getLiteral(required).toExpression();
         }

@@ -1,18 +1,14 @@
 package org.lee.statement.clause.from;
 
 import org.lee.common.DevTempConf;
+import org.lee.node.Node;
 import org.lee.rules.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.util.FuzzUtil;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.stream.IntStream;
 
 public class WithClause extends Clause<CTE> implements SupportGenerateProjectable {
@@ -31,12 +27,12 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
         if(children.isEmpty()){
             return "";
         }
-        return (materialized ? WITH + SPACE + MATERIALIZED : WITH + SPACE) + nodeArrayToString(children);
+        return (materialized ? WITH + SPACE + MATERIALIZED : WITH + SPACE) + nodeArrayToString(",\n", children, CTE::getCTEBody);
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return NodeTag.clause;
+        return NodeTag.withClause;
     }
 
     @Override

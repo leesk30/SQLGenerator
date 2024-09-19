@@ -20,6 +20,21 @@ public interface Projectable extends Node, Fuzzer {
     List<TargetEntry> project();
     RangeTableEntry toRelation();
 
+    boolean isWithLogicalParentheses();
+
+    @Override
+    default String getString(){
+        if(this.isWithLogicalParentheses()){
+            return LP + body() + RP;
+        }
+        if(((SQLStatement)this).isFinished()){
+            return body() + ENDING;
+        }
+        return body();
+    }
+
+    String body();
+
     boolean isScalar();
 
     default int width(){

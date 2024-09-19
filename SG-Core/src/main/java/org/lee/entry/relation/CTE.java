@@ -3,16 +3,21 @@ package org.lee.entry.relation;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Alias;
 import org.lee.node.NodeTag;
+import org.lee.util.FuzzUtil;
 
 public class CTE extends SubEntry {
     protected String cteName;
     public CTE(Projectable statement){
         super(statement);
-        this.cteName = Alias.getRandomName("CTE_");
+        this.cteName = FuzzUtil.getRandomName("CTE_");
     }
 
     @Override
     public String getString() {
+        return cteName;
+    }
+
+    public String getCTEBody(){
         return cteName + LP + nodeArrayToString(fieldList) + RP + SPACE + AS + SPACE + projectable.getString();
     }
 

@@ -62,15 +62,16 @@ public final class SelectSetopStatement
 
     @Override
     public void fuzz() {
+        withClause.fuzz();
+
         left = generate();
         right = generate();
         left.fuzz();
         right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
-        if(left instanceof AbstractNormalSelectStatement){
-            withClause.fuzz();
-        }
+
         setop = FuzzUtil.randomlyChooseFrom(SetOperation.values());
         all = FuzzUtil.probability(50);
+
         sortByClause.fuzz();
         limitOffset.fuzz();
     }
@@ -106,5 +107,10 @@ public final class SelectSetopStatement
     @Override
     public List<CTE> getCTEs() {
         return withClause.getChildNodes();
+    }
+
+    @Override
+    public WithClause getWithClause() {
+        return withClause;
     }
 }
