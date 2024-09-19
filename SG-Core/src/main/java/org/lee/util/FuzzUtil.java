@@ -2,6 +2,7 @@ package org.lee.util;
 
 import org.apache.commons.math3.distribution.BinomialDistribution;
 import org.apache.commons.math3.distribution.IntegerDistribution;
+import org.apache.commons.math3.random.RandomDataGenerator;
 import org.lee.common.MetaEntry;
 import org.lee.entry.relation.Relation;
 
@@ -10,10 +11,11 @@ import java.security.SecureRandom;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class FuzzUtil {
     public static final SecureRandom secureRandom = new SecureRandom();
-    public static final BinomialDistribution binamialDist = new BinomialDistribution();
+    public static final RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 
     private static final char[] characters = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
@@ -99,13 +101,12 @@ public class FuzzUtil {
         return false;
     }
 
-    public static int getBinomialDistributionRandomFromRange(int probability, int beginInclusive, int endExclusive){
+    public static int getBinomialDistributionRandomFromRange(int prob, int beginInclusive, int endExclusive){
         if(checkBeginAndEndIsInvalid(beginInclusive, endExclusive)){
             return beginInclusive;
         }
-        int max = endExclusive - beginInclusive;
-        IntegerDistribution distribution = new BinomialDistribution(max, (double) probability / 100D);
-        return beginInclusive;
+        int edge = endExclusive - beginInclusive;
+        return beginInclusive + randomDataGenerator.nextBinomial(edge, (double) prob / 100D);
     }
 
 }
