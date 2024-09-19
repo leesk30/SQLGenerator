@@ -111,11 +111,12 @@ public class Finder {
         singleton.put(new Function(body, returnType, arguments));
     }
 
-    private static void jsonToOperator(JSONObject function){
-        final String body = function.getString("body");
-        final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
-        final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
-        singleton.put(new Operator(body, returnType, arguments));
+    private static void jsonToOperator(JSONObject operator){
+        final String body = operator.getString("body");
+        final TypeTag returnType = TypeTag.getEnum(operator.getString("return"));
+        final TypeTag[] arguments = jsonArrayToTypeTags(operator.getJSONArray("args"));
+        final int priority = operator.has("priority") ? operator.getInt("priority") : 1;
+        singleton.put(new Operator(body, priority, returnType, arguments));
     }
 
     private static void jsonToAggregation(JSONObject aggregate){

@@ -1,8 +1,12 @@
 package org.lee.type;
 
 import org.lee.entry.literal.mapped.MappedType;
+import org.lee.symbol.Parentheses;
+import org.lee.symbol.Signature;
+import org.lee.symbol.StaticSymbol;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 public enum TypeTag {
@@ -31,10 +35,14 @@ public enum TypeTag {
     private final TypeCategory category;
     private final String[] names;
     private final int priority;
+    private final StaticSymbol emptySymbol;
+    private final Parentheses parenthesesSymbol;
     TypeTag(TypeCategory category, int priority,  String ... names){
         this.category = category;
         this.names = names;
         this.priority = priority;
+        this.emptySymbol = new StaticSymbol("%s", Collections.singletonList(this), this);
+        this.parenthesesSymbol = new Parentheses(emptySymbol);
     }
 
     public String[] getNames() {
@@ -83,5 +91,13 @@ public enum TypeTag {
 
     public <T> MappedType<T> asMapped(){
         return MappedType.get(this);
+    }
+
+    public Parentheses getParenthesesSymbol() {
+        return parenthesesSymbol;
+    }
+
+    public Signature getEmptySymbol() {
+        return emptySymbol;
     }
 }

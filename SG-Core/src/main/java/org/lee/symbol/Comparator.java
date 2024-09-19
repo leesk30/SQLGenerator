@@ -19,7 +19,7 @@ public enum Comparator implements Signature{
 
     IS_NOT_NULL(1, "%s IS NOT NULL"),
     IS_NULL(1, "%s IS NULL"),
-    BETWEEN_AND(3, "%s BETWEEN %s AND %s")
+    BETWEEN_AND(3, "%s BETWEEN %s AND %s"),
     ;
 
     public static final Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE};

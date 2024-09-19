@@ -7,9 +7,7 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
-import org.lee.symbol.Aggregation;
-import org.lee.symbol.Signature;
-import org.lee.symbol.Window;
+import org.lee.symbol.*;
 import org.lee.type.TypeTag;
 import org.lee.util.DevSupplier;
 import org.lee.util.Pair;
@@ -43,11 +41,25 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     public Expression newChild(Node current){
         if(current instanceof Expression){
-            this.childNodes.add((Expression)current);
+            tryParenthesesAddChild((Expression)current);
         }else {
-            this.childNodes.add(new Expression(current));
+            tryParenthesesAddChild(new Expression(current));
         }
         return this;
+    }
+
+    private void tryParenthesesAddChild(Expression childExpression){
+        if(this.current instanceof Operator && childExpression.current instanceof Operator){
+            Operator parentOperator = (Operator) this.current;
+            Operator childOperator = (Operator) childExpression.current;
+            // Expression(Expression(a + b) * c) -> (a + b) * c
+            // Expression(a + Expression(b * c)) -> a + b * c
+            if(childOperator.getSignaturePriority() < parentOperator.getSignaturePriority()){
+                this.childNodes.add(childExpression.toWithParenthesesExpression());
+                return;
+            }
+        }
+        this.childNodes.add(childExpression);
     }
 
     protected int getTotalDegree(){
@@ -59,6 +71,13 @@ public class Expression implements Scalar, TreeNode<Expression> {
                 .map(Expression::getTotalDegree)
                 .max(Integer::compare)
                 .orElseThrow(DevSupplier.impossible) + 1;
+    }
+
+    public Expression toWithParenthesesExpression(){
+        Parentheses parentheses = isTerminateNode? ((Scalar) current).getType().getParenthesesSymbol() : ((Signature)current).toParentheses();
+        Expression newer = newExpression(parentheses) ;
+        newer.childNodes.addAll(childNodes);
+        return newer;
     }
 
     public static Expression newExpression(Node current){

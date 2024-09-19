@@ -6,6 +6,7 @@ import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
 import org.lee.node.NodeTag;
 import org.lee.node.TreeNode;
+import org.lee.symbol.PredicateCombiner;
 import org.lee.symbol.StaticSymbol;
 import org.lee.type.TypeTag;
 import org.lee.util.ListUtil;
@@ -87,7 +88,7 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
     }
 
     private Qualification combine(Qualification left, Qualification right){
-        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? StaticSymbol.AND:StaticSymbol.OR);
+        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? PredicateCombiner.AND:PredicateCombiner.OR);
         final AtomicInteger counter = new AtomicInteger(0);
         java.util.function.Function<Qualification, Qualification> tryToNegative = (qual) -> {
             if(FuzzUtil.probability(3 - counter.get())){

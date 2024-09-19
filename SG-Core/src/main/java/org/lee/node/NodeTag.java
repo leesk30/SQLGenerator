@@ -15,10 +15,12 @@ public enum NodeTag {
 
     rangeTableReference("rangeTableReference"),
 
-    operator("operator"),
-    window("window"),
-    aggregate("aggregate"),
-    function("function"),
+    signature("signature"),
+    operator("operator", signature),
+    combiner("combiner", signature),
+    window("window", signature),
+    aggregate("aggregate", signature),
+    function("function", signature),
 
     expression("expression", scalar),
     assignment("assignment", scalar),

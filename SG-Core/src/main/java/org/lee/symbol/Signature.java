@@ -11,12 +11,17 @@ public interface Signature extends Node {
     List<TypeTag> UNCONFIRMED_INPUT1 = Collections.singletonList(TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT2 = Arrays.asList(TypeTag.null_, TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT3 = Arrays.asList(TypeTag.null_, TypeTag.null_, TypeTag.null_);
+    TypeTag UNCONFIRMED_RETURN = TypeTag.null_;
     String EQUAL_OR_ASSIGN = "%s = %s";
     String PLACEHOLDER = "%s";
 
     int argsNum();
     TypeTag getReturnType();
     List<TypeTag> getArgumentsTypes();
+
+    default Parentheses toParentheses(){
+        return new Parentheses(this);
+    }
 
     default void check(){
         if(!isMatchArguments()){

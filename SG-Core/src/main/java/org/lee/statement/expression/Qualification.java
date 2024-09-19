@@ -1,7 +1,10 @@
 package org.lee.statement.expression;
 
+import org.lee.entry.scalar.Scalar;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
+import org.lee.symbol.Parentheses;
+import org.lee.symbol.PredicateCombiner;
 import org.lee.symbol.Signature;
 import org.lee.symbol.StaticSymbol;
 import org.lee.type.TypeTag;
@@ -51,15 +54,22 @@ public class Qualification extends Expression {
         }
     }
 
+    public Qualification toWithParenthesesExpression(){
+        Parentheses parentheses = isTerminateNode? ((Scalar) current).getType().getParenthesesSymbol() : ((Signature)current).toParentheses();
+        Qualification newer = new Qualification(parentheses) ;
+        newer.childNodes.addAll(childNodes);
+        return newer;
+    }
+
     private Qualification toNegativeWithParentheses(){
-        return new Qualification(StaticSymbol.PARENTHESES).newChild(toNegativeWithoutParentheses());
+        return toNegativeWithoutParentheses().toWithParenthesesExpression();
     }
 
     private Qualification toNegativeWithoutParentheses(){
-        return new Qualification(StaticSymbol.NOT).newChild(this);
+        return new Qualification(PredicateCombiner.NOT).newChild(this);
     }
 
     public Qualification and(final Qualification rhs){
-        return new Qualification(StaticSymbol.AND).newChild(this).newChild(rhs);
+        return new Qualification(PredicateCombiner.AND).newChild(this).newChild(rhs);
     }
 }
