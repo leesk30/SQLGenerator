@@ -1,6 +1,6 @@
 package org.lee.entry.relation;
 
-import org.lee.entry.NormalizedEntryNode;
+import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.entry.scalar.Field;
 import org.lee.node.NodeTag;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Pivoted implements NormalizedEntryNode<RangeTableEntry>, RangeTableEntry, Fuzzer {
+public class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>, RangeTableEntry, Fuzzer {
     private final RangeTableEntry rawEntry;
     private final List<Field> fieldList;
     private boolean unpivotFlag = false;
@@ -41,7 +41,7 @@ public class Pivoted implements NormalizedEntryNode<RangeTableEntry>, RangeTable
     }
 
     @Override
-    public RangeTableEntry getRawNode() {
+    public RangeTableEntry getWrapped() {
         return rawEntry;
     }
 

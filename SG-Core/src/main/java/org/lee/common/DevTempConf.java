@@ -26,7 +26,10 @@ public class DevTempConf {
     public final static short HAVING_CLAUSE_FUZZ_PROBABILITY = 5;
     public final static short SORT_BY_CLAUSE_FUZZ_PROBABILITY = 10;
 
-    public final static short MAX_WHERE_FILTER_NUM = 10;
+    public final static short MAX_SELECT_WHERE_FILTER_NUM = 5;
+    public final static short MAX_SELECT_JOIN_FILTER_NUM = 3;
+    public final static short SELECT_JOIN_FILTER_APPEND_PROBABILITY = 40;
+    public final static short SELECT_WHERE_FILTER_APPEND_PROBABILITY = 40;
 
     public final static short EXPRESSION_APPEND_AGGREGATION_PROB = 10;
     public final static short EXPRESSION_RECURSION_PROBABILITY = 10;

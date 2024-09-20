@@ -1,6 +1,5 @@
 package org.lee.entry.literal.mapped;
 
-import org.lee.entry.literal.LiteralDecimal;
 import org.lee.entry.literal.LiteralLong;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;

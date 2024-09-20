@@ -1,13 +1,7 @@
 package org.lee.entry.relation;
 
 import org.lee.statement.support.Projectable;
-import org.lee.entry.NormalizedEntryNode;
-import org.lee.entry.scalar.Field;
 import org.lee.node.NodeTag;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class SubqueryRelation extends SubEntry {
     public SubqueryRelation(Projectable projectable){

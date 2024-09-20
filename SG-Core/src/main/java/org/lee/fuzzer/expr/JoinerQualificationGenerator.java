@@ -12,13 +12,9 @@ import org.lee.util.Pair;
 
 public class JoinerQualificationGenerator extends RelationalGenerator<Qualification> implements QualificationGenerator {
 
-    private final RangeTableReference left;
-    private final RangeTableReference right;
 
     public JoinerQualificationGenerator(RangeTableReference left, RangeTableReference right){
         super(left, right);
-        this.left = left;
-        this.right = right;
     }
 
     @Override

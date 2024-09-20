@@ -50,7 +50,7 @@ public class GroupByClause extends Clause<Scalar> {
     private void groupByNonAgg(final List<TargetEntry> targetEntries){
         Map<String, Scalar> inAggregate = new ConcurrentHashMap<>(targetEntries.size());
         Map<String, Scalar> nonAggregate = new ConcurrentHashMap<>(targetEntries.size() * 2);
-        targetEntries.stream().parallel().map(TargetEntry::getTarget).forEach(
+        targetEntries.stream().parallel().map(TargetEntry::getWrapped).forEach(
                 scalar -> {
                     if(scalar instanceof Expression){
                         Expression expression = (Expression) scalar;

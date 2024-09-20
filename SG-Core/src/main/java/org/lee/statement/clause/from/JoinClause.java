@@ -10,7 +10,7 @@ public abstract class JoinClause extends Clause<RangeTableReference> {
         super(statement, 2);
     }
 
-    public static enum Pattern {
+    public enum Pattern {
         LEFT,
         INNER,
         RIGHT,

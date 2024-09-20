@@ -22,42 +22,43 @@ public class SQLFormatter {
     private static final Set<String> MISC = new HashSet<String>();
 
     static {
-        BEGIN_CLAUSES.add( "left" );
-        BEGIN_CLAUSES.add( "right" );
-        BEGIN_CLAUSES.add( "inner" );
-        BEGIN_CLAUSES.add( "outer" );
-        BEGIN_CLAUSES.add( "group" );
-        BEGIN_CLAUSES.add( "order" );
-        BEGIN_CLAUSES.add( "limit" );
-        BEGIN_CLAUSES.add( "offset" );
+        BEGIN_CLAUSES.add("left");
+        BEGIN_CLAUSES.add("right");
+        BEGIN_CLAUSES.add("inner");
+        BEGIN_CLAUSES.add("outer");
+        BEGIN_CLAUSES.add("group");
+        BEGIN_CLAUSES.add("order");
+        BEGIN_CLAUSES.add("limit");
+        BEGIN_CLAUSES.add("offset");
 
-        END_CLAUSES.add( "where" );
-        END_CLAUSES.add( "set" );
-        END_CLAUSES.add( "having" );
-        END_CLAUSES.add( "join" );
-        END_CLAUSES.add( "from" );
-        END_CLAUSES.add( "by" );
-        END_CLAUSES.add( "into" );
-        END_CLAUSES.add( "union" );
+        END_CLAUSES.add("where");
+        END_CLAUSES.add("set");
+        END_CLAUSES.add("having");
+        END_CLAUSES.add("join");
+        END_CLAUSES.add("from");
+        END_CLAUSES.add("by");
+        END_CLAUSES.add("into");
+        END_CLAUSES.add("union");
 
-        LOGICAL.add( "and" );
-        LOGICAL.add( "or" );
-        LOGICAL.add( "when" );
-        LOGICAL.add( "else" );
-        LOGICAL.add( "end" );
+        LOGICAL.add("and");
+        LOGICAL.add("or");
+        LOGICAL.add("when");
+        LOGICAL.add("else");
+        LOGICAL.add("end");
 
-        QUANTIFIERS.add( "in" );
-        QUANTIFIERS.add( "all" );
-        QUANTIFIERS.add( "exists" );
-        QUANTIFIERS.add( "some" );
-        QUANTIFIERS.add( "any" );
+        QUANTIFIERS.add("in");
+        QUANTIFIERS.add("all");
+        QUANTIFIERS.add("exists");
+        QUANTIFIERS.add("some");
+        QUANTIFIERS.add("any");
 
-        DML.add( "insert" );
-        DML.add( "update" );
-        DML.add( "delete" );
+        DML.add("insert");
+        DML.add("update");
+        DML.add("delete");
+        DML.add("merge");
 
-        MISC.add( "select" );
-        MISC.add( "on" );
+        MISC.add("select");
+        MISC.add("on");
     }
 
     private static final String INDENT_STRING = "    ";
@@ -76,6 +77,7 @@ public class SQLFormatter {
         boolean afterOn;
         boolean afterBetween;
         boolean afterInsert;
+        boolean afterWith;
         int inFunction;
         int parensSinceSelect;
         private final LinkedList<Integer> parenCounts = new LinkedList<>();
@@ -122,7 +124,11 @@ public class SQLFormatter {
                     while ( !"\"".equals( t ) );
                 }
 
-                if ( afterByOrSetOrFromOrSelect && ",".equals( token ) ) {
+//                if(!afterWith && "with".equals(lcToken)){
+//                    startCte();
+//                }
+//                else
+                    if ( afterByOrSetOrFromOrSelect && ",".equals( token ) ) {
                     commaAfterByOrFromOrSelect();
                 }
                 else if ( afterOn && ",".equals( token ) ) {
@@ -218,6 +224,15 @@ public class SQLFormatter {
             beginLine = false;
         }
 
+        private void startCte(){
+            out();
+            afterWith = true;
+        }
+
+        private void closeCte(){
+            afterWith = false;
+        }
+
         private void misc() {
             out();
             if ( "between".equals( lcToken ) ) {
@@ -255,6 +270,7 @@ public class SQLFormatter {
 
         private void select() {
             out();
+            afterWith = parensSinceSelect == 0;
             indent++;
             newline();
             parenCounts.addLast( parensSinceSelect );

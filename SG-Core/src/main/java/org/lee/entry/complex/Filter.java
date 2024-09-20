@@ -88,7 +88,7 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
     }
 
     private Qualification combine(Qualification left, Qualification right){
-        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? PredicateCombiner.AND:PredicateCombiner.OR);
+        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? PredicateCombiner.AND : PredicateCombiner.OR);
         final AtomicInteger counter = new AtomicInteger(0);
         java.util.function.Function<Qualification, Qualification> tryToNegative = (qual) -> {
             if(FuzzUtil.probability(3 - counter.get())){
@@ -99,8 +99,7 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
             }
         };
         return tryToNegative.apply(
-                qualification
-                        .newChild(tryToNegative.apply(left))
+                qualification.newChild(tryToNegative.apply(left))
                         .newChild(tryToNegative.apply(right))
         );
     }

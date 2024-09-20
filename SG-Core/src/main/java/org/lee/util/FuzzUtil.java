@@ -94,7 +94,7 @@ public class FuzzUtil {
         }
         String intPart = String.valueOf(secureRandom.nextInt(endExclusive - beginInclusive) + beginInclusive);
         String floatPart = new StringBuffer(String.valueOf(secureRandom.nextInt(100000000))).reverse().toString();
-        return new BigDecimal(intPart + floatPart);
+        return new BigDecimal(intPart + "." + floatPart);
     }
 
     public static String getRandomName(String prefix){
@@ -108,6 +108,7 @@ public class FuzzUtil {
     }
 
     public static int getBinomialDistributionRandomFromRange(int prob, int beginInclusive, int endExclusive){
+        // TODO: There might be some bugs in calculating of edge.
         if(checkBeginAndEndIsInvalid(beginInclusive, endExclusive)){
             return beginInclusive;
         }

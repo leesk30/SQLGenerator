@@ -1,14 +1,13 @@
 package org.lee.entry.relation;
 
-import org.lee.entry.NormalizedEntryNode;
+import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
-import org.lee.node.NodeTag;
 import org.lee.statement.support.Projectable;
 
 import java.util.List;
 import java.util.Vector;
 
-public abstract class SubEntry implements NormalizedEntryNode<Projectable>, RangeTableEntry {
+public abstract class SubEntry implements NormalizedEntryWrapper<Projectable>, RangeTableEntry {
 
     protected final Projectable projectable;
     protected final List<Field> fieldList;
@@ -23,7 +22,7 @@ public abstract class SubEntry implements NormalizedEntryNode<Projectable>, Rang
     }
 
     @Override
-    public Projectable getRawNode() {
+    public Projectable getWrapped() {
         return projectable;
     }
 }

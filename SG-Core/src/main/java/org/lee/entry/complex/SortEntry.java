@@ -1,5 +1,6 @@
 package org.lee.entry.complex;
 
+import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
@@ -9,7 +10,7 @@ import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 
-public class SortEntry implements Scalar, Fuzzer {
+public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer {
 
     private final Scalar scalar;
     private final boolean isDefaultAsc;
@@ -38,10 +39,10 @@ public class SortEntry implements Scalar, Fuzzer {
         StringBuilder builder = new StringBuilder();
         builder.append(getSortEntryBody());
         if(representOrderOption){
-            builder.append(orderOptionAsc ? " ASC" : " DESC");
+            builder.append(orderOptionAsc ? SPACE + ASC : SPACE + DESC);
         }
         if(representNullOption){
-            builder.append(nullOptionLast ? " NULLS LAST" : " NULLS FIRST");
+            builder.append(nullOptionLast ? SPACE + NULLS + SPACE + LAST : SPACE + NULLS + SPACE + FIRST);
         }
         return builder.toString();
     }
@@ -94,5 +95,10 @@ public class SortEntry implements Scalar, Fuzzer {
 
     public boolean isNullLast(){
         return nullOptionLast;
+    }
+
+    @Override
+    public Scalar getWrapped() {
+        return scalar;
     }
 }

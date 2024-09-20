@@ -5,6 +5,7 @@ import org.lee.entry.RangeTableReference;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
+import org.lee.fuzzer.expr.statistic.RelatedStatistic;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
 import org.lee.symbol.StaticSymbol;
@@ -12,25 +13,22 @@ import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 import org.lee.util.Pair;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public abstract class RelationalGenerator<T extends Expression> implements Generator<T> {
     protected final List<RangeTableReference> candidateRelations;
 
     protected List<Pair<Scalar, Scalar>> relatedPair = null;
+    protected final RangeTableReference left;
+    protected final RangeTableReference right;
+    protected final RelatedStatistic statistic;
 
-
-    protected RelationalGenerator(RangeTableReference ... references){
-        candidateRelations = new Vector<>(references.length);
-        candidateRelations.addAll(Arrays.asList(references));
-    }
-
-    protected RelationalGenerator(List<RangeTableReference> references){
-        candidateRelations = new Vector<>(references.size());
-        candidateRelations.addAll(references);
+    protected RelationalGenerator(RangeTableReference lhs, RangeTableReference rhs){
+        left = lhs;
+        right = rhs;
+        statistic = new RelatedStatistic(left, right);
+        candidateRelations = Collections.unmodifiableList(Arrays.asList(lhs, rhs));
     }
 
     protected List<RangeTableReference> getCandidate(){

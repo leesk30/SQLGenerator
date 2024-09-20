@@ -2,6 +2,7 @@ package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.FieldReference;
+import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
@@ -11,7 +12,7 @@ import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 
-public class TargetEntry implements Scalar, Alias {
+public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {
     private String alias = null;
     private final Scalar target;
     private final boolean isTargetEntryExpression;
@@ -92,15 +93,16 @@ public class TargetEntry implements Scalar, Alias {
         return target.getType();
     }
 
-    public Scalar getTarget(){
-        return target;
-    }
-
     public boolean isTargetEntryAggregate() {
         return isTargetEntryAggregate;
     }
 
     public boolean isTargetEntryExpression() {
         return isTargetEntryExpression;
+    }
+
+    @Override
+    public Scalar getWrapped() {
+        return target;
     }
 }

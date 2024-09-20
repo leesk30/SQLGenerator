@@ -33,6 +33,13 @@ public interface Node {
     String LIMIT = "LIMIT";
     String OFFSET = "OFFSET";
     String MATERIALIZED = "MATERIALIZED";
+    String DOT = ".";
+    String DESC = "DESC";
+    String ASC = "ASC";
+    String NULLS = "NULLS";
+    String NULL = "NULL";
+    String FIRST = "FIRST";
+    String LAST = "LAST";
 
     String getString();
     NodeTag getNodeTag();

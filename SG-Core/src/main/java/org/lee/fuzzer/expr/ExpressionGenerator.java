@@ -1,6 +1,7 @@
 package org.lee.fuzzer.expr;
 
 import org.lee.entry.scalar.Scalar;
+import org.lee.fuzzer.expr.statistic.UnrelatedStatistic;
 import org.lee.statement.expression.Expression;
 import org.lee.symbol.*;
 import org.lee.type.TypeCategory;
@@ -19,7 +20,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     Expression fallback();
 
     default Expression fallbackFor(List<? extends Scalar> anyInputs){
-        UnrelatedGenerator.Statistic statistic = new UnrelatedGenerator.Statistic(anyInputs);
+        UnrelatedStatistic statistic = new UnrelatedStatistic(anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
             return anyScalar.toExpression();

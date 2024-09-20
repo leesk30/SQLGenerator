@@ -22,9 +22,9 @@ public enum Comparator implements Signature{
     BETWEEN_AND(3, "%s BETWEEN %s AND %s"),
     ;
 
-    public static final Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE};
-    public static final Comparator[] ALL = {NOT_EQ, EQ, GT, GT_EQ, LT, LT_EQ};
-    public static final Comparator[] BASE_EQ = {EQ, NOT_EQ};
+    public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE};
+    public final static Comparator[] ALL = {NOT_EQ, EQ, GT, GT_EQ, LT, LT_EQ};
+    public final static Comparator[] BASE_EQ = {EQ, NOT_EQ};
 
     private final String symbols;
     private final int argNum;

@@ -1,22 +1,22 @@
 package org.lee.entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.entry.relation.CTE;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.node.NodeTag;
 import org.lee.statement.support.Alias;
 import org.lee.util.FuzzUtil;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.Vector;
 
-public final class RangeTableReference implements NormalizedEntryNode<RangeTableEntry>, Alias {
+public final class RangeTableReference implements NormalizedEntryWrapper<RangeTableEntry>, Alias {
 
     private String refName;
     private final RangeTableEntry entry;
     private final List<FieldReference> fieldReferences = new Vector<>();
+    private final UUID uniqueName = UUID.randomUUID();
 
     public RangeTableReference(RangeTableEntry rangeTableEntry){
         this(null, rangeTableEntry);
@@ -82,11 +82,15 @@ public final class RangeTableReference implements NormalizedEntryNode<RangeTable
     }
 
     @Override
-    public RangeTableEntry getRawNode() {
+    public RangeTableEntry getWrapped() {
         return entry;
     }
 
     public String getBody() {
         return entry.getString();
+    }
+
+    public UUID getUniqueName(){
+        return uniqueName;
     }
 }

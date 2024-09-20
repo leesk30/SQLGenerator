@@ -64,7 +64,7 @@ public class SelectClauseWithinFrom extends SelectClause{
 
         IntStream.range(0, numOfProjection).parallel().forEach(
                 i-> {
-                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY) || FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
                         processEntry(generator.generate());
                     }else {
                         processEntry(generator.fallback());
@@ -77,7 +77,7 @@ public class SelectClauseWithinFrom extends SelectClause{
         GeneralExpressionGenerator generator = getProjectionGenerator();
         statement().getProjectTypeLimitation().stream().parallel().forEachOrdered(
                 requiredType -> {
-                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY) || FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
                         processEntry(generator.generate(requiredType));
                     }else {
                         processEntry(generator.fallback(requiredType));

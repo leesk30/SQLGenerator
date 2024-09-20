@@ -1,6 +1,9 @@
-package org.lee.symbol;
+package org.lee.util;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TrieTree<K, V> {
