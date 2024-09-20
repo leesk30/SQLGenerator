@@ -3,7 +3,6 @@ package org.lee.symbol;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,20 +11,18 @@ import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class Finder {
 
     private static class Holder{
-        public final SymbolTrieTree finder = new SymbolTrieTree();
+        public final TrieTree<TypeTag, Signature> finder = new TrieTree<>();
         public final Map<TypeTag, List<Signature>> reverseFinder = new ConcurrentHashMap<>();
 
         synchronized void put(Signature signature){
             final TypeTag key = signature.getReturnType();
-            finder.put(signature);
+            finder.put(signature.getArgumentsTypes(), signature);
             if(!reverseFinder.containsKey(key)){
                 reverseFinder.put(key, new Vector<>());
             }
@@ -37,7 +34,7 @@ public class Finder {
         }
 
         List<Signature> getByInput(TypeTag ... input){
-            return finder.get(input);
+            return finder.get(Arrays.asList(input));
         }
     }
 
@@ -147,11 +144,11 @@ public class Finder {
     }
 
     public List<Signature> getAggregate(TypeTag input){
-        return BUILTIN_AGGREGATE_HOLDER.finder.get(input);
+        return BUILTIN_AGGREGATE_HOLDER.finder.get(Collections.singletonList(input));
     }
 
-    public List<Signature> getOperator(TypeTag lhs, TypeTag rhs){
-        return BUILTIN_OPERATOR_HOLDER.finder.get(lhs, rhs);
+    public List<Signature> getOperator(List<TypeTag> args){
+        return BUILTIN_OPERATOR_HOLDER.finder.get(args);
     }
 
     public List<Signature> getFunction(List<TypeTag> tags){
@@ -159,7 +156,7 @@ public class Finder {
     }
 
     public List<Signature> getFunction(TypeTag ... tags){
-        return BUILTIN_FUNCTION_HOLDER.finder.get(tags);
+        return BUILTIN_FUNCTION_HOLDER.finder.get(Arrays.asList(tags));
     }
 
 

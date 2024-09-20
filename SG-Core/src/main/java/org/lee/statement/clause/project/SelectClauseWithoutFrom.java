@@ -20,17 +20,21 @@ public class SelectClauseWithoutFrom extends SelectClause{
         if(statement.getProjectTypeLimitation().isEmpty()){
             IntStream.range(0, FuzzUtil.randomIntFromRange(1, 7)).parallel().forEach(
                     i -> {
-                        TargetEntry entry = new TargetEntry(generator.generate());
-                        entry.setAlias();
-                        children.add(entry);
+                        if(FuzzUtil.probability(20)){
+                            processEntry(generator.getLiteral());
+                        }else {
+                            processEntry(generator.generate());
+                        }
                     }
             );
         }else {
             statement.getProjectTypeLimitation().stream().parallel().forEachOrdered(
                     requiredType -> {
-                        TargetEntry entry = new TargetEntry(generator.generate(requiredType));
-                        entry.setAlias();
-                        children.add(entry);
+                        if(FuzzUtil.probability(20)){
+                            processEntry(generator.generate(requiredType));
+                        }else {
+                            processEntry(generator.generate(requiredType));
+                        }
                     }
             );
         }

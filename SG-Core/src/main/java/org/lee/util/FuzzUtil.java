@@ -8,9 +8,8 @@ import org.lee.entry.relation.Relation;
 
 import java.math.BigDecimal;
 import java.security.SecureRandom;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class FuzzUtil {
@@ -46,6 +45,13 @@ public class FuzzUtil {
             return null;
         }
         return list.get(secureRandom.nextInt(list.size()));
+    }
+
+    public static <T> T randomlyChooseFrom(Set<T> set){
+        if(set == null || set.isEmpty()){
+            return null;
+        }
+        return randomlyChooseFrom(new ArrayList<>(set));
     }
 
     public static <T> T randomlyChooseFrom(T[] arr){

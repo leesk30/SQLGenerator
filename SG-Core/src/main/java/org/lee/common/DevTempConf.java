@@ -7,7 +7,7 @@ public class DevTempConf {
 
     public final static short CONVERT_TO_PARTITION_PROB = 10;
     public final static short CONVERT_TO_PIVOTED_PROB = 5;
-    public final static short USING_VALUES_IN_FROM_PROBABILITY = 0;
+    public final static short USING_VALUES_IN_FROM_PROBABILITY = 1;
     public final static short USING_SUBQUERY_IN_FROM_PROBABILITY = 4;
 
     public final static short MAX_FROM_CLAUSE_RTE_JOIN_NUM = 3;

@@ -1,9 +1,11 @@
 package org.lee.statement.clause.project;
 
+import org.lee.common.DevTempConf;
 import org.lee.common.SGException;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.TargetEntry;
+import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
 import org.lee.rules.ConstRule;
@@ -43,51 +45,45 @@ public class SelectClauseWithinFrom extends SelectClause{
         }
     }
 
-    private void fuzzProjections(List<RangeTableReference> rangeTableReferences){
-        // todo: combine choose
+    @Override
+    public AbstractSimpleSelectStatement statement(){
+        return (AbstractSimpleSelectStatement) statement;
     }
 
-    private void fuzzProjections(List<RangeTableReference> rangeTableReferences, List<TypeTag> typeLimitations){
-        // todo: combine choose by limitations
+    private GeneralExpressionGenerator getProjectionGenerator(){
+        Clause<RangeTableReference> fromClause = statement().getFromClause();
+        List<FieldReference> fieldReferences = new Vector<>();
+        fromClause.getChildNodes().stream().parallel().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
+        return new GeneralExpressionGenerator(fieldReferences);
     }
 
     private void nonLimitationsProjectionFuzz(){
-        Clause<RangeTableReference> fromClause = ((AbstractSimpleSelectStatement) statement).getFromClause();
-        List<FieldReference> fieldReferences = new Vector<>();
-        fromClause.getChildNodes().stream().parallel().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
-        Generator<Expression> generator = new GeneralExpressionGenerator(fieldReferences);
-        final int numOfEntry = ((FromClause)fromClause).getRawEntryList().size();
+        GeneralExpressionGenerator generator = getProjectionGenerator();
+        final int numOfEntry = statement().getFromClause().getRawEntryList().size();
         final int numOfProjection = FuzzUtil.randomIntFromRange(numOfEntry, numOfEntry*2);
+
         IntStream.range(0, numOfProjection).parallel().forEach(
                 i-> {
-                    Expression expression = generator.generate();
-                    processEntry(expression);
+                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                        processEntry(generator.generate());
+                    }else {
+                        processEntry(generator.fallback());
+                    }
                 }
         );
     }
 
     private void  withLimitationsProjectionFuzz(){
-        Clause<RangeTableReference> fromClause = ((AbstractSimpleSelectStatement) statement).getFromClause();
-        List<FieldReference> fieldReferences = new Vector<>();
-        fromClause.getChildNodes().stream().parallel().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
-        GeneralExpressionGenerator generator = new GeneralExpressionGenerator(fieldReferences);
-        ((AbstractSimpleSelectStatement) statement).getProjectTypeLimitation().stream().parallel().forEachOrdered(
-                typeTag -> {
-                    Expression expression = generator.generate(typeTag);
-                    processEntry(expression);
+        GeneralExpressionGenerator generator = getProjectionGenerator();
+        statement().getProjectTypeLimitation().stream().parallel().forEachOrdered(
+                requiredType -> {
+                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                        processEntry(generator.generate(requiredType));
+                    }else {
+                        processEntry(generator.fallback(requiredType));
+                    }
                 }
         );
-    }
-
-    private void processEntry(Expression expression){
-        if(expression.isIncludingAggregation() && !statement.confirmByRuleName(RuleName.AGGREGATION_REQUIRED_GROUP_BY)){
-            synchronized (statement.getRuleSet()){
-                statement.getRuleSet().put(new ConstRule(RuleName.AGGREGATION_REQUIRED_GROUP_BY, true));
-            }
-        }
-        TargetEntry entry = new TargetEntry(expression);
-        entry.setAlias();
-        children.add(entry);
     }
 
     private void simpleFuzzProjections(List<RangeTableReference> rangeTableReferences){

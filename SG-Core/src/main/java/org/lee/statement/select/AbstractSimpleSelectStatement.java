@@ -48,7 +48,7 @@ public abstract class AbstractSimpleSelectStatement extends SelectStatement {
         return targetList;
     }
 
-    public Clause<RangeTableReference> getFromClause() {
+    public FromClause getFromClause() {
         return fromClause;
     }
 

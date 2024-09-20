@@ -12,7 +12,7 @@ import java.util.stream.IntStream;
 public enum PredicateCombiner implements Signature {
 
     NOT(1, "NOT %s"),
-    AND(2, "% AND %"),
+    AND(2, "%s AND %s"),
     OR(2, "%s OR %s"),
     ;
 

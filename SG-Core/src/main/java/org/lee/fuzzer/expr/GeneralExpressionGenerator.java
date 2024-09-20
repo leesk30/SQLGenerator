@@ -10,7 +10,6 @@ import org.lee.util.FuzzUtil;
 import org.lee.util.ListUtil;
 
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> implements ExpressionGenerator{
@@ -32,7 +31,7 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
         super(scalars);
     }
 
-    public List<Signature> getSignatures(TypeTag root){
+    public List<Signature> getCandidateSignatures(TypeTag root){
         List<Signature> copiedSignature = ListUtil.copyList(finder.getFunctionByReturn(root));
         List<Signature> operators = finder.getOperatorByReturn(root);
         if(operators != null){
@@ -42,7 +41,7 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
     }
 
     public Expression getCompleteExpressionTree(TypeTag root, int recursionDepth, boolean enableAggregate){
-        final List<Signature> copiedSignature = getSignatures(root);
+        final List<Signature> copiedSignature = getCandidateSignatures(root);
         if(enableAggregate && FuzzUtil.probability(DevTempConf.EXPRESSION_APPEND_AGGREGATION_PROB)){
             List<Signature> aggregators = finder.getAggregateByReturn(root);
             if(aggregators != null){
@@ -66,12 +65,11 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
                 candidateList.addAll(replicated);
             }
 
-            final Statistic statistic = new Statistic(signature.getArgumentsTypes(), candidateList);
-            if(suitable(statistic)){
-                return stopGrowth(signature, statistic);
+            if(suitable(signature)){
+                return stopGrowth(signature);
             }else {
-                if(preferRecursion(statistic, recursionDepth)){
-                    return growth(signature, statistic, recursionDepth+1);
+                if(preferRecursion(signature, recursionDepth)){
+                    return growth(signature, recursionDepth+1);
                 }
                 // else backtrace
             }
@@ -79,28 +77,24 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
         return fallback(root);
     }
 
-    private boolean suitable(Statistic statistic){
+    private boolean suitable(Signature signature){
 //        System.out.println(statistic.suitableFactorProb());
-        return FuzzUtil.probability(statistic.suitableFactorProb());
+        return FuzzUtil.probability(statistic.suitableFactorProb(signature));
     }
 
-    private boolean needBacktrace(Statistic statistic){
-        // more suitable there is no more necessary to fallback
-        return !(FuzzUtil.probability(statistic.suitableFactorProb()) || FuzzUtil.probability(50));
-    }
-
-    private boolean preferRecursion(Statistic statistic, int currentDepth){
+    private boolean preferRecursion(Signature signature, int currentDepth){
         // more suitable there is no more necessary to fallback
         if(currentDepth > DevTempConf.MAX_EXPRESSION_RECURSION_DEPTH){
             return false;
         }
         // not suit Or not in depth fix
-        return !FuzzUtil.probability(statistic.suitableFactorProb()) && FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY / (currentDepth == 0? 1: currentDepth));
+        return !FuzzUtil.probability(statistic.suitableFactorProb(signature))
+                && FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY / (currentDepth == 0? 1: currentDepth));
     }
 
-    private Expression stopGrowth(Signature signature, Statistic statistic){
+    private Expression stopGrowth(Signature signature){
         final Expression expression = new Expression(signature);
-        final Scalar[] scalars = statistic.findForAll();
+        final Scalar[] scalars = statistic.findMatchedForSignature(signature);
         final List<Expression> children = new Vector<>();
         IntStream.range(0, signature.argsNum()).parallel().forEachOrdered(
                 i -> {
@@ -117,9 +111,9 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
     }
 
 
-    private Expression growth(Signature signature, Statistic statistic, int incrementalDepth){
+    private Expression growth(Signature signature, int incrementalDepth){
         final Expression expression = new Expression(signature);
-        final Scalar[] scalars = statistic.findForAll();
+        final Scalar[] scalars = statistic.findMatchedForSignature(signature);
         final List<Expression> children = new Vector<>();
         final boolean childrenEnableAggregation = !(signature instanceof Aggregation);
 //        final int[] nullOfIndex = IntStream.range(0, scalars.length).parallel().filter(Objects::isNull).toArray();
@@ -127,7 +121,7 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
         IntStream.range(0, signature.argsNum()).parallel().forEachOrdered(
                 i -> {
                     final TypeTag targetType = signature.getArgumentsTypes().get(i);
-                    if(scalars[i] == null || preferRecursion(statistic, incrementalDepth)){
+                    if(scalars[i] == null || preferRecursion(signature, incrementalDepth)){
                         children.add(generate(targetType, incrementalDepth, childrenEnableAggregation));
                     }else {
                         children.add(scalars[i].toExpression());
@@ -152,16 +146,22 @@ public class GeneralExpressionGenerator extends UnrelatedGenerator<Expression> i
 
     @Override
     public Expression fallback(TypeTag required) {
-        if(replicated.isEmpty()){
-            return getLiteral(required).toExpression();
+        Scalar requiredScalar = statistic.findMatchedForTargetType(required);
+        if(requiredScalar != null){
+            return requiredScalar.toExpression();
         }
-        // On concurrency without ListUtil.copyList(replicated) may cause ConcurrencyModificationException
-        List<Expression> matchedList = ListUtil.copyList(replicated).stream().parallel().filter(expression -> expression.getType() == required).collect(Collectors.toList());
-        if(matchedList.isEmpty()){
-            return getLiteral(required).toExpression();
-        }
-        return fallback(matchedList);
+        return getLiteral(required).toExpression();
     }
+
+    @Override
+    public Expression fallback(){
+        Scalar anyScalar = statistic.findAny();
+        if(anyScalar != null){
+            return anyScalar.toExpression();
+        }
+        return getLiteral().toExpression();
+    }
+
 
     public Expression generate(TypeTag required, int recursionDepth) {
         return generate(required, recursionDepth, true);

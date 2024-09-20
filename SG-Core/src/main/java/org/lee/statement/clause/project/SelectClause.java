@@ -1,6 +1,7 @@
 package org.lee.statement.clause.project;
 
 import org.lee.common.SGException;
+import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
 import org.lee.rules.ConstRule;
@@ -35,6 +36,18 @@ public abstract class SelectClause extends Clause<TargetEntry> {
     @Override
     public NodeTag getNodeTag() {
         return NodeTag.selectClause;
+    }
+
+    protected void processEntry(Scalar scalar){
+        final Expression expression = scalar.toExpression();
+        if(expression.isIncludingAggregation() && !statement.confirmByRuleName(RuleName.AGGREGATION_REQUIRED_GROUP_BY)){
+            synchronized (statement.getRuleSet()){
+                statement.getRuleSet().put(new ConstRule(RuleName.AGGREGATION_REQUIRED_GROUP_BY, true));
+            }
+        }
+        TargetEntry entry = new TargetEntry(expression);
+        entry.setAlias();
+        children.add(entry);
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.*;
 
 public abstract class FromClause extends Clause<RangeTableReference> {
     protected final List<RangeTableEntry> rawEntryList = new Vector<>();
-    protected final List<RangeTableEntry> candidatesAll = new Vector<>();
+    protected final List<RangeTableEntry> allOfCandidates = new Vector<>();
 //    protected List<List<RangeTableReference>> candidatesList;
     protected FromClause(SQLStatement statement) {
         super(statement);
@@ -85,23 +85,23 @@ public abstract class FromClause extends Clause<RangeTableReference> {
 
     protected RangeTableEntry randomlyGetRangeTable(){
         cacheCandidateAll();
-        return FuzzUtil.randomlyChooseFrom(candidatesAll);
+        return FuzzUtil.randomlyChooseFrom(allOfCandidates);
     }
 
     protected void cacheCandidateAll(){
-        if(!candidatesAll.isEmpty()){
+        if(!allOfCandidates.isEmpty()){
             return;
         }
         // related with parent cte
         if(FuzzUtil.probability(50)){
-            candidatesAll.addAll(statement.recursiveGetCTEs());
+            allOfCandidates.addAll(statement.recursiveGetCTEs());
         }else {
             // repeat self cte
             if(statement instanceof SupportCommonTableExpression){
-                candidatesAll.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
+                allOfCandidates.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
             }
         }
-        candidatesAll.addAll(MetaEntry.relationMap.values());
+        allOfCandidates.addAll(MetaEntry.relationMap.values());
     }
 
     protected RangeTableEntry randomlyConvertToPartition(RangeTableEntry entry){
