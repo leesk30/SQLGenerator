@@ -238,6 +238,10 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public List<FieldReference> extractField(boolean parallel){
+        if(isLeaf() && isTerminateNode && current instanceof FieldReference){
+            return Collections.singletonList((FieldReference) current);
+        }
+
         final List<Expression> leaf = this.getLeafs();
         final Stream<Expression> stream = parallel ? leaf.parallelStream() : leaf.stream();
         return stream
@@ -256,12 +260,14 @@ public class Expression implements Scalar, TreeNode<Expression> {
         final List<FieldReference> notInAggregator = new Vector<>();
         final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
 
-        if(isLeaf()){
+        if(isCurrentAggregation()){
+            inAggregator.addAll(extractField(true));
             return pair;
         }
 
         if(!isIncludingAggregation()){
             notInAggregator.addAll(extractField(true));
+            return pair;
         }
 
         childNodes.stream().parallel().forEach(
@@ -278,6 +284,12 @@ public class Expression implements Scalar, TreeNode<Expression> {
                 }
         );
         return pair;
+    }
+
+    @Override
+    public String toString(){
+        // for debug
+        return getString();
     }
 
 }

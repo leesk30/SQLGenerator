@@ -4,6 +4,7 @@ import org.lee.common.DevTempConf;
 import org.lee.entry.FieldReference;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.literal.LiteralInt;
+import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
 import org.lee.rules.RuleName;
@@ -61,8 +62,10 @@ public class GroupByClause extends Clause<Scalar> {
                         extracted.getSecond().orElse(Collections.emptyList()).forEach(
                                 fieldReference -> nonAggregate.put(fieldReference.getString(), fieldReference)
                         );
-                    }else {
+                    }else if(scalar instanceof NameProxy || scalar instanceof FieldReference) {
                         nonAggregate.put(scalar.getString(), scalar);
+                    }else {
+                        throw new RuntimeException("The target entry only should be proxy or reference. Not a " + scalar.getClass().getName());
                     }
                 }
         );

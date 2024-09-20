@@ -27,7 +27,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
 
     @Override
     public String getString() {
-        return ORDER + SPACE + BY + nodeArrayToString(children);
+        return ORDER + SPACE + BY + SPACE + nodeArrayToString(children);
     }
 
     @Override
@@ -68,6 +68,9 @@ public abstract class SortByClause extends Clause<SortEntry> {
         assert this.statement instanceof Projectable;
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
+        if(projectionLength == 0){
+            throw new RuntimeException("The Projection length cannot be zero.");
+        }
         final int orderNumber = FuzzUtil.randomIntFromRange(1, (int)(1.5D * projectionLength));
         final RuleSet ruleSetRef = this.statement.getRuleSet();
 
