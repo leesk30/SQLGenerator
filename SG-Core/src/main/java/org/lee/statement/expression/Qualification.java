@@ -48,9 +48,9 @@ public class Qualification extends Expression {
         }
 
         if(shouldWithParentheses){
-            return toNegativeWithParentheses();
+            return not().toWithParenthesesExpression();
         }else {
-            return toNegativeWithoutParentheses();
+            return not();
         }
     }
 
@@ -61,15 +61,15 @@ public class Qualification extends Expression {
         return newer;
     }
 
-    private Qualification toNegativeWithParentheses(){
-        return toNegativeWithoutParentheses().toWithParenthesesExpression();
-    }
-
-    private Qualification toNegativeWithoutParentheses(){
-        return new Qualification(PredicateCombiner.NOT).newChild(this);
-    }
-
     public Qualification and(final Qualification rhs){
         return new Qualification(PredicateCombiner.AND).newChild(this).newChild(rhs);
+    }
+
+    public Qualification or(final  Qualification rhs){
+        return new Qualification(PredicateCombiner.OR).newChild(this).newChild(rhs);
+    }
+
+    public Qualification not(){
+        return new Qualification(PredicateCombiner.NOT).newChild(this);
     }
 }

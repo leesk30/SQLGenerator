@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public interface Node {
+    String EMPTY = "";
     String ENDING = ";";
     String LP = "(";
     String RP = ")";
@@ -40,6 +41,11 @@ public interface Node {
     String NULL = "NULL";
     String FIRST = "FIRST";
     String LAST = "LAST";
+    String NEWLINE = "\n";
+    String ALL = "ALL";
+    String SOME = "SOME";
+    String ANY = "ANY";
+    String EXISTS = "EXISTS";
 
     String getString();
     NodeTag getNodeTag();

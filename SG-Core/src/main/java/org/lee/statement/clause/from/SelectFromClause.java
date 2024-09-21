@@ -5,6 +5,8 @@ import org.lee.entry.RangeTableReference;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.stream.IntStream;
 
 public final class SelectFromClause extends FromClause {

@@ -5,8 +5,10 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.Node;
+import org.lee.node.TreeNode;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectSetopStatement;
@@ -16,7 +18,7 @@ import org.lee.util.FuzzUtil;
 
 import java.util.List;
 
-public interface Projectable extends Node, Fuzzer {
+public interface Projectable extends TreeNode<Clause<? extends Node>>, Fuzzer {
     List<TargetEntry> project();
     RangeTableEntry toRelation();
 

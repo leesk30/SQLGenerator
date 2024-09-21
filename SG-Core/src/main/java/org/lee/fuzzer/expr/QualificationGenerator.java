@@ -20,17 +20,6 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     Qualification fallback();
     Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
 
-    default Comparator fastGetComparatorByCategory(TypeCategory category){
-        if(category == TypeCategory.STRING && FuzzUtil.probability(90)){
-            return FuzzUtil.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
-        }
-
-        if(category.isComparable()){
-            return FuzzUtil.randomlyChooseFrom(Comparator.ALL);
-        }else {
-            return FuzzUtil.randomlyChooseFrom(Comparator.BASE_EQ);
-        }
-    }
     Pair<Scalar, Scalar> getTwoSide(TypeTag target);
     default Pair<Scalar, Scalar> getTwoSide(){
         return getTwoSide(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
@@ -61,7 +50,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         TypeTag typeTag = fieldReference.getType();
         Literal<T> literal = Literal.fromType(typeTag);
         assert typeTag.getCategory() == literal.getType().getCategory();
-        Comparator comparator = fastGetComparatorByCategory(typeTag.getCategory());
+        Comparator comparator = Comparator.fastGetComparatorByCategory(typeTag.getCategory());
         return new Qualification(comparator)
                 .newChild(fieldReference)
                 .newChild(literal);
@@ -96,7 +85,11 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
 
         final Qualification rhs = FuzzUtil.probability(50) ?
                 compareToRangeLiteral(addPredicateLhs): compareToLiteral(addPredicateLhs);
-        return qualification.and(rhs);
+
+        if(FuzzUtil.probability(80)){
+            return qualification.and(rhs);
+        }
+        return qualification.or(rhs);
     }
 
 }

@@ -33,8 +33,9 @@ public class JoinerQualificationGenerator extends RelationalGenerator<Qualificat
 
     @Override
     public Signature getCompareOperator(TypeTag lhs, TypeTag rhs) {
-        // todo:
-        return fastGetComparatorByCategory(lhs.getCategory());
+//        Comparator.fastGetComparatorByCategory(lhs.getCategory());
+        // todo
+        return Comparator.fastGetComparatorByCategory(lhs.getCategory());
     }
 
     @Override

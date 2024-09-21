@@ -27,6 +27,15 @@ public final class SelectSetopStatement
     private Projectable right;
     private SetOperation setop;
     private boolean all;
+
+    public enum SetOperation {
+        UNION,
+        INTERSECT,
+        MINUS,
+        EXCEPT,
+        ;
+    }
+
     private final WithClause withClause = new WithClause(this);
     private final SortByClause sortByClause = new SelectOrderByClause(this);
     private final LimitOffset limitOffset = new SelectLimitOffset(this);
@@ -40,9 +49,10 @@ public final class SelectSetopStatement
         super(SelectType.setop, parent);
     }
 
+
     @Override
-    public String getString() {
-        return left.getString() + "\n" + setop.toString(all, context.getParameter().syntaxMode) + "\n" + right.getString();
+    public String body(){
+        return left.getString() + NEWLINE + setop + (all ? ALL : EMPTY) + NEWLINE + right.getString();
     }
 
     private SelectType getSubSelectType(){
@@ -63,9 +73,9 @@ public final class SelectSetopStatement
     @Override
     public void fuzz() {
         withClause.fuzz();
-
-        left = generate();
-        right = generate();
+        // with parent generate
+        left = generate(this);
+        right = generate(this);
         left.fuzz();
         right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
 
