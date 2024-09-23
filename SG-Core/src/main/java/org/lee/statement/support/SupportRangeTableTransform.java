@@ -27,6 +27,7 @@ public interface SupportRangeTableTransform {
     }
 
     default RangeTableEntry randomlyConvertToPivoted(RangeTableEntry entry){
+        // todo implements
         if(entry.getNodeTag() != NodeTag.pivoted && FuzzUtil.probability(DevTempConf.CONVERT_TO_PIVOTED_PROB)){
             Pivoted pivoted = new Pivoted(entry);
             pivoted.fuzz();
