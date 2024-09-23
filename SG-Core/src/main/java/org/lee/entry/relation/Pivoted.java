@@ -1,6 +1,7 @@
 package org.lee.entry.relation;
 
 import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.exception.Assertion;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.entry.scalar.Field;
 import org.lee.node.NodeTag;
@@ -54,7 +55,8 @@ public class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>, RangeTa
         }else {
             pivot();
         }
-        assert !fieldList.isEmpty();
+
+        Assertion.requiredTrue(!fieldList.isEmpty());
     }
 
     private List<Field> getCandidate(){

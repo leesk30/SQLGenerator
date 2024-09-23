@@ -7,7 +7,6 @@ import org.lee.statement.expression.Qualification;
 import org.lee.node.NodeTag;
 import org.lee.node.TreeNode;
 import org.lee.symbol.PredicateCombiner;
-import org.lee.symbol.StaticSymbol;
 import org.lee.type.TypeTag;
 import org.lee.util.ListUtil;
 import org.lee.util.FuzzUtil;

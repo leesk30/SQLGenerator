@@ -1,22 +1,17 @@
 package org.lee.statement.clause.project;
 
 import org.lee.common.DevTempConf;
-import org.lee.common.SGException;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.scalar.Scalar;
+import org.lee.exception.NotImplementedException;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
-import org.lee.rules.ConstRule;
 import org.lee.rules.RuleName;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
-import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 import org.lee.util.ListUtil;
 
@@ -106,7 +101,7 @@ public class SelectClauseWithinFrom extends SelectClause{
                     fieldReferences.add(choose);
                 });
             }else {
-                throw new SGException.NotImplementedException("Not implement for disable duplicate projections");
+                throw new NotImplementedException("Not implement for disable duplicate projections");
             }
         });
 

@@ -5,13 +5,12 @@ import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.literal.LiteralInt;
+import org.lee.exception.Assertion;
 import org.lee.rules.RuleName;
 import org.lee.rules.RuleSet;
 import org.lee.statement.SQLStatement;
 import org.lee.node.NodeTag;
-import org.lee.statement.ValuesStatement;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Sortable;
 import org.lee.util.FuzzUtil;
@@ -59,31 +58,47 @@ public abstract class SortByClause extends Clause<SortEntry> {
         };
     }
 
-    @Override
-    public void fuzz(){
+    protected void orderByScalar(){
+        final SortEntry sortEntry = new SortEntry(new LiteralInt(1), this.statement.getRuleSet());
+        sortEntry.fuzz();
+        children.add(sortEntry);
+    }
+
+    protected boolean sortable(){
         if(!FuzzUtil.probability(DevTempConf.SORT_BY_CLAUSE_FUZZ_PROBABILITY)){
-            return;
+            return false;
         }
-        assert this.statement instanceof Sortable;
-        assert this.statement instanceof Projectable;
+        Assertion.requiredTrue(this.statement instanceof Sortable);
+        Assertion.requiredTrue(this.statement instanceof Projectable);
+        return true;
+    }
+
+    protected int getProjectSize(){
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
-        if(projectionLength == 0){
-            throw new RuntimeException("The Projection length cannot be zero.");
-        }
-        final int orderNumber = FuzzUtil.randomIntFromRange(1, (int)(1.5D * projectionLength));
-        final RuleSet ruleSetRef = this.statement.getRuleSet();
+        Assertion.requireNonEquals(projectionLength, 0);
+        return projectionLength;
+    }
 
-        if(ruleSetRef.confirm(RuleName.REQUIRE_SCALA)){
-            final SortEntry sortEntry = new SortEntry(new LiteralInt(1), ruleSetRef);
-            sortEntry.fuzz();
-            children.add(sortEntry);
-            return;
-        }
+    protected IntStream getParallelStreamer(){
+        return IntStream.range(
+                0, FuzzUtil.randomIntFromRange(1, (int)(1.5D * getProjectSize()))
+        ).parallel();
+    }
 
-        final IntStream streamer = IntStream.range(0, orderNumber).parallel();
-        final IntConsumer consumer = FuzzUtil.probability(50) ? orderByIndex(): orderByTarget();
-        streamer.forEach(consumer);
+    protected IntConsumer getConsumer(){
+        return FuzzUtil.probability(50)? orderByIndex(): orderByTarget();
+    }
+
+    @Override
+    public void fuzz(){
+        if(sortable()){
+            if(this.statement.getRuleSet().confirm(RuleName.REQUIRE_SCALA)){
+                orderByScalar();
+                return;
+            }
+            getParallelStreamer().forEach(getConsumer());
+        }
     }
 
 }

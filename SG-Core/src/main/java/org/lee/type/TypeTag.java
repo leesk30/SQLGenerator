@@ -1,12 +1,13 @@
 package org.lee.type;
 
 import org.lee.entry.literal.mapped.MappedType;
+import org.lee.node.NodeTag;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Signature;
-import org.lee.symbol.StaticSymbol;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.stream.Stream;
 
 public enum TypeTag {
@@ -35,13 +36,13 @@ public enum TypeTag {
     private final TypeCategory category;
     private final String[] names;
     private final int priority;
-    private final StaticSymbol emptySymbol;
+    private final EmptySymbol emptySymbol;
     private final Parentheses parenthesesSymbol;
     TypeTag(TypeCategory category, int priority,  String ... names){
         this.category = category;
         this.names = names;
         this.priority = priority;
-        this.emptySymbol = new StaticSymbol("%s", Collections.singletonList(this), this);
+        this.emptySymbol = new EmptySymbol(this);
         this.parenthesesSymbol = new Parentheses(emptySymbol);
     }
 
@@ -104,5 +105,40 @@ public enum TypeTag {
     @Override
     public String toString() {
         return names[0];
+    }
+
+    private final static class EmptySymbol implements Signature {
+        private final List<TypeTag> arguments;
+        private final TypeTag returnType;
+        public EmptySymbol(TypeTag target){
+            this.arguments = Collections.singletonList(target);
+            this.returnType = target;
+            check();
+        }
+
+        @Override
+        public final String getString() {
+            return "%s";
+        }
+
+        @Override
+        public final NodeTag getNodeTag() {
+            return NodeTag.operator;
+        }
+
+        @Override
+        public final int argsNum() {
+            return 1;
+        }
+
+        @Override
+        public final TypeTag getReturnType() {
+            return returnType;
+        }
+
+        @Override
+        public final List<TypeTag> getArgumentsTypes() {
+            return arguments;
+        }
     }
 }

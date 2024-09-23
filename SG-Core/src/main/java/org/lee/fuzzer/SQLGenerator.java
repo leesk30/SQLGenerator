@@ -1,5 +1,6 @@
 package org.lee.fuzzer;
 
+import org.lee.exception.Assertion;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
@@ -31,7 +32,7 @@ public class SQLGenerator implements Generator<SQLStatement> {
     @Override
     public SQLStatement generate() {
         SQLStatement statement = getStatement();
-        assert statement != null;
+        Assertion.requiredNonNull(statement);
         statement.fuzz();
         return statement;
     }

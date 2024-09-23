@@ -17,6 +17,7 @@ public final class Operator implements Signature{
         this.returnType = returnType;
         this.arguments = Arrays.asList(arguments);
         this.signaturePriority = priority;
+        check();
     }
 
     public Operator(String body, int priority, TypeTag returnType, List<TypeTag> arguments){
@@ -24,6 +25,7 @@ public final class Operator implements Signature{
         this.returnType = returnType;
         this.arguments = arguments;
         this.signaturePriority = priority;
+        check();
     }
 
     @Override

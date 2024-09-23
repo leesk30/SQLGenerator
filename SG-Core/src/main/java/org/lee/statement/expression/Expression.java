@@ -4,12 +4,12 @@ import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
+import org.lee.exception.Assertion;
 import org.lee.node.NodeTag;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
-import org.lee.util.DevSupplier;
 import org.lee.util.Pair;
 
 import java.util.*;
@@ -70,7 +70,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
                 .stream()
                 .map(Expression::getTotalDegree)
                 .max(Integer::compare)
-                .orElseThrow(DevSupplier.impossible) + 1;
+                .orElseThrow(Assertion.IMPOSSIBLE) + 1;
     }
 
     public Expression toWithParenthesesExpression(){

@@ -1,6 +1,7 @@
 package org.lee.statement.clause.condition;
 
 import org.lee.entry.RangeTableReference;
+import org.lee.exception.Assertion;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
@@ -21,7 +22,7 @@ public abstract class WhereClause extends Clause<Filter> {
 
     @Override
     public String getString() {
-        assert children.size() == 1;
+        Assertion.requireEquals(children.size(), 1);
         return WHERE + SPACE + nodeArrayToString(children);
     }
 

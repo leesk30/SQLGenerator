@@ -19,6 +19,7 @@ import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -54,7 +55,7 @@ public final class SelectSetopStatement
     private String wrappedStatementToPretty(String name, Projectable projectable){
         if(projectable instanceof ValuesStatement){
             // notice: cannot use 'values as v1(c1, c2)' here, use 'values v1(c1, c2)' instead.
-            return projectable.getString() + SPACE + name + LP + ((ValuesStatement) left).toPrintPrettyNamedField() + RP;
+            return projectable.getString() + SPACE + ((ValuesStatement) left).toPrintPrettyNamedField(name);
         }else {
             return projectable.getString();
         }
@@ -123,7 +124,9 @@ public final class SelectSetopStatement
 
     @Override
     public List<RangeTableEntry> getRawRTEList() {
-        assert left != null && right != null;
+        Objects.requireNonNull(left);
+        Objects.requireNonNull(right);
+
         List<RangeTableEntry> rawRTEList = new ArrayList<>();
         if(left instanceof SelectStatement){
             rawRTEList.addAll(((SelectStatement) left).getRawRTEList());

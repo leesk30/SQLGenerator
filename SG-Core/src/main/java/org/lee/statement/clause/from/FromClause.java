@@ -3,6 +3,7 @@ package org.lee.statement.clause.from;
 import org.lee.common.DevTempConf;
 import org.lee.common.MetaEntry;
 import org.lee.entry.relation.*;
+import org.lee.exception.Assertion;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
@@ -13,7 +14,6 @@ import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.statement.support.SupportRangeTableTransform;
-import org.lee.util.DevSupplier;
 import org.lee.util.FuzzUtil;
 
 import java.util.*;
@@ -64,7 +64,7 @@ public abstract class FromClause extends Clause<RangeTableReference>
                         join.fuzz();
                         return new RangeTableReference(join);
                     })
-                    .orElseThrow(DevSupplier.impossible);
+                    .orElseThrow(Assertion.IMPOSSIBLE);
             children.add(reference);
         }
     }

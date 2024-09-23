@@ -109,12 +109,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
         return valuesClause;
     }
 
-    @Override
-    public String body() {
-        return nodeArrayToString(SPACE, this.walk());
-    }
-
-    public String toPrintPrettyNamedField(){
-        return nodeArrayToString(this.project());
+    public String toPrintPrettyNamedField(String name){
+        return name + LP + nodeArrayToString(this.project()) + RP;
     }
 }

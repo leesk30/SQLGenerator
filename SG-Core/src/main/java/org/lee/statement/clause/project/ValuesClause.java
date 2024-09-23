@@ -2,6 +2,7 @@ package org.lee.statement.clause.project;
 
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.record.Record;
+import org.lee.exception.Assertion;
 import org.lee.node.NodeTag;
 import org.lee.rules.RuleName;
 import org.lee.statement.ValuesStatement;
@@ -31,12 +32,14 @@ public class ValuesClause extends Clause<Record> {
         if(this.statement.confirmByRuleName(RuleName.REQUIRE_SCALA)){
             length = 1;
             width = withLimitations ? limitations.size(): 1;
-            assert width == 1;
+            Assertion.requireEquals(width, 1);
         }else {
             length = FuzzUtil.randomIntFromRange(1, 10);
             width = withLimitations ? limitations.size() : FuzzUtil.randomIntFromRange(1, 7);
         }
-        assert length > 0 && width > 0;
+        Assertion.requiredTrue(length > 0);
+        Assertion.requiredTrue(width> 0);
+
         final List<TypeTag> targetType;
         if(withLimitations){
             targetType = limitations;
@@ -45,7 +48,9 @@ public class ValuesClause extends Clause<Record> {
                     i -> FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE)).collect(Collectors.toList()
             );
         }
-        assert targetType.size() == width;
+
+        Assertion.requireEquals(targetType.size(), width);
+
         IntStream.range(0, length).parallel().forEach(
                 i -> {
                     final Record record = new Record(width);

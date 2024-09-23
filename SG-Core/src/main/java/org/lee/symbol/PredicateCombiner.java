@@ -42,7 +42,7 @@ public enum PredicateCombiner implements Signature {
     }
 
     @Override
-    public TypeTag getReturnType() {
+    public final TypeTag getReturnType() {
         return TypeTag.boolean_;
     }
 

@@ -6,6 +6,7 @@ import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
+import org.lee.exception.Assertion;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
 import org.lee.node.NodeTag;
@@ -19,21 +20,21 @@ public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alia
     private final boolean isTargetEntryAggregate;
 
     public TargetEntry(FieldReference targetScalar){
-        assert targetScalar != null;
+        Assertion.requiredNonNull(targetScalar);
         this.target = targetScalar;
         this.isTargetEntryExpression = false;
         this.isTargetEntryAggregate = false;
     }
 
     public TargetEntry(NameProxy targetScalar){
-        assert targetScalar != null;
+        Assertion.requiredNonNull(targetScalar);
         this.target = targetScalar;
         this.isTargetEntryExpression = false;
         this.isTargetEntryAggregate = false;
     }
 
     public TargetEntry(Expression expression){
-        assert expression != null;
+        Assertion.requiredNonNull(expression);
         this.target = expression;
         this.isTargetEntryExpression = true;
         this.isTargetEntryAggregate = expression.isIncludingAggregation();

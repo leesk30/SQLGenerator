@@ -7,8 +7,6 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.statistic.RelatedStatistic;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.Qualification;
-import org.lee.symbol.StaticSymbol;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 import org.lee.util.Pair;

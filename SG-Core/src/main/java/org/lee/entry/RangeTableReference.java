@@ -41,8 +41,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
     public String getString() {
         if(hasAlias()){
             if(isEntryNeedPrintPrettyName){
-                return entry.getString() + SPACE + AS + SPACE + getAlias() + LP +
-                        ((ValuesRelation)entry).getWrapped().toPrintPrettyNamedField() + RP;
+                return entry.getString() + SPACE + ((ValuesRelation)entry).getWrapped().toPrintPrettyNamedField(getAlias());
             }
             return entry.getString() + SPACE + AS + SPACE + getAlias();
         }

@@ -3,13 +3,11 @@ package org.lee.fuzzer.expr;
 import org.lee.entry.FieldReference;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.scalar.Scalar;
-import org.lee.fuzzer.Generator;
+import org.lee.exception.Assertion;
 import org.lee.statement.expression.Qualification;
 import org.lee.symbol.Signature;
 import org.lee.symbol.Comparator;
-import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.util.DevSupplier;
 import org.lee.util.FuzzUtil;
 import org.lee.util.Pair;
 
@@ -49,7 +47,8 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     default <T> Qualification compareToLiteral(Scalar fieldReference){
         TypeTag typeTag = fieldReference.getType();
         Literal<T> literal = Literal.fromType(typeTag);
-        assert typeTag.getCategory() == literal.getType().getCategory();
+        // check the value is same category
+        Assertion.requiredTrue(typeTag.getCategory() == literal.getType().getCategory());
         Comparator comparator = Comparator.fastGetComparatorByCategory(typeTag.getCategory());
         return new Qualification(comparator)
                 .newChild(fieldReference)
@@ -69,8 +68,8 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         }
         return new Qualification(Comparator.BETWEEN_AND)
                 .newChild(fieldReference)
-                .newChild(ordered.getFirst().orElseThrow(DevSupplier.impossible))
-                .newChild(ordered.getFirst().orElseThrow(DevSupplier.impossible));
+                .newChild(ordered.getFirst().orElseThrow(Assertion.IMPOSSIBLE))
+                .newChild(ordered.getFirst().orElseThrow(Assertion.IMPOSSIBLE));
     }
 
     default Qualification tryWithPredicateAddition(final Qualification qualification){

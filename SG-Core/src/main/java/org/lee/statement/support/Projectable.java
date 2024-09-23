@@ -35,12 +35,14 @@ public interface Projectable extends TreeNode<Clause<? extends Node>>, Fuzzer {
         return body();
     }
 
-    String body();
-
     boolean isScalar();
 
     default int width(){
         return project().size();
+    }
+
+    default String body(){
+        return nodeArrayToString(SPACE, this.walk());
     }
 
     void withProjectTypeLimitation(List<TypeTag> limitation);

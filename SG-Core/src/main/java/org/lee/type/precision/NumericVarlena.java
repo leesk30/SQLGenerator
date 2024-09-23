@@ -1,5 +1,6 @@
 package org.lee.type.precision;
 
+import org.lee.exception.Assertion;
 import org.lee.node.Node;
 
 public final class NumericVarlena implements TypePrecision{
@@ -8,9 +9,7 @@ public final class NumericVarlena implements TypePrecision{
     public final static NumericVarlena defaultPrecision = new NumericVarlena();
 
     public NumericVarlena(int head, int tail) {
-        if(head != VARLENA_FLAG && head < tail){
-            throw new AssertionError("Tail should be lower than head");
-        }
+        Assertion.requiredFalse(head != VARLENA_FLAG && head < tail);
         this.head = head;
         this.tail = tail;
     }

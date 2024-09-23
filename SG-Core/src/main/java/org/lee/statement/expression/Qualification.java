@@ -6,12 +6,9 @@ import org.lee.node.NodeTag;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.symbol.Signature;
-import org.lee.symbol.StaticSymbol;
 import org.lee.type.TypeTag;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class Qualification extends Expression {
 

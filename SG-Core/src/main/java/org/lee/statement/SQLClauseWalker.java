@@ -1,6 +1,6 @@
 package org.lee.statement;
 
-import org.lee.common.SGException;
+import org.lee.exception.NotImplementedException;
 import org.lee.statement.clause.Clause;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
@@ -60,7 +60,7 @@ public class SQLClauseWalker implements Iterator<Clause<? extends Node>> {
                 this.router = isAssemble ? valuesAssembler: valuesGenerator;
                 break;
             default:
-                throw new SGException.NotImplementedException("NotImplemented for " + sqlType);
+                throw new NotImplementedException("NotImplemented for " + sqlType);
         }
     }
 
