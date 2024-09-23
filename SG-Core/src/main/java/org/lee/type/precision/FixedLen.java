@@ -1,5 +1,7 @@
 package org.lee.type.precision;
 
+import org.lee.node.Node;
+
 /**
  * 定长精度
  * */
@@ -24,5 +26,10 @@ public class FixedLen extends SizeofPrecision {
     @Override
     public boolean isUnlimitedLength() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return Node.EMPTY;
     }
 }

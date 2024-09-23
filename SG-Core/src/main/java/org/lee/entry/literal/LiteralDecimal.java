@@ -12,4 +12,5 @@ public class LiteralDecimal extends LiteralNumber<BigDecimal> {
     public LiteralDecimal(BigDecimal literalValue, int index) {
         super(TypeTag.decimal, literalValue, index);
     }
+
 }

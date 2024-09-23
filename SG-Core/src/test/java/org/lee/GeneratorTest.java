@@ -1,5 +1,6 @@
 package org.lee;
 
+import org.lee.common.MetaEntry;
 import org.lee.fuzzer.Generator;
 import org.lee.statement.SQLFormatter;
 import org.lee.statement.select.SelectStatement;
@@ -20,6 +21,9 @@ public class GeneratorTest {
         long startAt = System.currentTimeMillis();
         Finder finder = Finder.getFinder();
         Finder.load();
+        MetaEntry.relationMap.values().forEach(r -> {
+            System.out.println(r.toDDL(true, " USING PARQUET "));
+        });
         finder.put(new Function("abs(%s)", TypeTag.decimal, TypeTag.decimal));
         String output = TestSingleSQLGenerator.outputPath();
         System.out.println("Output dir is: " + output);

@@ -3,7 +3,10 @@ package org.lee.entry;
 import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
+import org.lee.entry.relation.SubqueryRelation;
+import org.lee.entry.relation.ValuesRelation;
 import org.lee.node.NodeTag;
+import org.lee.statement.ValuesStatement;
 import org.lee.statement.support.Alias;
 import org.lee.util.FuzzUtil;
 
@@ -15,6 +18,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
 
     private String refName;
     private final RangeTableEntry entry;
+    private final boolean isEntryNeedPrintPrettyName;
     private final List<FieldReference> fieldReferences = new Vector<>();
     private final UUID uniqueName = UUID.randomUUID();
 
@@ -25,6 +29,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
     public RangeTableReference(String refName, RangeTableEntry rangeTableEntry){
         this.entry = rangeTableEntry;
         this.refName = refName;
+        this.isEntryNeedPrintPrettyName = (entry instanceof ValuesRelation);
         if(entry instanceof RTEJoin){
             ((RTEJoin) entry).getChildNodes().parallelStream().forEach(child -> fieldReferences.addAll(child.getFieldReferences()));
         }else {
@@ -35,7 +40,11 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
     @Override
     public String getString() {
         if(hasAlias()){
-            return String.format("%s as %s", entry.getString(), refName);
+            if(isEntryNeedPrintPrettyName){
+                return entry.getString() + SPACE + AS + SPACE + getAlias() + LP +
+                        ((ValuesRelation)entry).getWrapped().toPrintPrettyNamedField() + RP;
+            }
+            return entry.getString() + SPACE + AS + SPACE + getAlias();
         }
         return entry.getString();
     }

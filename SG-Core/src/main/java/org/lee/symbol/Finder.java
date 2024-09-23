@@ -102,7 +102,18 @@ public class Finder {
         System.out.println("Build symbol elapse: " + (System.currentTimeMillis() - start));
     }
 
+    private static boolean checkDisabled(JSONObject jsonSymbol){
+        if(jsonSymbol.has("enable") && !jsonSymbol.getBoolean("enable")){
+            System.out.println("Disable by " + (jsonSymbol.has("reason") ? jsonSymbol.getString("reason") : "Unknown reason"));
+            return true;
+        }
+        return false;
+    }
+
     private static void jsonToFunction(JSONObject function){
+        if(checkDisabled(function)){
+            return;
+        }
         final String body = function.getString("body");
         final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
@@ -110,6 +121,9 @@ public class Finder {
     }
 
     private static void jsonToOperator(JSONObject operator){
+        if(checkDisabled(operator)){
+            return;
+        }
         final String body = operator.getString("body");
         final TypeTag returnType = TypeTag.getEnum(operator.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(operator.getJSONArray("args"));
@@ -118,6 +132,9 @@ public class Finder {
     }
 
     private static void jsonToAggregation(JSONObject aggregate){
+        if(checkDisabled(aggregate)){
+            return;
+        }
         final String body = aggregate.getString("body");
         final TypeTag returnType = TypeTag.getEnum(aggregate.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(aggregate.getJSONArray("args"));

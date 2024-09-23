@@ -4,6 +4,7 @@ import org.lee.common.DevTempConf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.SQLStatement;
+import org.lee.statement.ValuesStatement;
 import org.lee.statement.clause.from.WithClause;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.SelectLimitOffset;
@@ -19,6 +20,7 @@ import org.lee.util.FuzzUtil;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public final class SelectSetopStatement
         extends SelectStatement
@@ -49,10 +51,25 @@ public final class SelectSetopStatement
         super(SelectType.setop, parent);
     }
 
+    private String wrappedStatementToPretty(String name, Projectable projectable){
+        if(projectable instanceof ValuesStatement){
+            // notice: cannot use 'values as v1(c1, c2)' here, use 'values v1(c1, c2)' instead.
+            return projectable.getString() + SPACE + name + LP + ((ValuesStatement) left).toPrintPrettyNamedField() + RP;
+        }else {
+            return projectable.getString();
+        }
+    }
+
+    private String setOperationToString(){
+        return setop + (all ? SPACE + ALL : SPACE + EMPTY);
+    }
+
 
     @Override
     public String body(){
-        return left.getString() + NEWLINE + setop + (all ? ALL : EMPTY) + NEWLINE + right.getString();
+        return wrappedStatementToPretty("v_left", left) + NEWLINE +
+                setOperationToString() + NEWLINE +
+                wrappedStatementToPretty("v_right", right);
     }
 
     private SelectType getSubSelectType(){
@@ -70,18 +87,31 @@ public final class SelectSetopStatement
         return left.project();
     }
 
+    private void requireProjectionLeftSimilarWithRight(){
+        if(left.project().size() != right.project().size()){
+            throw new RuntimeException("The setop statement has difference project length. " +
+                    "Left: " + left.project().size() + " Right: " + right.project().size());
+        }
+        IntStream.range(0, left.project().size()).parallel().forEach(
+                i -> {
+                    if(left.project().get(i).getType() != right.project().get(i).getType()){
+                        throw new RuntimeException("The setop statement is mismatched type in both size. " +
+                                "Left type: " + left.project().get(i).getType() +
+                                " Right type: "+ right.project().get(i).getType() +" Index: " + i);
+                    }
+                }
+        );
+    }
+
     @Override
     public void fuzz() {
         withClause.fuzz();
         // with parent generate
         left = generate(this);
-        right = generate(this);
-        left.fuzz();
-        right.withProjectTypeLimitation(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
-
+        right = generate(this, left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+        requireProjectionLeftSimilarWithRight();
         setop = FuzzUtil.randomlyChooseFrom(SetOperation.values());
         all = FuzzUtil.probability(50);
-
         sortByClause.fuzz();
         limitOffset.fuzz();
     }

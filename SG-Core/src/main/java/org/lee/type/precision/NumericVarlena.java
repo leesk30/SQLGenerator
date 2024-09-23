@@ -1,5 +1,7 @@
 package org.lee.type.precision;
 
+import org.lee.node.Node;
+
 public final class NumericVarlena implements TypePrecision{
     private final int head;
     private final int tail;
@@ -48,5 +50,15 @@ public final class NumericVarlena implements TypePrecision{
 
     public int getFloatDigitLength(){
         return tail;
+    }
+
+    @Override
+    public String toString() {
+        if(head > 0 && tail > 0){
+            return Node.LP + head + Node.COMMA + tail + Node.RP;
+        } else if (head > 0) {
+            return Node.LP + head + Node.RP;
+        }
+        return Node.EMPTY;
     }
 }

@@ -265,9 +265,9 @@
     {"body": "add_months(%s, %s)", "return": "date", "args": ["date", "int"]},
     {"body": "add_months(%s, %s)", "return": "date", "args": ["date", "bigint"]},
     {"body": "date_add(%s, %s)", "return": "date", "args": ["date", "int"]},
-    {"body": "date_add(%s, %s)", "return": "date", "args": ["date", "bigint"]},
+    {"body": "date_add(%s, %s)", "return": "date", "args": ["date", "bigint"], "enable": false, "reason": "date_add not support with bigint"},
     {"body": "date_sub(%s, %s)", "return": "date", "args": ["date", "int"]},
-    {"body": "date_sub(%s, %s)", "return": "date", "args": ["date", "bigint"]},
+    {"body": "date_sub(%s, %s)", "return": "date", "args": ["date", "bigint"], "enable": false, "reason": "date_add not support with bigint"},
     {"body": "date_diff(%s, %s)", "return": "int", "args": ["date", "date"]},
     {"body": "date_diff(%s, %s)", "return": "int", "args": ["date", "date"]},
 
@@ -280,10 +280,10 @@
     {"body": "mod(%s, %s)", "return": "double", "args": ["int", "double"]},
     {"body": "mod(%s, %s)", "return": "double", "args": ["bigint", "double"]},
 
-    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["int", "int"]},
-    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["float", "float"]},
-    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["decimal", "decimal"]},
-    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["bigint", "bigint"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "int", "args": ["int", "int"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "float", "args": ["float", "float"]},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "string", "args": ["decimal", "decimal"], "enable":  false, "reason": "java_method(Max) only support (\"BOOLEAN\" or \"TINYINT\" or \"SMALLINT\" or \"INT\" or \"BIGINT\" or \"FLOAT\" or \"DOUBLE\" or \"STRING\")"},
+    {"body": "java_method('java.lang.Math', 'max', %s, %s)", "return": "bigint", "args": ["bigint", "bigint"]},
 
     {"body": "substring(%s, %s)", "return": "string", "args": ["string", "int"]},
     {"body": "substring(%s, %s)", "return": "string", "args": ["string", "bigint"]},
@@ -293,10 +293,10 @@
     {"body": "try_add(%s, %s)", "return": "int", "args": ["bigint", "bigint"]},
     {"body": "try_add(%s, %s)", "return": "int", "args": ["int", "bigint"]},
 
-    {"body": "try_add(%s, %s)", "return": "int", "args": ["date", "int"]},
-    {"body": "try_add(%s, %s)", "return": "int", "args": ["int", "date"]},
+    {"body": "try_add(%s, %s)", "return": "date", "args": ["date", "int"]},
+    {"body": "try_add(%s, %s)", "return": "date", "args": ["int", "date"]},
 
-    {"body": "try_add(%s, %s)", "return": "int", "args": ["string", "int"]},
+    {"body": "try_add(%s, %s)", "return": "string", "args": ["string", "int"]},
 
     {"body": "hash(%s, %s)", "return": "int", "args": ["string", "string"]},
     {"body": "hash(%s, %s)", "return": "int", "args": ["char", "string"]},
@@ -337,7 +337,7 @@
 
     {"body": "overlay(%s PLACING %s FROM %s)", "return": "string", "args": ["string", "int", "int"]},
 
-    {"body": "mask(%s, %s, %s, %s)", "return": "string", "args": ["string", "char", "char", "char"]},
+    {"body": "mask(%s, %s, %s, %s)", "return": "string", "args": ["string", "char", "char", "char"], "enable": false, "reason": "The CharType of function mask() should be upperChar/lowerChar/digitChar"},
 
     {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "int"]},
     {"body": "make_timestamp(%s, %s, %s, %s, %s, %s)", "return": "timestamp", "args": ["int", "int", "int", "int", "int", "decimal"]},

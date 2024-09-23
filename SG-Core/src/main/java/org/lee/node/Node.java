@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
@@ -46,9 +45,30 @@ public interface Node {
     String SOME = "SOME";
     String ANY = "ANY";
     String EXISTS = "EXISTS";
+    String CREATE = "CREATE";
+    String TABLE = "TABLE";
+    String VIEW = "VIEW";
+    String IF = "IF";
+    String CASE = "CASE";
+    String WHEN = "WHEN";
+    String THEN = "THEN";
+    String NOT = "NOT";
 
     String getString();
     NodeTag getNodeTag();
+
+
+    default String concatWithSpace(String ... word){
+        return String.join(SPACE, word);
+    }
+
+    default String concatWithComma(String ... word){
+        return String.join(COMMA, word);
+    }
+
+    default String concatWithNewline(String ... word){
+        return String.join(NEWLINE, word);
+    }
 
     default <T extends Node> String nodeArrayToString(final String separator, final Stream<T> nodeStream, final Function<T, String> toStringMethod) {
         final String reducerSeparator = "%s" + separator + "%s";

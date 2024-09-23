@@ -1,5 +1,6 @@
 package org.lee.type;
 
+import org.lee.node.Node;
 import org.lee.type.precision.*;
 
 import java.util.HashMap;
@@ -60,10 +61,15 @@ public class TypeDescriptor {
             throw new RuntimeException("Unable to parse type by name: " + typeName);
         }
         TypePrecision precision;
-        if(tag == TypeTag.decimal){
-            precision = precisions.length == 1 ? new NumericVarlena(precisions[0]) : new NumericVarlena(precisions[0], precisions[1]);
-        }else {
-            precision = new FixedLen(precisions[0]);
+        switch (tag){
+            case decimal:
+                precision = precisions.length == 1 ? new NumericVarlena(precisions[0]) : new NumericVarlena(precisions[0], precisions[1]);
+                break;
+            case char_:
+                precision = new CharVarlena(precisions[0]);
+                break;
+            default:
+                precision = new FixedLen(precisions[0]);
         }
         return new TypeDescriptor(tag, precision);
     }
@@ -95,6 +101,14 @@ public class TypeDescriptor {
             }
         );
         return precisionArr;
+    }
 
+    @Override
+    public String toString() {
+        String precisionPart = precision.toString();
+        if(precisionPart.isEmpty() && tag == TypeTag.char_){
+            return this.tag + Node.LP + 1 + Node.RP;
+        }
+        return this.tag.toString() + precision.toString();
     }
 }

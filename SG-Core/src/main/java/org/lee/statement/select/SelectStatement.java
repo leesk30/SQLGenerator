@@ -45,7 +45,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
             }else {
                 this.setopDepth = selectParent.setopDepth;
                 this.subqueryDepth = selectParent.selectType == SelectType.setop ? selectParent.subqueryDepth: (selectParent.subqueryDepth + 1);
-                this.withLogicalParentheses = this.selectType != SelectType.simple;
+                this.withLogicalParentheses = (selectParent.selectType != SelectType.setop || this.selectType != SelectType.simple);
             }
         }else {
             this.subqueryDepth = 1;

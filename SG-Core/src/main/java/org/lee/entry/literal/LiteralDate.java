@@ -11,6 +11,6 @@ public class LiteralDate extends Literal<Date> implements Inescapable{
 
     @Override
     public String getInescapeString() {
-        return String.format("TIMESTAMP'%s'", literalValue.toString());
+        return String.format("DATE'%s'", literalValue.toString());
     }
 }

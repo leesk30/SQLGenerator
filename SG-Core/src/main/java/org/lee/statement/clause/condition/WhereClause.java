@@ -21,7 +21,8 @@ public abstract class WhereClause extends Clause<Filter> {
 
     @Override
     public String getString() {
-        return "\nWHERE " + nodeArrayToString(children);
+        assert children.size() == 1;
+        return WHERE + SPACE + nodeArrayToString(children);
     }
 
     @Override

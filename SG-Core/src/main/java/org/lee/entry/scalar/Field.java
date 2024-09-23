@@ -36,6 +36,10 @@ public class Field extends ScalarWithinRelation {
         return fieldType;
     }
 
+    public TypeDescriptor getDescriptor(){
+        return descriptor;
+    }
+
     public TypeDescriptor getTypeDescriptor() {
         return descriptor;
     }

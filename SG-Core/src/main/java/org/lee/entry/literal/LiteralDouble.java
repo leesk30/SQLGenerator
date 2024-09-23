@@ -10,4 +10,9 @@ public class LiteralDouble extends LiteralNumber<Double>{
     public LiteralDouble(double literalValue, int index) {
         super(TypeTag.float_, literalValue, index);
     }
+
+    @Override
+    public String getString() {
+        return literalValue + "D";
+    }
 }

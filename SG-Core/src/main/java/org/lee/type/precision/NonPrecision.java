@@ -1,5 +1,7 @@
 package org.lee.type.precision;
 
+import org.lee.node.Node;
+
 public class NonPrecision implements TypePrecision{
     public static final NonPrecision instance = new NonPrecision();
 
@@ -19,5 +21,10 @@ public class NonPrecision implements TypePrecision{
     @Override
     public int getPrecisionSize() {
         return NON_PRECISION_SIZE;
+    }
+
+    @Override
+    public String toString() {
+        return Node.EMPTY;
     }
 }

@@ -1,9 +1,8 @@
 package org.lee.statement;
 
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.relation.SubqueryRelation;
-import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.relation.ValuesRelation;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.limit.LimitOffset;
@@ -14,12 +13,10 @@ import org.lee.statement.clause.sort.ValuesOrderByClause;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Sortable;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
-import java.util.stream.IntStream;
 
 public class ValuesStatement extends SQLStatement implements Projectable, Sortable {
     protected final boolean withLogicalParentheses;
@@ -73,7 +70,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
 
     @Override
     public RangeTableEntry toRelation() {
-        return new SubqueryRelation(this);
+        return new ValuesRelation(this);
     }
 
     @Override
@@ -115,5 +112,9 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
     @Override
     public String body() {
         return nodeArrayToString(SPACE, this.walk());
+    }
+
+    public String toPrintPrettyNamedField(){
+        return nodeArrayToString(this.project());
     }
 }

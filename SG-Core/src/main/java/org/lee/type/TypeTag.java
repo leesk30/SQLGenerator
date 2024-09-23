@@ -12,11 +12,11 @@ import java.util.stream.Stream;
 public enum TypeTag {
     string(TypeCategory.STRING, 2, "string", "text"),
     int_(TypeCategory.NUMBER,1, "integer", "int1", "int2", "int4", "int"),
-    bigint(TypeCategory.NUMBER, 2, "int8", "long", "bigint"),
+    bigint(TypeCategory.NUMBER, 2, "bigint", "long", "int8"),
     date(TypeCategory.DATE, 1,"date"),
     timestamp(TypeCategory.TIMESTAMP, 1,"timestamp"),
     boolean_(TypeCategory.BOOLEAN, 1,"boolean", "bool"),
-    char_(TypeCategory.STRING, 1,"character", "char"),
+    char_(TypeCategory.STRING, 1,"char", "character"),
     decimal(TypeCategory.NUMBER, 4,"decimal", "number", "numeric"),
     float_(TypeCategory.NUMBER,3,"double", "float", "float4", "float8", "real"),
 
@@ -99,5 +99,10 @@ public enum TypeTag {
 
     public Signature getEmptySymbol() {
         return emptySymbol;
+    }
+
+    @Override
+    public String toString() {
+        return names[0];
     }
 }

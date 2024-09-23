@@ -1,5 +1,7 @@
 package org.lee.type.precision;
 
+import org.lee.node.Node;
+
 /**
  * character is a specific type of var-len-array type.
  * */
@@ -10,5 +12,13 @@ public final class CharVarlena extends Varlena{
 
     public CharVarlena(){
         super(CHAR_DEFAULT_SIZE);
+    }
+
+    @Override
+    public String toString() {
+        if(sizeof == VARLENA_FLAG || sizeof < 0){
+            return Node.LP + 1 + Node.RP;
+        }
+        return Node.LP + sizeof + Node.RP;
     }
 }

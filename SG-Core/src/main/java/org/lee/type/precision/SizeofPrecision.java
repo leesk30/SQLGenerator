@@ -1,5 +1,7 @@
 package org.lee.type.precision;
 
+import org.lee.node.Node;
+
 public abstract class SizeofPrecision implements TypePrecision{
     protected final int sizeof;
 
@@ -17,4 +19,8 @@ public abstract class SizeofPrecision implements TypePrecision{
         return sizeof == VARLENA_FLAG;
     }
 
+    @Override
+    public String toString() {
+        return Node.EMPTY;
+    }
 }
