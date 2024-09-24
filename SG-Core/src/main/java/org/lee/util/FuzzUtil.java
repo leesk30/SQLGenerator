@@ -6,6 +6,10 @@ import org.apache.commons.math3.random.RandomDataGenerator;
 import org.lee.common.MetaEntry;
 import org.lee.entry.relation.Relation;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.util.*;
@@ -16,10 +20,13 @@ public class FuzzUtil {
     public static final SecureRandom secureRandom = new SecureRandom();
     public static final RandomDataGenerator randomDataGenerator = new RandomDataGenerator();
 
-    private static final char[] characters = {
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
-            't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    private static final char[] charset = {
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
     };
+
+    private static final String strings = FileUtil.inputStreamToString(FuzzUtil.class.getClassLoader().getResourceAsStream("strings.txt"));
 
     public static boolean probability(int prob){
         return secureRandom.nextInt(100) < prob;

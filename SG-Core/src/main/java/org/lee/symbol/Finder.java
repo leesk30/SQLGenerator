@@ -3,6 +3,7 @@ package org.lee.symbol;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.type.TypeTag;
+import org.lee.util.FileUtil;
 import org.lee.util.TrieTree;
 
 import java.io.BufferedReader;
@@ -82,7 +83,7 @@ public class Finder {
         }
         isLoad = true;
         InputStream stream = Finder.class.getClassLoader().getResourceAsStream("symbol.json");
-        JSONObject symbols = new JSONObject(inputStreamToString(stream));
+        JSONObject symbols = new JSONObject(FileUtil.inputStreamToString(stream));
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");
         JSONArray operatorList = symbols.getJSONArray("operator");
@@ -145,20 +146,6 @@ public class Finder {
         TypeTag[] typeTags = new TypeTag[arr.length()];
         IntStream.range(0, arr.length()).parallel().forEach(i->typeTags[i] = TypeTag.getEnum(arr.getString(i)));
         return typeTags;
-    }
-
-    public static String inputStreamToString(InputStream input){
-        StringBuilder builder = new StringBuilder();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-        String line;
-        try {
-            while ((line = reader.readLine()) != null){
-                builder.append(line).append("\n");
-            }
-        }catch (IOException e){
-            throw new RuntimeException(e);
-        }
-        return builder.toString();
     }
 
     public List<Signature> getAggregate(TypeTag input){
