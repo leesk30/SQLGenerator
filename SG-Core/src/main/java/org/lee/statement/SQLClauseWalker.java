@@ -36,8 +36,14 @@ public class SQLClauseWalker implements Iterator<Clause<? extends Node>> {
             NodeTag.limitOffset,
     };
 
+    private static final NodeTag[] insertAssembler = {
+            NodeTag.modifyTableClause,
+            NodeTag.valuesClause,
+    };
+
     // in same order
     private static final NodeTag[] valuesGenerator = valuesAssembler;
+    private static final NodeTag[] insertGenerator = insertAssembler;
 
     private static final NodeTag[] selectGenerator = {
             NodeTag.withClause,
@@ -58,6 +64,9 @@ public class SQLClauseWalker implements Iterator<Clause<? extends Node>> {
                 break;
             case values:
                 this.router = isAssemble ? valuesAssembler: valuesGenerator;
+                break;
+            case insert:
+                this.router = isAssemble ? insertAssembler: insertGenerator;
                 break;
             default:
                 throw new NotImplementedException("NotImplemented for " + sqlType);

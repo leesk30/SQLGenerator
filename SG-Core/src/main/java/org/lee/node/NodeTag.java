@@ -41,6 +41,7 @@ public enum NodeTag {
     connectByClause("connectByClause", clause),
     limitOffset("limitOffset", clause),
     valuesClause("valuesClause", clause),
+    modifyTableClause("modifyTableClause", clause),
 
 
     pivoted("pivoted"),

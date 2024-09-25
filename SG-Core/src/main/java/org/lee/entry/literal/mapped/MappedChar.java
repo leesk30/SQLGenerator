@@ -17,11 +17,11 @@ public class MappedChar extends MappedType<String>{
 
     @Override
     public LiteralChar generate() {
-        return new LiteralChar(FuzzUtil.getRandomName(""));
+        return new LiteralChar(FuzzUtil.randomStringByLength(5));
     }
 
     @Override
     public LiteralChar generate(int partial) {
-        return new LiteralChar(FuzzUtil.getRandomName(""));
+        return new LiteralChar(FuzzUtil.randomStringByLength(partial));
     }
 }

@@ -5,11 +5,13 @@ import org.json.JSONObject;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
+import org.lee.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public class MetaEntry {
     private static boolean isInitialized = false;
@@ -58,5 +60,22 @@ public class MetaEntry {
         return new Field(fieldName, typeDescriptor);
     }
 
+    public static String toDDLs(boolean ignoreIfExists, String options){
+        StringBuilder builder = new StringBuilder();
+        MetaEntry.relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append(";").append("\n"));
+        return builder.toString();
+    }
 
+    public static String toInitializedInserts(){
+        StringBuilder builder = new StringBuilder();
+        MetaEntry.relationMap.values().forEach(
+                r -> {
+                    final int numOfInsertStatement = FuzzUtil.randomIntFromRange(10, 20);
+                    IntStream.range(0, numOfInsertStatement).forEach(
+                            i -> builder.append(r.getInitializedInsert(3)).append("\n")
+                    );
+                }
+        );
+        return builder.toString();
+    }
 }

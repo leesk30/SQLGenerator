@@ -1,7 +1,9 @@
 package org.lee.entry.relation;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lee.node.NodeTag;
 import org.lee.entry.scalar.Field;
+import org.lee.statement.insert.InsertInitializedStatement;
 
 import java.util.List;
 import java.util.Vector;
@@ -60,12 +62,20 @@ public class Relation implements RangeTableEntry {
     }
 
     public String toDDL(boolean addIgnore, String ddlOptions){
-        return concatWithSpace(
+        String result = concatWithSpace(
                 concatWithSpace(CREATE, TABLE, addIgnore ? concatWithSpace(IF, NOT, EXISTS, EMPTY):EMPTY),
                 getName(),
                 LP,
                 toDDLStyleFieldWithType(),
                 RP
-        ) + ddlOptions + ENDING;
+        );
+        if(!StringUtils.isEmpty(ddlOptions) && !StringUtils.isBlank(ddlOptions)){
+            return concatWithSpace(result, ddlOptions) + ENDING;
+        }
+        return result + ENDING;
+    }
+
+    public String getInitializedInsert(int maxNumOfValueLines){
+        return new InsertInitializedStatement(this, maxNumOfValueLines).getString();
     }
 }

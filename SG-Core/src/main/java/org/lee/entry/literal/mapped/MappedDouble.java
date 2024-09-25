@@ -17,11 +17,11 @@ public class MappedDouble extends MappedType<Double>{
 
     @Override
     public LiteralDouble generate() {
-        return new LiteralDouble(FuzzUtil.randomDecimalFromRange(0, 100).doubleValue());
+        return new LiteralDouble(FuzzUtil.randomDoubleFromRange(0, 100));
     }
 
     @Override
     public LiteralDouble generate(int partial) {
-        return new LiteralDouble(FuzzUtil.randomDecimalFromRange(partial, partial+100).doubleValue());
+        return new LiteralDouble(FuzzUtil.randomDoubleFromRange(partial, partial+100));
     }
 }

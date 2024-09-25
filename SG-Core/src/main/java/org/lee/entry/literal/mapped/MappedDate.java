@@ -17,11 +17,11 @@ public class MappedDate extends MappedType<Date> {
 
     @Override
     public LiteralDate generate() {
-        return new LiteralDate(new Date(System.currentTimeMillis()));
+        return generate(0);
     }
 
     @Override
     public LiteralDate generate(int partial) {
-        return new LiteralDate(new Date(System.currentTimeMillis() + partial));
+        return new LiteralDate(FuzzUtil.randomDate(partial));
     }
 }

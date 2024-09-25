@@ -8,6 +8,7 @@ import org.lee.node.NodeTag;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;
+import org.lee.statement.clause.project.ValuesClauseForValues;
 import org.lee.statement.clause.sort.SortByClause;
 import org.lee.statement.clause.sort.ValuesOrderByClause;
 import org.lee.statement.support.Projectable;
@@ -20,7 +21,7 @@ import java.util.Vector;
 
 public class ValuesStatement extends SQLStatement implements Projectable, Sortable {
     protected final boolean withLogicalParentheses;
-    protected final ValuesClause valuesClause = new ValuesClause(this);
+    protected final ValuesClause valuesClause = new ValuesClauseForValues(this);
     protected final SortByClause sortByClause = new ValuesOrderByClause(this);
     protected final LimitOffset limitOffset = new ValuesLimitOffset(this);
     protected final List<TypeTag> limitations = new Vector<>();

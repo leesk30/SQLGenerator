@@ -16,11 +16,11 @@ public class MappedString extends MappedType<String> {
 
     @Override
     public LiteralString generate() {
-        return new LiteralString(FuzzUtil.getRandomName(""));
+        return new LiteralString(FuzzUtil.randomStringByLength(10));
     }
 
     @Override
     public LiteralString generate(int partial) {
-        return new LiteralString(FuzzUtil.getRandomName(""));
+        return new LiteralString(FuzzUtil.randomStringByLength(partial));
     }
 }

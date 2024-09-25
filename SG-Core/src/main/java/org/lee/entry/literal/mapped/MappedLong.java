@@ -15,12 +15,12 @@ public final class MappedLong extends MappedType<Long>{
 
     @Override
     public LiteralLong generate() {
-        return new LiteralLong(FuzzUtil.randomIntFromRange(0, 100));
+        return new LiteralLong(FuzzUtil.randomLongFromRange(0, 100));
     }
 
     @Override
     public LiteralLong generate(int partial) {
-        return new LiteralLong(FuzzUtil.randomIntFromRange(partial, partial+100));
+        return new LiteralLong(FuzzUtil.randomLongFromRange(partial, partial+100));
     }
 
 }

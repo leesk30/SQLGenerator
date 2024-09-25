@@ -2,6 +2,7 @@ package org.lee.entry.literal.mapped;
 
 import org.lee.entry.literal.LiteralTimestamp;
 import org.lee.type.TypeTag;
+import org.lee.util.FuzzUtil;
 
 import java.sql.Timestamp;
 
@@ -18,11 +19,11 @@ public final class MappedTimestamp extends MappedType<Timestamp> {
 
     @Override
     public LiteralTimestamp generate() {
-        return new LiteralTimestamp(new Timestamp(System.currentTimeMillis()));
+        return generate(0);
     }
 
     @Override
     public LiteralTimestamp generate(int partial) {
-        return new LiteralTimestamp(new Timestamp(System.currentTimeMillis() + partial));
+        return new LiteralTimestamp(FuzzUtil.randomTimestamp(partial));
     }
 }
