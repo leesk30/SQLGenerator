@@ -1,11 +1,11 @@
 package org.lee.entry.complex;
 
+import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
-import org.lee.rules.RuleName;
-import org.lee.rules.RuleSet;
+import org.lee.common.config.RuleName;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
@@ -22,11 +22,11 @@ public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer
     private boolean representOrderOption;
     private boolean representNullOption;
 
-    public SortEntry(Scalar scalar, RuleSet bySyntax){
+    public SortEntry(Scalar scalar, RuntimeConfiguration config){
         this.scalar = scalar;
-        this.isDefaultAsc = !bySyntax.confirm(RuleName.ORDER_DEFAULT_DESC);
-        this.isDefaultNullLast = !bySyntax.confirm(RuleName.ORDER_DEFAULT_NULL_FIRST);
-        this.supportWithProjectionAlias = bySyntax.confirm(RuleName.ENABLE_FILTER_USING_PROJECTION_ALIAS);
+        this.isDefaultAsc = !config.getRule(RuleName.ORDER_DEFAULT_DESC);
+        this.isDefaultNullLast = !config.getRule(RuleName.ORDER_DEFAULT_NULL_FIRST);
+        this.supportWithProjectionAlias = config.getRule(RuleName.ENABLE_FILTER_USING_PROJECTION_ALIAS);
     }
 
     @Override

@@ -7,7 +7,7 @@ import org.lee.entry.literal.LiteralInt;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
 import org.lee.node.NodeTag;
-import org.lee.rules.RuleName;
+import org.lee.common.config.RuleName;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;
@@ -85,7 +85,7 @@ public class GroupByClause extends Clause<Scalar> {
 
     @Override
     public void fuzz() {
-        final boolean isAggregateRequiredGroupBy = statement.getRuleSet().confirm(RuleName.AGGREGATION_REQUIRED_GROUP_BY);
+        final boolean isAggregateRequiredGroupBy = statement.confirm(RuleName.AGGREGATION_REQUIRED_GROUP_BY);
         if(!isAggregateRequiredGroupBy && !FuzzUtil.probability(DevTempConf.GROUP_BY_CLAUSE_FUZZ_PROBABILITY)){
             return;
         }

@@ -5,7 +5,6 @@ import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
-import org.lee.util.FuzzUtil;
 
 public class SQLGenerator implements Generator<SQLStatement> {
     protected final SQLType sqlType;
@@ -33,6 +32,7 @@ public class SQLGenerator implements Generator<SQLStatement> {
     public SQLStatement generate() {
         SQLStatement statement = getStatement();
         Assertion.requiredNonNull(statement);
+        assert statement != null;
         statement.fuzz();
         return statement;
     }

@@ -1,7 +1,7 @@
 package org.lee.statement.clause.limit;
 
 import org.lee.common.DevTempConf;
-import org.lee.rules.RuleName;
+import org.lee.common.config.RuleName;
 import org.lee.statement.select.SelectStatement;
 import org.lee.util.FuzzUtil;
 
@@ -14,7 +14,7 @@ public class SelectLimitOffset extends LimitOffset {
     @Override
     public void fuzz() {
         if(FuzzUtil.probability(DevTempConf.LIMIT_OFFSET_CLAUSE_FUZZ_PROBABILITY)){
-            if(statement.confirmByRuleName(RuleName.REQUIRE_SCALA)){
+            if(statement.confirm(RuleName.REQUIRE_SCALA)){
                 limitNode.set(1);
             }else {
                 limitNode.set(FuzzUtil.randomIntFromRange(1, 100));

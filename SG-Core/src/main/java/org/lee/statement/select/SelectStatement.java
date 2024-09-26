@@ -1,8 +1,6 @@
 package org.lee.statement.select;
 
 
-import org.lee.rules.DynamicRule;
-import org.lee.rules.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
@@ -123,7 +121,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     public abstract List<RangeTableEntry> getRawRTEList();
 
     private void ruleSetConstruct(){
-        ruleSet.put(new DynamicRule(RuleName.ENABLE_CTE_RULE, () -> this.selectType == SelectType.normal));
+
     }
 
     @Override

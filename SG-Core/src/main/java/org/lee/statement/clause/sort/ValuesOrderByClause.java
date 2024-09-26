@@ -12,6 +12,6 @@ public class ValuesOrderByClause extends SortByClause {
     @Override
     protected IntConsumer getConsumer() {
         // values statement cannot sort by target for some situations
-        return orderByIndex();
+        return randomlyOrderByIndex();
     }
 }

@@ -91,4 +91,8 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         return qualification.or(rhs);
     }
 
+    default Qualification existsPredicate(){
+        return null;
+    }
+
 }

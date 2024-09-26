@@ -1,13 +1,13 @@
 package org.lee.statement.clause.sort;
 
 import org.lee.common.DevTempConf;
+import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.literal.Literal;
 import org.lee.entry.literal.LiteralInt;
 import org.lee.exception.Assertion;
-import org.lee.rules.RuleName;
-import org.lee.rules.RuleSet;
+import org.lee.common.config.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
@@ -34,43 +34,44 @@ public abstract class SortByClause extends Clause<SortEntry> {
         return NodeTag.sortByClause;
     }
 
-    protected IntConsumer orderByIndex(){
+    protected void addSortEntry(SortEntry sortEntry){
+        sortEntry.fuzz();
+        children.add(sortEntry);
+    }
+
+    protected IntConsumer randomlyOrderByIndex(){
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
         return i -> {
             final int orderByIndex = FuzzUtil.randomIntFromRange(1, projectionLength+1);
             final Literal<Integer> literal = new LiteralInt(orderByIndex);
-            final SortEntry sortEntry = new SortEntry(literal, this.statement.getRuleSet());
-            sortEntry.fuzz();
-            children.add(sortEntry);
+            addSortEntry(new SortEntry(literal, this.statement.getConfig()));
         };
     }
 
-    protected IntConsumer orderByTarget(){
+    protected IntConsumer randomlyOrderByTarget(){
         final Projectable projectable = (Projectable) this.statement;
         final List<TargetEntry> targetEntries = projectable.project();
-        final RuleSet ruleSet = ((SQLStatement)projectable).getRuleSet();
+        final RuntimeConfiguration configuration = ((SQLStatement)projectable).getConfig();
         return i -> {
             final TargetEntry targetEntry = FuzzUtil.randomlyChooseFrom(targetEntries);
-            final SortEntry sortEntry = new SortEntry(targetEntry, ruleSet);
-            sortEntry.fuzz();
-            children.add(sortEntry);
+            addSortEntry(new SortEntry(targetEntry, configuration));
         };
     }
 
     protected void orderByScalar(){
-        final SortEntry sortEntry = new SortEntry(new LiteralInt(1), this.statement.getRuleSet());
+        final SortEntry sortEntry = new SortEntry(new LiteralInt(1), this.statement.getConfig());
         sortEntry.fuzz();
         children.add(sortEntry);
     }
 
-    protected boolean sortable(){
-        if(!FuzzUtil.probability(DevTempConf.SORT_BY_CLAUSE_FUZZ_PROBABILITY)){
-            return false;
+    protected boolean requireSort(){
+        if(FuzzUtil.probability(DevTempConf.SORT_BY_CLAUSE_FUZZ_PROBABILITY)){
+            Assertion.requiredTrue(this.statement instanceof Sortable);
+            Assertion.requiredTrue(this.statement instanceof Projectable);
+            return true;
         }
-        Assertion.requiredTrue(this.statement instanceof Sortable);
-        Assertion.requiredTrue(this.statement instanceof Projectable);
-        return true;
+        return false;
     }
 
     protected int getProjectSize(){
@@ -87,13 +88,24 @@ public abstract class SortByClause extends Clause<SortEntry> {
     }
 
     protected IntConsumer getConsumer(){
-        return FuzzUtil.probability(50)? orderByIndex(): orderByTarget();
+        return FuzzUtil.probability(50)? randomlyOrderByIndex(): randomlyOrderByTarget();
+    }
+
+    protected void forceOrderByAllProjections(){
+        IntStream.range(1, getProjectSize() + 1)
+                .parallel()
+                .forEach(i -> addSortEntry(new SortEntry(new LiteralInt(i), this.statement.getConfig())));
     }
 
     @Override
     public void fuzz(){
-        if(sortable()){
-            if(this.statement.getRuleSet().confirm(RuleName.REQUIRE_SCALA)){
+        if(statement.confirm(RuleName.REWRITER_REORDER)){
+            forceOrderByAllProjections();
+            return;
+        }
+
+        if(requireSort()){
+            if(this.statement.confirm(RuleName.REQUIRE_SCALA)){
                 orderByScalar();
                 return;
             }

@@ -6,7 +6,7 @@ import org.lee.entry.RangeTableReference;
 import org.lee.exception.NotImplementedException;
 import org.lee.fuzzer.Generator;
 import org.lee.fuzzer.expr.GeneralExpressionGenerator;
-import org.lee.rules.RuleName;
+import org.lee.common.config.RuleName;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
@@ -87,7 +87,7 @@ public class SelectClauseWithinFrom extends SelectClause{
         final int numOfCandidate = Arrays.stream(numOfEachCandidate).sum();
         final int mayChooseNum = FuzzUtil.randomIntFromRange(1, numOfCandidate + 1);
         final int averageChooseRoundNum = Math.max((numOfCandidate / numOfEachCandidate.length), 1);
-        final boolean enableDuplicateProjections = statement.confirmByRuleName(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS);
+        final boolean enableDuplicateProjections = statement.confirm(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS);
 //        final int[] mutableFactor = {mayChooseNum};
         final List<FieldReference> fieldReferences = new Vector<>(mayChooseNum);
 

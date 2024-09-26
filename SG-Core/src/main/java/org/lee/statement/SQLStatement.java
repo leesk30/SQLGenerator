@@ -1,16 +1,15 @@
 package org.lee.statement;
 
+import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
-import org.lee.rules.RuleName;
-import org.lee.rules.RuleSet;
-import org.lee.rules.SparkRuleSet;
+import org.lee.common.config.RuleName;
 import org.lee.statement.clause.Clause;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
 import org.lee.statement.support.SupportCommonTableExpression;
-import org.lee.statement.syntax.SQLSyntax;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,10 +17,9 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, Fuzzer {
-    protected final SQLGenerateContext context;
     protected final SQLType sqlType;
     protected final SQLStatement parent;
-    protected final RuleSet ruleSet;
+    protected final RuntimeConfiguration configuration;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
 
     protected SQLStatement(SQLType sqlType){
@@ -30,24 +28,19 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
 
     protected SQLStatement(SQLType sqlType, SQLStatement parentStatement){
         if(parentStatement == null){
-            this.context = new SQLGenerateContext(sqlType);
             this.sqlType = sqlType;
             this.parent = null;
+            this.configuration = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
         }else {
-            this.context = new SQLGenerateContext(parentStatement.getContext(), sqlType);
             this.sqlType = sqlType;
             this.parent = parentStatement;
+            this.configuration = this.parent.configuration.newChildRuntimeConfiguration();
         }
-        this.ruleSet = new SparkRuleSet();
 //        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
 
     public boolean isFinished(){
         return this.parent == null;
-    }
-
-    public SQLGenerateContext getContext(){
-        return context;
     }
 
     public SQLStatement getParent() {
@@ -58,12 +51,12 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
         return sqlType;
     }
 
-    public RuleSet getRuleSet() {
-        return ruleSet;
+    public RuntimeConfiguration getConfig() {
+        return configuration;
     }
 
-    public boolean confirmByRuleName(RuleName ruleName){
-        return ruleSet.confirm(ruleName);
+    public boolean confirm(RuleName ruleName){
+        return configuration.getRule(ruleName);
     }
 
     protected void addClause(Clause<? extends Node> child){

@@ -1,8 +1,7 @@
 package org.lee.statement.clause.from;
 
 import org.lee.common.DevTempConf;
-import org.lee.node.Node;
-import org.lee.rules.RuleName;
+import org.lee.common.config.RuleName;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
 import org.lee.node.NodeTag;
@@ -44,7 +43,7 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
         if(numOfCTEs == 0){
             return;
         }
-        if(statement.confirmByRuleName(RuleName.SUPPORT_CTE_MATERIALIZED)
+        if(statement.confirm(RuleName.SUPPORT_CTE_MATERIALIZED)
                 && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
