@@ -21,6 +21,7 @@ public class MappedString extends MappedType<String> {
 
     @Override
     public LiteralString generate(int partial) {
+        partial = Math.min(partial, FuzzUtil.ACTUALLY_MAX_STRINGS);
         return new LiteralString(FuzzUtil.randomStringByLength(partial));
     }
 }

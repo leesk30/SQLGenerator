@@ -5,6 +5,7 @@ import org.lee.entry.literal.LiteralDouble;
 import org.lee.type.TypeTag;
 import org.lee.util.FuzzUtil;
 
+import javax.lang.model.element.NestingKind;
 import java.math.BigDecimal;
 
 public class MappedDecimal extends MappedType<BigDecimal> {
@@ -25,6 +26,23 @@ public class MappedDecimal extends MappedType<BigDecimal> {
     @Override
     public LiteralDecimal generate(int partial) {
         return new LiteralDecimal(FuzzUtil.randomDecimalFromRange(partial, partial+100));
+    }
+
+    public LiteralDecimal generate(int intDigitLength, int floatDigitLength) {
+        intDigitLength = Math.min(3, intDigitLength);
+        floatDigitLength = Math.min(8, floatDigitLength);
+        long integerPart = FuzzUtil.randomLongFromRange(0, (int)Math.pow(10, intDigitLength));
+        long floatPart = FuzzUtil.randomLongFromRange(0, (int)Math.pow(10, floatDigitLength));
+        return toDecimal(integerPart, floatPart);
+    }
+
+    private LiteralDecimal toDecimal(long integerPart, long floatPart){
+        String intPartString = String.valueOf(integerPart);
+        if(floatPart > 0){
+            String floatPartString = new StringBuffer(String.valueOf(floatPart)).reverse().toString();
+            return new LiteralDecimal(new BigDecimal(intPartString + "." + floatPartString));
+        }
+        return new LiteralDecimal(new BigDecimal(integerPart));
     }
 
     @Override

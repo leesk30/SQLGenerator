@@ -7,7 +7,7 @@ import org.lee.node.Node;
  * */
 public class Varlena implements TypePrecision {
     protected final int sizeof;
-    public final static Varlena unlimited = new Varlena(VARLENA_FLAG);
+    public final static Varlena UNLIMITED_VARLENA_PRECISION = new Varlena(VARLENA_FLAG);
 
     public Varlena(int sizeof){
         this.sizeof = sizeof;
@@ -26,7 +26,7 @@ public class Varlena implements TypePrecision {
     @Override
     public String toString() {
         if(sizeof != VARLENA_FLAG){
-            return Node.LP + sizeof + Node.LP;
+            return Node.LP + sizeof + Node.RP;
         }else {
             return Node.EMPTY;
         }

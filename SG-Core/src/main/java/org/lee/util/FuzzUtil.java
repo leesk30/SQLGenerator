@@ -18,7 +18,7 @@ public class FuzzUtil {
     private static final String strings;
     private static final long timestamps = 1720000000000L;
     private static final long timestampsRange = 100 * 24 * 3600000L;  // 100 days
-    private static final int ACTUALLY_MAX_STRINGS;
+    public static final int ACTUALLY_MAX_STRINGS;
 
     static {
         secureRandom = new SecureRandom();

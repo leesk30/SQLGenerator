@@ -3,7 +3,7 @@ package org.lee.type.precision;
 import org.lee.node.Node;
 
 public class NonPrecision implements TypePrecision{
-    public static final NonPrecision instance = new NonPrecision();
+    public static final NonPrecision NON_PRECISION = new NonPrecision();
 
     private NonPrecision(){
     }

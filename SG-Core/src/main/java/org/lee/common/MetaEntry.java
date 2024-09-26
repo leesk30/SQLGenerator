@@ -62,7 +62,7 @@ public class MetaEntry {
 
     public static String toDDLs(boolean ignoreIfExists, String options){
         StringBuilder builder = new StringBuilder();
-        MetaEntry.relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append(";").append("\n"));
+        MetaEntry.relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append("\n"));
         return builder.toString();
     }
 

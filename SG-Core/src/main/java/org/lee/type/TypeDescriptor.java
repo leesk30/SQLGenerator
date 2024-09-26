@@ -1,13 +1,18 @@
 package org.lee.type;
 
+import org.lee.entry.literal.Literal;
+import org.lee.entry.literal.mapped.MappedDecimal;
+import org.lee.entry.literal.mapped.MappedType;
+import org.lee.fuzzer.Generator;
 import org.lee.node.Node;
 import org.lee.type.precision.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class TypeDescriptor {
+public class TypeDescriptor implements Generator<Literal<?>> {
     private final TypeTag tag;
     private final TypePrecision precision;
     private static final Map<TypeTag, TypeDescriptor> stashDescriptor = new HashMap<>();
@@ -27,12 +32,12 @@ public class TypeDescriptor {
         TypePrecision precision;
         switch (tag){
             case bigint: case float_: precision = FixedLen.sizeof8; break;
-            case string: precision = Varlena.unlimited; break;
-            case char_: precision = FixedLen.sizeof1; break;
-            case decimal: precision = NumericVarlena.defaultPrecision; break;
+            case string: precision = Varlena.UNLIMITED_VARLENA_PRECISION; break;
+            case char_: precision = CharVarlena.DEFAULT_CHAR_PRECISION; break;
+            case decimal: precision = NumericVarlena.DEFAULT_NUMERIC_PRECISION; break;
             case int_: precision = FixedLen.sizeof4; break;
             case timestamp: precision = FixedLen.sizeof6; break;
-            default: precision = NonPrecision.instance;
+            default: precision = NonPrecision.NON_PRECISION;
         }
         descriptor = new TypeDescriptor(tag, precision);
         stashDescriptor.put(tag, descriptor);
@@ -67,6 +72,9 @@ public class TypeDescriptor {
                 break;
             case char_:
                 precision = new CharVarlena(precisions[0]);
+                break;
+            case string:
+                precision = new Varlena(precisions[0]);
                 break;
             default:
                 precision = new FixedLen(precisions[0]);
@@ -108,7 +116,27 @@ public class TypeDescriptor {
         String precisionPart = precision.toString();
         if(precisionPart.isEmpty() && tag == TypeTag.char_){
             return this.tag + Node.LP + 1 + Node.RP;
+        } else if (!precisionPart.isEmpty() && tag == TypeTag.string) {
+            return "varchar" + precisionPart;
         }
-        return this.tag.toString() + precision.toString();
+        return this.tag.toString() + precisionPart;
+    }
+
+
+    @Override
+    public Literal<?> generate() {
+        TypeCategory category = this.tag.getCategory();
+        if(category == TypeCategory.STRING && precision.getPrecision() > 0){
+            return tag.asMapped().generate(precision.getPrecision());
+        } else if (category == TypeCategory.NUMBER && tag == TypeTag.decimal) {
+            MappedType<BigDecimal> mapped = tag.asMapped();
+            MappedDecimal mappedDecimal = (MappedDecimal) mapped;
+            if(precision instanceof NumericVarlena){
+                NumericVarlena numericVarlena = (NumericVarlena)precision;
+                return mappedDecimal.generate(numericVarlena.getIntDigitLength(), numericVarlena.getFloatDigitLength());
+            }
+        }
+        return tag.asMapped().generate();
+
     }
 }

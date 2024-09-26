@@ -54,14 +54,14 @@ public abstract class ValuesClause extends Clause<Record> {
                 .collect(Collectors.toList());
     }
 
-    protected void requiredReadyToGenerateRecord(final List<TypeTag> targetType){
+    protected void requiredReadyToGenerateRecord(final int targetWidth){
         Assertion.requiredTrue(length > 0);
         Assertion.requiredTrue(width> 0);
-        Assertion.requireEquals(targetType.size(), width);
+        Assertion.requireEquals(targetWidth, width);
     }
 
     protected void generateRecord(final List<TypeTag> targetType){
-        requiredReadyToGenerateRecord(targetType);
+        requiredReadyToGenerateRecord(targetType.size());
 
         IntStream.range(0, length).parallel().forEach(
                 i -> {

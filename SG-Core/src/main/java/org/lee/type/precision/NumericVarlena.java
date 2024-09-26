@@ -6,7 +6,7 @@ import org.lee.node.Node;
 public final class NumericVarlena implements TypePrecision{
     private final int head;
     private final int tail;
-    public final static NumericVarlena defaultPrecision = new NumericVarlena();
+    public final static NumericVarlena DEFAULT_NUMERIC_PRECISION = new NumericVarlena();
 
     public NumericVarlena(int head, int tail) {
         Assertion.requiredFalse(head != VARLENA_FLAG && head < tail);
