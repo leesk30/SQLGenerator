@@ -71,7 +71,7 @@ public class MetaEntry {
         MetaEntry.relationMap.values().forEach(
                 r -> {
                     final int numOfInsertStatement = FuzzUtil.randomIntFromRange(10, 20);
-                    IntStream.range(0, numOfInsertStatement).forEach(
+                    IntStream.range(0, numOfInsertStatement).sequential().forEach(
                             i -> builder.append(r.getInitializedInsert(3)).append("\n")
                     );
                 }

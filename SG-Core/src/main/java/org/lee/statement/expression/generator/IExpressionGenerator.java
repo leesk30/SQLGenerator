@@ -1,7 +1,7 @@
-package org.lee.statement.generator;
+package org.lee.statement.expression.generator;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.fuzzer.Generator;
+import org.lee.base.Generator;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.type.TypeTag;

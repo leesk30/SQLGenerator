@@ -1,6 +1,6 @@
 package org.lee.entry.scalar;
 
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 
 public class Pseudo extends ScalarWithinRelation {

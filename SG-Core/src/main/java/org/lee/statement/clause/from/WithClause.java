@@ -4,7 +4,7 @@ import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.common.util.FuzzUtil;
@@ -46,6 +46,6 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
         if(config.confirm(Rule.SUPPORT_CTE_MATERIALIZED) && config.probability(Conf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
-        IntStream.range(0, numOfCTEs).parallel().forEach(i -> children.add(new CTE(generate(this.statement))));
+        IntStream.range(0, numOfCTEs).sequential().forEach(i -> children.add(new CTE(generate(this.statement))));
     }
 }

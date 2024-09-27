@@ -1,4 +1,4 @@
-package org.lee.node;
+package org.lee.base;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -72,7 +72,7 @@ public interface Node {
 
     default <T extends Node> String nodeArrayToString(final String separator, final Stream<T> nodeStream, final Function<T, String> toStringMethod) {
         final String reducerSeparator = "%s" + separator + "%s";
-        return nodeStream.parallel()
+        return nodeStream
                 .map(toStringMethod)
                 .filter(s -> !StringUtils.isEmpty(s) && !StringUtils.isBlank(s))
                 .reduce((s1, s2) -> String.format(reducerSeparator, s1, s2))

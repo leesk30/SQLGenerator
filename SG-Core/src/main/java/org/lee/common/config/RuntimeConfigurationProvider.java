@@ -55,12 +55,12 @@ public abstract class RuntimeConfigurationProvider {
 
     protected RuntimeConfigurationProvider(){
         this.sourceFile = null;
-        ruleConstructor();
+        onCreateNewConfigurationProvider();
     }
 
     protected RuntimeConfigurationProvider(File sourceFile){
         this.sourceFile = sourceFile;
-        ruleConstructor();
+        onCreateNewConfigurationProvider();
     }
 
     public Map<Rule, Boolean> getTemplateRuleMap() {
@@ -93,6 +93,6 @@ public abstract class RuntimeConfigurationProvider {
     }
 
     abstract public RuntimeConfiguration newRuntimeConfiguration();
-    abstract protected void ruleConstructor();
+    abstract protected void onCreateNewConfigurationProvider();
 
 }

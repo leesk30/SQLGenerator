@@ -2,11 +2,11 @@ package org.lee.statement.clause.condition;
 
 import org.lee.entry.RangeTableReference;
 import org.lee.common.exception.Assertion;
-import org.lee.fuzzer.Generator;
-import org.lee.statement.generator.JoinerQualificationGenerator;
+import org.lee.base.Generator;
+import org.lee.statement.expression.generator.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.complex.Filter;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
@@ -40,7 +40,7 @@ public abstract class WhereClause extends Clause<Filter> {
             return;
         }
 
-        IntStream.range(0, fromClause.size()).parallel().forEach(i -> {
+        IntStream.range(0, fromClause.size()).sequential().forEach(i -> {
             if(i+1 >= length){
                 return;
             }
@@ -49,7 +49,7 @@ public abstract class WhereClause extends Clause<Filter> {
             final Generator<Qualification> generator = new JoinerQualificationGenerator(config, left, right);
             // todo: add counting randomly
             final int generateCount = FuzzUtil.randomIntFromRange(1, 2);
-            IntStream.range(0, generateCount).parallel().forEach(
+            IntStream.range(0, generateCount).sequential().forEach(
                     j -> {
                         final Qualification qualification = generator.generate();
                         if(qualification != null){

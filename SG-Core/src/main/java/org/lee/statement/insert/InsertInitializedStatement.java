@@ -43,14 +43,14 @@ public final class InsertInitializedStatement extends InsertStatement{
         private void generateRecordByTypeDescriptor(){
             final List<TypeDescriptor> typeDescriptors = InsertInitializedStatement.this.targetRelation.getFields().stream().map(Field::getDescriptor).collect(Collectors.toList());
             requiredReadyToGenerateRecord(typeDescriptors.size());
-            IntStream.range(0, length).parallel().forEach(
+            IntStream.range(0, length).sequential().forEach(
                     i -> {
                         final Record record = new Record(width);
                         typeDescriptors.forEach(td -> record.add(td.generate()));
                         children.add(record);
                     }
             );
-            children.get(0).stream().parallel().forEachOrdered(l -> projection.add(TargetEntry.newNamedEntry(l.getType())));
+            children.get(0).forEach(l -> projection.add(TargetEntry.newNamedEntry(l.getType())));
         }
 
         @Override

@@ -1,8 +1,8 @@
 package org.lee.statement.support;
 
-import org.lee.fuzzer.Fuzzer;
-import org.lee.node.Node;
-import org.lee.node.TreeNode;
+import org.lee.base.Fuzzer;
+import org.lee.base.Node;
+import org.lee.base.TreeNode;
 
 public interface Statement<T extends Node> extends TreeNode<T>, SupportRuntimeConfiguration, Fuzzer {
     Statement<?> getParent();

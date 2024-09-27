@@ -1,6 +1,6 @@
 package org.lee.symbol;
 
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 import org.lee.common.util.FuzzUtil;

@@ -1,4 +1,4 @@
-package org.lee.node;
+package org.lee.base;
 
 public enum NodeTag {
     scalar("scalar"),

@@ -10,7 +10,7 @@ import java.util.Vector;
 
 public class InsertModifyTableClause extends ModifyTableClause{
     protected Relation target;
-    protected final List<Field> insertFields = new Vector<>();
+    protected final List<Field> insertFields = new ArrayList<>();
     public InsertModifyTableClause(SQLStatement statement) {
         super(statement, 1);
     }

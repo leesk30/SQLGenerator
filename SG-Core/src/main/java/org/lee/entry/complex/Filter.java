@@ -1,11 +1,11 @@
 package org.lee.entry.complex;
 
-import org.lee.fuzzer.Fuzzer;
+import org.lee.base.Fuzzer;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
-import org.lee.node.NodeTag;
-import org.lee.node.TreeNode;
+import org.lee.base.NodeTag;
+import org.lee.base.TreeNode;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
 import org.lee.common.util.ListUtil;
@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 
 public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
-    private final List<Qualification> rawQualifications = new Vector<>();
+    private final List<Qualification> rawQualifications = new ArrayList<>();
     private Qualification combinedQualifications;
     public Filter(){
 

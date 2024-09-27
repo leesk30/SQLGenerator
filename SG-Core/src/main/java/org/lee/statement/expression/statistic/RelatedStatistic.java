@@ -1,4 +1,4 @@
-package org.lee.statement.generator.statistic;
+package org.lee.statement.expression.statistic;
 
 import org.lee.entry.RangeTableReference;
 import org.lee.type.TypeCategory;
@@ -17,7 +17,7 @@ public class RelatedStatistic implements GeneratorStatistic{
 
     public RelatedStatistic(RangeTableReference left, RangeTableReference right){
         relatedEntryPair = new Pair<>(left, right);
-        Stream.of(left, right).parallel().forEach(
+        Stream.of(left, right).forEach(
                 one -> {
                     final String uniqueKey = one.getUniqueName().toString();
                     final UnrelatedStatistic statistic = new UnrelatedStatistic(one.getFieldReferences());

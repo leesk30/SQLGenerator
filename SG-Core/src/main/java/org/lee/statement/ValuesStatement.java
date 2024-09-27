@@ -3,8 +3,8 @@ package org.lee.statement;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;
@@ -24,7 +24,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
     protected final ValuesClause valuesClause = new ValuesClauseForValues(this);
     protected final SortByClause sortByClause = new ValuesOrderByClause(this);
     protected final LimitOffset limitOffset = new ValuesLimitOffset(this);
-    protected final List<TypeTag> limitations = new Vector<>();
+    protected final List<TypeTag> limitations = new ArrayList<>();
 
     public ValuesStatement() {
         this(null);

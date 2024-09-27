@@ -1,7 +1,7 @@
 package org.lee;
 
 import org.lee.common.MetaEntry;
-import org.lee.fuzzer.Generator;
+import org.lee.base.Generator;
 import org.lee.statement.SQLFormatter;
 import org.lee.statement.select.SelectStatement;
 import org.lee.common.util.FuzzUtil;
@@ -52,15 +52,18 @@ public class GeneratorTest {
         System.out.println("Output dir is: " + output);
         final SQLFormatter formatter = new SQLFormatter();
         try (final FileWriter writer = new FileWriter(output)){
-            IntStream.range(0, 1000).forEach(
+            IntStream.range(0, 1000).parallel().forEach(
                     i -> {
                         SelectStatement statement = generator.generate();
                         String result = statement.getString();
                         try {
-                            writer.write("----------->\n" + formatter.format(result) + "\n");
-                            writer.flush();
+                            synchronized (writer){
+                                writer.write("----------->\n" + formatter.format(result) + "\n");
+                                writer.flush();
+                            }
                         } catch (IOException e) {
                             System.out.println("ERROR: " + e.getMessage());
+                            e.printStackTrace();
                             throw new RuntimeException(e);
                         }
                     }

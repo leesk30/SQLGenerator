@@ -1,4 +1,4 @@
-package org.lee.statement.generator;
+package org.lee.statement.expression.generator;
 
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
@@ -23,7 +23,7 @@ public class GeneralExpressionGenerator
         operator,
     }
 
-    public static final List<Scalar> unmodifiableEmptyList = Collections.unmodifiableList(new Vector<>(0));
+    public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
 
     public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(RuntimeConfiguration config){
         return new GeneralExpressionGenerator(config, unmodifiableEmptyList);
@@ -104,8 +104,8 @@ public class GeneralExpressionGenerator
     private Expression stopGrowth(Signature signature){
         final Expression expression = new Expression(signature);
         final Scalar[] scalars = statistic.findMatchedForSignature(signature);
-        final List<Expression> children = new Vector<>();
-        IntStream.range(0, signature.argsNum()).parallel().forEachOrdered(
+        final List<Expression> children = new ArrayList<>();
+        IntStream.range(0, signature.argsNum()).sequential().forEachOrdered(
                 i -> {
                     final TypeTag targetType = signature.getArgumentsTypes().get(i);
                     if(scalars[i] != null){
@@ -123,11 +123,11 @@ public class GeneralExpressionGenerator
     private Expression growth(Signature signature, int incrementalDepth){
         final Expression expression = new Expression(signature);
         final Scalar[] scalars = statistic.findMatchedForSignature(signature);
-        final List<Expression> children = new Vector<>();
+        final List<Expression> children = new ArrayList<>();
         final boolean childrenEnableAggregation = !(signature instanceof Aggregation);
 //        final int[] nullOfIndex = IntStream.range(0, scalars.length).parallel().filter(Objects::isNull).toArray();
         // The arguments must be ordered.
-        IntStream.range(0, signature.argsNum()).parallel().forEachOrdered(
+        IntStream.range(0, signature.argsNum()).sequential().forEachOrdered(
                 i -> {
                     final TypeTag targetType = signature.getArgumentsTypes().get(i);
                     if(scalars[i] == null || preferRecursion(signature, incrementalDepth)){

@@ -1,10 +1,10 @@
 package org.lee.statement.clause;
 
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.fuzzer.Fuzzer;
+import org.lee.base.Fuzzer;
 import org.lee.statement.SQLStatement;
-import org.lee.node.Node;
-import org.lee.node.TreeNode;
+import org.lee.base.Node;
+import org.lee.base.TreeNode;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 
 import java.util.ArrayList;
@@ -20,13 +20,13 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, Sup
     protected Clause(SQLStatement statement){
         this.statement = statement;
         this.config = statement.getConfig();
-        this.children = new Vector<>(defaultChildrenInitialCapacity);
+        this.children = new ArrayList<>(defaultChildrenInitialCapacity);
     }
 
     protected Clause(SQLStatement statement, int childrenInitialCapacity){
         this.statement = statement;
         this.config = statement.getConfig();
-        this.children = new Vector<>(childrenInitialCapacity);
+        this.children = new ArrayList<>(childrenInitialCapacity);
     }
 
     public SQLStatement statement() {

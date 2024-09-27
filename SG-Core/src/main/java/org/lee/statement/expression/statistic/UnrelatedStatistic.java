@@ -1,4 +1,4 @@
-package org.lee.statement.generator.statistic;
+package org.lee.statement.expression.statistic;
 
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Signature;
@@ -28,10 +28,10 @@ public class UnrelatedStatistic implements GeneratorStatistic{
         if(candidateList.isEmpty()){
             return;
         }
-        candidateList.stream().parallel().forEach(scalar -> {
+        candidateList.forEach(scalar -> {
             TypeTag type = scalar.getType();
             if(!groupByType.containsKey(type)){
-                groupByType.put(type, new Vector<>());
+                groupByType.put(type, new ArrayList<>());
             }
             groupByType.get(type).add(scalar);
         });

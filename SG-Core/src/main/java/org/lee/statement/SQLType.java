@@ -13,4 +13,9 @@ public enum SQLType {
     public boolean isDML(){
         return this != SQLType.select && this != SQLType.values;
     }
+
+    @Override
+    public String toString() {
+        return super.toString().toUpperCase();
+    }
 }

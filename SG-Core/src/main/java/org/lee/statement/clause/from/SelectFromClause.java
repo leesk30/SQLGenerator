@@ -16,7 +16,7 @@ public final class SelectFromClause extends FromClause {
     public void fuzz() {
         final int rteJoinNumber = FuzzUtil.randomIntFromRange(1, config.getInt(Conf.MAX_FROM_CLAUSE_RTE_JOIN_NUM));
         final RangeTableReference[][] candidatesArray = new RangeTableReference[rteJoinNumber][];
-        IntStream.range(0, rteJoinNumber).parallel().forEach(
+        IntStream.range(0, rteJoinNumber).sequential().forEach(
                 i -> {
                     final int rteJoinEntryNumber = FuzzUtil.randomIntFromRange(1, config.getInt(Conf.MAX_RTE_JOIN_ENTRY_NUM));
                     final RangeTableReference[] candidates = new RangeTableReference[rteJoinEntryNumber];

@@ -1,12 +1,14 @@
 package org.lee.statement;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
-import org.lee.node.Node;
+import org.lee.base.Node;
 import org.lee.statement.support.Statement;
 import org.lee.statement.support.SupportCommonTableExpression;
 
@@ -20,6 +22,8 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
     protected final SQLStatement parent;
     protected final RuntimeConfiguration config;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
+    protected final UUID uuid;
+    protected final Log LOGGER = LogFactory.getLog(this.getClass());
 
     protected SQLStatement(SQLType sqlType){
         this(sqlType, null);
@@ -27,14 +31,17 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
 
     protected SQLStatement(SQLType sqlType, SQLStatement parentStatement){
         if(parentStatement == null){
+            this.uuid = UUID.randomUUID();
             this.sqlType = sqlType;
             this.parent = null;
             this.config = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
         }else {
+            this.uuid = parentStatement.uuid;
             this.sqlType = sqlType;
             this.parent = parentStatement;
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
         }
+        LOGGER.info("Hello world! - " + uuid);
 //        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
 
@@ -77,7 +84,7 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
     public List<CTE> recursiveGetCTEs(){
         List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : Collections.emptyList();
         if(this instanceof SupportCommonTableExpression){
-            List<CTE> cteList = new Vector<>(((SupportCommonTableExpression) this).getCTEs());
+            List<CTE> cteList = new ArrayList<>(((SupportCommonTableExpression) this).getCTEs());
             if(parentCTEList != null){
                 cteList.addAll(parentCTEList);
             }

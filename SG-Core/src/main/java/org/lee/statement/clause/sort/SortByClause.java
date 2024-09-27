@@ -9,7 +9,7 @@ import org.lee.type.literal.LiteralInt;
 import org.lee.common.exception.Assertion;
 import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Sortable;
@@ -81,10 +81,8 @@ public abstract class SortByClause extends Clause<SortEntry> {
         return projectionLength;
     }
 
-    protected IntStream getParallelStreamer(){
-        return IntStream.range(
-                0, FuzzUtil.randomIntFromRange(1, (int)(1.5D * getProjectSize()))
-        ).parallel();
+    protected IntStream getStreamer(){
+        return IntStream.range(0, FuzzUtil.randomIntFromRange(1, (int)(1.5D * getProjectSize()))).sequential();
     }
 
     protected IntConsumer getConsumer(){
@@ -93,7 +91,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
 
     protected void forceOrderByAllProjections(){
         IntStream.range(1, getProjectSize() + 1)
-                .parallel()
+                .sequential()
                 .forEach(i -> addSortEntry(new SortEntry(new LiteralInt(i), this.statement.getConfig())));
     }
 
@@ -109,7 +107,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
                 orderByScalar();
                 return;
             }
-            getParallelStreamer().forEach(getConsumer());
+            getStreamer().forEach(getConsumer());
         }
     }
 

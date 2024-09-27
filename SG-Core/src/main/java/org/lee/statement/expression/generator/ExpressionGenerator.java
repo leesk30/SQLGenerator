@@ -1,7 +1,7 @@
-package org.lee.statement.generator;
+package org.lee.statement.expression.generator;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.generator.statistic.UnrelatedStatistic;
+import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.expression.Expression;
 import org.lee.symbol.*;
 import org.lee.type.TypeCategory;
@@ -89,12 +89,13 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                 template.add(
                         functionUnit(
                                 IntStream.range(0, windowSize)
+                                        .sequential()
                                         .mapToObj(i -> template.remove(0))
                                         .collect(Collectors.toList())
                         )
                 );
             }
         }while (FuzzUtil.probability(50/epoch));
-        return template.parallelStream().map(scalar -> scalar instanceof Expression? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
+        return template.stream().map(scalar -> scalar instanceof Expression? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
     }
 }

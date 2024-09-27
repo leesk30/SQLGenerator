@@ -1,6 +1,6 @@
 package org.lee.type.precision;
 
-import org.lee.node.Node;
+import org.lee.base.Node;
 
 public abstract class SizeofPrecision implements TypePrecision{
     protected final int sizeof;

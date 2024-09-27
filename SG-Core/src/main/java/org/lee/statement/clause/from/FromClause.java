@@ -9,7 +9,7 @@ import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.RangeTableReference;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
@@ -20,9 +20,9 @@ import java.util.*;
 
 public abstract class FromClause extends Clause<RangeTableReference>
         implements SupportGenerateProjectable, SupportRangeTableTransform {
-    protected final List<RangeTableEntry> rawEntryList = new Vector<>();
-    protected final List<RangeTableEntry> currentCTECandidates = new Vector<>();
-    protected final List<RangeTableEntry> allOfCandidates = new Vector<>();
+    protected final List<RangeTableEntry> rawEntryList = new ArrayList<>();
+    protected final List<RangeTableEntry> currentCTECandidates = new ArrayList<>();
+    protected final List<RangeTableEntry> allOfCandidates = new ArrayList<>();
 //    protected List<List<RangeTableReference>> candidatesList;
     protected FromClause(SQLStatement statement) {
         super(statement);

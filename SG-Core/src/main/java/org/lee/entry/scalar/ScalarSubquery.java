@@ -2,7 +2,7 @@ package org.lee.entry.scalar;
 
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.statement.SQLStatement;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 
 public class ScalarSubquery implements NormalizedEntryWrapper<SQLStatement>, Scalar {

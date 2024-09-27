@@ -1,10 +1,10 @@
-package org.lee.statement.generator;
+package org.lee.statement.expression.generator;
 
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
-import org.lee.fuzzer.Generator;
-import org.lee.statement.generator.statistic.RelatedStatistic;
+import org.lee.base.Generator;
+import org.lee.statement.expression.statistic.RelatedStatistic;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.common.util.FuzzUtil;
@@ -40,11 +40,13 @@ public abstract class RelationalGenerator<T extends Expression>
             return;
         }
 
-        relatedPair = new Vector<>();
+        relatedPair = new ArrayList<>();
         final int size = candidateRelations.size();
         final int benchmarkIndex = FuzzUtil.randomIntFromRange(0, size);
         final RangeTableReference benchmark = candidateRelations.get(benchmarkIndex);
-        IntStream.range(0, size - 1).map(i -> i >= benchmarkIndex ? i + 1 : i).forEach(
+        IntStream.range(0, size - 1).sequential()
+                .map(i -> i >= benchmarkIndex ? i + 1 : i)
+                .forEach(
                 i -> candidateRelations
                         .get(i)
                         .getFieldReferences()

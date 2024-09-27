@@ -2,8 +2,7 @@ package org.lee;
 
 import org.json.JSONObject;
 import org.lee.common.MetaEntry;
-import org.lee.fuzzer.Generator;
-import org.lee.statement.SQLStatement;
+import org.lee.base.Generator;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.symbol.Finder;

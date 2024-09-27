@@ -1,12 +1,13 @@
 package org.lee.statement.insert;
 
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.modify.ModifyTableClause;
 import org.lee.statement.support.SupportModifyTable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,7 +29,7 @@ public abstract class InsertStatement extends SQLStatement implements SupportMod
 
     @Override
     public List<? extends Node> getChildNodes() {
-        return new Vector<>(childrenMap.values());
+        return new ArrayList<>(childrenMap.values());
     }
 
     @Override

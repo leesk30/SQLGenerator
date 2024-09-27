@@ -1,6 +1,6 @@
 package org.lee.symbol;
 
-import org.lee.node.Node;
+import org.lee.base.Node;
 import org.lee.type.TypeTag;
 
 import java.util.Arrays;

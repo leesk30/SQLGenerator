@@ -1,16 +1,17 @@
 package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.fuzzer.Generator;
-import org.lee.statement.generator.JoinerQualificationGenerator;
+import org.lee.base.Generator;
+import org.lee.statement.expression.generator.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.expression.Qualification;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.clause.from.JoinClause;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -27,7 +28,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
         this.right = right;
         this.children.add(left);
         this.children.add(right);
-        this.fieldList = new Vector<>(left.getFieldReferences().size() + right.getFieldReferences().size());
+        this.fieldList = new ArrayList<>(left.getFieldReferences().size() + right.getFieldReferences().size());
     }
 
     @Override

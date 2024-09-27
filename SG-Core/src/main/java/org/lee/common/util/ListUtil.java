@@ -11,10 +11,11 @@ public class ListUtil {
 
     public static <T> List<T> copyList(final List<T> source){
         if(source == null || source.isEmpty()){
-            return new Vector<>();
+            // cannot be emptyList here
+            return new ArrayList<>();
         }
-        final List<T> dest = new Vector<>(source.size());
-        source.parallelStream().forEach(dest::add);
+        final List<T> dest = new ArrayList<>(source.size());
+        dest.addAll(source);
         return dest;
     }
 

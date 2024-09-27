@@ -1,8 +1,8 @@
 package org.lee.entry.record;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 
 import java.util.Arrays;
 import java.util.List;

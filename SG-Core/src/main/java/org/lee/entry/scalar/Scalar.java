@@ -1,6 +1,6 @@
 package org.lee.entry.scalar;
 
-import org.lee.node.Node;
+import org.lee.base.Node;
 import org.lee.statement.expression.Expression;
 import org.lee.type.TypeTag;
 

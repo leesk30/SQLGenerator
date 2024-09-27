@@ -1,6 +1,6 @@
 package org.lee.statement.clause.project;
 
-import org.lee.statement.generator.GeneralExpressionGenerator;
+import org.lee.statement.expression.generator.GeneralExpressionGenerator;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.common.util.FuzzUtil;
 
@@ -16,7 +16,7 @@ public class SelectClauseWithoutFrom extends SelectClause{
         SelectClauseStatement statement = (SelectClauseStatement) this.statement;
         final GeneralExpressionGenerator generator = GeneralExpressionGenerator.emptyCandidateExpressionGenerator(config);
         if(statement.getProjectTypeLimitation().isEmpty()){
-            IntStream.range(0, FuzzUtil.randomIntFromRange(1, 7)).parallel().forEach(
+            IntStream.range(0, FuzzUtil.randomIntFromRange(1, 7)).sequential().forEach(
                     i -> {
                         if(FuzzUtil.probability(20)){
                             processEntry(generator.getLiteral());
@@ -26,7 +26,7 @@ public class SelectClauseWithoutFrom extends SelectClause{
                     }
             );
         }else {
-            statement.getProjectTypeLimitation().stream().parallel().forEachOrdered(
+            statement.getProjectTypeLimitation().forEach(
                     requiredType -> {
                         if(FuzzUtil.probability(20)){
                             processEntry(generator.generate(requiredType));

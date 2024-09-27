@@ -1,6 +1,6 @@
 package org.lee.type.precision;
 
-import org.lee.node.Node;
+import org.lee.base.Node;
 
 public class NonPrecision implements TypePrecision{
     public static final NonPrecision NON_PRECISION = new NonPrecision();

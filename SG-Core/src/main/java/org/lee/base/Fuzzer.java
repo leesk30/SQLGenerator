@@ -1,4 +1,4 @@
-package org.lee.fuzzer;
+package org.lee.base;
 
 public interface Fuzzer {
     void fuzz();

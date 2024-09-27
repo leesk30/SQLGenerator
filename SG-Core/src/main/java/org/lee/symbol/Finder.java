@@ -141,7 +141,7 @@ public class Finder {
 
     private static TypeTag[] jsonArrayToTypeTags(JSONArray arr){
         TypeTag[] typeTags = new TypeTag[arr.length()];
-        IntStream.range(0, arr.length()).parallel().forEach(i->typeTags[i] = TypeTag.getEnum(arr.getString(i)));
+        IntStream.range(0, arr.length()).sequential().forEach(i->typeTags[i] = TypeTag.getEnum(arr.getString(i)));
         return typeTags;
     }
 

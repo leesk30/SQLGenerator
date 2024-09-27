@@ -2,9 +2,9 @@ package org.lee.entry.relation;
 
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.common.exception.Assertion;
-import org.lee.fuzzer.Fuzzer;
+import org.lee.base.Fuzzer;
 import org.lee.entry.scalar.Field;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;

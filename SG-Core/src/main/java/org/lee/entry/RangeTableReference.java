@@ -4,10 +4,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.relation.ValuesRelation;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.support.Alias;
 import org.lee.common.util.FuzzUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -17,7 +18,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
     private String refName;
     private final RangeTableEntry entry;
     private final boolean isEntryNeedPrintPrettyName;
-    private final List<FieldReference> fieldReferences = new Vector<>();
+    private final List<FieldReference> fieldReferences = new ArrayList<>();
     private final UUID uniqueName = UUID.randomUUID();
 
     public RangeTableReference(RangeTableEntry rangeTableEntry){
@@ -29,7 +30,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
         this.refName = refName;
         this.isEntryNeedPrintPrettyName = (entry instanceof ValuesRelation);
         if(entry instanceof RTEJoin){
-            ((RTEJoin) entry).getChildNodes().parallelStream().forEach(child -> fieldReferences.addAll(child.getFieldReferences()));
+            ((RTEJoin) entry).getChildNodes().forEach(child -> fieldReferences.addAll(child.getFieldReferences()));
         }else {
             entry.getFields().forEach(scalar -> fieldReferences.add(new FieldReference(this, scalar)));
         }

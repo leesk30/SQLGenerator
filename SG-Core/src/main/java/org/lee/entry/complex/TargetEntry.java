@@ -9,7 +9,7 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.common.exception.Assertion;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 import org.lee.common.util.FuzzUtil;
 

@@ -1,6 +1,6 @@
 package org.lee.statement.support;
 
-import org.lee.node.Node;
+import org.lee.base.Node;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

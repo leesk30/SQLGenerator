@@ -1,10 +1,11 @@
 package org.lee.entry.relation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.insert.InsertInitializedStatement;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.IntStream;
@@ -14,7 +15,7 @@ public class Relation implements RangeTableEntry {
     private final String namespace;
     private final String name;
     private final List<Field> fields;
-    private final List<Partition> partitions = new Vector<>();
+    private final List<Partition> partitions = new ArrayList<>();
 
     public Relation(String namespace, String name, List<Field> fields){
         this.namespace = namespace;
@@ -55,8 +56,7 @@ public class Relation implements RangeTableEntry {
 
     private String toDDLStyleFieldWithType(){
         final String[] pair = new String[fields.size()];
-        IntStream.range(0, fields.size())
-                .parallel()
+        IntStream.range(0, fields.size()).sequential()
                 .forEach(i -> pair[i] = fields.get(i).getString() + SPACE + fields.get(i).getDescriptor().toString());
         return concatWithComma(pair);
     }

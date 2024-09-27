@@ -1,12 +1,10 @@
 package org.lee.symbol;
 
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.IntStream;
 
 public enum PredicateCombiner implements Signature {
@@ -23,7 +21,7 @@ public enum PredicateCombiner implements Signature {
         this.argNum = argNum;
         this.argumentsType = new ArrayList<>(argNum);
         this.symbols = body;
-        IntStream.range(0, argNum).forEach(i -> argumentsType.add(TypeTag.boolean_));
+        IntStream.range(0, argNum).sequential().forEach(i -> argumentsType.add(TypeTag.boolean_));
     }
 
     @Override

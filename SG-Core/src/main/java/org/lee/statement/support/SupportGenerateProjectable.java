@@ -1,6 +1,6 @@
 package org.lee.statement.support;
 
-import org.lee.fuzzer.Generator;
+import org.lee.base.Generator;
 import org.lee.statement.SQLStatement;
 import org.lee.type.TypeTag;
 

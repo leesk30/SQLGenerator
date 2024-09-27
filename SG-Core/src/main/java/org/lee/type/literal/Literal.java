@@ -2,7 +2,7 @@ package org.lee.type.literal;
 
 import org.lee.type.literal.mapped.MappedType;
 import org.lee.entry.scalar.Scalar;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 

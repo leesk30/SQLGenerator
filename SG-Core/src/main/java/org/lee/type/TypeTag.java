@@ -1,7 +1,7 @@
 package org.lee.type;
 
 import org.lee.type.literal.mapped.MappedType;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Signature;
 
@@ -38,6 +38,7 @@ public enum TypeTag {
     private final int priority;
     private final EmptySymbol emptySymbol;
     private final Parentheses parenthesesSymbol;
+
     TypeTag(TypeCategory category, int priority,  String ... names){
         this.category = category;
         this.names = names;

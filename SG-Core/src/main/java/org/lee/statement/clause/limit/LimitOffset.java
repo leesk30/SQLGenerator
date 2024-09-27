@@ -3,7 +3,7 @@ package org.lee.statement.clause.limit;
 import org.lee.type.literal.LiteralInt;
 import org.lee.statement.SQLStatement;
 import org.lee.type.literal.Literal;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 
 public abstract class LimitOffset extends Clause<Literal<Integer>> {

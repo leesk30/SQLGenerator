@@ -15,12 +15,20 @@
         <module>SG-Protos</module>
         <module>SG-Client</module>
     </modules>
+
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <grpc.version>1.29.0</grpc.version>
         <protobuf.version>3.11.0</protobuf.version>
+        <commons.lang3.version>3.15.0</commons.lang3.version>
+        <commons.math3.version>3.6</commons.math3.version>
+        <commons.configuration2.version>2.11.0</commons.configuration2.version>
+        <commons.beanutils>1.9.4</commons.beanutils>
+        <commons.logging.version>1.5</commons.logging.version>
+        <logging.log4j.version>2.13.0</logging.log4j.version>
+        <testng.version>6.14.3</testng.version>
     </properties>
 
 
@@ -55,20 +63,52 @@
             </dependency>
 
             <dependency>
-                <groupId>org.json</groupId>
-                <artifactId>json</artifactId>
-                <version>20231013</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.6</version>
+                <version>${commons.lang3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-math3</artifactId>
+                <version>${commons.math3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-configuration2</artifactId>
+                <version>${commons.configuration2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${commons.beanutils}</version>
+            </dependency>
+
+            <!-- logs -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons.logging.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${logging.log4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${logging.log4j.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>6.14.3</version>
+                <version>${testng.version}</version>
             </dependency>
 
         </dependencies>

@@ -2,8 +2,8 @@ package org.lee.statement;
 
 import org.lee.common.exception.NotImplementedException;
 import org.lee.statement.clause.Clause;
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 
 import java.util.Iterator;
 import java.util.Map;

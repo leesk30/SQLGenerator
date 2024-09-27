@@ -1,6 +1,6 @@
 package org.lee.type.literal;
 
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.symbol.Function;
 
 public final class LiteralFunction extends Literal<Function> {

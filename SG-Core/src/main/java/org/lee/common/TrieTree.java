@@ -1,9 +1,6 @@
 package org.lee.common;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class TrieTree<K, V> {
@@ -11,7 +8,7 @@ public class TrieTree<K, V> {
     private static class TrieTreeNode<K, V> {
         private final int level;
         private final Map<K, TrieTreeNode<K, V>> childrenMap = new ConcurrentHashMap<>();
-        private final List<V> container = new Vector<>();
+        private final List<V> container = new ArrayList<>();
 
         public TrieTreeNode() {
             this.level = 0;
@@ -82,7 +79,7 @@ public class TrieTree<K, V> {
         if(container.isEmpty()){
             return Collections.emptyList();
         }
-        return new Vector<>(container);
+        return new ArrayList<>(container);
     }
 
     public final List<V> get(K singleGuide){
@@ -90,7 +87,7 @@ public class TrieTree<K, V> {
         if(child == null){
             return Collections.emptyList();
         }
-        return new Vector<>(child.getContainer());
+        return new ArrayList<>(child.getContainer());
     }
 
     public int maxWidth(){

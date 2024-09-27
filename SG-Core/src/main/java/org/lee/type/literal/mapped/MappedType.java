@@ -1,7 +1,7 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.type.literal.Literal;
-import org.lee.fuzzer.Generator;
+import org.lee.base.Generator;
 import org.lee.type.TypeTag;
 
 public abstract class MappedType<T> implements Generator<Literal<T>> {

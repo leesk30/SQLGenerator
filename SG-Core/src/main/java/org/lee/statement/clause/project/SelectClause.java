@@ -3,7 +3,7 @@ package org.lee.statement.clause.project;
 import org.lee.entry.scalar.Scalar;
 import org.lee.common.config.Rule;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;

@@ -1,8 +1,8 @@
 package org.lee.statement.expression;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.symbol.Signature;

@@ -1,15 +1,15 @@
-package org.lee.statement.generator;
+package org.lee.statement.expression.generator;
 
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.scalar.Scalar;
-import org.lee.fuzzer.Generator;
+import org.lee.base.Generator;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.symbol.Finder;
 import org.lee.type.TypeTag;
 import org.lee.common.util.FuzzUtil;
 import org.lee.common.util.ListUtil;
-import org.lee.statement.generator.statistic.UnrelatedStatistic;
+import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -22,16 +22,16 @@ public abstract class UnrelatedGenerator<T> implements Generator<T>, SupportRunt
 
     protected UnrelatedGenerator(RuntimeConfiguration conf, Scalar ... scalars){
         config = conf;
-        candidateList = new Vector<>(scalars.length);
-        IntStream.range(0, scalars.length).parallel().forEach(i -> candidateList.add(scalars[i].toExpression()));
+        candidateList = new ArrayList<>(scalars.length);
+        IntStream.range(0, scalars.length).sequential().forEach(i -> candidateList.add(scalars[i].toExpression()));
         replicated = ListUtil.copyFrozenList(candidateList);
         statistic = new UnrelatedStatistic(replicated);
     }
 
     protected UnrelatedGenerator(RuntimeConfiguration conf, List<? extends Scalar> expresssionList){
         config = conf;
-        candidateList = new Vector<>(expresssionList.size());
-        IntStream.range(0, expresssionList.size()).parallel().forEach(
+        candidateList = new ArrayList<>(expresssionList.size());
+        IntStream.range(0, expresssionList.size()).sequential().forEach(
                 i -> candidateList.add(expresssionList.get(i).toExpression()));
         replicated = ListUtil.copyFrozenList(candidateList);
         statistic = new UnrelatedStatistic(replicated);

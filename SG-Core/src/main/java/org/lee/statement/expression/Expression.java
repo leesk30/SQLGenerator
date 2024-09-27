@@ -5,9 +5,9 @@ import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
 import org.lee.common.exception.Assertion;
-import org.lee.node.NodeTag;
-import org.lee.node.Node;
-import org.lee.node.TreeNode;
+import org.lee.base.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.TreeNode;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
 import org.lee.common.Pair;
@@ -29,7 +29,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
             this.childNodes = Collections.emptyList();
         }else {
             int size = ((Signature) current).argsNum();
-            this.childNodes = size > 0 ? new Vector<>(size) : Collections.emptyList();
+            this.childNodes = size > 0 ? new ArrayList<>(size) : Collections.emptyList();
         }
     }
 
@@ -139,7 +139,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
         if(isLeaf()){
             return true;
         }
-        return childNodes.parallelStream().allMatch(Expression::isComplete);
+        return childNodes.stream().allMatch(Expression::isComplete);
     }
 
     public boolean isCurrentAggregation(){
@@ -158,7 +158,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
         if (!isTerminateNode && isCurrentAggregation()){
             return true;
         }
-        return childNodes.stream().parallel().anyMatch(Expression::isIncludingAggregation);
+        return childNodes.stream().anyMatch(Expression::isIncludingAggregation);
     }
 
     public boolean isIncludingPseudo(){
@@ -198,7 +198,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
         if(isLeaf()){
             return Collections.singletonList(this);
         }
-        final List<Expression> leafs = new Vector<>();
+        final List<Expression> leafs = new ArrayList<>();
         getChildNodes().forEach(child -> leafs.addAll(child.getLeafs()));
         return leafs;
     }
@@ -206,13 +206,13 @@ public class Expression implements Scalar, TreeNode<Expression> {
     public List<TypeTag> getLeafRequired(){
         if(isLeaf()){
             if(!isTerminateNode){
-                return new Vector<>(((Signature) current).getArgumentsTypes());
+                return new ArrayList<>(((Signature) current).getArgumentsTypes());
             }else {
                 return Collections.emptyList();
             }
         }
-        final List<TypeTag> types = new Vector<>();
-        childNodes.stream().parallel().forEach(child -> types.addAll(child.getLeafRequired()));
+        final List<TypeTag> types = new ArrayList<>();
+        childNodes.forEach(child -> types.addAll(child.getLeafRequired()));
         return types;
     }
 
@@ -222,7 +222,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     protected List<Expression> midTraverseExpression(){
-        final List<Expression> expressionList = new Vector<>(getTotalDegree() * childNodes.size());
+        final List<Expression> expressionList = new ArrayList<>(getTotalDegree() * childNodes.size());
         final LinkedList<Expression> fifo = new LinkedList<>();
         fifo.add(this);
         while (!fifo.isEmpty()){
@@ -234,17 +234,12 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public List<FieldReference> extractField(){
-        return extractField(false);
-    }
-
-    public List<FieldReference> extractField(boolean parallel){
         if(isLeaf() && isTerminateNode && current instanceof FieldReference){
             return Collections.singletonList((FieldReference) current);
         }
 
         final List<Expression> leaf = this.getLeafs();
-        final Stream<Expression> stream = parallel ? leaf.parallelStream() : leaf.stream();
-        return stream
+        return leaf.stream()
                 .map(Expression::getCurrentNode)
                 .filter(each -> each instanceof FieldReference)
                 .filter(each -> {
@@ -256,21 +251,21 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public Pair<List<FieldReference>, List<FieldReference>> extractAggregate(){
-        final List<FieldReference> inAggregator = new Vector<>();
-        final List<FieldReference> notInAggregator = new Vector<>();
+        final List<FieldReference> inAggregator = new ArrayList<>();
+        final List<FieldReference> notInAggregator = new ArrayList<>();
         final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
 
         if(isCurrentAggregation()){
-            inAggregator.addAll(extractField(true));
+            inAggregator.addAll(extractField());
             return pair;
         }
 
         if(!isIncludingAggregation()){
-            notInAggregator.addAll(extractField(true));
+            notInAggregator.addAll(extractField());
             return pair;
         }
 
-        childNodes.stream().parallel().forEach(
+        childNodes.forEach(
                 expression -> {
                     if(expression.isCurrentAggregation()){
                         inAggregator.addAll(expression.extractField());

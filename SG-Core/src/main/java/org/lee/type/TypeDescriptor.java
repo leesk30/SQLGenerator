@@ -3,8 +3,8 @@ package org.lee.type;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.mapped.MappedDecimal;
 import org.lee.type.literal.mapped.MappedType;
-import org.lee.fuzzer.Generator;
-import org.lee.node.Node;
+import org.lee.base.Generator;
+import org.lee.base.Node;
 import org.lee.type.precision.*;
 
 import java.math.BigDecimal;
@@ -100,7 +100,7 @@ public class TypeDescriptor implements Generator<Literal<?>> {
             throw new RuntimeException("Unable to parse type by precision: " + precisionInString);
         }
         final int[] precisionArr = new int[precisionStringArr.length];
-        IntStream.range(0, precisionStringArr.length).forEach(i ->
+        IntStream.range(0, precisionStringArr.length).sequential().forEach(i ->
             {
                 precisionArr[i] = Integer.parseInt(precisionStringArr[i].trim());
                 if(precisionArr[i] <= 0){
@@ -125,6 +125,7 @@ public class TypeDescriptor implements Generator<Literal<?>> {
 
     @Override
     public Literal<?> generate() {
+        // todo: optimize hacking code
         TypeCategory category = this.tag.getCategory();
         if(category == TypeCategory.STRING && precision.getPrecision() > 0){
             return tag.asMapped().generate(precision.getPrecision());

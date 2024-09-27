@@ -4,7 +4,7 @@ import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
 import org.lee.entry.scalar.ScalarWithinRelation;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 
 public final class FieldReference implements Scalar {

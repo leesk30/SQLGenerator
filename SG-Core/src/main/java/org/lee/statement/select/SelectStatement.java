@@ -6,8 +6,8 @@ import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.entry.relation.SubqueryRelation;
-import org.lee.node.Node;
-import org.lee.node.NodeTag;
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.type.TypeTag;
 import org.lee.common.util.FuzzUtil;
@@ -20,7 +20,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
     public final int subqueryDepth;
     public final int setopDepth;
 
-    protected final List<TypeTag> limitationsTypes = new Vector<>();
+    protected final List<TypeTag> limitationsTypes = new ArrayList<>();
 
     public SelectStatement(SelectType selectType){
         this(selectType, null);

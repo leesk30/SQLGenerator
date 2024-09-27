@@ -1,6 +1,6 @@
 package org.lee.entry.relation;
 
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.entry.scalar.Field;
 
 import java.util.List;

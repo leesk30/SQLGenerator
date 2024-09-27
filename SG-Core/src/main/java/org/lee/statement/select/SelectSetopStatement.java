@@ -85,7 +85,7 @@ public final class SelectSetopStatement
             throw new ValueCheckFailedException("The setop statement has difference project length. " +
                     "Left: " + left.project().size() + " Right: " + right.project().size());
         }
-        IntStream.range(0, left.project().size()).parallel().forEach(
+        IntStream.range(0, left.project().size()).sequential().forEach(
                 i -> {
                     if(left.project().get(i).getType() != right.project().get(i).getType()){
                         System.out.println(left.getClass().getName());

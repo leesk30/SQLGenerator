@@ -6,7 +6,7 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.type.literal.LiteralInt;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
-import org.lee.node.NodeTag;
+import org.lee.base.NodeTag;
 import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
@@ -39,19 +39,14 @@ public class GroupByClause extends Clause<Scalar> {
 
 
     private void groupByAll(int size){
-        IntStream.range(0, size).parallel().forEach(
-                i -> {
-                    Scalar scalar = new LiteralInt(i + 1);
-                    children.add(scalar);
-                }
-        );
+        IntStream.range(0, size).sequential().forEach(i -> children.add(new LiteralInt(i + 1)));
         Collections.shuffle(children);
     }
 
     private void groupByNonAgg(final List<TargetEntry> targetEntries){
         Map<String, Scalar> inAggregate = new ConcurrentHashMap<>(targetEntries.size());
         Map<String, Scalar> nonAggregate = new ConcurrentHashMap<>(targetEntries.size() * 2);
-        targetEntries.stream().parallel().map(TargetEntry::getWrapped).forEach(
+        targetEntries.stream().map(TargetEntry::getWrapped).forEach(
                 scalar -> {
                     if(scalar instanceof Expression){
                         Expression expression = (Expression) scalar;
@@ -77,7 +72,7 @@ public class GroupByClause extends Clause<Scalar> {
             return;
         }
         children.addAll(nonAggregate.values());
-        intersected.stream().parallel().filter(s -> FuzzUtil.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
+        intersected.stream().filter(s -> FuzzUtil.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
         Collections.shuffle(children);
 
     }
