@@ -2,12 +2,12 @@ package org.lee.statement.clause.project;
 
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.record.Record;
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.node.NodeTag;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 import java.util.Vector;

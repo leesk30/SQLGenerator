@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

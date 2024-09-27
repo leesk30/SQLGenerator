@@ -1,9 +1,9 @@
 package org.lee.statement.clause.from;
 
-import org.lee.common.DevTempConf;
 import org.lee.common.MetaEntry;
+import org.lee.common.config.Conf;
 import org.lee.entry.relation.*;
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
@@ -14,7 +14,7 @@ import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.statement.support.SupportRangeTableTransform;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.*;
 
@@ -73,8 +73,8 @@ public abstract class FromClause extends Clause<RangeTableReference>
         SelectStatement currentStatement = (SelectStatement) this.statement;
         RangeTableEntry entry;
 
-        if(currentStatement.subqueryDepth < DevTempConf.MAX_SUBQUERY_RECURSION_DEPTH
-                && FuzzUtil.probability(DevTempConf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
+        if(currentStatement.subqueryDepth < config.getInt(Conf.MAX_SUBQUERY_RECURSION_DEPTH )
+                && probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
             entry = this.generate(this.statement).toRelation();
         }else {
             entry = randomlyGetRangeTable();
@@ -91,8 +91,8 @@ public abstract class FromClause extends Clause<RangeTableReference>
         }
         // atomic operation
         synchronized (currentCTECandidates){
-            if(!currentCTECandidates.isEmpty() && FuzzUtil.probability(90)){
-                if(FuzzUtil.probability(99)){
+            if(!currentCTECandidates.isEmpty() && probability(90)){
+                if(probability(99)){
                     return currentCTECandidates.remove(0);
                 }else {
                     return FuzzUtil.randomlyChooseFrom(currentCTECandidates);

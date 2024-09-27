@@ -3,12 +3,10 @@ package org.lee.entry;
 import org.apache.commons.lang3.StringUtils;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
-import org.lee.entry.relation.SubqueryRelation;
 import org.lee.entry.relation.ValuesRelation;
 import org.lee.node.NodeTag;
-import org.lee.statement.ValuesStatement;
 import org.lee.statement.support.Alias;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 import java.util.UUID;

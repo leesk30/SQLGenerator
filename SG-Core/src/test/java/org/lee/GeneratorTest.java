@@ -4,7 +4,7 @@ import org.lee.common.MetaEntry;
 import org.lee.fuzzer.Generator;
 import org.lee.statement.SQLFormatter;
 import org.lee.statement.select.SelectStatement;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 import org.testng.annotations.Test;
 
 import java.io.FileWriter;

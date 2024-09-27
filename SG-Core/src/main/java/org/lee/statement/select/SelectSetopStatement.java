@@ -1,9 +1,8 @@
 package org.lee.statement.select;
 
-import org.lee.common.DevTempConf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
-import org.lee.exception.ValueCheckFailedException;
+import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.clause.from.WithClause;
@@ -16,14 +15,13 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public final class SelectSetopStatement
         extends SelectStatement
@@ -73,16 +71,6 @@ public final class SelectSetopStatement
         return wrappedStatementToPretty("v_left", left) + NEWLINE +
                 setOperationToString() + NEWLINE +
                 wrappedStatementToPretty("v_right", right);
-    }
-
-    private SelectType getSubSelectType(){
-        SelectType[] candidate;
-        if(setopDepth < DevTempConf.MAX_SETOP_RECURSION_DEPTH){
-            candidate = new SelectType[]{SelectType.simple, SelectType.normal, SelectType.setop};
-        }else {
-            candidate = new SelectType[]{SelectType.simple, SelectType.normal};
-        }
-        return FuzzUtil.randomlyChooseFrom(candidate);
     }
 
     @Override

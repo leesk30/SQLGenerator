@@ -5,10 +5,10 @@ import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
-import org.lee.common.config.RuleName;
+import org.lee.common.config.Rule;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer {
 
@@ -24,9 +24,9 @@ public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer
 
     public SortEntry(Scalar scalar, RuntimeConfiguration config){
         this.scalar = scalar;
-        this.isDefaultAsc = !config.getRule(RuleName.ORDER_DEFAULT_DESC);
-        this.isDefaultNullLast = !config.getRule(RuleName.ORDER_DEFAULT_NULL_FIRST);
-        this.supportWithProjectionAlias = config.getRule(RuleName.ENABLE_FILTER_USING_PROJECTION_ALIAS);
+        this.isDefaultAsc = !config.getRule(Rule.ORDER_DEFAULT_DESC);
+        this.isDefaultNullLast = !config.getRule(Rule.ORDER_DEFAULT_NULL_FIRST);
+        this.supportWithProjectionAlias = config.getRule(Rule.ENABLE_FILTER_USING_PROJECTION_ALIAS);
     }
 
     @Override
@@ -101,4 +101,5 @@ public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer
     public Scalar getWrapped() {
         return scalar;
     }
+
 }

@@ -10,7 +10,7 @@ import org.lee.node.Node;
 import org.lee.node.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.*;
 

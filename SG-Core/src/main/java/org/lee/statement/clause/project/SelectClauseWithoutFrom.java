@@ -1,11 +1,9 @@
 package org.lee.statement.clause.project;
 
-import org.lee.entry.complex.TargetEntry;
-import org.lee.fuzzer.expr.GeneralExpressionGenerator;
+import org.lee.statement.generator.GeneralExpressionGenerator;
 import org.lee.statement.select.SelectClauseStatement;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
-import java.util.ConcurrentModificationException;
 import java.util.stream.IntStream;
 
 public class SelectClauseWithoutFrom extends SelectClause{
@@ -16,7 +14,7 @@ public class SelectClauseWithoutFrom extends SelectClause{
     @Override
     public final void fuzz(){
         SelectClauseStatement statement = (SelectClauseStatement) this.statement;
-        final GeneralExpressionGenerator generator = GeneralExpressionGenerator.EmptyCandidateExpressionGenerator;
+        final GeneralExpressionGenerator generator = GeneralExpressionGenerator.emptyCandidateExpressionGenerator(config);
         if(statement.getProjectTypeLimitation().isEmpty()){
             IntStream.range(0, FuzzUtil.randomIntFromRange(1, 7)).parallel().forEach(
                     i -> {

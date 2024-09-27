@@ -1,26 +1,31 @@
 package org.lee.statement.clause;
 
+import org.lee.common.config.RuntimeConfiguration;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.statement.SQLStatement;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
+import org.lee.statement.support.SupportRuntimeConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.stream.Stream;
 
-public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer {
+public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SupportRuntimeConfiguration {
     protected final SQLStatement statement;
     protected final List<T> children;
     protected static int defaultChildrenInitialCapacity = 8;
+    protected final RuntimeConfiguration config;
     protected Clause(SQLStatement statement){
         this.statement = statement;
+        this.config = statement.getConfig();
         this.children = new Vector<>(defaultChildrenInitialCapacity);
     }
 
     protected Clause(SQLStatement statement, int childrenInitialCapacity){
         this.statement = statement;
+        this.config = statement.getConfig();
         this.children = new Vector<>(childrenInitialCapacity);
     }
 
@@ -44,5 +49,10 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer {
     @Override
     public Stream<T> walk() {
         return children.stream();
+    }
+
+    @Override
+    public RuntimeConfiguration getConfig() {
+        return config;
     }
 }

@@ -1,11 +1,11 @@
 package org.lee.entry.relation;
 
 import org.lee.entry.NormalizedEntryWrapper;
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.fuzzer.Fuzzer;
 import org.lee.entry.scalar.Field;
 import org.lee.node.NodeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +16,7 @@ public class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>, RangeTa
     private final List<Field> fieldList;
     private boolean unpivotFlag = false;
     private String pivotedBody;
+
     public Pivoted(RangeTableEntry rawEntry){
         this.rawEntry = rawEntry;
         this.fieldList = new ArrayList<>(rawEntry.getFields().size());

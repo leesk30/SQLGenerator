@@ -1,8 +1,7 @@
 package org.lee.statement.clause.project;
 
-import org.lee.statement.SQLStatement;
 import org.lee.statement.insert.InsertStatement;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 public class ValuesClauseForInsert extends ValuesClause{
     protected final int maxLines;

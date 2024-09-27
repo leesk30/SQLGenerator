@@ -1,6 +1,6 @@
 package org.lee.fuzzer;
 
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;

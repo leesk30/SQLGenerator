@@ -1,19 +1,19 @@
 package org.lee.statement.clause.sort;
 
-import org.lee.common.DevTempConf;
+import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.literal.Literal;
-import org.lee.entry.literal.LiteralInt;
-import org.lee.exception.Assertion;
-import org.lee.common.config.RuleName;
+import org.lee.type.literal.Literal;
+import org.lee.type.literal.LiteralInt;
+import org.lee.common.exception.Assertion;
+import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Sortable;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -66,7 +66,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
     }
 
     protected boolean requireSort(){
-        if(FuzzUtil.probability(DevTempConf.SORT_BY_CLAUSE_FUZZ_PROBABILITY)){
+        if(probability(Conf.SORT_BY_CLAUSE_FUZZ_PROBABILITY)){
             Assertion.requiredTrue(this.statement instanceof Sortable);
             Assertion.requiredTrue(this.statement instanceof Projectable);
             return true;
@@ -99,13 +99,13 @@ public abstract class SortByClause extends Clause<SortEntry> {
 
     @Override
     public void fuzz(){
-        if(statement.confirm(RuleName.REWRITER_REORDER)){
+        if(statement.confirm(Rule.REWRITER_REORDER)){
             forceOrderByAllProjections();
             return;
         }
 
         if(requireSort()){
-            if(this.statement.confirm(RuleName.REQUIRE_SCALA)){
+            if(this.statement.confirm(Rule.REQUIRE_SCALA)){
                 orderByScalar();
                 return;
             }

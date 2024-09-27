@@ -3,10 +3,9 @@ package org.lee.symbol;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
-import java.lang.Math;
 
 public enum Comparator implements Signature{
     NOT_EQ("%s != %s"),

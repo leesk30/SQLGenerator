@@ -3,13 +3,10 @@ package org.lee.symbol;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.type.TypeTag;
-import org.lee.util.FileUtil;
-import org.lee.util.TrieTree;
+import org.lee.common.util.FileUtil;
+import org.lee.common.TrieTree;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;

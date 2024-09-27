@@ -1,11 +1,11 @@
 package org.lee.statement.clause.project;
 
-import org.lee.exception.Assertion;
-import org.lee.common.config.RuleName;
+import org.lee.common.exception.Assertion;
+import org.lee.common.config.Rule;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class ValuesClauseForValues extends ValuesClause{
     public void fuzz() {
         final List<TypeTag> limitations = ((Projectable)this.statement).getProjectTypeLimitation();
         final boolean withLimitations = !limitations.isEmpty();
-        if(this.statement.confirm(RuleName.REQUIRE_SCALA)){
+        if(this.statement.confirm(Rule.REQUIRE_SCALA)){
             length = 1;
             width = withLimitations ? limitations.size(): 1;
             Assertion.requireEquals(width, 1);

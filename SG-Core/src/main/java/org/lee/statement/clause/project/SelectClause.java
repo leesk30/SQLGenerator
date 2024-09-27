@@ -1,7 +1,7 @@
 package org.lee.statement.clause.project;
 
 import org.lee.entry.scalar.Scalar;
-import org.lee.common.config.RuleName;
+import org.lee.common.config.Rule;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
@@ -25,9 +25,9 @@ public abstract class SelectClause extends Clause<TargetEntry> {
 
     protected void processEntry(Scalar scalar){
         final Expression expression = scalar.toExpression();
-        if(expression.isIncludingAggregation() && !statement.confirm(RuleName.AGGREGATION_REQUIRED_GROUP_BY)){
+        if(expression.isIncludingAggregation() && !statement.confirm(Rule.AGGREGATION_REQUIRED_GROUP_BY)){
             synchronized (statement.getConfig()){
-                statement.getConfig().set(RuleName.AGGREGATION_REQUIRED_GROUP_BY, true);
+                statement.getConfig().set(Rule.AGGREGATION_REQUIRED_GROUP_BY, true);
             }
         }
         TargetEntry entry = new TargetEntry(expression);

@@ -1,13 +1,13 @@
 package org.lee.statement.clause.from;
 
-import org.lee.common.DevTempConf;
-import org.lee.common.config.RuleName;
+import org.lee.common.config.Conf;
+import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SupportGenerateProjectable;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 import java.util.stream.IntStream;
 
 public class WithClause extends Clause<CTE> implements SupportGenerateProjectable {
@@ -36,15 +36,14 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
 
     @Override
     public void fuzz() {
-        if(!FuzzUtil.probability(DevTempConf.WITH_CTE_PROBABILITY)){
+        if(!config.probability(Conf.WITH_CTE_PROBABILITY)){
             return;
         }
         final int numOfCTEs = FuzzUtil.randomIntFromRange(0, 3);
         if(numOfCTEs == 0){
             return;
         }
-        if(statement.confirm(RuleName.SUPPORT_CTE_MATERIALIZED)
-                && FuzzUtil.probability(DevTempConf.USING_MATERIALIZED_CTE_PROB)){
+        if(config.confirm(Rule.SUPPORT_CTE_MATERIALIZED) && config.probability(Conf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
         IntStream.range(0, numOfCTEs).parallel().forEach(i -> children.add(new CTE(generate(this.statement))));

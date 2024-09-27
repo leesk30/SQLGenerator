@@ -4,13 +4,13 @@ import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.node.NodeTag;
 import org.lee.node.Node;
 import org.lee.node.TreeNode;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
-import org.lee.util.Pair;
+import org.lee.common.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;

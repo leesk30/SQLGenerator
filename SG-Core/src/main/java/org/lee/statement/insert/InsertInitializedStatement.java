@@ -7,12 +7,9 @@ import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.modify.InsertModifyTableClause;
 import org.lee.statement.clause.project.ValuesClauseForInsert;
 import org.lee.type.TypeDescriptor;
-import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 

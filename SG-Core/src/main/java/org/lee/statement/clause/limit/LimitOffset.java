@@ -1,15 +1,10 @@
 package org.lee.statement.clause.limit;
 
-import org.lee.entry.literal.LiteralInt;
+import org.lee.type.literal.LiteralInt;
 import org.lee.statement.SQLStatement;
-import org.lee.entry.literal.Literal;
-import org.lee.entry.literal.LiteralNumber;
+import org.lee.type.literal.Literal;
 import org.lee.node.NodeTag;
 import org.lee.statement.clause.Clause;
-import org.lee.type.TypeTag;
-
-import java.util.Iterator;
-import java.util.stream.Stream;
 
 public abstract class LimitOffset extends Clause<Literal<Integer>> {
     protected final Literal<Integer> limitNode = new LiteralInt(0);
@@ -44,7 +39,6 @@ public abstract class LimitOffset extends Clause<Literal<Integer>> {
     public NodeTag getNodeTag() {
         return NodeTag.limitOffset;
     }
-
 
     @Override
     public String getString(){

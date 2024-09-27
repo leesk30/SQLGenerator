@@ -3,12 +3,11 @@ package org.lee.statement;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
-import org.lee.fuzzer.Fuzzer;
 import org.lee.node.NodeTag;
-import org.lee.common.config.RuleName;
+import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.node.Node;
-import org.lee.node.TreeNode;
+import org.lee.statement.support.Statement;
 import org.lee.statement.support.SupportCommonTableExpression;
 
 import java.util.*;
@@ -16,10 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, Fuzzer {
+public abstract class SQLStatement implements Statement<Clause<? extends Node>> {
     protected final SQLType sqlType;
     protected final SQLStatement parent;
-    protected final RuntimeConfiguration configuration;
+    protected final RuntimeConfiguration config;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
 
     protected SQLStatement(SQLType sqlType){
@@ -30,11 +29,11 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
         if(parentStatement == null){
             this.sqlType = sqlType;
             this.parent = null;
-            this.configuration = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
+            this.config = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
         }else {
             this.sqlType = sqlType;
             this.parent = parentStatement;
-            this.configuration = this.parent.configuration.newChildRuntimeConfiguration();
+            this.config = this.parent.getConfig().newChildRuntimeConfiguration();
         }
 //        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
@@ -52,11 +51,11 @@ public abstract class SQLStatement implements TreeNode<Clause<? extends Node>>, 
     }
 
     public RuntimeConfiguration getConfig() {
-        return configuration;
+        return config;
     }
 
-    public boolean confirm(RuleName ruleName){
-        return configuration.getRule(ruleName);
+    public boolean confirm(Rule ruleName){
+        return config.getRule(ruleName);
     }
 
     protected void addClause(Clause<? extends Node> child){

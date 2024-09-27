@@ -6,12 +6,12 @@ import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
-import org.lee.exception.Assertion;
+import org.lee.common.exception.Assertion;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
 import org.lee.node.NodeTag;
 import org.lee.type.TypeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {
     private String alias = null;

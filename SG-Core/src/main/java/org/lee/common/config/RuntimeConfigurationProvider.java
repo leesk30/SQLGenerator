@@ -4,7 +4,7 @@ import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
 import org.lee.common.SyntaxType;
-import org.lee.exception.NotImplementedException;
+import org.lee.common.exception.NotImplementedException;
 
 import java.io.File;
 import java.util.HashMap;
@@ -22,12 +22,12 @@ public abstract class RuntimeConfigurationProvider {
     public static RuntimeConfigurationProvider getProvider(File sourceFile){
         try {
             Configuration configuration = configurations.properties(sourceFile);
-            if(!configuration.containsKey(ConfigName.SYNTAX_TYPE.toString())){
+            if(!configuration.containsKey(Conf.SYNTAX_TYPE.toString())){
                 System.out.println("The syntax of the configuration doesn't exist. Using default.");
                 return new  SparkGeneratorConfigurationProvider();
             }
 
-            SyntaxType syntaxType = configuration.getEnum(ConfigName.SYNTAX_TYPE.toString(), SyntaxType.class);
+            SyntaxType syntaxType = configuration.getEnum(Conf.SYNTAX_TYPE.toString(), SyntaxType.class);
             switch (syntaxType){
                 case spark:
                 case rain:
@@ -51,7 +51,7 @@ public abstract class RuntimeConfigurationProvider {
 
 
     protected final File sourceFile;
-    protected final Map<RuleName, Boolean> ruleMapTemplate = new HashMap<>();
+    protected final Map<Rule, Boolean> ruleMapTemplate = new HashMap<>();
 
     protected RuntimeConfigurationProvider(){
         this.sourceFile = null;
@@ -63,7 +63,7 @@ public abstract class RuntimeConfigurationProvider {
         ruleConstructor();
     }
 
-    public Map<RuleName, Boolean> getTemplateRuleMap() {
+    public Map<Rule, Boolean> getTemplateRuleMap() {
         return ruleMapTemplate;
     }
 

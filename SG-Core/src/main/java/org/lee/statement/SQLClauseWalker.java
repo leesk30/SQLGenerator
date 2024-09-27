@@ -1,6 +1,6 @@
 package org.lee.statement;
 
-import org.lee.exception.NotImplementedException;
+import org.lee.common.exception.NotImplementedException;
 import org.lee.statement.clause.Clause;
 import org.lee.node.Node;
 import org.lee.node.NodeTag;

@@ -1,6 +1,6 @@
 package org.lee.type;
 
-import org.lee.entry.literal.mapped.MappedType;
+import org.lee.type.literal.mapped.MappedType;
 import org.lee.node.NodeTag;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Signature;

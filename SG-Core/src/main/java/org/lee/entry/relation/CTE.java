@@ -1,9 +1,8 @@
 package org.lee.entry.relation;
 
 import org.lee.statement.support.Projectable;
-import org.lee.statement.support.Alias;
 import org.lee.node.NodeTag;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.FuzzUtil;
 
 public class CTE extends SubEntry {
     protected String cteName;

@@ -1,19 +1,19 @@
 package org.lee.statement.clause.project;
 
-import org.lee.common.DevTempConf;
+import org.lee.common.config.Conf;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
-import org.lee.exception.NotImplementedException;
+import org.lee.common.exception.NotImplementedException;
 import org.lee.fuzzer.Generator;
-import org.lee.fuzzer.expr.GeneralExpressionGenerator;
-import org.lee.common.config.RuleName;
+import org.lee.statement.generator.GeneralExpressionGenerator;
+import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
-import org.lee.util.FuzzUtil;
-import org.lee.util.ListUtil;
+import org.lee.common.util.FuzzUtil;
+import org.lee.common.util.ListUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -49,7 +49,7 @@ public class SelectClauseWithinFrom extends SelectClause{
         Clause<RangeTableReference> fromClause = statement().getFromClause();
         List<FieldReference> fieldReferences = new Vector<>();
         fromClause.getChildNodes().stream().parallel().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
-        return new GeneralExpressionGenerator(fieldReferences);
+        return new GeneralExpressionGenerator(config, fieldReferences);
     }
 
     private void nonLimitationsProjectionFuzz(){
@@ -59,7 +59,7 @@ public class SelectClauseWithinFrom extends SelectClause{
 
         IntStream.range(0, numOfProjection).parallel().forEach(
                 i-> {
-                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY) || FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                    if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
                         processEntry(generator.generate());
                     }else {
                         processEntry(generator.fallback());
@@ -72,7 +72,7 @@ public class SelectClauseWithinFrom extends SelectClause{
         GeneralExpressionGenerator generator = getProjectionGenerator();
         statement().getProjectTypeLimitation().stream().parallel().forEachOrdered(
                 requiredType -> {
-                    if(FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY) || FuzzUtil.probability(DevTempConf.EXPRESSION_RECURSION_PROBABILITY)){
+                    if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
                         processEntry(generator.generate(requiredType));
                     }else {
                         processEntry(generator.fallback(requiredType));
@@ -87,7 +87,7 @@ public class SelectClauseWithinFrom extends SelectClause{
         final int numOfCandidate = Arrays.stream(numOfEachCandidate).sum();
         final int mayChooseNum = FuzzUtil.randomIntFromRange(1, numOfCandidate + 1);
         final int averageChooseRoundNum = Math.max((numOfCandidate / numOfEachCandidate.length), 1);
-        final boolean enableDuplicateProjections = statement.confirm(RuleName.ENABLE_DUPLICATE_FILED_PROJECTIONS);
+        final boolean enableDuplicateProjections = statement.confirm(Rule.ENABLE_DUPLICATE_FILED_PROJECTIONS);
 //        final int[] mutableFactor = {mayChooseNum};
         final List<FieldReference> fieldReferences = new Vector<>(mayChooseNum);
 
@@ -105,7 +105,7 @@ public class SelectClauseWithinFrom extends SelectClause{
             }
         });
 
-        Generator<Expression> generator = new GeneralExpressionGenerator(fieldReferences);
+        Generator<Expression> generator = new GeneralExpressionGenerator(config, fieldReferences);
         final int max = Math.max(numOfEachCandidate.length, averageChooseRoundNum / 2);
         final int projectionNums = FuzzUtil.randomIntFromRange(numOfEachCandidate.length, max);
         IntStream.range(0, projectionNums).parallel().forEach(

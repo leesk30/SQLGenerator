@@ -1,8 +1,8 @@
 package org.lee.type;
 
-import org.lee.entry.literal.Literal;
-import org.lee.entry.literal.mapped.MappedDecimal;
-import org.lee.entry.literal.mapped.MappedType;
+import org.lee.type.literal.Literal;
+import org.lee.type.literal.mapped.MappedDecimal;
+import org.lee.type.literal.mapped.MappedType;
 import org.lee.fuzzer.Generator;
 import org.lee.node.Node;
 import org.lee.type.precision.*;

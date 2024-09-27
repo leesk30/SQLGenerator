@@ -8,8 +8,8 @@ import org.lee.node.NodeTag;
 import org.lee.node.TreeNode;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
-import org.lee.util.ListUtil;
-import org.lee.util.FuzzUtil;
+import org.lee.common.util.ListUtil;
+import org.lee.common.util.FuzzUtil;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
