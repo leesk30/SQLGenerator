@@ -42,7 +42,7 @@
 
         <!-- logs -->
         <dependency>
-            <groupId>org.apache.commons</groupId>
+            <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
         </dependency>
 
