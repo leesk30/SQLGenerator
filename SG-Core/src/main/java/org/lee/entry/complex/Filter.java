@@ -10,6 +10,8 @@ import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
 import org.lee.common.util.ListUtil;
 import org.lee.common.util.FuzzUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
 public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
     private final List<Qualification> rawQualifications = new ArrayList<>();
     private Qualification combinedQualifications;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public Filter(){
 
     }
@@ -30,7 +33,7 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
     @Override
     public String getString() {
         if(combinedQualifications == null){
-            System.out.println("=================!!!!!===================");
+            logger.error("combinedQualifications cannot be empty or null");
         }
         return combinedQualifications.getString();
     }

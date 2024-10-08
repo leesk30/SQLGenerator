@@ -6,6 +6,8 @@ import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
 import org.lee.common.util.FuzzUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,12 +19,15 @@ public class MetaEntry {
     private static boolean isInitialized = false;
     public static final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
     public static final Map<String, Relation> relationMap = new HashMap<>();
+    public static final Logger logger = LoggerFactory.getLogger(MetaEntry.class);
 
     MetaEntry(){}
     public static synchronized void load(JSONObject json){
         if(isInitialized){
+            logger.warn("The meta entry has already been initialized!!!");
             return;
         }
+        long start = System.currentTimeMillis();
         for(String namespace: json.keySet()){
             JSONArray relationList = json.getJSONArray(namespace);
             for(int i=0; i< relationList.length(); i++){
@@ -35,6 +40,7 @@ public class MetaEntry {
                 relationByNamespaceMap.get(namespace).add(relation);
             }
         }
+        logger.info(String.format("MetaEntry initialized %d items. Elapsed time: %d ms", relationMap.size(), System.currentTimeMillis() - start));
         isInitialized = true;
     }
 

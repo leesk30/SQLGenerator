@@ -6,6 +6,8 @@ import org.lee.statement.SQLStatement;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.statement.support.SupportRuntimeConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,8 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, Sup
     protected final List<T> children;
     protected static int defaultChildrenInitialCapacity = 8;
     protected final RuntimeConfiguration config;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     protected Clause(SQLStatement statement){
         this.statement = statement;
         this.config = statement.getConfig();

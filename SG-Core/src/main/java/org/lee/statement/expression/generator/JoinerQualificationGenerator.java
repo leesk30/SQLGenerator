@@ -30,7 +30,8 @@ public class JoinerQualificationGenerator extends RelationalGenerator<Qualificat
         final RangeTableReference randomRTE = FuzzUtil.randomlyChooseFrom(candidateRelations);
         final FieldReference randomFieldReference = FuzzUtil.randomlyChooseFrom(randomRTE.getFieldReferences());
         if(randomFieldReference == null){
-            System.out.println("Size:" + randomRTE.getFieldReferences().size());
+            logger.error("Cannot find any scalar in rte.");
+            logger.error("Size:" + randomRTE.getFieldReferences().size());
             throw new RuntimeException("Cannot find any scalar in rte.");
         }
         return compareToLiteral(randomFieldReference);

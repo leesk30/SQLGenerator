@@ -10,6 +10,9 @@ import org.lee.type.TypeTag;
 import org.lee.common.util.FuzzUtil;
 import org.lee.common.util.ListUtil;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -19,6 +22,7 @@ public abstract class UnrelatedGenerator<T> implements Generator<T>, SupportRunt
     protected final UnrelatedStatistic statistic;
     protected final RuntimeConfiguration config;
     protected final Finder finder = Finder.getFinder();
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected UnrelatedGenerator(RuntimeConfiguration conf, Scalar ... scalars){
         config = conf;

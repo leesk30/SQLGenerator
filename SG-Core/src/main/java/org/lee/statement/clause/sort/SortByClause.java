@@ -98,6 +98,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
     @Override
     public void fuzz(){
         if(statement.confirm(Rule.REWRITER_REORDER)){
+            logger.info("SortClause using rewrite-reorder to generate orderBy.");
             forceOrderByAllProjections();
             return;
         }

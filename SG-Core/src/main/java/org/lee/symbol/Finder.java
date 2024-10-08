@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.lee.type.TypeTag;
 import org.lee.common.util.FileUtil;
 import org.lee.common.TrieTree;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.*;
@@ -14,6 +16,7 @@ import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class Finder {
+    private static final Logger logger = LoggerFactory.getLogger(Finder.class);
 
     private static class Holder{
         public final TrieTree<TypeTag, Signature> finder = new TrieTree<>();
@@ -97,12 +100,12 @@ public class Finder {
                     process.accept(aggregate);
                 }
         );
-        System.out.println("Build symbol elapse: " + (System.currentTimeMillis() - start));
+        logger.debug("Build symbol elapse: " + (System.currentTimeMillis() - start));
     }
 
     private static boolean checkDisabled(JSONObject jsonSymbol){
         if(jsonSymbol.has("enable") && !jsonSymbol.getBoolean("enable")){
-            System.out.println("Disable by " + (jsonSymbol.has("reason") ? jsonSymbol.getString("reason") : "Unknown reason"));
+            logger.debug("Disable by " + (jsonSymbol.has("reason") ? jsonSymbol.getString("reason") : "Unknown reason"));
             return true;
         }
         return false;

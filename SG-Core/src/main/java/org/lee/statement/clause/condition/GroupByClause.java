@@ -82,13 +82,16 @@ public class GroupByClause extends Clause<Scalar> {
     public void fuzz() {
         final boolean isAggregateRequiredGroupBy = statement.confirm(Rule.AGGREGATION_REQUIRED_GROUP_BY);
         if(!isAggregateRequiredGroupBy && !probability(Conf.GROUP_BY_CLAUSE_FUZZ_PROBABILITY)){
+//            logger.debug("The statement is non-aggregation or the probability is not passed.");
             return;
         }
         final List<TargetEntry> targetEntries = ((SelectStatement)statement).project();
         if(isAggregateRequiredGroupBy){
+//            logger.debug("The group by clause will be required by aggregation.");
             groupByNonAgg(targetEntries);
             return;
         }
+//        logger.debug("The group by clause will group by all entries.");
         groupByAll(targetEntries.size());
 
     }

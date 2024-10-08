@@ -55,7 +55,7 @@ public class SelectClauseWithinFrom extends SelectClause{
 
     private void nonLimitationsProjectionFuzz(){
         GeneralExpressionGenerator generator = getProjectionGenerator();
-        final int numOfEntry = statement().getFromClause().getRawEntryList().size();
+        final int numOfEntry = statement().getFromClause().size();
         final int numOfProjection = FuzzUtil.randomIntFromRange(numOfEntry, numOfEntry*2);
 
         IntStream.range(0, numOfProjection).sequential().forEach(

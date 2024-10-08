@@ -3,6 +3,8 @@ package org.lee.common.config;
 import org.apache.commons.configuration2.Configuration;
 import org.lee.common.SyntaxType;
 import org.lee.common.util.FuzzUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,6 +13,7 @@ public class RuntimeConfiguration {
     private final Map<Rule, Boolean> ruleMap = new HashMap<>();
     private final Configuration configuration;
     private final RuntimeConfigurationProvider provider;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public RuntimeConfiguration(RuntimeConfigurationProvider provider){
         this.provider = provider;
         this.configuration = this.provider.getTemplateConfig();
@@ -19,7 +22,13 @@ public class RuntimeConfiguration {
     public RuntimeConfiguration newChildRuntimeConfiguration(){
         RuntimeConfiguration child = this.provider.newRuntimeConfiguration();
         ruleMap.keySet().stream()
-                .filter(ruleName -> !ruleName.isDiffusible())
+                .filter(ruleName -> {
+                    if(!ruleName.isDiffusible()){
+                        logger.debug(String.format("The rule configuration named '%s' diffuse to child runtime configuration. The value is: %s", ruleName, ruleMap.get(ruleName)));
+                        return true;
+                    }
+                    return false;
+                })
                 .forEach(ruleName -> child.set(ruleName, ruleMap.get(ruleName)));
         return child;
     }
@@ -28,7 +37,8 @@ public class RuntimeConfiguration {
         if(!ruleMap.containsKey(name) || !name.isRewritable()){
             ruleMap.put(name, value);
         }else {
-            System.out.println("Cannot overwrite frozen attributes");
+            logger.error("Cannot overwrite frozen attributes");
+            throw new UnsupportedOperationException("Cannot overwrite frozen attributes");
         }
     }
 

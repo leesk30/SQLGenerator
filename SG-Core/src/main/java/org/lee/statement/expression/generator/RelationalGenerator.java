@@ -9,6 +9,8 @@ import org.lee.statement.expression.Expression;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.common.util.FuzzUtil;
 import org.lee.common.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -22,6 +24,7 @@ public abstract class RelationalGenerator<T extends Expression>
     protected final RangeTableReference right;
     protected final RelatedStatistic statistic;
     protected final RuntimeConfiguration config;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected RelationalGenerator(RuntimeConfiguration conf, RangeTableReference lhs, RangeTableReference rhs){
         config = conf;

@@ -25,9 +25,9 @@
         <commons.lang3.version>3.15.0</commons.lang3.version>
         <commons.math3.version>3.6</commons.math3.version>
         <commons.configuration2.version>2.11.0</commons.configuration2.version>
-        <commons.beanutils>1.9.4</commons.beanutils>
-        <commons.logging.version>1.2</commons.logging.version>
-        <logging.log4j.version>2.13.0</logging.log4j.version>
+        <commons.beanutils.version>1.9.4</commons.beanutils.version>
+        <logging.slf4j.version>1.7.30</logging.slf4j.version>
+        <logging.log4j.version>2.22.0</logging.log4j.version>
         <testng.version>6.14.3</testng.version>
     </properties>
 
@@ -83,14 +83,20 @@
             <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
-                <version>${commons.beanutils}</version>
+                <version>${commons.beanutils.version}</version>
             </dependency>
 
             <!-- logs -->
             <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${commons.logging.version}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${logging.slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${logging.log4j.version}</version>
             </dependency>
 
             <dependency>

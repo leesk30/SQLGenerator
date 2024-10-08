@@ -11,6 +11,8 @@ import org.lee.base.TreeNode;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
 import org.lee.common.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,6 +23,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     protected final Node current;
     protected final List<Expression> childNodes;
     protected final boolean isTerminateNode;
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public Expression(Node current){
         this.isTerminateNode = !(current instanceof Signature);
@@ -55,6 +58,8 @@ public class Expression implements Scalar, TreeNode<Expression> {
             // Expression(Expression(a + b) * c) -> (a + b) * c
             // Expression(a + Expression(b * c)) -> a + b * c
             if(childOperator.getSignaturePriority() < parentOperator.getSignaturePriority()){
+                logger.debug("The priority checking of signature tell we should with parentheses for this expression.");
+                logger.debug(String.format("The child signature is: '%s'. The parent signature is: '%s'", childOperator.getString(), parentOperator.getString()));
                 this.childNodes.add(childExpression.toWithParenthesesExpression());
                 return;
             }
@@ -98,7 +103,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
         if(!isTerminateNode){
             return String.format(current.getString(), childNodes.stream().map(Expression::getString).toArray());
         }
-        assert childNodes.isEmpty();
+        Assertion.requiredTrue(childNodes.isEmpty());
         return current.getString();
     }
 

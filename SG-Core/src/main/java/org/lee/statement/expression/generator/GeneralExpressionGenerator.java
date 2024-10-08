@@ -181,9 +181,9 @@ public class GeneralExpressionGenerator
         if(expression.isComplete() && expression.getType() == required){
             return expression;
         }else {
-            System.out.println("The Expression is not Required or Incomplete");
-            System.out.println("IsComplete: " + expression.isComplete());
-            System.out.println("IsRequired: " + (expression.getType() == required));
+            logger.error("The Expression is not Required or Incomplete");
+            logger.debug("IsComplete: " + expression.isComplete());
+            logger.debug("IsRequired: " + (expression.getType() == required));
         }
         return fallback(required);
     }

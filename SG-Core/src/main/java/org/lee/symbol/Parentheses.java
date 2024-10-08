@@ -2,6 +2,8 @@ package org.lee.symbol;
 
 import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -9,6 +11,10 @@ public class Parentheses implements Signature{
 
     private final Signature wrapped;
     public Parentheses(Signature wrapped){
+        if(wrapped instanceof Parentheses){
+            LoggerFactory.getLogger(this.getClass()).error("There is no sense for the parentheses nest directly!");
+            throw new UnsupportedOperationException("There is no sense for the parentheses nest directly!");
+        }
         this.wrapped = wrapped;
     }
 

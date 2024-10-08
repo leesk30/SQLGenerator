@@ -1,6 +1,8 @@
 package org.lee.common.exception;
 
 import org.lee.entry.RangeTableReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -8,58 +10,67 @@ import java.util.function.Supplier;
 public class Assertion {
 
     public static final Supplier<GeneratorInternalError> IMPOSSIBLE = GeneratorInternalError::new;
-
+    private final static Logger logger = LoggerFactory.getLogger(Assertion.class);
 
     public static void requiredTrue(final boolean boolValue){
         if(!boolValue){
+            logger.error("[requiredTrue] The bool value cannot be true");
             throw new ValueCheckFailedException("[requiredTrue] The bool value cannot be true");
         }
     }
 
     public static void requiredFalse(final boolean boolValue){
         if(boolValue){
+            logger.error("[requiredFalse] The bool value cannot be false");
             throw new ValueCheckFailedException("[requiredFalse] The bool value cannot be false");
         }
     }
 
     public static void requiredNonNull(final Object check){
         if(Objects.isNull(check)){
+            logger.error("[requiredNonNull] The object of class cannot be null");
             throw new ValueCheckFailedException("[requiredNonNull] The object of class cannot be null");
         }
     }
 
     public static void requireEquals(final int actually, final int required){
         if(actually != required){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireEquals", actually, required));
             throw new ValueCheckFailedException("requireEquals", actually, required);
         }
     }
 
     public static void requireNonEquals(final int actually, final int required){
         if(actually == required){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireNonEquals", actually, required));
             throw new ValueCheckFailedException("requireNonEquals", actually, required);
         }
     }
 
     public static void requireEquals(final String actually, final String required){
         if(!actually.equals(required)){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireEquals", actually, required));
             throw new ValueCheckFailedException("requireEquals", actually, required);
         }
     }
 
     public static void requireEquals(final RangeTableReference actually, final RangeTableReference required){
         if(!actually.getUniqueName().equals(required.getUniqueName())){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireEquals", actually, required));
             throw new ValueCheckFailedException("requireEquals", actually, required);
         }
     }
 
     public static void requireNonEquals(final String actually, final String required){
         if(actually.equals(required)){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireNonEquals", actually, required));
             throw new ValueCheckFailedException("requireNonEquals", actually, required);
         }
     }
 
     public static void requireNonEquals(final RangeTableReference actually, final RangeTableReference required){
         if(actually.getUniqueName().equals(required.getUniqueName())){
+            logger.error(ValueCheckFailedException.formatErrorMessage("requireNonEquals", actually, required));
             throw new ValueCheckFailedException("requireNonEquals", actually, required);
         }
     }

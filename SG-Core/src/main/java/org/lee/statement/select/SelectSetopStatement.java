@@ -80,19 +80,23 @@ public final class SelectSetopStatement
 
     private void requireProjectionLeftSimilarWithRight(){
         if(left.project().size() != right.project().size()){
-            System.out.println(left.getClass().getName());
-            System.out.println(right.getClass().getName());
-            throw new ValueCheckFailedException("The setop statement has difference project length. " +
-                    "Left: " + left.project().size() + " Right: " + right.project().size());
+            String message = "The setop statement has difference project length. " +
+                    "Left: " + left.project().size() + " Right: " + right.project().size();
+
+            logger.error(message);
+            logger.debug(String.format("Left class name: %s Right class name: %s", left.getClass().getName(), right.getClass().getName()));
+            throw new ValueCheckFailedException(message);
         }
-        IntStream.range(0, left.project().size()).sequential().forEach(
+        IntStream.range(0, left.project().size())
+                .sequential().forEach(
                 i -> {
                     if(left.project().get(i).getType() != right.project().get(i).getType()){
-                        System.out.println(left.getClass().getName());
-                        System.out.println(right.getClass().getName());
-                        throw new ValueCheckFailedException("The setop statement is mismatched type in both size. " +
+                        String message = "The setop statement is mismatched type in both size. " +
                                 "Left type: " + left.project().get(i).getType() +
-                                " Right type: "+ right.project().get(i).getType() +" Index: " + i);
+                                " Right type: "+ right.project().get(i).getType() +" Index: " + i;
+                        logger.error(message);
+                        logger.debug(String.format("Left class name: %s Right class name: %s", left.getClass().getName(), right.getClass().getName()));
+                        throw new ValueCheckFailedException(message);
                     }
                 }
         );

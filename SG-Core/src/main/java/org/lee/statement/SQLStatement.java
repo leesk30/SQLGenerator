@@ -1,7 +1,8 @@
 package org.lee.statement;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
@@ -23,7 +24,7 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
     protected final RuntimeConfiguration config;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
     protected final UUID uuid;
-    protected final Log LOGGER = LogFactory.getLog(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected SQLStatement(SQLType sqlType){
         this(sqlType, null);
@@ -35,14 +36,16 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
             this.sqlType = sqlType;
             this.parent = null;
             this.config = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
+            MDC.put("stmtId", uuid.toString().replaceAll("-", ""));
+            logger.info(String.format("Start to build statement for type: %s.", sqlType));
         }else {
             this.uuid = parentStatement.uuid;
             this.sqlType = sqlType;
             this.parent = parentStatement;
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
+//            MDC.put("stmtId", uuid.toString());
+            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parentStatement.sqlType));
         }
-        LOGGER.info("Hello world! - " + uuid);
-//        this.sqlSyntax = SQLSyntax.newSyntax(this);
     }
 
     public boolean isFinished(){
