@@ -1,19 +1,19 @@
 package org.lee.statement.clause.sort;
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.LiteralInt;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
 import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.Sortable;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 import java.util.function.IntConsumer;
@@ -43,7 +43,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
         return i -> {
-            final int orderByIndex = FuzzUtil.randomIntFromRange(1, projectionLength+1);
+            final int orderByIndex = Utility.randomIntFromRange(1, projectionLength+1);
             final Literal<Integer> literal = new LiteralInt(orderByIndex);
             addSortEntry(new SortEntry(literal, this.statement.getConfig()));
         };
@@ -54,7 +54,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
         final List<TargetEntry> targetEntries = projectable.project();
         final RuntimeConfiguration configuration = ((SQLStatement)projectable).getConfig();
         return i -> {
-            final TargetEntry targetEntry = FuzzUtil.randomlyChooseFrom(targetEntries);
+            final TargetEntry targetEntry = Utility.randomlyChooseFrom(targetEntries);
             addSortEntry(new SortEntry(targetEntry, configuration));
         };
     }
@@ -77,16 +77,16 @@ public abstract class SortByClause extends Clause<SortEntry> {
     protected int getProjectSize(){
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
-        Assertion.requireNonEquals(projectionLength, 0);
+        Assertion.requiredNonEquals(projectionLength, 0);
         return projectionLength;
     }
 
     protected IntStream getStreamer(){
-        return IntStream.range(0, FuzzUtil.randomIntFromRange(1, (int)(1.5D * getProjectSize()))).sequential();
+        return IntStream.range(0, Utility.randomIntFromRange(1, (int)(1.5D * getProjectSize()))).sequential();
     }
 
     protected IntConsumer getConsumer(){
-        return FuzzUtil.probability(50)? randomlyOrderByIndex(): randomlyOrderByTarget();
+        return Utility.probability(50)? randomlyOrderByIndex(): randomlyOrderByTarget();
     }
 
     protected void forceOrderByAllProjections(){

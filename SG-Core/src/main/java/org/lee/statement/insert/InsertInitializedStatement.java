@@ -1,5 +1,6 @@
 package org.lee.statement.insert;
 
+import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.record.Record;
 import org.lee.entry.relation.Relation;
@@ -7,7 +8,6 @@ import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.modify.InsertModifyTableClause;
 import org.lee.statement.clause.project.ValuesClauseForInsert;
 import org.lee.type.TypeDescriptor;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +55,7 @@ public final class InsertInitializedStatement extends InsertStatement{
 
         @Override
         public void fuzz() {
-            length = FuzzUtil.randomIntFromRange(minLines, maxLines);
+            length = Utility.randomIntFromRange(minLines, maxLines);
             width = InsertInitializedStatement.this.targetRelation.getFields().size();
             generateRecordByTypeDescriptor();
         }

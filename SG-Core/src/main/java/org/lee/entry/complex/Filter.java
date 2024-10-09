@@ -1,6 +1,7 @@
 package org.lee.entry.complex;
 
 import org.lee.base.Fuzzer;
+import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
@@ -8,8 +9,6 @@ import org.lee.base.NodeTag;
 import org.lee.base.TreeNode;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
-import org.lee.common.util.ListUtil;
-import org.lee.common.util.FuzzUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,8 +79,8 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
             return Collections.singletonList(combine(qualifications.get(0), qualifications.get(1)));
         }
         final List<Qualification> result = new ArrayList<>();
-        final List<Qualification> template = ListUtil.copyListShuffle(qualifications);
-        final int splitIndex = FuzzUtil.randomIntFromRange(1, template.size() - 1);
+        final List<Qualification> template = Utility.copyListShuffle(qualifications);
+        final int splitIndex = Utility.randomIntFromRange(1, template.size() - 1);
         final List<Qualification> lhs = template.subList(0, splitIndex);
         final List<Qualification> rhs = template.subList(splitIndex, template.size());
         result.addAll(randomlyMerge(lhs));
@@ -90,10 +89,10 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
     }
 
     private Qualification combine(Qualification left, Qualification right){
-        Qualification qualification = new Qualification(FuzzUtil.probability(50) ? PredicateCombiner.AND : PredicateCombiner.OR);
+        Qualification qualification = new Qualification(Utility.probability(50) ? PredicateCombiner.AND : PredicateCombiner.OR);
         final AtomicInteger counter = new AtomicInteger(0);
         java.util.function.Function<Qualification, Qualification> tryToNegative = (qual) -> {
-            if(FuzzUtil.probability(3 - counter.get())){
+            if(Utility.probability(3 - counter.get())){
                 counter.set(counter.get() + 1);
                 return qual.toNegative();
             }else {

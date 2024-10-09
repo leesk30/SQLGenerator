@@ -1,5 +1,6 @@
 package org.lee.statement.clause.condition;
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.entry.FieldReference;
 import org.lee.entry.complex.TargetEntry;
@@ -11,7 +12,6 @@ import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;
-import org.lee.common.util.FuzzUtil;
 import org.lee.common.Pair;
 
 import java.util.*;
@@ -72,7 +72,7 @@ public class GroupByClause extends Clause<Scalar> {
             return;
         }
         children.addAll(nonAggregate.values());
-        intersected.stream().filter(s -> FuzzUtil.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
+        intersected.stream().filter(s -> Utility.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
         Collections.shuffle(children);
 
     }

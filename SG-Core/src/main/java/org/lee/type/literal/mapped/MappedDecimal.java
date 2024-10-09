@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
+import org.lee.common.Utility;
 import org.lee.type.literal.LiteralDecimal;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.math.BigDecimal;
 
@@ -18,19 +18,19 @@ public class MappedDecimal extends MappedType<BigDecimal> {
 
     @Override
     public LiteralDecimal generate() {
-        return new LiteralDecimal(FuzzUtil.randomDecimalFromRange(0, 100));
+        return new LiteralDecimal(Utility.randomDecimalFromRange(0, 100));
     }
 
     @Override
     public LiteralDecimal generate(int partial) {
-        return new LiteralDecimal(FuzzUtil.randomDecimalFromRange(partial, partial+100));
+        return new LiteralDecimal(Utility.randomDecimalFromRange(partial, partial+100));
     }
 
     public LiteralDecimal generate(int intDigitLength, int floatDigitLength) {
         intDigitLength = Math.min(3, intDigitLength);
         floatDigitLength = Math.min(8, floatDigitLength);
-        long integerPart = FuzzUtil.randomLongFromRange(0, (int)Math.pow(10, intDigitLength));
-        long floatPart = FuzzUtil.randomLongFromRange(0, (int)Math.pow(10, floatDigitLength));
+        long integerPart = Utility.randomLongFromRange(0, (int)Math.pow(10, intDigitLength));
+        long floatPart = Utility.randomLongFromRange(0, (int)Math.pow(10, floatDigitLength));
         return toDecimal(integerPart, floatPart);
     }
 

@@ -1,5 +1,6 @@
 package org.lee.statement.select;
 
+import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.common.exception.ValueCheckFailedException;
@@ -15,7 +16,6 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,7 +104,7 @@ public final class SelectSetopStatement
 
     private void fuzzForSubStatement(){
         if(this.getProjectTypeLimitation().isEmpty()){
-            if(FuzzUtil.probability(50)){
+            if(Utility.probability(50)){
                 left = generate(this);
                 right = generate(this, left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }else {
@@ -123,8 +123,8 @@ public final class SelectSetopStatement
     public void fuzz() {
         withClause.fuzz();
         fuzzForSubStatement();
-        setop = FuzzUtil.randomlyChooseFrom(SetOperation.values());
-        all = FuzzUtil.probability(50);
+        setop = Utility.randomlyChooseFrom(SetOperation.values());
+        all = Utility.probability(50);
         sortByClause.fuzz();
         limitOffset.fuzz();
     }

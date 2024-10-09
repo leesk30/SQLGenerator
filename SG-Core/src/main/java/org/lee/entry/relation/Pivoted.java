@@ -1,11 +1,11 @@
 package org.lee.entry.relation;
 
+import org.lee.common.Utility;
 import org.lee.entry.NormalizedEntryWrapper;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.base.Fuzzer;
 import org.lee.entry.scalar.Field;
 import org.lee.base.NodeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +49,7 @@ public class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>, RangeTa
 
     @Override
     public void fuzz() {
-        unpivotFlag = FuzzUtil.probability(50);
+        unpivotFlag = Utility.probability(50);
 
         if(unpivotFlag){
             unpivot();

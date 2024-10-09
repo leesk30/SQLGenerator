@@ -1,19 +1,34 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.common.Utility;
+import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
 import org.lee.base.Generator;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.support.Logging;
+import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
+import java.util.Collections;
 import java.util.List;
 
 public interface IExpressionGenerator<T extends Expression>
-        extends Generator<T>, SupportRuntimeConfiguration {
+        extends Generator<T>, SupportRuntimeConfiguration, Logging {
 
-    default Scalar scalarSubqueryGenerate(){
-        return null;
+    SQLStatement getStatement();
+
+    default Scalar scalarGenerate(TypeTag typeTag){
+        Projectable projectable = Projectable.newRandomlyProjectable(getStatement());
+        projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
+        projectable.asStatement().setConfig(Rule.REQUIRE_SCALA,true);
+        projectable.fuzz();
+        return projectable.toScalar();
+    }
+
+    default Scalar scalarGenerate(){
+        return scalarGenerate(TypeTag.randomGenerateTarget());
     }
 
     default Scalar getLiteral(TypeTag typeTag){
@@ -21,11 +36,11 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Scalar getLiteral(){
-        return getLiteral(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
+        return getLiteral(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
     }
 
     default Scalar getLiteral(int partial){
-        return getLiteral(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE), partial);
+        return getLiteral(TypeTag.randomGenerateTarget(), partial);
     }
 
     default Scalar getLiteral(TypeTag typeTag, int partial){

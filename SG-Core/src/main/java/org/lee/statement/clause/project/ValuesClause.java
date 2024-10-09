@@ -1,17 +1,16 @@
 package org.lee.statement.clause.project;
 
+import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.record.Record;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.base.NodeTag;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -51,14 +50,14 @@ public abstract class ValuesClause extends Clause<Record> {
         return IntStream.range(0, width)
                 .sequential()
                 .mapToObj(
-                        i -> FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE))
+                        i -> Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE))
                 .collect(Collectors.toList());
     }
 
     protected void requiredReadyToGenerateRecord(final int targetWidth){
         Assertion.requiredTrue(length > 0);
         Assertion.requiredTrue(width> 0);
-        Assertion.requireEquals(targetWidth, width);
+        Assertion.requiredEquals(targetWidth, width);
     }
 
     protected void generateRecord(final List<TypeTag> targetType){

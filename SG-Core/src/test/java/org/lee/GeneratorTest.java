@@ -2,9 +2,9 @@ package org.lee;
 
 import org.lee.common.MetaEntry;
 import org.lee.base.Generator;
+import org.lee.common.Utility;
 import org.lee.statement.SQLFormatter;
 import org.lee.statement.select.SelectStatement;
-import org.lee.common.util.FuzzUtil;
 import org.testng.annotations.Test;
 
 import java.io.FileWriter;
@@ -20,17 +20,17 @@ public class GeneratorTest {
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'G', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         };
-        IntStream.range(0, 100).parallel().forEach(i -> System.out.print(charset[FuzzUtil.randomIntFromRange(0, charset.length)]));
+        IntStream.range(0, 100).parallel().forEach(i -> System.out.print(charset[Utility.randomIntFromRange(0, charset.length)]));
     }
 
     @Test
     public static void generateString(){
         final int maxLength = 2;
-        String res = FuzzUtil.randomStringByLength(maxLength);
+        String res = Utility.randomStringByLength(maxLength);
         assert res.length() <= maxLength;
         System.out.println(res.length());
         System.out.println(res);
-        System.out.println(FuzzUtil.stringToLikePattern(res));
+        System.out.println(Utility.stringToLikePattern(res));
     }
 
     @Test

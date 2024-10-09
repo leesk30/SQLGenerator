@@ -2,7 +2,7 @@ package org.lee.common.config;
 
 import org.apache.commons.configuration2.Configuration;
 import org.lee.common.SyntaxType;
-import org.lee.common.util.FuzzUtil;
+import org.lee.common.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +76,6 @@ public class RuntimeConfiguration {
 
     public boolean probability(Conf name){
         short probability = getShort(name);
-        return FuzzUtil.probability(probability);
+        return Utility.probability(probability);
     }
 }

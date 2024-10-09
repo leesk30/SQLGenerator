@@ -1,7 +1,8 @@
 package org.lee.statement.clause.condition;
 
+import org.lee.common.Utility;
 import org.lee.entry.RangeTableReference;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.base.Generator;
 import org.lee.statement.expression.generator.JoinerQualificationGenerator;
 import org.lee.statement.SQLStatement;
@@ -10,7 +11,6 @@ import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.stream.IntStream;
 
@@ -22,7 +22,7 @@ public abstract class WhereClause extends Clause<Filter> {
 
     @Override
     public String getString() {
-        Assertion.requireEquals(children.size(), 1);
+        Assertion.requiredEquals(children.size(), 1);
         return WHERE + SPACE + nodeArrayToString(children);
     }
 
@@ -46,9 +46,9 @@ public abstract class WhereClause extends Clause<Filter> {
             }
             final RangeTableReference left = fromClause.getChildNodes().get(i);
             final RangeTableReference right = fromClause.getChildNodes().get(i+1);
-            final Generator<Qualification> generator = new JoinerQualificationGenerator(config, left, right);
+            final Generator<Qualification> generator = new JoinerQualificationGenerator(this.statement, left, right);
             // todo: add counting randomly
-            final int generateCount = FuzzUtil.randomIntFromRange(1, 2);
+            final int generateCount = Utility.randomIntFromRange(1, 2);
             IntStream.range(0, generateCount).sequential().forEach(
                     j -> {
                         final Qualification qualification = generator.generate();

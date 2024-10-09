@@ -16,5 +16,7 @@ public class SparkGeneratorConfigurationProvider extends RuntimeConfigurationPro
         this.ruleMapTemplate.put(Rule.ENABLE_DUPLICATE_FILED_PROJECTIONS, true);
         this.ruleMapTemplate.put(Rule.ORDER_DEFAULT_DESC, false);
         this.ruleMapTemplate.put(Rule.ORDER_DEFAULT_NULL_FIRST, true);
+        // spark required scalar subquery is created by aggregation
+        this.ruleMapTemplate.put(Rule.SCALAR_FORCE_USING_AGGREGATION, true);
     }
 }

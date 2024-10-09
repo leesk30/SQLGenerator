@@ -1,5 +1,6 @@
 package org.lee.statement.clause.from;
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.statement.SQLStatement;
@@ -7,7 +8,7 @@ import org.lee.entry.relation.CTE;
 import org.lee.base.NodeTag;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SupportGenerateProjectable;
-import org.lee.common.util.FuzzUtil;
+
 import java.util.stream.IntStream;
 
 public class WithClause extends Clause<CTE> implements SupportGenerateProjectable {
@@ -39,7 +40,7 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
         if(!config.probability(Conf.WITH_CTE_PROBABILITY)){
             return;
         }
-        final int numOfCTEs = FuzzUtil.randomIntFromRange(0, 3);
+        final int numOfCTEs = Utility.randomIntFromRange(0, 3);
         if(numOfCTEs == 0){
             return;
         }

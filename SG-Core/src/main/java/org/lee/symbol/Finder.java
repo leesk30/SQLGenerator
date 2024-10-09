@@ -2,8 +2,8 @@ package org.lee.symbol;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lee.common.Utility;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FileUtil;
 import org.lee.common.TrieTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +83,7 @@ public class Finder {
         }
         isLoad = true;
         InputStream stream = Finder.class.getClassLoader().getResourceAsStream("symbol.json");
-        JSONObject symbols = new JSONObject(FileUtil.inputStreamToString(stream));
+        JSONObject symbols = new JSONObject(Utility.inputStreamToString(stream));
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");
         JSONArray operatorList = symbols.getJSONArray("operator");

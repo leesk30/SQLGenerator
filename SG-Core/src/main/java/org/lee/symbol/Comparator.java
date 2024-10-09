@@ -1,9 +1,9 @@
 package org.lee.symbol;
 
 import org.lee.base.NodeTag;
+import org.lee.common.Utility;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 
@@ -28,14 +28,14 @@ public enum Comparator implements Signature{
     public final static Comparator[] BASE_EQ = {EQ, NOT_EQ};
 
     public static Comparator fastGetComparatorByCategory(TypeCategory category){
-        if(category == TypeCategory.STRING && FuzzUtil.probability(90)){
-            return FuzzUtil.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
+        if(category == TypeCategory.STRING && Utility.probability(90)){
+            return Utility.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
         }
         final int prob = category == TypeCategory.STRING ? 99: 90;
-        if(category.isComparable() && FuzzUtil.probability(prob)){
-            return FuzzUtil.randomlyChooseFrom(Comparator.ALL);
+        if(category.isComparable() && Utility.probability(prob)){
+            return Utility.randomlyChooseFrom(Comparator.ALL);
         }else {
-            return FuzzUtil.randomlyChooseFrom(Comparator.BASE_EQ);
+            return Utility.randomlyChooseFrom(Comparator.BASE_EQ);
         }
     }
 

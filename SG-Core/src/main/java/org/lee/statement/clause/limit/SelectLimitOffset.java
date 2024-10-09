@@ -1,10 +1,10 @@
 package org.lee.statement.clause.limit;
 
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.statement.select.SelectStatement;
-import org.lee.common.util.FuzzUtil;
 
 public class SelectLimitOffset extends LimitOffset {
 
@@ -18,12 +18,12 @@ public class SelectLimitOffset extends LimitOffset {
             if(statement.confirm(Rule.REQUIRE_SCALA)){
                 limitNode.set(1);
             }else {
-                limitNode.set(FuzzUtil.randomIntFromRange(1, 100));
+                limitNode.set(Utility.randomIntFromRange(1, 100));
             }
         }
 
         if(config.probability(Conf.LIMIT_OFFSET_WITH_OFFSET_PROBABILITY)){
-            offsetNode.set(FuzzUtil.randomIntFromRange(1, 100));
+            offsetNode.set(Utility.randomIntFromRange(1, 100));
         }
     }
 }

@@ -8,7 +8,7 @@ public class TrieTree<K, V> {
     private static class TrieTreeNode<K, V> {
         private final int level;
         private final Map<K, TrieTreeNode<K, V>> childrenMap = new ConcurrentHashMap<>();
-        private final List<V> container = new ArrayList<>();
+        private final List<V> container = new Vector<>();
 
         public TrieTreeNode() {
             this.level = 0;

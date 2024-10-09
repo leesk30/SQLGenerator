@@ -1,13 +1,13 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.common.Utility;
+import org.lee.common.Assertion;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.expression.Expression;
 import org.lee.symbol.*;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
-import org.lee.common.util.ListUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +33,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         List<TypeTag> arg = new ArrayList<>(2);
         arg.add(left.getType());
         arg.add(right.getType());
-        Operator op = (Operator) FuzzUtil.randomlyChooseFrom(finder.getOperator(arg));
+        Operator op = (Operator) Utility.randomlyChooseFrom(finder.getOperator(arg));
         if(op != null){
             return new Expression(op).newChild(left).newChild(right);
         }
@@ -47,7 +47,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     default Expression functionUnit(List<Scalar> scalars){
         final Finder finder = Finder.getFinder();
         final List<Signature> candidate = finder.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
-        Function function = (Function) FuzzUtil.randomlyChooseFrom(candidate);
+        Function function = (Function) Utility.randomlyChooseFrom(candidate);
         if(function == null){
             return fallbackFor(scalars);
         }
@@ -59,16 +59,71 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         return result;
     }
 
+    default Expression withAggregator(TypeTag targetType, Expression expression){
+        if(expression.isIncludingAggregation()){
+            // like max(a + b). return itself.
+            return expression;
+        }else {
+            // We cannot cast if an expression includes aggregation but not in outermost layer.
+            // like max(a) + b
+            Assertion.requiredFalse(expression.isIncludingAggregation());
+        }
+        Finder finder = Finder.getFinder();
+        List<Signature> input = finder.getAggregateByReturn(targetType);
+        if(input != null){
+
+        }
+        List<Signature> suitable = input.stream()
+                .filter(signature -> signature.getArgumentsTypes().size() == 1)
+                .filter(signature -> signature.getArgumentsTypes().get(0) == expression.getType())
+                .collect(Collectors.toList());
+        if(suitable.isEmpty()){
+            // todo
+        }
+        return null;
+    }
+
+    default Expression cast(Expression expression, TypeTag targetType){
+        return castRecursionUnit(expression, targetType);
+    }
+
+    default Expression nullableCast(Expression expression, TypeTag targetType){
+        final Finder finder = Finder.getFinder();
+        List<Signature> result = finder.getFunction(expression.getType())
+                .stream()
+                .filter(
+                        signature -> signature.getArgumentsTypes().get(0) == targetType
+                )
+                .collect(Collectors.toList());
+        if(!result.isEmpty() && probability(99)){
+            return new Expression(Utility.randomlyChooseFrom(result)).newChild(expression);
+        }
+        return null;
+    }
+
+    default Expression castRecursionUnit(Expression expression, TypeTag targetType){
+        final boolean skipForceConvert = (probability(99) || probability(99));
+        if(expression.getType() == targetType && skipForceConvert){
+            return expression;
+        }
+        Expression castedExpression = nullableCast(expression, targetType);
+        if(castedExpression != null){
+            return castedExpression;
+        }
+        // todo
+        return null;
+
+    }
 
     default List<Expression> tryMergeToExpression(List<Scalar> scalars){
-        final List<Scalar> template = ListUtil.copyListShuffle(scalars);
+        final List<Scalar> template = Utility.copyListShuffle(scalars);
         if(template.isEmpty()){
             return Collections.singletonList(new Expression(getLiteral()));
         }
         final int maxSize = Math.min(Finder.getFinder().maxFunctionArgWidth(), scalars.size());
         int epoch = 0;
         do {
-            int windowSize = Math.min(template.size(), FuzzUtil.randomIntFromRange(1, maxSize));
+            int windowSize = Math.min(template.size(), Utility.randomIntFromRange(1, maxSize));
             epoch++;
             Collections.shuffle(template);
             if(windowSize == 1){
@@ -80,7 +135,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                 if(left.getType().getCategory() == TypeCategory.NUMBER && right.getType().getCategory() == TypeCategory.NUMBER){
                     prob = 75;
                 }
-                if(FuzzUtil.probability(prob)){
+                if(Utility.probability(prob)){
                     template.add(generateOperatorExpression(left, right));
                 }else {
                     template.add(functionUnit(left, right));
@@ -95,7 +150,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                         )
                 );
             }
-        }while (FuzzUtil.probability(50/epoch));
+        }while (Utility.probability(50/epoch));
         return template.stream().map(scalar -> scalar instanceof Expression? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
     }
 }

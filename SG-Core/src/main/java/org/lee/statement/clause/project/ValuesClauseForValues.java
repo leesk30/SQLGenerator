@@ -1,11 +1,11 @@
 package org.lee.statement.clause.project;
 
-import org.lee.common.exception.Assertion;
+import org.lee.common.Utility;
+import org.lee.common.Assertion;
 import org.lee.common.config.Rule;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ public class ValuesClauseForValues extends ValuesClause{
         if(this.statement.confirm(Rule.REQUIRE_SCALA)){
             length = 1;
             width = withLimitations ? limitations.size(): 1;
-            Assertion.requireEquals(width, 1);
+            Assertion.requiredEquals(width, 1);
         }else {
-            length = FuzzUtil.randomIntFromRange(1, 10);
-            width = withLimitations ? limitations.size(): FuzzUtil.randomIntFromRange(1, 7);
+            length = Utility.randomIntFromRange(1, 10);
+            width = withLimitations ? limitations.size(): Utility.randomIntFromRange(1, 7);
         }
 
         if(withLimitations){

@@ -1,14 +1,14 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
-import org.lee.common.util.ListUtil;
 
 import java.util.*;
 import java.util.stream.IntStream;
@@ -16,6 +16,7 @@ import java.util.stream.IntStream;
 public class GeneralExpressionGenerator
         extends UnrelatedGenerator<Expression>
         implements ExpressionGenerator {
+
 
     public enum SymbolType{
         aggregate,
@@ -25,20 +26,20 @@ public class GeneralExpressionGenerator
 
     public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
 
-    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(RuntimeConfiguration config){
-        return new GeneralExpressionGenerator(config, unmodifiableEmptyList);
+    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
+        return new GeneralExpressionGenerator(statement, unmodifiableEmptyList);
     }
 
-    public GeneralExpressionGenerator(RuntimeConfiguration config, Scalar ... scalars){
-        super(config, scalars);
+    public GeneralExpressionGenerator(SQLStatement statement, Scalar ... scalars){
+        super(statement, scalars);
     }
 
-    public GeneralExpressionGenerator(RuntimeConfiguration config, List<? extends Scalar> scalars){
-        super(config, scalars);
+    public GeneralExpressionGenerator(SQLStatement statement, List<? extends Scalar> scalars){
+        super(statement, scalars);
     }
 
     public List<Signature> getCandidateSignatures(TypeTag root){
-        List<Signature> copiedSignature = ListUtil.copyList(finder.getFunctionByReturn(root));
+        List<Signature> copiedSignature = Utility.copyList(finder.getFunctionByReturn(root));
         List<Signature> operators = finder.getOperatorByReturn(root);
         if(operators != null){
             copiedSignature.addAll(operators);
@@ -48,15 +49,20 @@ public class GeneralExpressionGenerator
 
     public Expression getCompleteExpressionTree(TypeTag root, int recursionDepth, boolean enableAggregate){
         final List<Signature> copiedSignature = getCandidateSignatures(root);
-        if(enableAggregate && config.probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
+        if(enableAggregate && probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
             List<Signature> aggregators = finder.getAggregateByReturn(root);
-            if(aggregators != null){
+            final boolean inScalarRequiredAggregation = confirm(Rule.REQUIRE_SCALA) && confirm(Rule.SCALAR_FORCE_USING_AGGREGATION);
+            if(inScalarRequiredAggregation){
+                // do nothing
+                logger.debug("The statement requires a scalar, and the scalar should be wrapped with an aggregate. " +
+                        "To stop retrieving aggregation, we stop the aggregator search here.");
+            }else if(aggregators != null){
                 copiedSignature.addAll(aggregators);
             }
         }
         Collections.shuffle(copiedSignature);
         while (!copiedSignature.isEmpty()){
-            final Signature signature = FuzzUtil.pop(copiedSignature);
+            final Signature signature = Utility.pop(copiedSignature);
             if(signature == null){
                 return fallback(root);
             }
@@ -85,7 +91,7 @@ public class GeneralExpressionGenerator
 
     private boolean suitable(Signature signature){
 //        System.out.println(statistic.suitableFactorProb());
-        return FuzzUtil.probability(statistic.suitableFactorProb(signature));
+        return Utility.probability(statistic.suitableFactorProb(signature));
     }
 
     private boolean preferRecursion(Signature signature, int currentDepth){
@@ -145,7 +151,7 @@ public class GeneralExpressionGenerator
 
     @Override
     public Expression generate() {
-        return generate(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE), 0);
+        return generate(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE), 0);
     }
 
     @Override
@@ -159,6 +165,7 @@ public class GeneralExpressionGenerator
         if(requiredScalar != null){
             return requiredScalar.toExpression();
         }
+
         return getLiteral(required).toExpression();
     }
 
@@ -187,4 +194,5 @@ public class GeneralExpressionGenerator
         }
         return fallback(required);
     }
+
 }

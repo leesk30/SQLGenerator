@@ -1,17 +1,16 @@
 package org.lee.entry;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lee.common.Utility;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.relation.ValuesRelation;
 import org.lee.base.NodeTag;
 import org.lee.statement.support.Alias;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Vector;
 
 public final class RangeTableReference implements NormalizedEntryWrapper<RangeTableEntry>, Alias {
 
@@ -85,7 +84,7 @@ public final class RangeTableReference implements NormalizedEntryWrapper<RangeTa
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }
-        refName = FuzzUtil.getRandomName("r_");
+        refName = Utility.getRandomName("r_");
     }
 
     @Override

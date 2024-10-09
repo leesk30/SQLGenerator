@@ -8,10 +8,11 @@ public enum Rule {
     AGGREGATION_REQUIRED_GROUP_BY,
 
 
-    SUPPORT_CTE_MATERIALIZED(false),
-    ORDER_DEFAULT_DESC(false),
-    ORDER_DEFAULT_NULL_FIRST(false),
+    SUPPORT_CTE_MATERIALIZED(false, false, true),
+    ORDER_DEFAULT_DESC(false, false, true),
+    ORDER_DEFAULT_NULL_FIRST(false, false, true),
     REWRITER_REORDER(false, false, true),
+    SCALAR_FORCE_USING_AGGREGATION(false, false, true)
     ;
 
     private final boolean rewritable;

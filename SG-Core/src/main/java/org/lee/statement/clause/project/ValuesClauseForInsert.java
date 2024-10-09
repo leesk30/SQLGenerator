@@ -1,7 +1,7 @@
 package org.lee.statement.clause.project;
 
+import org.lee.common.Utility;
 import org.lee.statement.insert.InsertStatement;
-import org.lee.common.util.FuzzUtil;
 
 public class ValuesClauseForInsert extends ValuesClause{
     protected final int maxLines;
@@ -26,8 +26,8 @@ public class ValuesClauseForInsert extends ValuesClause{
     @Override
     public void fuzz() {
         final int modifyTableMaxWith = statement().getModifyTableClause().getChildNodes().get(0).getFields().size();
-        length = FuzzUtil.randomIntFromRange(minLines, maxLines);
-        width = FuzzUtil.randomIntFromRange(1, modifyTableMaxWith);
+        length = Utility.randomIntFromRange(minLines, maxLines);
+        width = Utility.randomIntFromRange(1, modifyTableMaxWith);
         generateRecord(getTargetTypeByWidth());
     }
 }

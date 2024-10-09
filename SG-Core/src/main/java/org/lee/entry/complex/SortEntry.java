@@ -1,5 +1,6 @@
 package org.lee.entry.complex;
 
+import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
@@ -8,7 +9,6 @@ import org.lee.base.NodeTag;
 import org.lee.common.config.Rule;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer {
 
@@ -66,16 +66,16 @@ public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer
 
     @Override
     public void fuzz() {
-        orderOptionAsc = FuzzUtil.probability(50);
-        nullOptionLast = FuzzUtil.probability(50);
+        orderOptionAsc = Utility.probability(50);
+        nullOptionLast = Utility.probability(50);
         if((isDefaultAsc && orderOptionAsc) || (!isDefaultAsc && !orderOptionAsc)){
-            representOrderOption = FuzzUtil.probability(50);
+            representOrderOption = Utility.probability(50);
         }else {
             representOrderOption = true;
         }
 
         if((isDefaultNullLast && nullOptionLast) || (!isDefaultNullLast && !nullOptionLast)){
-            representNullOption = FuzzUtil.probability(50);
+            representNullOption = Utility.probability(50);
         }else {
             representNullOption = true;
         }

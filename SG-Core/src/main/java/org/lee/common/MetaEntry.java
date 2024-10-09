@@ -5,7 +5,6 @@ import org.json.JSONObject;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
-import org.lee.common.util.FuzzUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +75,7 @@ public class MetaEntry {
         StringBuilder builder = new StringBuilder();
         MetaEntry.relationMap.values().forEach(
                 r -> {
-                    final int numOfInsertStatement = FuzzUtil.randomIntFromRange(10, 20);
+                    final int numOfInsertStatement = Utility.randomIntFromRange(10, 20);
                     IntStream.range(0, numOfInsertStatement).sequential().forEach(
                             i -> builder.append(r.getInitializedInsert(3)).append("\n")
                     );

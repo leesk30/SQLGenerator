@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
+import org.lee.common.Utility;
 import org.lee.type.literal.LiteralChar;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 public class MappedChar extends MappedType<String>{
     private static final MappedChar self = new MappedChar();
@@ -16,11 +16,11 @@ public class MappedChar extends MappedType<String>{
 
     @Override
     public LiteralChar generate() {
-        return new LiteralChar(FuzzUtil.randomStringByLength(5));
+        return new LiteralChar(Utility.randomStringByLength(5));
     }
 
     @Override
     public LiteralChar generate(int partial) {
-        return new LiteralChar(FuzzUtil.randomStringByLength(partial));
+        return new LiteralChar(Utility.randomStringByLength(partial));
     }
 }

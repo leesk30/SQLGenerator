@@ -1,9 +1,9 @@
 package org.lee.statement.expression.statistic;
 
+import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 import org.lee.common.TrieTree;
 
 import java.util.*;
@@ -89,7 +89,7 @@ public class UnrelatedStatistic implements GeneratorStatistic{
 
     public Scalar findMatchedForTargetType(TypeTag targetType){
         if(groupByType.containsKey(targetType)){
-            return FuzzUtil.randomlyChooseFrom(groupByType.get(targetType));
+            return Utility.randomlyChooseFrom(groupByType.get(targetType));
         }
         return null;
     }
@@ -97,10 +97,10 @@ public class UnrelatedStatistic implements GeneratorStatistic{
     public Scalar findAny(){
         assert !groupByType.isEmpty();
         Set<TypeTag> keys = groupByType.keySet();
-        TypeTag anyKey = FuzzUtil.randomlyChooseFrom(keys);
+        TypeTag anyKey = Utility.randomlyChooseFrom(keys);
         List<Scalar> candidate = groupByType.get(anyKey);
         assert !candidate.isEmpty();
-        return FuzzUtil.randomlyChooseFrom(candidate);
+        return Utility.randomlyChooseFrom(candidate);
     }
 
     public Scalar[] findMatchedForSignature(Signature signature){
@@ -117,13 +117,13 @@ public class UnrelatedStatistic implements GeneratorStatistic{
                 final List<? extends Scalar> localCandidate = groupByType.get(required);
                 final boolean onlyOneCandidate = localCandidate.size() == 1;
                 if (localCandidate.size() >= counter.get(required)) {
-                    result[i] = FuzzUtil.randomlyChooseFrom(groupByType.get(required));
+                    result[i] = Utility.randomlyChooseFrom(groupByType.get(required));
                     continue;
                 }
 
                 if(onlyOneCandidate){
                     oneCandidateMarker.add(required);
-                    if(!oneCandidateMarker.contains(required) || FuzzUtil.probability(50)){
+                    if(!oneCandidateMarker.contains(required) || Utility.probability(50)){
                         result[i] = groupByType.get(required).get(0);
                         continue;
                     }

@@ -1,14 +1,14 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.type.literal.Literal;
 import org.lee.entry.scalar.Scalar;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.statement.expression.Qualification;
 import org.lee.symbol.Signature;
 import org.lee.symbol.Comparator;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 import org.lee.common.Pair;
 
 import java.util.List;
@@ -20,7 +20,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
 
     Pair<Scalar, Scalar> getTwoSide(TypeTag target);
     default Pair<Scalar, Scalar> getTwoSide(){
-        return getTwoSide(FuzzUtil.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
+        return getTwoSide(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
     }
 
     default Qualification simplifyCompare(){
@@ -73,19 +73,19 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     }
 
     default Qualification tryWithPredicateAddition(final Qualification qualification){
-        if(!FuzzUtil.probability(5)){
+        if(!Utility.probability(5)){
             return qualification;
         }
         final List<FieldReference> referenceList = qualification.extractField();
-        final FieldReference addPredicateLhs = FuzzUtil.randomlyChooseFrom(referenceList);
+        final FieldReference addPredicateLhs = Utility.randomlyChooseFrom(referenceList);
 
         if(addPredicateLhs == null)
             return qualification;
 
-        final Qualification rhs = FuzzUtil.probability(50) ?
+        final Qualification rhs = Utility.probability(50) ?
                 compareToRangeLiteral(addPredicateLhs): compareToLiteral(addPredicateLhs);
 
-        if(FuzzUtil.probability(80)){
+        if(Utility.probability(80)){
             return qualification.and(rhs);
         }
         return qualification.or(rhs);

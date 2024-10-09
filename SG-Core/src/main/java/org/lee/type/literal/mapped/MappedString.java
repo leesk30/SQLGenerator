@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
+import org.lee.common.Utility;
 import org.lee.type.literal.LiteralString;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 public class MappedString extends MappedType<String> {
     private static final MappedString self = new MappedString();
@@ -16,12 +16,12 @@ public class MappedString extends MappedType<String> {
 
     @Override
     public LiteralString generate() {
-        return new LiteralString(FuzzUtil.randomStringByLength(10));
+        return new LiteralString(Utility.randomStringByLength(10));
     }
 
     @Override
     public LiteralString generate(int partial) {
-        partial = Math.min(partial, FuzzUtil.ACTUALLY_MAX_STRINGS);
-        return new LiteralString(FuzzUtil.randomStringByLength(partial));
+        partial = Math.min(partial, Utility.ACTUALLY_MAX_STRINGS);
+        return new LiteralString(Utility.randomStringByLength(partial));
     }
 }

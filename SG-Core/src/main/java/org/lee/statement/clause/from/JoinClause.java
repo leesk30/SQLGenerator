@@ -1,9 +1,9 @@
 package org.lee.statement.clause.from;
 
+import org.lee.common.Utility;
 import org.lee.statement.SQLStatement;
 import org.lee.entry.RangeTableReference;
 import org.lee.statement.clause.Clause;
-import org.lee.common.util.FuzzUtil;
 
 public abstract class JoinClause extends Clause<RangeTableReference> {
     public JoinClause(SQLStatement statement) {
@@ -18,7 +18,7 @@ public abstract class JoinClause extends Clause<RangeTableReference> {
     }
 
     protected Pattern getRandomJoinPattern(){
-        return FuzzUtil.randomlyChooseFrom(new Pattern[]{Pattern.LEFT, Pattern.RIGHT, Pattern.INNER});
+        return Utility.randomlyChooseFrom(new Pattern[]{Pattern.LEFT, Pattern.RIGHT, Pattern.INNER});
     }
 
 }

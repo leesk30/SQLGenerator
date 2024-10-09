@@ -1,9 +1,10 @@
 package org.lee.statement.clause.from;
 
 import org.lee.common.MetaEntry;
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.entry.relation.*;
-import org.lee.common.exception.Assertion;
+import org.lee.common.Assertion;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
@@ -14,7 +15,6 @@ import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.statement.support.SupportRangeTableTransform;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.*;
 
@@ -70,11 +70,10 @@ public abstract class FromClause extends Clause<RangeTableReference>
     }
 
     protected RangeTableReference randomlyGetRangeReference(){
-        SelectStatement currentStatement = (SelectStatement) this.statement;
         RangeTableEntry entry;
 
-        if(currentStatement.subqueryDepth < config.getInt(Conf.MAX_SUBQUERY_RECURSION_DEPTH )
-                && probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
+        if(this.statement.enableSubquery() &&
+                probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
             entry = this.generate(this.statement).toRelation();
         }else {
             entry = randomlyGetRangeTable();
@@ -95,11 +94,11 @@ public abstract class FromClause extends Clause<RangeTableReference>
                 if(probability(99)){
                     return currentCTECandidates.remove(0);
                 }else {
-                    return FuzzUtil.randomlyChooseFrom(currentCTECandidates);
+                    return Utility.randomlyChooseFrom(currentCTECandidates);
                 }
             }
         }
-        return FuzzUtil.randomlyChooseFrom(allOfCandidates);
+        return Utility.randomlyChooseFrom(allOfCandidates);
     }
 
     protected void initializeCandidate(){
@@ -108,7 +107,7 @@ public abstract class FromClause extends Clause<RangeTableReference>
             currentCTECandidates.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
         }
         // related cte is prob
-        if(FuzzUtil.probability(50)){
+        if(Utility.probability(50)){
             allOfCandidates.addAll(statement.recursiveGetCTEs());
         }
     }

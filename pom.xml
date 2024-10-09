@@ -26,6 +26,8 @@
         <commons.math3.version>3.6</commons.math3.version>
         <commons.configuration2.version>2.11.0</commons.configuration2.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
+        <commons.codec.version>1.16.0</commons.codec.version>
+        <cache.caffeine.version>2.7.0</cache.caffeine.version>
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
         <logging.log4j.version>2.22.0</logging.log4j.version>
         <testng.version>6.14.3</testng.version>
@@ -81,9 +83,21 @@
             </dependency>
 
             <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons.codec.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>commons-beanutils</groupId>
                 <artifactId>commons-beanutils</artifactId>
                 <version>${commons.beanutils.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${cache.caffeine.version}</version>
             </dependency>
 
             <!-- logs -->

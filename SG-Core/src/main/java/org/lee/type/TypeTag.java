@@ -1,6 +1,6 @@
 package org.lee.type;
 
-import org.lee.common.exception.UnrecognizedValueException;
+import org.lee.common.Utility;
 import org.lee.type.literal.mapped.MappedType;
 import org.lee.base.NodeTag;
 import org.lee.symbol.Parentheses;
@@ -102,6 +102,10 @@ public enum TypeTag {
 
     public Signature getEmptySymbol() {
         return emptySymbol;
+    }
+
+    public static TypeTag randomGenerateTarget(){
+        return Utility.randomlyChooseFrom(GENERATE_PREFER_CHOOSE);
     }
 
     @Override

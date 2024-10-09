@@ -1,14 +1,14 @@
 package org.lee.entry.relation;
 
+import org.lee.common.Utility;
 import org.lee.statement.support.Projectable;
 import org.lee.base.NodeTag;
-import org.lee.common.util.FuzzUtil;
 
 public class CTE extends SubEntry {
     protected String cteName;
     public CTE(Projectable statement){
         super(statement);
-        this.cteName = FuzzUtil.getRandomName("CTE_");
+        this.cteName = Utility.getRandomName("CTE_");
     }
 
     @Override

@@ -1,9 +1,9 @@
 package org.lee.statement.support;
 
+import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.util.FuzzUtil;
 
 public interface SupportRuntimeConfiguration {
     RuntimeConfiguration getConfig();
@@ -16,14 +16,22 @@ public interface SupportRuntimeConfiguration {
     }
 
     default boolean probability(Conf name){
-        return FuzzUtil.probability(getConfig().getShort(name));
+        return Utility.probability(getConfig().getShort(name));
     }
 
     default boolean probability(int prob){
-        return FuzzUtil.probability(prob);
+        return Utility.probability(prob);
     }
 
     default boolean probability(short prob){
-        return FuzzUtil.probability(prob);
+        return Utility.probability(prob);
+    }
+
+    default void setConfig(Conf name, Object value){
+        getConfig().set(name, value);
+    }
+
+    default void setConfig(Rule name, boolean value){
+        getConfig().set(name, value);
     }
 }

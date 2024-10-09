@@ -1,5 +1,7 @@
 package org.lee.statement;
 
+import org.lee.common.config.Conf;
+import org.lee.statement.select.SelectStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -105,4 +107,24 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
         );
     }
 
+    public boolean enableSubquery(){
+        if(this instanceof SelectStatement){
+            SelectStatement selectStatement = (SelectStatement) this;
+            return selectStatement.subqueryDepth < config.getShort(Conf.MAX_SUBQUERY_RECURSION_DEPTH);
+        }
+        return true;
+    }
+
+    public boolean enableSetop(){
+        if(this instanceof SelectStatement){
+            SelectStatement selectStatement = (SelectStatement) this;
+            return selectStatement.setopDepth < config.getShort(Conf.MAX_SETOP_RECURSION_DEPTH);
+        }
+        return true;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
 }

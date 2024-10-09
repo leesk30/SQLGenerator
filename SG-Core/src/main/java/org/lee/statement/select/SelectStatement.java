@@ -1,6 +1,7 @@
 package org.lee.statement.select;
 
 
+import org.lee.common.Utility;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
@@ -10,7 +11,6 @@ import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.type.TypeTag;
-import org.lee.common.util.FuzzUtil;
 
 import java.util.*;
 
@@ -93,7 +93,7 @@ public abstract class SelectStatement extends SQLStatement implements Projectabl
 
     public static SelectStatement getStatementBySelectType(SelectType selectType, SQLStatement parent){
         if(selectType == null){
-            selectType = FuzzUtil.randomlyChooseFrom(SelectType.ALL);
+            selectType = Utility.randomlyChooseFrom(SelectType.ALL);
         }
         switch (selectType){
             case normal:

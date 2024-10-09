@@ -1,10 +1,6 @@
 package org.lee.common.exception;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
+import org.lee.common.Utility;
 
 public class ValueCheckFailedException extends RuntimeException{
     public ValueCheckFailedException(String title, Object expected, Object actual){
@@ -13,9 +9,7 @@ public class ValueCheckFailedException extends RuntimeException{
 
     public ValueCheckFailedException(String message){
         super(message);
-        StackTraceElement[] localStackElement = Thread.getAllStackTraces().get(Thread.currentThread());
-        LoggerFactory.getLogger(this.getClass()).error(StringUtils.joinWith("\n", localStackElement));
-
+        Utility.recordLocalFrameInfo4DebugInLog(null);
     }
 
     public static String formatErrorMessage(String title, Object e, Object a){

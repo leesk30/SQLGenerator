@@ -65,7 +65,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
 
     @Override
     public void fuzz() {
-        Generator<Qualification> generator = new JoinerQualificationGenerator(config, left, right);
+        Generator<Qualification> generator = new JoinerQualificationGenerator(this.statement, left, right);
         filter.put(generator.generate());
         filter.fuzz();
     }
