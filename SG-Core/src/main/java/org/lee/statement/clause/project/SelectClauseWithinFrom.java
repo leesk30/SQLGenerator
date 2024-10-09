@@ -1,15 +1,15 @@
 package org.lee.statement.clause.project;
 
+import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.Rule;
+import org.lee.common.exception.NotImplementedException;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
-import org.lee.common.exception.NotImplementedException;
-import org.lee.base.Generator;
-import org.lee.statement.expression.generator.GeneralExpressionGenerator;
-import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.expression.generator.GeneralExpressionGenerator;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;

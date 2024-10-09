@@ -1,15 +1,15 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.common.Assertion;
+import org.lee.common.Pair;
 import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
-import org.lee.type.literal.Literal;
 import org.lee.entry.scalar.Scalar;
-import org.lee.common.Assertion;
 import org.lee.statement.expression.Qualification;
-import org.lee.symbol.Signature;
 import org.lee.symbol.Comparator;
+import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.lee.common.Pair;
+import org.lee.type.literal.Literal;
 
 import java.util.List;
 

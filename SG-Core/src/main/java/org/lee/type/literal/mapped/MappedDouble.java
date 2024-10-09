@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.literal.LiteralDouble;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.LiteralDouble;
 
 public class MappedDouble extends MappedType<Double>{
     private static final MappedDouble self = new MappedDouble();

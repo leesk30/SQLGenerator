@@ -1,9 +1,10 @@
 package org.lee.statement.select;
 
 import org.lee.common.Utility;
+import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
-import org.lee.common.exception.ValueCheckFailedException;
+import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.clause.from.WithClause;
@@ -12,7 +13,6 @@ import org.lee.statement.clause.limit.SelectLimitOffset;
 import org.lee.statement.clause.sort.SelectOrderByClause;
 import org.lee.statement.clause.sort.SortByClause;
 import org.lee.statement.support.Projectable;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;

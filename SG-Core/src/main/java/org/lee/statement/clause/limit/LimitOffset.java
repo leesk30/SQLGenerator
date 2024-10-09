@@ -1,10 +1,10 @@
 package org.lee.statement.clause.limit;
 
-import org.lee.type.literal.LiteralInt;
-import org.lee.statement.SQLStatement;
-import org.lee.type.literal.Literal;
 import org.lee.base.NodeTag;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
+import org.lee.type.literal.Literal;
+import org.lee.type.literal.LiteralInt;
 
 public abstract class LimitOffset extends Clause<Literal<Integer>> {
     protected final Literal<Integer> limitNode = new LiteralInt(0);

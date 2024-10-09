@@ -1,20 +1,23 @@
 package org.lee.statement.expression;
 
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
+import org.lee.base.TreeNode;
+import org.lee.common.Assertion;
+import org.lee.common.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
-import org.lee.common.Assertion;
-import org.lee.base.NodeTag;
-import org.lee.base.Node;
-import org.lee.base.TreeNode;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
-import org.lee.common.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

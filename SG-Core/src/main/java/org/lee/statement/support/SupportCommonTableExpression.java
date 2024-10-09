@@ -1,7 +1,6 @@
 package org.lee.statement.support;
 
 import org.lee.entry.relation.CTE;
-import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.WithClause;
 
 import java.util.List;

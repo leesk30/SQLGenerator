@@ -1,12 +1,12 @@
 package org.lee.entry.complex;
 
+import org.lee.base.Fuzzer;
+import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
-import org.lee.base.Fuzzer;
-import org.lee.base.NodeTag;
-import org.lee.common.config.Rule;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
 

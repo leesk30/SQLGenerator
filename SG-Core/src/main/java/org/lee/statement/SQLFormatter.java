@@ -1,12 +1,6 @@
 package org.lee.statement;
 
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Locale;
-import java.util.Set;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Copy from Hibernate ORM: https://github.com/hibernate/hibernate-orm

@@ -1,19 +1,19 @@
 package org.lee.statement;
 
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.common.config.Conf;
-import org.lee.statement.select.SelectStatement;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
+import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
-import org.lee.base.NodeTag;
-import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
-import org.lee.base.Node;
+import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.Statement;
 import org.lee.statement.support.SupportCommonTableExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

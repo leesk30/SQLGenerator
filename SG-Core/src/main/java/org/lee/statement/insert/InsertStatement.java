@@ -9,7 +9,6 @@ import org.lee.statement.support.SupportModifyTable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class InsertStatement extends SQLStatement implements SupportModifyTable {
 

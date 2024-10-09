@@ -1,17 +1,16 @@
 package org.lee.statement.clause;
 
-import org.lee.common.config.RuntimeConfiguration;
 import org.lee.base.Fuzzer;
-import org.lee.statement.SQLStatement;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
+import org.lee.common.config.RuntimeConfiguration;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.Stream;
 
 public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SupportRuntimeConfiguration {

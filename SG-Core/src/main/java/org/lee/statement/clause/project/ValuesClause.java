@@ -1,10 +1,10 @@
 package org.lee.statement.clause.project;
 
+import org.lee.base.NodeTag;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.record.Record;
-import org.lee.common.Assertion;
-import org.lee.base.NodeTag;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.type.TypeTag;

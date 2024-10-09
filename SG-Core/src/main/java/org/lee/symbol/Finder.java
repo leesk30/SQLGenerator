@@ -2,9 +2,9 @@ package org.lee.symbol;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lee.common.TrieTree;
 import org.lee.common.Utility;
 import org.lee.type.TypeTag;
-import org.lee.common.TrieTree;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

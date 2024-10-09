@@ -7,7 +7,6 @@ import org.lee.statement.insert.InsertInitializedStatement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import java.util.stream.IntStream;
 
 public class Relation implements RangeTableEntry {

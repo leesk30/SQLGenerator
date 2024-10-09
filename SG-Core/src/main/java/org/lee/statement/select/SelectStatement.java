@@ -1,18 +1,19 @@
 package org.lee.statement.select;
 
 
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.relation.SubqueryRelation;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
-import org.lee.entry.relation.SubqueryRelation;
-import org.lee.base.Node;
-import org.lee.base.NodeTag;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.type.TypeTag;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class SelectStatement extends SQLStatement implements Projectable {
     protected final SelectType selectType;

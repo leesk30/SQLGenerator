@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
-import org.lee.type.literal.Literal;
 import org.lee.base.Generator;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.Literal;
 
 public abstract class MappedType<T> implements Generator<Literal<T>> {
     private final Class<T> javaClass;

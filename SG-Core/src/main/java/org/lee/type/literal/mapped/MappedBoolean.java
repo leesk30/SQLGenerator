@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.literal.LiteralBoolean;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.LiteralBoolean;
 
 public class MappedBoolean extends MappedType<Boolean>{
     private static final MappedBoolean self = new MappedBoolean();

@@ -6,7 +6,6 @@ import org.lee.statement.support.Projectable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public abstract class SubEntry implements NormalizedEntryWrapper<Projectable>, RangeTableEntry {
 

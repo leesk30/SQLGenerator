@@ -1,7 +1,7 @@
 package org.lee.type.precision;
 
-import org.lee.common.Assertion;
 import org.lee.base.Node;
+import org.lee.common.Assertion;
 
 public final class NumericVarlena implements TypePrecision{
     private final int head;

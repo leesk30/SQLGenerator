@@ -6,7 +6,6 @@ import org.lee.statement.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class InsertModifyTableClause extends ModifyTableClause{
     protected Relation target;

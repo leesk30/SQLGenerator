@@ -1,6 +1,5 @@
 package org.lee.statement.insert;
 
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.modify.InsertModifyTableClause;
 import org.lee.statement.clause.modify.ModifyTableClause;
 import org.lee.statement.clause.project.ValuesClause;

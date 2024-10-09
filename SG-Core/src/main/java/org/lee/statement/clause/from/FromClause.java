@@ -1,22 +1,24 @@
 package org.lee.statement.clause.from;
 
+import org.lee.base.NodeTag;
+import org.lee.common.Assertion;
 import org.lee.common.MetaEntry;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.entry.relation.*;
-import org.lee.common.Assertion;
+import org.lee.entry.RangeTableReference;
+import org.lee.entry.complex.RTEJoin;
+import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.support.Projectable;
-import org.lee.entry.complex.RTEJoin;
-import org.lee.entry.RangeTableReference;
-import org.lee.base.NodeTag;
 import org.lee.statement.select.SelectStatement;
+import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.statement.support.SupportRangeTableTransform;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class FromClause extends Clause<RangeTableReference>
         implements SupportGenerateProjectable, SupportRangeTableTransform {

@@ -1,12 +1,12 @@
 package org.lee.statement.support;
 
+import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.entry.relation.Partition;
 import org.lee.entry.relation.Pivoted;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.Relation;
-import org.lee.base.NodeTag;
 
 import java.util.List;
 

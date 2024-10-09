@@ -1,16 +1,16 @@
 package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lee.base.NodeTag;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
-import org.lee.common.Assertion;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
-import org.lee.base.NodeTag;
 import org.lee.type.TypeTag;
 
 public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {

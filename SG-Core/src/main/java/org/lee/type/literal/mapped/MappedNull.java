@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
+import org.lee.type.TypeTag;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.LiteralNull;
-import org.lee.type.TypeTag;
 
 public class MappedNull extends MappedType<NullType>{
     private static final MappedNull self = new MappedNull();

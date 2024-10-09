@@ -1,11 +1,11 @@
 package org.lee.statement.clause.from;
 
+import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.statement.SQLStatement;
 import org.lee.entry.relation.CTE;
-import org.lee.base.NodeTag;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SupportGenerateProjectable;
 

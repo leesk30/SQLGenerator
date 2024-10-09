@@ -1,11 +1,11 @@
 package org.lee.entry.relation;
 
+import org.lee.base.Fuzzer;
+import org.lee.base.NodeTag;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.NormalizedEntryWrapper;
-import org.lee.common.Assertion;
-import org.lee.base.Fuzzer;
 import org.lee.entry.scalar.Field;
-import org.lee.base.NodeTag;
 
 import java.util.ArrayList;
 import java.util.Collections;

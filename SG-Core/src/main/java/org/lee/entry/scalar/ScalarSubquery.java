@@ -1,8 +1,8 @@
 package org.lee.entry.scalar;
 
+import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.entry.NormalizedEntryWrapper;
-import org.lee.base.NodeTag;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
 

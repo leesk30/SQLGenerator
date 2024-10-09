@@ -1,18 +1,20 @@
 package org.lee.entry.complex;
 
 import org.lee.base.Fuzzer;
+import org.lee.base.NodeTag;
+import org.lee.base.TreeNode;
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
-import org.lee.base.NodeTag;
-import org.lee.base.TreeNode;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 

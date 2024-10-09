@@ -1,11 +1,11 @@
 package org.lee.entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.common.Utility;
-import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.complex.RTEJoin;
-import org.lee.entry.relation.ValuesRelation;
 import org.lee.base.NodeTag;
+import org.lee.common.Utility;
+import org.lee.entry.complex.RTEJoin;
+import org.lee.entry.relation.RangeTableEntry;
+import org.lee.entry.relation.ValuesRelation;
 import org.lee.statement.support.Alias;
 
 import java.util.ArrayList;

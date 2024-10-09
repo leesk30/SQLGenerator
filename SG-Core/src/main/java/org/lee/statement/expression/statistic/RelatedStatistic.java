@@ -1,11 +1,13 @@
 package org.lee.statement.expression.statistic;
 
+import org.lee.common.Pair;
 import org.lee.entry.RangeTableReference;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.common.Pair;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 

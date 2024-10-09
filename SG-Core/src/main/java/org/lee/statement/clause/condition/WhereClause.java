@@ -1,16 +1,16 @@
 package org.lee.statement.clause.condition;
 
+import org.lee.base.Generator;
+import org.lee.base.NodeTag;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.RangeTableReference;
-import org.lee.common.Assertion;
-import org.lee.base.Generator;
-import org.lee.statement.expression.generator.JoinerQualificationGenerator;
-import org.lee.statement.SQLStatement;
 import org.lee.entry.complex.Filter;
-import org.lee.base.NodeTag;
+import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.expression.generator.JoinerQualificationGenerator;
 
 import java.util.stream.IntStream;
 

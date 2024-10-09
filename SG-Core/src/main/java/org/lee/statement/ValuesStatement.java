@@ -1,10 +1,10 @@
 package org.lee.statement;
 
+import org.lee.base.Node;
+import org.lee.base.NodeTag;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
-import org.lee.base.Node;
-import org.lee.base.NodeTag;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;
@@ -17,7 +17,6 @@ import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class ValuesStatement extends SQLStatement implements Projectable, Sortable {
     protected final boolean withLogicalParentheses;

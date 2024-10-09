@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.literal.LiteralLong;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.LiteralLong;
 
 public final class MappedLong extends MappedType<Long>{
     private static final MappedLong self = new MappedLong();

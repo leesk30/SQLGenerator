@@ -1,10 +1,10 @@
 package org.lee.type;
 
+import org.lee.base.Generator;
+import org.lee.base.Node;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.mapped.MappedDecimal;
 import org.lee.type.literal.mapped.MappedType;
-import org.lee.base.Generator;
-import org.lee.base.Node;
 import org.lee.type.precision.*;
 
 import java.math.BigDecimal;

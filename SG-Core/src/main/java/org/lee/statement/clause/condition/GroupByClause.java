@@ -1,20 +1,23 @@
 package org.lee.statement.clause.condition;
 
+import org.lee.base.NodeTag;
+import org.lee.common.Pair;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.Rule;
 import org.lee.entry.FieldReference;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.type.literal.LiteralInt;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
-import org.lee.base.NodeTag;
-import org.lee.common.config.Rule;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;
-import org.lee.common.Pair;
+import org.lee.type.literal.LiteralInt;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 

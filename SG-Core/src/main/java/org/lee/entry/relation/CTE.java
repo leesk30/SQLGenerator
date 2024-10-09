@@ -1,8 +1,8 @@
 package org.lee.entry.relation;
 
+import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.statement.support.Projectable;
-import org.lee.base.NodeTag;
 
 public class CTE extends SubEntry {
     protected String cteName;

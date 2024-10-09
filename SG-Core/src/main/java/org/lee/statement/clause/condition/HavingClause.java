@@ -1,7 +1,7 @@
 package org.lee.statement.clause.condition;
 
-import org.lee.entry.scalar.Scalar;
 import org.lee.base.NodeTag;
+import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.select.SelectStatement;
 

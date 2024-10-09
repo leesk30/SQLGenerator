@@ -1,10 +1,10 @@
 package org.lee.statement.expression.statistic;
 
+import org.lee.common.TrieTree;
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.lee.common.TrieTree;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

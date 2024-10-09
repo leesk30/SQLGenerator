@@ -1,7 +1,7 @@
 package org.lee.entry.relation;
 
-import org.lee.entry.scalar.Field;
 import org.lee.base.Node;
+import org.lee.entry.scalar.Field;
 
 import java.util.List;
 

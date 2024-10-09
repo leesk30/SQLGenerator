@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.literal.LiteralString;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.LiteralString;
 
 public class MappedString extends MappedType<String> {
     private static final MappedString self = new MappedString();

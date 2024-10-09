@@ -1,9 +1,9 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
-import org.lee.base.Generator;
 import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Logging;

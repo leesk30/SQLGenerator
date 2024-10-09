@@ -1,8 +1,8 @@
 package org.lee.type.literal.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.literal.LiteralTimestamp;
 import org.lee.type.TypeTag;
+import org.lee.type.literal.LiteralTimestamp;
 
 import java.sql.Timestamp;
 
