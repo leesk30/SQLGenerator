@@ -19,19 +19,20 @@ public class RelatedStatistic implements GeneratorStatistic{
 
     public RelatedStatistic(RangeTableReference left, RangeTableReference right){
         relatedEntryPair = new Pair<>(left, right);
-        Stream.of(left, right).forEach(
-                one -> {
-                    final String uniqueKey = one.getUniqueName().toString();
-                    final UnrelatedStatistic statistic = new UnrelatedStatistic(one.getFieldReferences());
-                    if(keys.contains(uniqueKey)){
-                        throw new RuntimeException("Duplicate attribute name in statistic.");
-                    }
-                    keys.add(uniqueKey);
-                    statisticMap.put(uniqueKey, statistic);
-                    summaryMap.put(uniqueKey, statistic.getGroupedType().keySet());
-                }
-        );
+        init(left);
+        init(right);
         collect();
+    }
+
+    private void init(RangeTableReference oneSide){
+        final String uniqueKey = oneSide.getUniqueName().toString();
+        final UnrelatedStatistic statistic = new UnrelatedStatistic(oneSide.getFieldReferences());
+        if(keys.contains(uniqueKey)){
+            throw new RuntimeException("Duplicate attribute name in statistic.");
+        }
+        keys.add(uniqueKey);
+        statisticMap.put(uniqueKey, statistic);
+        summaryMap.put(uniqueKey, statistic.getGroupedType().keySet());
     }
 
     private void collect(){

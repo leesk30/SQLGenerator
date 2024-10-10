@@ -52,7 +52,7 @@ public class GeneratorTest {
         System.out.println("Output dir is: " + output);
         final SQLFormatter formatter = new SQLFormatter();
         try (final FileWriter writer = new FileWriter(output)){
-            IntStream.range(0, 1000).parallel().forEach(
+            IntStream.range(0, 10000).parallel().forEach(
                     i -> {
                         SelectStatement statement = generator.generate();
                         String result = statement.getString();
