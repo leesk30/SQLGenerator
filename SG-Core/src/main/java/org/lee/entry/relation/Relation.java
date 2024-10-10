@@ -7,7 +7,6 @@ import org.lee.statement.insert.InsertInitializedStatement;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Relation implements RangeTableEntry {
 
@@ -55,8 +54,9 @@ public class Relation implements RangeTableEntry {
 
     private String toDDLStyleFieldWithType(){
         final String[] pair = new String[fields.size()];
-        IntStream.range(0, fields.size()).sequential()
-                .forEach(i -> pair[i] = fields.get(i).getString() + SPACE + fields.get(i).getDescriptor().toString());
+        for(int i=0; i<fields.size(); i++){
+            pair[i] = fields.get(i).getString() + SPACE + fields.get(i).getDescriptor().toString();
+        }
         return concatWithComma(pair);
     }
 

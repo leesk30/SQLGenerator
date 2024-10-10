@@ -6,10 +6,10 @@ import org.lee.base.NodeTag;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.from.JoinClause;
 import org.lee.statement.expression.Qualification;
 import org.lee.statement.expression.generator.JoinerQualificationGenerator;
+import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,6 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
     private final RangeTableReference left;
     private final RangeTableReference right;
     private final Filter filter = new Filter();
-    private final Pattern pattern = getRandomJoinPattern();
     private final List<Field> fieldList;  // lazy
 
     public RTEJoin(SQLStatement statement, RangeTableReference left, RangeTableReference right){

@@ -1,31 +1,30 @@
 package org.lee.statement.select;
 
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.clause.from.WithClause;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.SelectLimitOffset;
 import org.lee.statement.clause.sort.SelectOrderByClause;
 import org.lee.statement.clause.sort.SortByClause;
+import org.lee.statement.generator.ProjectableGenerator;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.Sortable;
 import org.lee.statement.support.SupportCommonTableExpression;
-import org.lee.statement.support.SupportGenerateProjectable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class SelectSetopStatement
         extends SelectStatement
-        implements Sortable, SupportCommonTableExpression, SupportGenerateProjectable {
+        implements Sortable, SupportCommonTableExpression {
     private Projectable left;
     private Projectable right;
     private SetOperation setop;
@@ -42,7 +41,6 @@ public final class SelectSetopStatement
     private final WithClause withClause = new WithClause(this);
     private final SortByClause sortByClause = new SelectOrderByClause(this);
     private final LimitOffset limitOffset = new SelectLimitOffset(this);
-
 
     public SelectSetopStatement() {
         super(SelectType.setop);
@@ -87,34 +85,32 @@ public final class SelectSetopStatement
             logger.debug(String.format("Left class name: %s Right class name: %s", left.getClass().getName(), right.getClass().getName()));
             throw new ValueCheckFailedException(message);
         }
-        IntStream.range(0, left.project().size())
-                .sequential().forEach(
-                i -> {
-                    if(left.project().get(i).getType() != right.project().get(i).getType()){
-                        String message = "The setop statement is mismatched type in both size. " +
-                                "Left type: " + left.project().get(i).getType() +
-                                " Right type: "+ right.project().get(i).getType() +" Index: " + i;
-                        logger.error(message);
-                        logger.debug(String.format("Left class name: %s Right class name: %s", left.getClass().getName(), right.getClass().getName()));
-                        throw new ValueCheckFailedException(message);
-                    }
-                }
-        );
+        for(int i = 0; i < left.project().size(); i++){
+            if(left.project().get(i).getType() != right.project().get(i).getType()){
+                String message = "The setop statement is mismatched type in both size. " +
+                        "Left type: " + left.project().get(i).getType() +
+                        " Right type: "+ right.project().get(i).getType() +" Index: " + i;
+                logger.error(message);
+                logger.debug(String.format("Left class name: %s Right class name: %s", left.getClass().getName(), right.getClass().getName()));
+                throw new ValueCheckFailedException(message);
+            }
+        }
     }
 
-    private void fuzzForSubStatement(){
+    private void generateChildStatement(){
+        final ProjectableGenerator generator = new ProjectableGenerator(this);
         if(this.getProjectTypeLimitation().isEmpty()){
             if(Utility.probability(50)){
-                left = generate(this);
-                right = generate(this, left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                left = generator.generate();
+                right = generator.generate(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }else {
-                right = generate(this);
-                left = generate(this, right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                right = generator.generate();
+                left = generator.generate(right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }
             // When parent required statement withTypeLimitation shelled statement should tell its children the limitations.
         }else {
-            left = generate(this, this.getProjectTypeLimitation());
-            right = generate(this, this.getProjectTypeLimitation());
+            left = generator.generate(this.getProjectTypeLimitation());
+            right = generator.generate(this.getProjectTypeLimitation());
         }
         requireProjectionLeftSimilarWithRight();
     }
@@ -122,7 +118,7 @@ public final class SelectSetopStatement
     @Override
     public void fuzz() {
         withClause.fuzz();
-        fuzzForSubStatement();
+        generateChildStatement();
         setop = Utility.randomlyChooseFrom(SetOperation.values());
         all = Utility.probability(50);
         sortByClause.fuzz();
@@ -136,8 +132,8 @@ public final class SelectSetopStatement
 
     @Override
     public List<RangeTableEntry> getRawRTEList() {
-        Objects.requireNonNull(left);
-        Objects.requireNonNull(right);
+        Assertion.requiredNonNull(left);
+        Assertion.requiredNonNull(right);
 
         List<RangeTableEntry> rawRTEList = new ArrayList<>();
         if(left instanceof SelectStatement){
@@ -168,4 +164,5 @@ public final class SelectSetopStatement
     public WithClause getWithClause() {
         return withClause;
     }
+
 }

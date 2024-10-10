@@ -6,13 +6,11 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.Filter;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
 import org.lee.statement.expression.generator.JoinerQualificationGenerator;
-
-import java.util.stream.IntStream;
+import org.lee.statement.support.SQLStatement;
 
 public abstract class WhereClause extends Clause<Filter> {
     protected final Filter filter = new Filter();
@@ -40,7 +38,7 @@ public abstract class WhereClause extends Clause<Filter> {
             return;
         }
 
-        IntStream.range(0, fromClause.size()).sequential().forEach(i -> {
+        for(int i = 0; i < fromClause.size(); i++){
             if(i+1 >= length){
                 return;
             }
@@ -49,14 +47,12 @@ public abstract class WhereClause extends Clause<Filter> {
             final Generator<Qualification> generator = new JoinerQualificationGenerator(this.statement, left, right);
             // todo: add counting randomly
             final int generateCount = Utility.randomIntFromRange(1, 2);
-            IntStream.range(0, generateCount).sequential().forEach(
-                    j -> {
-                        final Qualification qualification = generator.generate();
-                        if(qualification != null){
-                            filter.put(qualification);
-                        }
-                    }
-            );
-        });
+            for(int j = 0; j < generateCount; j++){
+                final Qualification qualification = generator.generate();
+                if(qualification != null){
+                    filter.put(qualification);
+                }
+            }
+        }
     }
 }

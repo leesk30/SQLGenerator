@@ -10,7 +10,6 @@ import org.lee.type.precision.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 public class TypeDescriptor implements Generator<Literal<?>> {
     private final TypeTag tag;
@@ -100,14 +99,12 @@ public class TypeDescriptor implements Generator<Literal<?>> {
             throw new RuntimeException("Unable to parse type by precision: " + precisionInString);
         }
         final int[] precisionArr = new int[precisionStringArr.length];
-        IntStream.range(0, precisionStringArr.length).sequential().forEach(i ->
-            {
-                precisionArr[i] = Integer.parseInt(precisionStringArr[i].trim());
-                if(precisionArr[i] <= 0){
-                    throw new RuntimeException("Unable to parse type by precision: the precision must be greater than zero");
-                }
+        for(int i = 0; i < precisionStringArr.length; i++){
+            precisionArr[i] = Integer.parseInt(precisionStringArr[i].trim());
+            if(precisionArr[i] <= 0){
+                throw new RuntimeException("Unable to parse type by precision: the precision must be greater than zero");
             }
-        );
+        }
         return precisionArr;
     }
 

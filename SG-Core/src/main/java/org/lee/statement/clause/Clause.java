@@ -4,7 +4,7 @@ import org.lee.base.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.statement.SQLStatement;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SupportRuntimeConfiguration {
+    protected static int defaultChildrenInitialCapacity = 8;
+
     protected final SQLStatement statement;
     protected final List<T> children;
-    protected static int defaultChildrenInitialCapacity = 8;
     protected final RuntimeConfiguration config;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 

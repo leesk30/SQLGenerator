@@ -4,10 +4,10 @@ import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.Logging;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.symbol.Finder;
 import org.lee.type.TypeTag;
@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public abstract class UnrelatedGenerator<T> implements
         Generator<T>, SupportRuntimeConfiguration, Logging {
@@ -31,7 +30,9 @@ public abstract class UnrelatedGenerator<T> implements
     protected UnrelatedGenerator(SQLStatement statement, Scalar ... scalars){
         config = statement.getConfig();
         candidateList = new ArrayList<>(scalars.length);
-        IntStream.range(0, scalars.length).sequential().forEach(i -> candidateList.add(scalars[i].toExpression()));
+        for (Scalar scalar : scalars) {
+            candidateList.add(scalar.toExpression());
+        }
         replicated = Utility.copyFrozenList(candidateList);
         statistic = new UnrelatedStatistic(replicated);
         this.statement = statement;
@@ -40,8 +41,9 @@ public abstract class UnrelatedGenerator<T> implements
     protected UnrelatedGenerator(SQLStatement statement, List<? extends Scalar> expresssionList){
         config = statement.getConfig();
         candidateList = new ArrayList<>(expresssionList.size());
-        IntStream.range(0, expresssionList.size()).sequential().forEach(
-                i -> candidateList.add(expresssionList.get(i).toExpression()));
+        for (Scalar scalar : expresssionList) {
+            candidateList.add(scalar.toExpression());
+        }
         replicated = Utility.copyFrozenList(candidateList);
         statistic = new UnrelatedStatistic(replicated);
         this.statement = statement;

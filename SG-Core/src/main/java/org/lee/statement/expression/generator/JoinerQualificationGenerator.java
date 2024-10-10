@@ -5,14 +5,15 @@ import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Comparator;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
-import org.slf4j.Logger;
 
-public class JoinerQualificationGenerator extends RelationalGenerator<Qualification> implements QualificationGenerator {
+public class JoinerQualificationGenerator
+        extends RelationalGenerator<Qualification>
+        implements QualificationGenerator {
 
 
     public JoinerQualificationGenerator(SQLStatement statement, RangeTableReference left, RangeTableReference right){
@@ -62,13 +63,4 @@ public class JoinerQualificationGenerator extends RelationalGenerator<Qualificat
     public RangeTableReference getLeft() { return left; }
     public RangeTableReference getRight() { return right; }
 
-    @Override
-    public SQLStatement getStatement() {
-        return null;
-    }
-
-    @Override
-    public Logger getLogger() {
-        return null;
-    }
 }

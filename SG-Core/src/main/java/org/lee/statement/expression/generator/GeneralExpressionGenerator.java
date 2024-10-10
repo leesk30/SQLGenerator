@@ -2,10 +2,9 @@ package org.lee.statement.expression.generator;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
@@ -13,7 +12,6 @@ import org.lee.type.TypeTag;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class GeneralExpressionGenerator
         extends UnrelatedGenerator<Expression>
@@ -27,41 +25,47 @@ public class GeneralExpressionGenerator
     }
 
     public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
+    private final boolean parentFlagEnableAggregate;
 
     public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
-        return new GeneralExpressionGenerator(statement, unmodifiableEmptyList);
+        return new GeneralExpressionGenerator(false, statement, unmodifiableEmptyList);
     }
 
-    public GeneralExpressionGenerator(SQLStatement statement, Scalar ... scalars){
+    public GeneralExpressionGenerator(boolean enableAggregation, SQLStatement statement, Scalar ... scalars){
         super(statement, scalars);
+        parentFlagEnableAggregate = enableAggregation;
     }
 
-    public GeneralExpressionGenerator(SQLStatement statement, List<? extends Scalar> scalars){
+    public GeneralExpressionGenerator(boolean enableAggregation, SQLStatement statement, List<? extends Scalar> scalars){
         super(statement, scalars);
+        parentFlagEnableAggregate = enableAggregation;
     }
 
-    public List<Signature> getCandidateSignatures(TypeTag root){
-        List<Signature> copiedSignature = Utility.copyList(finder.getFunctionByReturn(root));
-        List<Signature> operators = finder.getOperatorByReturn(root);
+    public List<Signature> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
+        final List<Signature> copiedSignature = Utility.copyList(finder.getFunctionByReturn(root));
+        final List<Signature> operators = finder.getOperatorByReturn(root);
+
         if(operators != null){
             copiedSignature.addAll(operators);
+        }
+        // The parentFlag means whether the expression generator can enable aggregation.
+        // The childrenFlag is an internal control flag which is used to avoid the nested aggregation.
+        //  After a one aggregator generated, the children of this aggregated expression can not enable generate aggregator.
+
+        // For example, when the parent flag is true, you probably generate an expression like `max(a)`,
+        //  and for the sub-expression, we use the childrenFlag to disable aggregation for nested another aggregator.
+        //  Otherwise, we may generate an `max(max(a))`. This is not allowed in mostly database engines.
+        if(parentFlagEnableAggregate && childrenFlagEnableAggregate && probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
+            final List<Signature> aggregators = finder.getAggregateByReturn(root);
+            if(aggregators != null){
+                copiedSignature.addAll(aggregators);
+            }
         }
         return copiedSignature;
     }
 
-    public Expression getCompleteExpressionTree(TypeTag root, int recursionDepth, boolean enableAggregate){
-        final List<Signature> copiedSignature = getCandidateSignatures(root);
-        if(enableAggregate && probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
-            List<Signature> aggregators = finder.getAggregateByReturn(root);
-            final boolean inScalarRequiredAggregation = confirm(Rule.REQUIRE_SCALA) && confirm(Rule.SCALAR_FORCE_USING_AGGREGATION);
-            if(inScalarRequiredAggregation){
-                // do nothing
-                logger.debug("The statement requires a scalar, and the scalar should be wrapped with an aggregate. " +
-                        "To stop retrieving aggregation, we stop the aggregator search here.");
-            }else if(aggregators != null){
-                copiedSignature.addAll(aggregators);
-            }
-        }
+    public Expression getCompleteExpressionTree(TypeTag root, int recursionDepth, boolean childrenFlagEnableAggregate){
+        final List<Signature> copiedSignature = getCandidateSignatures(root, childrenFlagEnableAggregate);
         Collections.shuffle(copiedSignature);
         while (!copiedSignature.isEmpty()){
             final Signature signature = Utility.pop(copiedSignature);
@@ -113,16 +117,14 @@ public class GeneralExpressionGenerator
         final Expression expression = new Expression(signature);
         final Scalar[] scalars = statistic.findMatchedForSignature(signature);
         final List<Expression> children = new ArrayList<>();
-        IntStream.range(0, signature.argsNum()).sequential().forEachOrdered(
-                i -> {
-                    final TypeTag targetType = signature.getArgumentsTypes().get(i);
-                    if(scalars[i] != null){
-                        children.add(scalars[i].toExpression());
-                    }else {
-                        children.add(getLiteral(targetType).toExpression());
-                    }
-                }
-        );
+        for (int i=0; i < signature.argsNum(); i++){
+            final TypeTag targetType = signature.getArgumentsTypes().get(i);
+            if(scalars[i] != null){
+                children.add(scalars[i].toExpression());
+            }else {
+                children.add(getLiteral(targetType).toExpression());
+            }
+        }
         children.forEach(expression::newChild);
         return expression;
     }
@@ -131,22 +133,16 @@ public class GeneralExpressionGenerator
     private Expression growth(Signature signature, int incrementalDepth){
         final Expression expression = new Expression(signature);
         final Scalar[] scalars = statistic.findMatchedForSignature(signature);
-        final List<Expression> children = new ArrayList<>();
         final boolean childrenEnableAggregation = !(signature instanceof Aggregation);
-//        final int[] nullOfIndex = IntStream.range(0, scalars.length).parallel().filter(Objects::isNull).toArray();
         // The arguments must be ordered.
-        IntStream.range(0, signature.argsNum()).sequential().forEachOrdered(
-                i -> {
-                    final TypeTag targetType = signature.getArgumentsTypes().get(i);
-                    if(scalars[i] == null || preferRecursion(signature, incrementalDepth)){
-                        children.add(generate(targetType, incrementalDepth, childrenEnableAggregation));
-                    }else {
-                        children.add(scalars[i].toExpression());
-                    }
-//                    children.add(sub);
-                }
-        );
-        children.forEach(expression::newChild);
+        for (int i=0; i < signature.argsNum(); i++){
+            final TypeTag targetType = signature.getArgumentsTypes().get(i);
+            if(scalars[i] == null || preferRecursion(signature, incrementalDepth)){
+                expression.newChild(generate(targetType, incrementalDepth, childrenEnableAggregation));
+            }else {
+                expression.newChild(scalars[i].toExpression());
+            }
+        }
         return expression;
     }
 
@@ -180,21 +176,21 @@ public class GeneralExpressionGenerator
         return getLiteral().toExpression();
     }
 
-
     public Expression generate(TypeTag required, int recursionDepth) {
         return generate(required, recursionDepth, true);
     }
 
-    public Expression generate(TypeTag required, int recursionDepth, boolean enableAggregate) {
-        Expression expression = getCompleteExpressionTree(required, recursionDepth, enableAggregate);
-        if(expression.isComplete() && expression.getType() == required){
-            return expression;
-        }else {
+    // The childrenFlag guides the expression generator to avoid nested aggregation.
+    // There is no necessary to public this method to outside.
+    private Expression generate(TypeTag required, int recursionDepth, boolean childrenFlagEnableAggregate) {
+        Expression expression = getCompleteExpressionTree(required, recursionDepth, childrenFlagEnableAggregate);
+        if(!expression.isComplete() || expression.getType() != required){
             logger.error("The Expression is not Required or Incomplete");
             logger.debug("IsComplete: " + expression.isComplete());
             logger.debug("IsRequired: " + (expression.getType() == required));
+            return fallback(required);
         }
-        return fallback(required);
+        return expression;
     }
 
 }

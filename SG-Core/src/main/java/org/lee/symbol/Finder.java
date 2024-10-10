@@ -12,7 +12,6 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
 public class Finder {
@@ -144,7 +143,9 @@ public class Finder {
 
     private static TypeTag[] jsonArrayToTypeTags(JSONArray arr){
         TypeTag[] typeTags = new TypeTag[arr.length()];
-        IntStream.range(0, arr.length()).sequential().forEach(i->typeTags[i] = TypeTag.getEnum(arr.getString(i)));
+        for(int i=0; i<arr.length(); i++){
+            typeTags[i] = TypeTag.getEnum(arr.getString(i));
+        }
         return typeTags;
     }
 

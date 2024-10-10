@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.IntStream;
 
 public class GroupByClause extends Clause<Scalar> {
     public GroupByClause(SelectStatement statement) {
@@ -42,7 +41,9 @@ public class GroupByClause extends Clause<Scalar> {
 
 
     private void groupByAll(int size){
-        IntStream.range(0, size).sequential().forEach(i -> children.add(new LiteralInt(i + 1)));
+        for(int i = 0; i < size; i++){
+            children.add(new LiteralInt(i + 1));
+        }
         Collections.shuffle(children);
     }
 

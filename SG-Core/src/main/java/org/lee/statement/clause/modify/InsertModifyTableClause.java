@@ -2,7 +2,7 @@ package org.lee.statement.clause.modify;
 
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
-import org.lee.statement.SQLStatement;
+import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,11 +1,9 @@
 package org.lee.statement.support;
 
-import org.lee.base.Node;
-import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.sort.SortByClause;
 
-public interface Sortable extends Statement<Clause<? extends Node>> {
+public interface Sortable extends SQLStatement {
 
     SortByClause getSortByClause();
 

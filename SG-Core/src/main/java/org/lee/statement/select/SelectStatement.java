@@ -6,16 +6,17 @@ import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.SubqueryRelation;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.SQLType;
+import org.lee.statement.basic.AbstractSQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SelectStatement extends SQLStatement implements Projectable {
+public abstract class SelectStatement extends AbstractSQLStatement implements Projectable {
     protected final SelectType selectType;
     protected final boolean withLogicalParentheses;
     public final int subqueryDepth;

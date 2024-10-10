@@ -1,11 +1,10 @@
 package org.lee.symbol;
 
 import org.lee.base.NodeTag;
+import org.lee.common.EnumStaticSpace;
 import org.lee.type.TypeTag;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public enum PredicateCombiner implements Signature {
 
@@ -13,15 +12,19 @@ public enum PredicateCombiner implements Signature {
     AND(2, "%s AND %s"),
     OR(2, "%s OR %s"),
     ;
-
     private final int argNum;
     private final List<TypeTag> argumentsType;
     private final String symbols;
     PredicateCombiner(int argNum, String body){
         this.argNum = argNum;
-        this.argumentsType = new ArrayList<>(argNum);
+        if(argNum == 1){
+            this.argumentsType = EnumStaticSpace.ARG_NUM_1;
+        }else if(argNum == 2){
+            this.argumentsType = EnumStaticSpace.ARG_NUM_2;
+        }else {
+            throw new IllegalArgumentException("The number of Combiner arguments must be 1 or 2");
+        }
         this.symbols = body;
-        IntStream.range(0, argNum).sequential().forEach(i -> argumentsType.add(TypeTag.boolean_));
     }
 
     @Override

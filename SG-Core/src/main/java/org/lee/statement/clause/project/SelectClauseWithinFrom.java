@@ -17,7 +17,6 @@ import org.lee.statement.select.SelectType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class SelectClauseWithinFrom extends SelectClause{
     public SelectClauseWithinFrom(SelectStatement statement) {
@@ -45,26 +44,33 @@ public class SelectClauseWithinFrom extends SelectClause{
     }
 
     private GeneralExpressionGenerator getProjectionGenerator(){
-        Clause<RangeTableReference> fromClause = statement().getFromClause();
-        List<FieldReference> fieldReferences = new ArrayList<>();
+        final Clause<RangeTableReference> fromClause = statement().getFromClause();
+        final List<FieldReference> fieldReferences = new ArrayList<>();
+        // From each rangeTableReference, we extract their fieldReferences as candidates for projection.
         fromClause.getChildNodes().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
-        return new GeneralExpressionGenerator(this.statement, fieldReferences);
+        final boolean enableAggregation = confirm(Rule.REQUIRE_SCALA) && confirm(Rule.SCALAR_FORCE_USING_AGGREGATION);
+        if(enableAggregation){
+            // do nothing
+            logger.debug(
+                    "The statement requires a scalar which should be wrapped with an aggregate. " +
+                            "To stop retrieving aggregation, we stop the aggregator search here."
+            );
+        }
+        return new GeneralExpressionGenerator(enableAggregation, this.statement, fieldReferences);
     }
 
     private void nonLimitationsProjectionFuzz(){
-        GeneralExpressionGenerator generator = getProjectionGenerator();
+        final GeneralExpressionGenerator generator = getProjectionGenerator();
         final int numOfEntry = statement().getFromClause().size();
         final int numOfProjection = Utility.randomIntFromRange(numOfEntry, numOfEntry*2);
-
-        IntStream.range(0, numOfProjection).sequential().forEach(
-                i-> {
-                    if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
-                        processEntry(generator.generate());
-                    }else {
-                        processEntry(generator.fallback());
-                    }
-                }
-        );
+        for (int i = 0; i < numOfProjection; i++) {
+            if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
+                    config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
+                processEntry(generator.generate());
+            }else {
+                processEntry(generator.fallback());
+            }
+        }
     }
 
     private void  withLimitationsProjectionFuzz(){
@@ -90,23 +96,24 @@ public class SelectClauseWithinFrom extends SelectClause{
 //        final int[] mutableFactor = {mayChooseNum};
         final List<FieldReference> fieldReferences = new ArrayList<>(mayChooseNum);
 
-        IntStream.range(0, numOfEachCandidate.length).sequential().forEach(i -> {
+        for(int i=0; i<numOfEachCandidate.length; i++){
             final List<FieldReference> shuffledCandidates = Utility.copyListShuffle(shuffledReferences.get(i).getFieldReferences());
             assert !shuffledCandidates.isEmpty();
             if(enableDuplicateProjections){
                 final int fromThisChooseNum = Math.min(shuffledCandidates.size(), averageChooseRoundNum);
-                IntStream.range(0, fromThisChooseNum).sequential().forEach(j -> {
-                    FieldReference choose = Utility.randomlyChooseFrom(shuffledCandidates);
-                    fieldReferences.add(choose);
-                });
+                for(int j=0; j<fromThisChooseNum; j++){
+                    fieldReferences.add(Utility.randomlyChooseFrom(shuffledCandidates));
+                }
             }else {
                 throw new NotImplementedException("Not implement for disable duplicate projections");
             }
-        });
+        }
 
-        Generator<Expression> generator = new GeneralExpressionGenerator(this.statement, fieldReferences);
+        Generator<Expression> generator = new GeneralExpressionGenerator(true, this.statement, fieldReferences);
         final int max = Math.max(numOfEachCandidate.length, averageChooseRoundNum / 2);
         final int projectionNums = Utility.randomIntFromRange(numOfEachCandidate.length, max);
-        IntStream.range(0, projectionNums).sequential().forEach(i-> processEntry(generator.generate()));
+        for (int i = 0; i < projectionNums; i++) {
+            processEntry(generator.generate());
+        }
     }
 }

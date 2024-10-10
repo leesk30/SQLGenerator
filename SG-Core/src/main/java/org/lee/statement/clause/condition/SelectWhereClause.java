@@ -2,11 +2,11 @@ package org.lee.statement.clause.condition;
 
 import org.lee.base.Generator;
 import org.lee.base.NodeTag;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.select.SelectStatement;
 
 public final class SelectWhereClause extends WhereClause {
-    public SelectWhereClause(SQLStatement statement) {
+    public SelectWhereClause(SelectStatement statement) {
         super(statement);
     }
 

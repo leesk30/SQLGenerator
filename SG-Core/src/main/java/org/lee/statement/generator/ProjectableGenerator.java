@@ -1,57 +1,48 @@
-package org.lee.statement.support;
+package org.lee.statement.generator;
 
-import org.lee.common.Assertion;
+import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.scalar.Scalar;
-import org.lee.entry.scalar.ScalarSubquery;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectSetopStatement;
 import org.lee.statement.select.SelectSimpleStatement;
+import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
 
 import java.util.List;
 
-public interface Projectable extends SQLStatement {
-    List<TargetEntry> project();
-    RangeTableEntry toRelation();
+public final class ProjectableGenerator implements Generator<Projectable> {
+    private final SQLStatement parent;
+    public static final ProjectableGenerator emptyParentGenerator = new ProjectableGenerator();
 
-    default Scalar toScalar(){
-        Assertion.requiredTrue(isScalar());
-        return new ScalarSubquery(this);
+    public ProjectableGenerator(){
+        this(null);
     }
 
-    boolean isWithLogicalParentheses();
+    public ProjectableGenerator(SQLStatement parent){
+        this.parent = parent;
+    }
 
     @Override
-    default String getString(){
-        if(this.isWithLogicalParentheses()){
-            return LP + body() + RP;
+    public Projectable generate(){
+        Projectable statement = newRandomlyProjectable(parent);
+        statement.fuzz();
+        return statement;
+    }
+
+    public Projectable generate(List<TypeTag> limitations){
+        Projectable statement = newRandomlyProjectable(parent);
+        if(!limitations.isEmpty()){
+            statement.withProjectTypeLimitation(limitations);
         }
-        if(this.isFinished()){
-            return body() + ENDING;
-        }
-        return body();
+        statement.fuzz();
+        return statement;
     }
 
-    boolean isScalar();
-
-    default int width(){
-        return project().size();
-    }
-
-    default String body(){
-        return nodeArrayToString(SPACE, this.walk());
-    }
-
-    void withProjectTypeLimitation(List<TypeTag> limitation);
-    List<TypeTag> getProjectTypeLimitation();
-
-    static Projectable newRandomlyProjectable(SQLStatement parent){
+    private Projectable newRandomlyProjectable(SQLStatement parent){
         final int PValues = parent.getConfig().getInt(Conf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY);
         final int PSetop = (parent.enableSetop() ? parent.getConfig().getInt(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0);
         final int PClause = parent.getConfig().getInt(Conf.PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY);
@@ -77,4 +68,5 @@ public interface Projectable extends SQLStatement {
             return new SelectNormalStatement(parent);
         }
     }
+
 }

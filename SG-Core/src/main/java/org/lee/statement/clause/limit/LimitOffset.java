@@ -1,8 +1,8 @@
 package org.lee.statement.clause.limit;
 
 import org.lee.base.NodeTag;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
+import org.lee.statement.support.SQLStatement;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.LiteralInt;
 

@@ -8,9 +8,9 @@ import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.complex.SortEntry;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.Sortable;
 import org.lee.type.literal.Literal;
 import org.lee.type.literal.LiteralInt;
@@ -52,7 +52,7 @@ public abstract class SortByClause extends Clause<SortEntry> {
     protected IntConsumer randomlyOrderByTarget(){
         final Projectable projectable = (Projectable) this.statement;
         final List<TargetEntry> targetEntries = projectable.project();
-        final RuntimeConfiguration configuration = ((SQLStatement)projectable).getConfig();
+        final RuntimeConfiguration configuration = projectable.getConfig();
         return i -> {
             final TargetEntry targetEntry = Utility.randomlyChooseFrom(targetEntries);
             addSortEntry(new SortEntry(targetEntry, configuration));
@@ -90,9 +90,9 @@ public abstract class SortByClause extends Clause<SortEntry> {
     }
 
     protected void forceOrderByAllProjections(){
-        IntStream.range(1, getProjectSize() + 1)
-                .sequential()
-                .forEach(i -> addSortEntry(new SortEntry(new LiteralInt(i), this.statement.getConfig())));
+        for (int i = 1; i < getProjectSize() + 1; i++) {
+            addSortEntry(new SortEntry(new LiteralInt(i), this.statement.getConfig()));
+        }
     }
 
     @Override

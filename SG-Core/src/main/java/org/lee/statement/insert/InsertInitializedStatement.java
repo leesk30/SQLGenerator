@@ -11,7 +11,6 @@ import org.lee.type.TypeDescriptor;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public final class InsertInitializedStatement extends InsertStatement{
     private final Relation targetRelation;
@@ -43,14 +42,14 @@ public final class InsertInitializedStatement extends InsertStatement{
         private void generateRecordByTypeDescriptor(){
             final List<TypeDescriptor> typeDescriptors = InsertInitializedStatement.this.targetRelation.getFields().stream().map(Field::getDescriptor).collect(Collectors.toList());
             requiredReadyToGenerateRecord(typeDescriptors.size());
-            IntStream.range(0, length).sequential().forEach(
-                    i -> {
-                        final Record record = new Record(width);
-                        typeDescriptors.forEach(td -> record.add(td.generate()));
-                        children.add(record);
-                    }
-            );
-            children.get(0).forEach(l -> projection.add(TargetEntry.newNamedEntry(l.getType())));
+            for(int i=0; i<length; i++){
+                final Record record = new Record(width);
+                typeDescriptors.forEach(td -> record.add(td.generate()));
+                children.add(record);
+                if(i == 0){
+                    record.forEach(l -> projection.add(TargetEntry.newNamedEntry(l.getType())));
+                }
+            }
         }
 
         @Override

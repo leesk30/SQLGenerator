@@ -8,12 +8,10 @@ import org.lee.common.config.Conf;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.relation.RangeTableEntry;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.select.SelectStatement;
-import org.lee.statement.support.Projectable;
+import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
-import org.lee.statement.support.SupportGenerateProjectable;
 import org.lee.statement.support.SupportRangeTableTransform;
 
 import java.util.ArrayList;
@@ -21,17 +19,17 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class FromClause extends Clause<RangeTableReference>
-        implements SupportGenerateProjectable, SupportRangeTableTransform {
+        implements SupportRangeTableTransform {
     protected final List<RangeTableEntry> rawEntryList = new ArrayList<>();
     protected final List<RangeTableEntry> currentCTECandidates = new ArrayList<>();
     protected final List<RangeTableEntry> allOfCandidates = new ArrayList<>();
+    protected final boolean enableSubquery;
+    protected final ProjectableGenerator generator;
 //    protected List<List<RangeTableReference>> candidatesList;
     protected FromClause(SQLStatement statement) {
         super(statement);
-    }
-
-    protected FromClause(SQLStatement statement, int initialCapacity) {
-        super(statement, initialCapacity);
+        enableSubquery = statement.enableSubquery();
+        generator = enableSubquery ? new ProjectableGenerator(statement) : null;
     }
 
     public List<RangeTableEntry> getRawEntryList() {
@@ -46,15 +44,6 @@ public abstract class FromClause extends Clause<RangeTableReference>
     @Override
     public NodeTag getNodeTag() {
         return NodeTag.fromClause;
-    }
-
-    @Override
-    public Projectable generate(SQLStatement parent){
-        Projectable projectableStatement = SupportGenerateProjectable.super.generate(this.statement);
-        if(projectableStatement instanceof SelectStatement){
-            rawEntryList.addAll(((SelectStatement) projectableStatement).getRawRTEList());
-        }
-        return projectableStatement;
     }
 
     protected void merge(RangeTableReference[][] candidatesList){
@@ -74,9 +63,8 @@ public abstract class FromClause extends Clause<RangeTableReference>
     protected RangeTableReference randomlyGetRangeReference(){
         RangeTableEntry entry;
 
-        if(this.statement.enableSubquery() &&
-                probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
-            entry = this.generate(this.statement).toRelation();
+        if(enableSubquery && probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
+            entry = generator.generate().toRelation();
         }else {
             entry = randomlyGetRangeTable();
             entry = randomlyConvertToPartition(entry);

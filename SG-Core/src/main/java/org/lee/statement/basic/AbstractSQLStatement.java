@@ -1,15 +1,14 @@
-package org.lee.statement;
+package org.lee.statement.basic;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
+import org.lee.statement.SQLClauseWalker;
+import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.select.SelectStatement;
-import org.lee.statement.support.Statement;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
-public abstract class SQLStatement implements Statement<Clause<? extends Node>> {
+public abstract class AbstractSQLStatement implements SQLStatement {
     protected final SQLType sqlType;
     protected final SQLStatement parent;
     protected final RuntimeConfiguration config;
@@ -28,11 +27,11 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
     protected final UUID uuid;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    protected SQLStatement(SQLType sqlType){
+    protected AbstractSQLStatement(SQLType sqlType){
         this(sqlType, null);
     }
 
-    protected SQLStatement(SQLType sqlType, SQLStatement parentStatement){
+    protected AbstractSQLStatement(SQLType sqlType, SQLStatement parentStatement){
         if(parentStatement == null){
             this.uuid = UUID.randomUUID();
             this.sqlType = sqlType;
@@ -41,33 +40,27 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
             MDC.put("stmtId", uuid.toString().replaceAll("-", ""));
             logger.info(String.format("Start to build statement for type: %s.", sqlType));
         }else {
-            this.uuid = parentStatement.uuid;
+            this.uuid = parentStatement.getUUID();
             this.sqlType = sqlType;
             this.parent = parentStatement;
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
-//            MDC.put("stmtId", uuid.toString());
-            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parentStatement.sqlType));
+            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parentStatement.getSQLType()));
         }
     }
 
-    public boolean isFinished(){
-        return this.parent == null;
-    }
-
+    @Override
     public SQLStatement getParent() {
         return parent;
     }
 
-    public SQLType getSqlType() {
+    @Override
+    public SQLType getSQLType() {
         return sqlType;
     }
 
+    @Override
     public RuntimeConfiguration getConfig() {
         return config;
-    }
-
-    public boolean confirm(Rule ruleName){
-        return config.getRule(ruleName);
     }
 
     protected void addClause(Clause<? extends Node> child){
@@ -78,14 +71,17 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
         childrenMap.put(key, child);
     }
 
+    @Override
     public boolean containsClause(NodeTag key){
         return childrenMap.containsKey(key);
     }
 
+    @Override
     public Clause<? extends Node> getClause(NodeTag key){
         return childrenMap.get(key);
     }
 
+    @Override
     public List<CTE> recursiveGetCTEs(){
         List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : Collections.emptyList();
         if(this instanceof SupportCommonTableExpression){
@@ -107,24 +103,13 @@ public abstract class SQLStatement implements Statement<Clause<? extends Node>> 
         );
     }
 
-    public boolean enableSubquery(){
-        if(this instanceof SelectStatement){
-            SelectStatement selectStatement = (SelectStatement) this;
-            return selectStatement.subqueryDepth < config.getShort(Conf.MAX_SUBQUERY_RECURSION_DEPTH);
-        }
-        return true;
-    }
-
-    public boolean enableSetop(){
-        if(this instanceof SelectStatement){
-            SelectStatement selectStatement = (SelectStatement) this;
-            return selectStatement.setopDepth < config.getShort(Conf.MAX_SETOP_RECURSION_DEPTH);
-        }
-        return true;
-    }
-
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    @Override
+    public UUID getUUID() {
+        return uuid;
     }
 }

@@ -5,6 +5,7 @@ import org.lee.base.NodeTag;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
+import org.lee.statement.basic.AbstractSQLStatement;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;
@@ -12,13 +13,14 @@ import org.lee.statement.clause.project.ValuesClauseForValues;
 import org.lee.statement.clause.sort.SortByClause;
 import org.lee.statement.clause.sort.ValuesOrderByClause;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.Sortable;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ValuesStatement extends SQLStatement implements Projectable, Sortable {
+public class ValuesStatement extends AbstractSQLStatement implements Projectable, Sortable {
     protected final boolean withLogicalParentheses;
     protected final ValuesClause valuesClause = new ValuesClauseForValues(this);
     protected final SortByClause sortByClause = new ValuesOrderByClause(this);
@@ -31,7 +33,7 @@ public class ValuesStatement extends SQLStatement implements Projectable, Sortab
 
     public ValuesStatement(SQLStatement parentStatement) {
         super(SQLType.values, parentStatement);
-        withLogicalParentheses = (parentStatement != null && parentStatement.getSqlType() == SQLType.select);
+        withLogicalParentheses = (parentStatement != null && parentStatement.getSQLType() == SQLType.select);
         addClause(valuesClause);
         addClause(sortByClause);
         addClause(limitOffset);

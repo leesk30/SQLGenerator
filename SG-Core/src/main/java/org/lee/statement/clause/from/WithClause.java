@@ -5,13 +5,11 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.entry.relation.CTE;
-import org.lee.statement.SQLStatement;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.support.SupportGenerateProjectable;
+import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.support.SQLStatement;
 
-import java.util.stream.IntStream;
-
-public class WithClause extends Clause<CTE> implements SupportGenerateProjectable {
+public class WithClause extends Clause<CTE> {
     private boolean materialized = false;
 
     public WithClause(SQLStatement statement) {
@@ -47,6 +45,9 @@ public class WithClause extends Clause<CTE> implements SupportGenerateProjectabl
         if(config.confirm(Rule.SUPPORT_CTE_MATERIALIZED) && config.probability(Conf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
-        IntStream.range(0, numOfCTEs).sequential().forEach(i -> children.add(new CTE(generate(this.statement))));
+        ProjectableGenerator generator = new ProjectableGenerator(this.statement);
+        for (int i = 0; i < numOfCTEs; i++) {
+            children.add(new CTE(generator.generate()));
+        }
     }
 }
