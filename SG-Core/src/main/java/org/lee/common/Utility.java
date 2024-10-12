@@ -20,6 +20,7 @@ import java.util.*;
 public class Utility {
     public static final Logger LOGGER;
     public static final SecureRandom secureRandom;
+    public static final ThreadLocal<SecureRandom> threadLocalSecureRandom;
     public static final RandomDataGenerator randomDataGenerator;
     public static final short MAX_STRINGS;
     public static final int ACTUALLY_MAX_STRINGS;
@@ -259,6 +260,9 @@ public class Utility {
         timestamps = 1720000000000L;
         timestampsRange = 100 * 24 * 3600000L;
         secureRandom = new SecureRandom();
+        // todo: add thread local initializer for secureRandom
+        threadLocalSecureRandom = new ThreadLocal<>();
+        threadLocalSecureRandom.set(new SecureRandom());
         randomDataGenerator = new RandomDataGenerator();
         MAX_STRINGS = 100;
         charset = new char[]{
