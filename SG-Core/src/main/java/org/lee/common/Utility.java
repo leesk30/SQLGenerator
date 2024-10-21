@@ -1,6 +1,7 @@
 package org.lee.common;
 
 import org.apache.commons.codec.digest.MurmurHash3;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
 import org.lee.entry.relation.Relation;
@@ -12,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -250,6 +252,7 @@ public class Utility {
                 builder.append(line).append("\n");
             }
         }catch (IOException e){
+            LOGGER.error("An IOException occurred during loading input stream.", e);
             throw new RuntimeException(e);
         }
         return builder.toString();

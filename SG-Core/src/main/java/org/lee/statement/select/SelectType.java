@@ -6,5 +6,7 @@ public enum SelectType {
     setop,
     clause,
     ;
-    public static final SelectType[] ALL = {SelectType.normal, SelectType.setop, SelectType.clause, SelectType.simple};
+    public static final SelectType[] ALL = {
+            SelectType.normal, SelectType.setop, SelectType.clause, SelectType.simple
+    };
 }

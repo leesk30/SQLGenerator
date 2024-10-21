@@ -3,6 +3,7 @@ package org.lee.statement.generator;
 import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectNormalStatement;
@@ -43,6 +44,9 @@ public final class ProjectableGenerator implements Generator<Projectable> {
     }
 
     private Projectable newRandomlyProjectable(SQLStatement parent){
+        if(parent == null){
+            throw new IllegalArgumentException("The argument 'parent' of projectable generator cannot be null.");
+        }
         final int PValues = parent.getConfig().getInt(Conf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY);
         final int PSetop = (parent.enableSetop() ? parent.getConfig().getInt(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0);
         final int PClause = parent.getConfig().getInt(Conf.PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY);

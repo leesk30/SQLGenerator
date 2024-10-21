@@ -17,7 +17,6 @@ public class GeneralExpressionGenerator
         extends UnrelatedGenerator<Expression>
         implements ExpressionGenerator {
 
-
     public enum SymbolType{
         aggregate,
         function,
@@ -29,6 +28,10 @@ public class GeneralExpressionGenerator
 
     public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
         return new GeneralExpressionGenerator(false, statement, unmodifiableEmptyList);
+    }
+
+    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(boolean enableAggregation, SQLStatement statement){
+        return new GeneralExpressionGenerator(enableAggregation, statement, unmodifiableEmptyList);
     }
 
     public GeneralExpressionGenerator(boolean enableAggregation, SQLStatement statement, Scalar ... scalars){
@@ -89,7 +92,7 @@ public class GeneralExpressionGenerator
                 if(preferRecursion(signature, recursionDepth)){
                     return growth(signature, recursionDepth+1);
                 }
-                // else backtrace
+                // else backtrace to another symbol
             }
         }
         return fallback(root);

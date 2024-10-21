@@ -5,6 +5,7 @@ import org.lee.common.Utility;
 import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.generator.ProjectableGenerator;
 import org.lee.statement.support.Logging;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SQLStatement;
@@ -20,7 +21,8 @@ public interface IExpressionGenerator<T extends Expression>
     SQLStatement getStatement();
 
     default Scalar scalarGenerate(TypeTag typeTag){
-        Projectable projectable = Projectable.newRandomlyProjectable(getStatement());
+        ProjectableGenerator generator = new ProjectableGenerator(getStatement());
+        Projectable projectable = generator.generate();
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.fuzz();

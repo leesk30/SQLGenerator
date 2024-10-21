@@ -27,10 +27,11 @@
         <commons.configuration2.version>2.11.0</commons.configuration2.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <commons.codec.version>1.16.0</commons.codec.version>
+        <commons.io.version>2.14.0</commons.io.version>
         <cache.caffeine.version>2.7.0</cache.caffeine.version>
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
         <logging.log4j.version>2.22.0</logging.log4j.version>
-        <testng.version>6.14.3</testng.version>
+        <testng.version>7.4.0</testng.version>
     </properties>
 
 
@@ -83,6 +84,12 @@
             </dependency>
 
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons.codec.version}</version>
@@ -129,6 +136,7 @@
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
+                <scope>test</scope>
             </dependency>
 
         </dependencies>

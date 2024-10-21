@@ -34,7 +34,5 @@ public enum Conf {
     EXPRESSION_USING_SCALAR_SUBQUERY_PROBABILITY,
     ;
     // implement how to check value
-    Conf(){
-
-    }
+    Conf(){}
 }
