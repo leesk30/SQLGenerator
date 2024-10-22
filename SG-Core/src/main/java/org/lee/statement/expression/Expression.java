@@ -4,7 +4,7 @@ import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.base.TreeNode;
 import org.lee.common.Assertion;
-import org.lee.common.Pair;
+import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.Pseudo;

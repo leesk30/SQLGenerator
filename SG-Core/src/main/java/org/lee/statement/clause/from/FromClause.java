@@ -1,8 +1,9 @@
 package org.lee.statement.clause.from;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.MetaEntry;
+import org.lee.common.global.MetaEntry;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.entry.RangeTableReference;
@@ -92,7 +93,8 @@ public abstract class FromClause extends Clause<RangeTableReference>
     }
 
     protected void initializeCandidate(){
-        allOfCandidates.addAll(MetaEntry.relationMap.values());
+        MetaEntry entry = SQLGeneratorContext.getCurrentMetaEntry();
+        allOfCandidates.addAll(entry.getRelationMap().values());
         if(statement instanceof SupportCommonTableExpression){
             currentCTECandidates.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
         }

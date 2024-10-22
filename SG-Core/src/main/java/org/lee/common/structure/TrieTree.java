@@ -1,4 +1,4 @@
-package org.lee.common;
+package org.lee.common.structure;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

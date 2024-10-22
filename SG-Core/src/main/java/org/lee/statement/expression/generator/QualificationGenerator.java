@@ -1,7 +1,7 @@
 package org.lee.statement.expression.generator;
 
 import org.lee.common.Assertion;
-import org.lee.common.Pair;
+import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Scalar;

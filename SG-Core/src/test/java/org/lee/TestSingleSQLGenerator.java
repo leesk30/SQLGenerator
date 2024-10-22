@@ -1,11 +1,11 @@
 package org.lee;
 
 import org.json.JSONObject;
-import org.lee.common.MetaEntry;
+import org.lee.common.global.MetaEntry;
 import org.lee.base.Generator;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectStatement;
-import org.lee.symbol.Finder;
+import org.lee.common.global.Finder;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -27,8 +27,10 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
         InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("tpcds.json");
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
-        MetaEntry.load(jsonObject);
-        Finder.load();
+        MetaEntry entry = SQLGeneratorContext.getCurrentMetaEntry();
+        Finder finder = SQLGeneratorContext.getCurrentFinder();
+        entry.load(jsonObject);
+        finder.load();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.lee.statement.clause.condition;
 
 import org.lee.base.NodeTag;
-import org.lee.common.Pair;
+import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;

@@ -127,7 +127,7 @@ public final class SelectSetopStatement
 
     @Override
     public boolean isScalar() {
-        return !limitOffset.isEmpty() && width() == 1 && limitOffset.getLimit() == 1;
+        return width() == 1 && !limitOffset.isEmpty() && limitOffset.getLimit() == 1;
     }
 
     @Override

@@ -4,6 +4,7 @@ import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
+import org.lee.SQLGeneratorContext;
 import org.lee.entry.relation.Relation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -122,19 +123,6 @@ public class Utility {
             return 0;
         }
         return arr[secureRandom.nextInt(arr.length)];
-    }
-
-    public static Relation getRandomRelationFromMetaEntry(){
-        Object[] keys = MetaEntry.relationMap.keySet().toArray();
-        String key = (String) randomlyChooseFrom(keys);
-        return MetaEntry.relationMap.get(key);
-    }
-
-    public static Relation getRandomRelationFromMetaEntry(String limitationNamespace){
-        if(limitationNamespace == null){
-            return getRandomRelationFromMetaEntry();
-        }
-        return randomlyChooseFrom(MetaEntry.relationByNamespaceMap.get(limitationNamespace));
     }
 
     public static int randomIntFromRange(int beginInclusive, int endExclusive){

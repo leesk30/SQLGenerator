@@ -1,6 +1,6 @@
 package org.lee.statement.expression.generator;
 
-import org.lee.common.Pair;
+import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
@@ -54,7 +54,7 @@ public class JoinerQualificationGenerator
     @Override
     public Pair<Scalar, Scalar> getTwoSide(){
         if(relatedPair != null && !relatedPair.isEmpty() && Utility.probability(50)){
-            return consumPair();
+            return getPair();
         }else {
             return QualificationGenerator.super.getTwoSide();
         }

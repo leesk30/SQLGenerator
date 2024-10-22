@@ -1,5 +1,6 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfiguration;
@@ -9,7 +10,7 @@ import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.Logging;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportRuntimeConfiguration;
-import org.lee.symbol.Finder;
+import org.lee.common.global.Finder;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public abstract class UnrelatedGenerator<T> implements
     protected final List<Expression> replicated;
     protected final UnrelatedStatistic statistic;
     protected final RuntimeConfiguration config;
-    protected final Finder finder = Finder.getFinder();
+    protected final Finder finder = SQLGeneratorContext.getCurrentFinder();;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     protected final SQLStatement statement;
 

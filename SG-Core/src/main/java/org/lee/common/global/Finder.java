@@ -1,9 +1,10 @@
-package org.lee.symbol;
+package org.lee.common.global;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.lee.common.TrieTree;
 import org.lee.common.Utility;
+import org.lee.common.structure.TrieTree;
+import org.lee.symbol.*;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,14 +40,14 @@ public class Finder {
         }
     }
 
-    private static final Holder BUILTIN_OPERATOR_HOLDER = new Holder();
-    private static final Holder BUILTIN_FUNCTION_HOLDER = new Holder();
-    private static final Holder BUILTIN_AGGREGATE_HOLDER = new Holder();
-    private static final Holder BUILTIN_WINDOW_HOLDER = new Holder();
+    private final Holder BUILTIN_OPERATOR_HOLDER = new Holder();
+    private final Holder BUILTIN_FUNCTION_HOLDER = new Holder();
+    private final Holder BUILTIN_AGGREGATE_HOLDER = new Holder();
+    private final Holder BUILTIN_WINDOW_HOLDER = new Holder();
 
-    private static final Holder UDF_HOLDER = new Holder();
-    private static final Holder UDTF_HOLDER = new Holder();
-    private static final Holder UDAF_HOLDER = new Holder();
+    private final Holder UDF_HOLDER = new Holder();
+    private final Holder UDTF_HOLDER = new Holder();
+    private final Holder UDAF_HOLDER = new Holder();
 
     public void put(Operator operator){
         BUILTIN_OPERATOR_HOLDER.put(operator);
@@ -68,15 +69,12 @@ public class Finder {
         }
     }
 
-    public static Finder getFinder(){
-        return singleton;
-    }
-
+    // todo: to thread local
     public static final Finder singleton = new Finder();
     private static boolean isLoad = false;
-    private Finder(){}
+    public Finder(){}
 
-    public synchronized static void load(){
+    public synchronized void load(){
         if(isLoad){
             return;
         }
@@ -86,12 +84,12 @@ public class Finder {
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");
         JSONArray operatorList = symbols.getJSONArray("operator");
-        build(aggregationList, Finder::jsonToAggregation);
-        build(functionList, Finder::jsonToFunction);
-        build(operatorList, Finder::jsonToOperator);
+        build(aggregationList, this::jsonToAggregation);
+        build(functionList, this::jsonToFunction);
+        build(operatorList, this::jsonToOperator);
     }
 
-    private static void build(JSONArray symbolArray, Consumer<JSONObject> process){
+    private void build(JSONArray symbolArray, Consumer<JSONObject> process){
         long start = System.currentTimeMillis();
         StreamSupport.stream(symbolArray.spliterator(), true).forEach(
                 json -> {
@@ -102,7 +100,7 @@ public class Finder {
         logger.debug("Build symbol elapse: " + (System.currentTimeMillis() - start));
     }
 
-    private static boolean checkDisabled(JSONObject jsonSymbol){
+    private boolean checkDisabled(JSONObject jsonSymbol){
         if(jsonSymbol.has("enable") && !jsonSymbol.getBoolean("enable")){
             logger.debug("Disable by " + (jsonSymbol.has("reason") ? jsonSymbol.getString("reason") : "Unknown reason"));
             return true;
@@ -110,17 +108,17 @@ public class Finder {
         return false;
     }
 
-    private static void jsonToFunction(JSONObject function){
+    private void jsonToFunction(JSONObject function){
         if(checkDisabled(function)){
             return;
         }
         final String body = function.getString("body");
         final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
-        singleton.put(new Function(body, returnType, arguments));
+        this.put(new Function(body, returnType, arguments));
     }
 
-    private static void jsonToOperator(JSONObject operator){
+    private void jsonToOperator(JSONObject operator){
         if(checkDisabled(operator)){
             return;
         }
@@ -128,17 +126,17 @@ public class Finder {
         final TypeTag returnType = TypeTag.getEnum(operator.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(operator.getJSONArray("args"));
         final int priority = operator.has("priority") ? operator.getInt("priority") : 1;
-        singleton.put(new Operator(body, priority, returnType, arguments));
+        this.put(new Operator(body, priority, returnType, arguments));
     }
 
-    private static void jsonToAggregation(JSONObject aggregate){
+    private void jsonToAggregation(JSONObject aggregate){
         if(checkDisabled(aggregate)){
             return;
         }
         final String body = aggregate.getString("body");
         final TypeTag returnType = TypeTag.getEnum(aggregate.getString("return"));
         final TypeTag[] arguments = jsonArrayToTypeTags(aggregate.getJSONArray("args"));
-        singleton.put(new Aggregation(body, returnType, arguments));
+        this.put(new Aggregation(body, returnType, arguments));
     }
 
     private static TypeTag[] jsonArrayToTypeTags(JSONArray arr){

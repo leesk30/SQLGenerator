@@ -81,7 +81,7 @@ public class SQLFormatter {
 
         StringBuilder result = new StringBuilder();
         StringTokenizer tokens;
-        String lastToken;
+        String lastToken=" ";
         String token;
         String lcToken;
 

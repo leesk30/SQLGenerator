@@ -1,4 +1,4 @@
-package org.lee.common;
+package org.lee.common.structure;
 
 
 import org.lee.type.literal.Literal;

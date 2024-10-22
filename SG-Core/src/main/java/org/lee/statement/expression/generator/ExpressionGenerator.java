@@ -1,11 +1,12 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
-import org.lee.symbol.Finder;
+import org.lee.common.global.Finder;
 import org.lee.symbol.Function;
 import org.lee.symbol.Operator;
 import org.lee.symbol.Signature;
@@ -35,7 +36,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression generateOperatorExpression(Scalar left, Scalar right){
-        final Finder finder = Finder.getFinder();
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
         List<TypeTag> arg = new ArrayList<>(2);
         arg.add(left.getType());
         arg.add(right.getType());
@@ -51,7 +52,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression functionUnit(List<Scalar> scalars){
-        final Finder finder = Finder.getFinder();
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
         final List<Signature> candidate = finder.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
         Function function = (Function) Utility.randomlyChooseFrom(candidate);
         if(function == null){
@@ -74,7 +75,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
             // like max(a) + b
             Assertion.requiredFalse(expression.isIncludingAggregation());
         }
-        Finder finder = Finder.getFinder();
+        Finder finder = SQLGeneratorContext.getCurrentFinder();
         List<Signature> input = finder.getAggregateByReturn(targetType);
         if(input != null){
 
@@ -95,7 +96,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression nullableCast(Expression expression, TypeTag targetType){
-        final Finder finder = Finder.getFinder();
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
         List<Signature> result = finder.getFunction(expression.getType())
                 .stream()
                 .filter(
@@ -127,7 +128,8 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         if(template.isEmpty()){
             return Collections.singletonList(new Expression(getLiteral()));
         }
-        final int maxSize = Math.min(Finder.getFinder().maxFunctionArgWidth(), scalars.size());
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final int maxSize = Math.min(finder.maxFunctionArgWidth(), scalars.size());
         int epoch = 0;
         do {
             int windowSize = Math.min(template.size(), Utility.randomIntFromRange(1, maxSize));

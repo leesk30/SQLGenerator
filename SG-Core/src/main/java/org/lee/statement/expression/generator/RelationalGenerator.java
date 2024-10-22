@@ -1,7 +1,7 @@
 package org.lee.statement.expression.generator;
 
 import org.lee.base.Generator;
-import org.lee.common.Pair;
+import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.RangeTableReference;
@@ -18,13 +18,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public abstract class RelationalGenerator<T extends Expression>
         implements Generator<T>, SupportRuntimeConfiguration, Logging {
     protected final List<RangeTableReference> candidateRelations;
 
-    protected List<Pair<Scalar, Scalar>> relatedPair = null;
+    protected final List<Pair<Scalar, Scalar>> relatedPair = new ArrayList<>();
+    protected boolean isRelatedPairAlwaysEmpty = false;
     protected final RangeTableReference left;
     protected final RangeTableReference right;
     protected final RelatedStatistic statistic;
@@ -45,41 +45,31 @@ public abstract class RelationalGenerator<T extends Expression>
         return candidateRelations;
     }
 
-    protected synchronized void doCache(){
-        if(relatedPair != null){
+    protected void doCache(){
+        if(isRelatedPairAlwaysEmpty || !relatedPair.isEmpty()){
             return;
         }
-
-        relatedPair = new ArrayList<>();
         final int size = candidateRelations.size();
         final int benchmarkIndex = Utility.randomIntFromRange(0, size);
         final RangeTableReference benchmark = candidateRelations.get(benchmarkIndex);
-        IntStream.range(0, size - 1).sequential()
-                .map(i -> i >= benchmarkIndex ? i + 1 : i)
-                .forEach(
-                i -> candidateRelations
-                        .get(i)
-                        .getFieldReferences()
+        candidateRelations.stream()
+                        .filter(rtr -> rtr != benchmark)
+                        .flatMap(rtr -> rtr.getFieldReferences().stream())
                         .forEach(
-                                cur ->
-                                        benchmark.getFieldReferences()
-                                                .stream()
-                                                .filter(benchRef -> cur.getType().isSimilarWith(benchRef.getType()))
-                                                .forEach(benchRef -> relatedPair.add(new Pair<>(cur, benchRef)))
-                        )
-        );
+                                cur -> benchmark.getFieldReferences()
+                                        .stream()
+                                        .filter(b -> cur.getType().isSimilarWith(b.getType()))
+                                        .forEach(b -> relatedPair.add(new Pair<>(cur, b)))
+                        );
+        isRelatedPairAlwaysEmpty = relatedPair.isEmpty();
     }
 
-    protected Pair<Scalar, Scalar> consumPair(){
+    protected Pair<Scalar, Scalar> getPair(){
         doCache();
-        final List<Pair<Scalar, Scalar>> safetyRef = relatedPair;
-        assert safetyRef != null;
-        synchronized (safetyRef){
-            if(safetyRef.isEmpty())
-                return null;
-            final int index = Utility.randomIntFromRange(0, safetyRef.size());
-            return safetyRef.remove(index);
-        }
+        if(relatedPair.isEmpty())
+            return null;
+        final int index = Utility.randomIntFromRange(0, relatedPair.size());
+        return relatedPair.remove(index);
     }
 
     @Override

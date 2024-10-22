@@ -1,7 +1,8 @@
-package org.lee.common;
+package org.lee.common.global;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lee.common.Utility;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeDescriptor;
@@ -15,13 +16,22 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class MetaEntry {
-    private static boolean isInitialized = false;
-    public static final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
-    public static final Map<String, Relation> relationMap = new HashMap<>();
-    public static final Logger logger = LoggerFactory.getLogger(MetaEntry.class);
+    private boolean isInitialized = false;
+    private final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
+    private final Map<String, Relation> relationMap = new HashMap<>();
+    private final Logger logger = LoggerFactory.getLogger(MetaEntry.class);
 
-    MetaEntry(){}
-    public static synchronized void load(JSONObject json){
+    public MetaEntry(){}
+
+    public Map<String, List<Relation>> getRelationByNamespaceMap() {
+        return relationByNamespaceMap;
+    }
+
+    public Map<String, Relation> getRelationMap() {
+        return relationMap;
+    }
+
+    public synchronized void load(JSONObject json){
         if(isInitialized){
             logger.warn("The meta entry has already been initialized!!!");
             return;
@@ -43,7 +53,7 @@ public class MetaEntry {
         isInitialized = true;
     }
 
-    public static Relation json2Relation(String namespace, JSONObject json){
+    public Relation json2Relation(String namespace, JSONObject json){
         String identifier = json.getString("identifier");
         JSONArray schemaList = json.getJSONArray("schema");
         List<Field> fieldList = new ArrayList<>(schemaList.length());
@@ -57,7 +67,7 @@ public class MetaEntry {
         return relation;
     }
 
-    public static Field json2Field(JSONObject json){
+    public Field json2Field(JSONObject json){
         String fieldName = json.getString("name");
         String fieldTypeName = json.getString("type").trim().toLowerCase();
         // todo: add constraint
@@ -65,15 +75,15 @@ public class MetaEntry {
         return new Field(fieldName, typeDescriptor);
     }
 
-    public static String toDDLs(boolean ignoreIfExists, String options){
+    public String toDDLs(boolean ignoreIfExists, String options){
         StringBuilder builder = new StringBuilder();
-        MetaEntry.relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append("\n"));
+        relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append("\n"));
         return builder.toString();
     }
 
-    public static String toInitializedInserts(){
+    public String toInitializedInserts(){
         StringBuilder builder = new StringBuilder();
-        MetaEntry.relationMap.values().forEach(
+        relationMap.values().forEach(
                 r -> {
                     final int numOfInsertStatement = Utility.randomIntFromRange(10, 20);
                     IntStream.range(0, numOfInsertStatement).sequential().forEach(

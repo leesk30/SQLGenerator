@@ -1,8 +1,7 @@
 package org.lee;
 
 import org.json.JSONObject;
-import org.lee.common.MetaEntry;
-import org.lee.type.TypeDescriptor;
+import org.lee.common.global.MetaEntry;
 import org.testng.annotations.Test;
 
 import java.io.*;
@@ -28,7 +27,8 @@ public class TestLoadFrom {
         InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("table_schema.json");
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
-        MetaEntry.load(jsonObject);
+        MetaEntry metaEntry = SQLGeneratorContext.getCurrentMetaEntry();
+        metaEntry.load(jsonObject);
         System.out.println(MetaEntry.class);
     }
 
