@@ -12,6 +12,7 @@ public enum PredicateCombiner implements Signature {
     AND(2, "%s AND %s"),
     OR(2, "%s OR %s"),
     ;
+
     private final int argNum;
     private final List<TypeTag> argumentsType;
     private final String symbols;

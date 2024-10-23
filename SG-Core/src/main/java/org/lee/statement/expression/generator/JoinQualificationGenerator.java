@@ -1,7 +1,7 @@
 package org.lee.statement.expression.generator;
 
-import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
+import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
@@ -11,20 +11,19 @@ import org.lee.symbol.Comparator;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 
-public class JoinerQualificationGenerator
+public class JoinQualificationGenerator
         extends RelationalGenerator<Qualification>
         implements QualificationGenerator {
 
 
-    public JoinerQualificationGenerator(SQLStatement statement, RangeTableReference left, RangeTableReference right){
+    public JoinQualificationGenerator(SQLStatement statement, RangeTableReference left, RangeTableReference right){
         super(statement, left, right);
     }
 
     @Override
     public Qualification generate() {
         Qualification qualification = simplifyCompare();
-        qualification = tryWithPredicateAddition(qualification);
-        return qualification;
+        return tryWithPredicateAddition(qualification);
     }
 
     @Override
@@ -53,7 +52,7 @@ public class JoinerQualificationGenerator
 
     @Override
     public Pair<Scalar, Scalar> getTwoSide(){
-        if(relatedPair != null && !relatedPair.isEmpty() && Utility.probability(50)){
+        if(!relatedPair.isEmpty() && Utility.probability(50)){
             return getPair();
         }else {
             return QualificationGenerator.super.getTwoSide();

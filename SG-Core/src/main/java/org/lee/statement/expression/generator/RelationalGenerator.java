@@ -1,18 +1,12 @@
 package org.lee.statement.expression.generator;
 
-import org.lee.base.Generator;
-import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
-import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.structure.Pair;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.RelatedStatistic;
-import org.lee.statement.support.Logging;
 import org.lee.statement.support.SQLStatement;
-import org.lee.statement.support.SupportRuntimeConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class RelationalGenerator<T extends Expression>
-        implements Generator<T>, SupportRuntimeConfiguration, Logging {
+        implements IExpressionGenerator<T> {
     protected final List<RangeTableReference> candidateRelations;
 
     protected final List<Pair<Scalar, Scalar>> relatedPair = new ArrayList<>();
@@ -28,13 +22,10 @@ public abstract class RelationalGenerator<T extends Expression>
     protected final RangeTableReference left;
     protected final RangeTableReference right;
     protected final RelatedStatistic statistic;
-    protected final RuntimeConfiguration config;
     protected final SQLStatement statement;
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected RelationalGenerator(SQLStatement stmt, RangeTableReference lhs, RangeTableReference rhs){
         statement = stmt;
-        config = statement.getConfig();
         left = lhs;
         right = rhs;
         statistic = new RelatedStatistic(left, right);
@@ -73,16 +64,19 @@ public abstract class RelationalGenerator<T extends Expression>
     }
 
     @Override
-    public RuntimeConfiguration getConfig() {
-        return config;
-    }
-
-    public SQLStatement getStatement() {
+    public SQLStatement retrieveStatement() {
         return statement;
     }
 
     @Override
-    public Logger getLogger() {
-        return logger;
+    public List<Scalar> getWholeScopeCandidates() {
+        final int capacity = left.getFieldReferences().size() + right.getFieldReferences().size();
+        if(capacity == 0){
+            return Collections.emptyList();
+        }
+        List<Scalar> candidates = new ArrayList<>(capacity);
+        candidates.addAll(left.getFieldReferences());
+        candidates.addAll(right.getFieldReferences());
+        return candidates;
     }
 }

@@ -2,6 +2,7 @@ package org.lee.statement.expression.generator;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.RuntimeConfiguration;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.support.SQLStatement;
@@ -81,11 +82,6 @@ public class GeneralExpressionGenerator
                 return new Expression(signature);
             }
 
-            // if all candidate are consumed. Fallback directly
-            if(candidateList.isEmpty()){
-                candidateList.addAll(replicated);
-            }
-
             if(suitable(signature)){
                 return stopGrowth(signature);
             }else {
@@ -105,6 +101,7 @@ public class GeneralExpressionGenerator
 
     private boolean preferRecursion(Signature signature, int currentDepth){
         // more suitable there is no more necessary to fallback
+        RuntimeConfiguration config = getConfig();
         if(currentDepth > config.getInt(Conf.MAX_EXPRESSION_RECURSION_DEPTH)){
             return false;
         }

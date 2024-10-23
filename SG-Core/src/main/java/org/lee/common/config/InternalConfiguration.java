@@ -1,7 +1,5 @@
 package org.lee.common.config;
 
-import java.io.File;
-
 public final class InternalConfiguration {
     public final static InternalConfiguration instance = new InternalConfiguration();
 

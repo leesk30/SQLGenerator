@@ -1,8 +1,8 @@
 package org.lee.statement.expression.generator;
 
 import org.lee.common.Assertion;
-import org.lee.common.structure.Pair;
 import org.lee.common.Utility;
+import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Qualification;
@@ -16,6 +16,7 @@ import java.util.List;
 public interface QualificationGenerator extends IExpressionGenerator<Qualification> {
     Qualification generate();
     Qualification fallback();
+
     Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
 
     Pair<Scalar, Scalar> getTwoSide(TypeTag target);

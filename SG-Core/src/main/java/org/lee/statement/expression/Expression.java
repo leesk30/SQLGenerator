@@ -295,4 +295,11 @@ public class Expression implements Scalar, TreeNode<Expression> {
         return getString();
     }
 
+    public Qualification toQualification(){
+        if(getType() != TypeTag.boolean_){
+            throw new UnsupportedOperationException(String.format("Cannot cast this expression to qualification. %s", this));
+        }
+        return new Qualification(current, childNodes);
+    }
+
 }

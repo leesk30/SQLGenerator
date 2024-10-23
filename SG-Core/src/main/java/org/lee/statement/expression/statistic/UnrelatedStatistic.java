@@ -1,7 +1,7 @@
 package org.lee.statement.expression.statistic;
 
-import org.lee.common.structure.TrieTree;
 import org.lee.common.Utility;
+import org.lee.common.structure.TrieTree;
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;

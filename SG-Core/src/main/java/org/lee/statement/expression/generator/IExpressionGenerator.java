@@ -6,22 +6,22 @@ import org.lee.common.config.Rule;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.generator.ProjectableGenerator;
-import org.lee.statement.support.Logging;
+import org.lee.statement.support.AwareSQLStatement;
 import org.lee.statement.support.Projectable;
-import org.lee.statement.support.SQLStatement;
-import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.lee.type.TypeTag;
 
 import java.util.Collections;
 import java.util.List;
 
 public interface IExpressionGenerator<T extends Expression>
-        extends Generator<T>, SupportRuntimeConfiguration, Logging {
+        extends
+        Generator<T>,
+        AwareSQLStatement {
 
-    SQLStatement getStatement();
+    List<Scalar> getWholeScopeCandidates();
 
-    default Scalar scalarGenerate(TypeTag typeTag){
-        ProjectableGenerator generator = new ProjectableGenerator(getStatement());
+    default Scalar getScalarSubquery(TypeTag typeTag){
+        ProjectableGenerator generator = new ProjectableGenerator(retrieveStatement());
         Projectable projectable = generator.generate();
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
@@ -29,8 +29,13 @@ public interface IExpressionGenerator<T extends Expression>
         return projectable.toScalar();
     }
 
-    default Scalar scalarGenerate(){
-        return scalarGenerate(TypeTag.randomGenerateTarget());
+    default Scalar getScalarSubquery(){
+        return getScalarSubquery(TypeTag.randomGenerateTarget());
+    }
+
+    default Scalar getPseudo(){
+        // todo
+        return null;
     }
 
     default Scalar getLiteral(TypeTag typeTag){
@@ -49,13 +54,13 @@ public interface IExpressionGenerator<T extends Expression>
         return typeTag.asMapped().generate(partial);
     }
 
-    static boolean isContainsType(List<? extends Scalar> scalarList, TypeTag check){
+    default boolean isContainsType(List<? extends Scalar> scalarList, TypeTag check){
         return scalarList.stream()
                 .map(Scalar::getType)
                 .anyMatch(exprType -> exprType == check);
     }
 
-    static int containsHowMany(List<? extends Scalar> scalarList, TypeTag check){
+    default int containsHowMany(List<? extends Scalar> scalarList, TypeTag check){
         if(scalarList.isEmpty()){
             return 0;
         }

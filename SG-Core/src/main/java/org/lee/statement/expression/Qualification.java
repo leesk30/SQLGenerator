@@ -51,6 +51,7 @@ public class Qualification extends Expression {
         }
     }
 
+    @Override
     public Qualification toWithParenthesesExpression(){
         Parentheses parentheses = isTerminateNode? ((Scalar) current).getType().getParenthesesSymbol() : ((Signature)current).toParentheses();
         Qualification newer = new Qualification(parentheses) ;
@@ -68,5 +69,10 @@ public class Qualification extends Expression {
 
     public Qualification not(){
         return new Qualification(PredicateCombiner.NOT).newChild(this);
+    }
+
+    @Override
+    public Qualification toQualification(){
+        return this;
     }
 }

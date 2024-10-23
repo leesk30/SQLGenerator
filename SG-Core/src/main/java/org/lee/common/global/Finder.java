@@ -16,13 +16,13 @@ import java.util.function.Consumer;
 import java.util.stream.StreamSupport;
 
 public class Finder {
-    private static final Logger logger = LoggerFactory.getLogger(Finder.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     private static class Holder{
         public final TrieTree<TypeTag, Signature> finder = new TrieTree<>();
         public final Map<TypeTag, List<Signature>> reverseFinder = new ConcurrentHashMap<>();
 
-        synchronized void put(Signature signature){
+        void put(Signature signature){
             final TypeTag key = signature.getReturnType();
             finder.put(signature.getArgumentsTypes(), signature);
             if(!reverseFinder.containsKey(key)){
@@ -54,24 +54,16 @@ public class Finder {
     }
 
     public void put(Function function){
+        final Holder holder;
         if(function instanceof Aggregator){
-            if(function instanceof UserDefined){
-                UDAF_HOLDER.put(function);
-            }else {
-                BUILTIN_AGGREGATE_HOLDER.put(function);
-            }
-            return;
-        }
-        if(function instanceof UserDefined){
-            UDF_HOLDER.put(function);
+            holder = function instanceof UserDefined ? UDAF_HOLDER : UDF_HOLDER;
         }else {
-            BUILTIN_FUNCTION_HOLDER.put(function);
+            holder = function instanceof UserDefined ? UDF_HOLDER : BUILTIN_FUNCTION_HOLDER;
         }
+        holder.put(function);
     }
 
-    // todo: to thread local
-    public static final Finder singleton = new Finder();
-    private static boolean isLoad = false;
+    private boolean isLoad = false;
     public Finder(){}
 
     public synchronized void load(){

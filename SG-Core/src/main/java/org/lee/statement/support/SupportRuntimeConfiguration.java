@@ -16,7 +16,10 @@ public interface SupportRuntimeConfiguration {
     }
 
     default boolean probability(Conf name){
-        return Utility.probability(getConfig().getShort(name));
+        if(name.isProb()){
+            return Utility.probability(getConfig().getShort(name));
+        }
+        throw new UnsupportedOperationException(String.format("The conf '%s' is not a probability", name));
     }
 
     default boolean probability(int prob){

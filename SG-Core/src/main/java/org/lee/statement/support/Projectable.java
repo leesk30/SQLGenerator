@@ -1,17 +1,10 @@
 package org.lee.statement.support;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.entry.scalar.ScalarSubquery;
-import org.lee.statement.ValuesStatement;
-import org.lee.statement.select.SelectClauseStatement;
-import org.lee.statement.select.SelectNormalStatement;
-import org.lee.statement.select.SelectSetopStatement;
-import org.lee.statement.select.SelectSimpleStatement;
 import org.lee.type.TypeTag;
 
 import java.util.List;

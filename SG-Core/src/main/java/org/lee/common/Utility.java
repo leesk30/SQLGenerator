@@ -1,11 +1,8 @@
 package org.lee.common;
 
 import org.apache.commons.codec.digest.MurmurHash3;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
-import org.lee.SQLGeneratorContext;
-import org.lee.entry.relation.Relation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.sql.Timestamp;
