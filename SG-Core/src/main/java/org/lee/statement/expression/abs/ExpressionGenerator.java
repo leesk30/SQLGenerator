@@ -1,4 +1,4 @@
-package org.lee.statement.expression.generator;
+package org.lee.statement.expression.abs;
 
 import org.lee.SQLGeneratorContext;
 import org.lee.common.Assertion;
@@ -26,7 +26,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     Expression fallback(TypeTag required);
     Expression fallback();
 
-    default Expression fallbackFor(List<? extends Scalar> anyInputs){
+    default Expression fallbackFor(List<Scalar> anyInputs){
         UnrelatedStatistic statistic = new UnrelatedStatistic(anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){

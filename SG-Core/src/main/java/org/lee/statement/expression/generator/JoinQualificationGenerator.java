@@ -6,13 +6,15 @@ import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.expression.abs.QualificationGenerator;
+import org.lee.statement.expression.abs.RelatedGenerator;
 import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Comparator;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 
 public class JoinQualificationGenerator
-        extends RelationalGenerator<Qualification>
+        extends RelatedGenerator<Qualification>
         implements QualificationGenerator {
 
 
@@ -28,7 +30,7 @@ public class JoinQualificationGenerator
 
     @Override
     public Qualification fallback() {
-        final RangeTableReference randomRTE = Utility.randomlyChooseFrom(candidateRelations);
+        final RangeTableReference randomRTE = probability(50) ? left : right;
         final FieldReference randomFieldReference = Utility.randomlyChooseFrom(randomRTE.getFieldReferences());
         if(randomFieldReference == null){
             logger.error("Cannot find any scalar in rte.");
@@ -43,20 +45,6 @@ public class JoinQualificationGenerator
 //        Comparator.fastGetComparatorByCategory(lhs.getCategory());
         // todo
         return Comparator.fastGetComparatorByCategory(lhs.getCategory());
-    }
-
-    @Override
-    public Pair<Scalar, Scalar> getTwoSide(TypeTag target) {
-        return null;
-    }
-
-    @Override
-    public Pair<Scalar, Scalar> getTwoSide(){
-        if(!relatedPair.isEmpty() && Utility.probability(50)){
-            return getPair();
-        }else {
-            return QualificationGenerator.super.getTwoSide();
-        }
     }
 
     public RangeTableReference getLeft() { return left; }

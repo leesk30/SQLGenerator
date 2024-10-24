@@ -5,6 +5,7 @@ public enum Rule {
     ENABLE_FILTER_USING_PROJECTION_ALIAS,
     ENABLE_DUPLICATE_FILED_PROJECTIONS,
     REQUIRE_SCALA,
+    PREFER_SCALA_RELATED,
     AGGREGATION_REQUIRED_GROUP_BY,
 
 
@@ -12,7 +13,8 @@ public enum Rule {
     ORDER_DEFAULT_DESC(false, false, true),
     ORDER_DEFAULT_NULL_FIRST(false, false, true),
     REWRITER_REORDER(false, false, true),
-    SCALAR_FORCE_USING_AGGREGATION(false, false, true)
+    SCALAR_FORCE_USING_AGGREGATION(false, false, true),
+    ENABLE_PSEUDO(false, true, true)
     ;
 
     private final boolean rewritable;

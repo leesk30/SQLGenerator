@@ -24,7 +24,8 @@ public class SQLGeneratorWorker implements Runnable{
     private void send(Generator<SQLStatement> generator){
         try {
             result.put(generator.generate());
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
+            e.printStackTrace(); //todo debug
             throw new RuntimeException(e);
         }
     }

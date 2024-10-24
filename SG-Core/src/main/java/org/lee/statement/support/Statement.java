@@ -6,8 +6,11 @@ import org.lee.base.TreeNode;
 
 import java.util.UUID;
 
-public interface Statement<T extends Node> extends TreeNode<T>,
-        SupportRuntimeConfiguration, Fuzzer, Logging {
+public interface Statement<T extends Node>
+        extends TreeNode<T>,
+        SupportRuntimeConfiguration,
+        Fuzzer,
+        Logging {
     Statement<?> getParent();
     UUID getUUID();
 }

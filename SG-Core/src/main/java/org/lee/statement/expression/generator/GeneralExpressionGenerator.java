@@ -1,14 +1,19 @@
 package org.lee.statement.expression.generator;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.global.Finder;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
+import org.lee.statement.expression.abs.ExpressionGenerator;
+import org.lee.statement.expression.abs.UnrelatedGenerator;
 import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,23 +31,27 @@ public class GeneralExpressionGenerator
 
     public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
     private final boolean parentFlagEnableAggregate;
+    private final boolean parentFlagEnableWindow;
+    protected final Finder finder = SQLGeneratorContext.getCurrentFinder();
 
     public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
-        return new GeneralExpressionGenerator(false, statement, unmodifiableEmptyList);
+        return new GeneralExpressionGenerator(false, false, statement, unmodifiableEmptyList);
     }
 
-    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(boolean enableAggregation, SQLStatement statement){
-        return new GeneralExpressionGenerator(enableAggregation, statement, unmodifiableEmptyList);
+    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement){
+        return new GeneralExpressionGenerator(enableAggregation, enableWindow, statement, unmodifiableEmptyList);
     }
 
-    public GeneralExpressionGenerator(boolean enableAggregation, SQLStatement statement, Scalar ... scalars){
+    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, Scalar ... scalars){
         super(statement, scalars);
         parentFlagEnableAggregate = enableAggregation;
+        parentFlagEnableWindow = enableWindow;
     }
 
-    public GeneralExpressionGenerator(boolean enableAggregation, SQLStatement statement, List<? extends Scalar> scalars){
+    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
         super(statement, scalars);
         parentFlagEnableAggregate = enableAggregation;
+        parentFlagEnableWindow = enableWindow;
     }
 
     public List<Signature> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
@@ -122,7 +131,7 @@ public class GeneralExpressionGenerator
             if(scalars[i] != null){
                 children.add(scalars[i].toExpression());
             }else {
-                children.add(getLiteral(targetType).toExpression());
+                children.add(getContextFreeScalar(targetType).toExpression());
             }
         }
         children.forEach(expression::newChild);
@@ -159,7 +168,7 @@ public class GeneralExpressionGenerator
 
     @Override
     public Expression fallback(TypeTag required) {
-        Scalar requiredScalar = statistic.findMatchedForTargetType(required);
+        Scalar requiredScalar = statistic.findAny(required);
         if(requiredScalar != null){
             return requiredScalar.toExpression();
         }
@@ -185,6 +194,7 @@ public class GeneralExpressionGenerator
     private Expression generate(TypeTag required, int recursionDepth, boolean childrenFlagEnableAggregate) {
         Expression expression = getCompleteExpressionTree(required, recursionDepth, childrenFlagEnableAggregate);
         if(!expression.isComplete() || expression.getType() != required){
+            Logger logger = getLogger();
             logger.error("The Expression is not Required or Incomplete");
             logger.debug("IsComplete: " + expression.isComplete());
             logger.debug("IsRequired: " + (expression.getType() == required));

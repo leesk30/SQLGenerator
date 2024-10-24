@@ -5,7 +5,7 @@ import org.lee.statement.clause.from.WithClause;
 
 import java.util.List;
 
-public interface SupportCommonTableExpression {
+public interface SupportCommonTableExpression extends SQLStatement {
     List<CTE> getCTEs();
     WithClause getWithClause();
 }

@@ -23,7 +23,7 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     protected final SQLType sqlType;
     protected final SQLStatement parent;
     protected final RuntimeConfiguration config;
-    protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new ConcurrentHashMap<>();
+    protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new EnumMap<>(NodeTag.class);
     protected final UUID uuid;
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 

@@ -65,6 +65,7 @@ public class GeneratorTest {
                 service.submit(workers[i]);
             }
             for (int i=0; i< 1000; i++){
+//                System.out.printf("Take: %d ", i);
                 SQLStatement statement = queue.take();
                 String sql = statement.getString();
                 if(sql == null){

@@ -16,15 +16,15 @@ public class Assertion {
 
     public static void requiredTrue(final boolean boolValue){
         if(!boolValue){
-            logger.error("[requiredTrue] The bool value cannot be true");
-            throw new ValueCheckFailedException("[requiredTrue] The bool value cannot be true");
+            logger.error("[requiredTrue] The bool value must be true");
+            throw new ValueCheckFailedException("[requiredTrue] The bool value must be true");
         }
     }
 
     public static void requiredFalse(final boolean boolValue){
         if(boolValue){
-            logger.error("[requiredFalse] The bool value cannot be false");
-            throw new ValueCheckFailedException("[requiredFalse] The bool value cannot be false");
+            logger.error("[requiredFalse] The bool value must be false");
+            throw new ValueCheckFailedException("[requiredFalse] The bool value must be false");
         }
     }
 

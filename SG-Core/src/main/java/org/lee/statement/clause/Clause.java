@@ -4,37 +4,44 @@ import org.lee.base.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.statement.support.SQLStatementChildren;
 import org.lee.statement.support.SQLStatement;
-import org.lee.statement.support.SupportRuntimeConfiguration;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SupportRuntimeConfiguration {
-    protected static int defaultChildrenInitialCapacity = 8;
+public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SQLStatementChildren {
+    protected static int DEFAULT_CHILDREN_CAPACITY = 8;
 
     protected final SQLStatement statement;
     protected final List<T> children;
     protected final RuntimeConfiguration config;
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger;
 
     protected Clause(SQLStatement statement){
         this.statement = statement;
+        this.children = new ArrayList<>(DEFAULT_CHILDREN_CAPACITY);
         this.config = statement.getConfig();
-        this.children = new ArrayList<>(defaultChildrenInitialCapacity);
+        this.logger = statement.getLogger();
     }
 
     protected Clause(SQLStatement statement, int childrenInitialCapacity){
         this.statement = statement;
-        this.config = statement.getConfig();
         this.children = new ArrayList<>(childrenInitialCapacity);
+        this.config = statement.getConfig();
+        this.logger = statement.getLogger();
     }
 
-    public SQLStatement statement() {
+    @Override
+    public SQLStatement retrieveStatement() {
         return statement;
+    }
+
+    @Override
+    public Logger getLogger(){
+        return logger;
     }
 
     public boolean isEmpty(){

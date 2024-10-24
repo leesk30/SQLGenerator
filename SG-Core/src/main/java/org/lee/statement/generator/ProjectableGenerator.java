@@ -85,4 +85,8 @@ public final class ProjectableGenerator implements Generator<Projectable> {
         }
     }
 
+    public static Projectable newPreparedProjectable(SQLStatement parent){
+        return new ProjectableGenerator(parent).generate();
+    }
+
 }

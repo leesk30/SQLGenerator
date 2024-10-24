@@ -3,17 +3,18 @@ package org.lee.statement.expression.statistic;
 import org.lee.common.Utility;
 import org.lee.common.structure.TrieTree;
 import org.lee.entry.scalar.Scalar;
+import org.lee.statement.expression.abs.GeneratorStatistic;
 import org.lee.symbol.Signature;
+import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class UnrelatedStatistic implements GeneratorStatistic{
-    private final List<? extends Scalar> candidateList;
+public class UnrelatedStatistic implements GeneratorStatistic {
+    private final List<Scalar> candidateList;
     private final int totalSize;
-    private final Map<TypeTag, List<Scalar>> groupByType = new ConcurrentHashMap<>();
+    private final Map<TypeTag, List<Scalar>> groupByType = new EnumMap<>(TypeTag.class);
     private final TrieTree<TypeTag, Integer> signatureCalculateResultCache = new TrieTree<>();
     private final AtomicInteger hit = new AtomicInteger(0);
     private final AtomicInteger attach = new AtomicInteger(0);
@@ -24,7 +25,8 @@ public class UnrelatedStatistic implements GeneratorStatistic{
         collect();
     }
 
-    private void collect(){
+
+    public void collect(){
         if(candidateList.isEmpty()){
             return;
         }
@@ -74,9 +76,7 @@ public class UnrelatedStatistic implements GeneratorStatistic{
         attach.incrementAndGet();
         if(signatureCalculateResultCache.get(signature.getArgumentsTypes()).isEmpty()){
             int cached = calculateSuitableFactor(signature);
-            synchronized (signatureCalculateResultCache) {
-                signatureCalculateResultCache.put(signature.getArgumentsTypes(), cached);
-            }
+            signatureCalculateResultCache.put(signature.getArgumentsTypes(), cached);
             return cached;
         }
         hit.incrementAndGet();
@@ -87,13 +87,26 @@ public class UnrelatedStatistic implements GeneratorStatistic{
         return (double) hit.get() / (double) attach.get();
     }
 
-    public Scalar findMatchedForTargetType(TypeTag targetType){
+    @Override
+    public List<Scalar> findMatch(TypeTag targetType){
         if(groupByType.containsKey(targetType)){
-            return Utility.randomlyChooseFrom(groupByType.get(targetType));
+            return groupByType.get(targetType);
         }
-        return null;
+        return Collections.emptyList();
     }
 
+    @Override
+    public List<Scalar> findMatch(TypeCategory category){
+        List<Scalar> candidates = new ArrayList<>();
+        for(TypeTag key: groupByType.keySet()){
+            if(key.getCategory() == category){
+                candidates.addAll(groupByType.get(key));
+            }
+        }
+        return candidates;
+    }
+
+    @Override
     public Scalar findAny(){
         assert !groupByType.isEmpty();
         Set<TypeTag> keys = groupByType.keySet();
@@ -113,28 +126,57 @@ public class UnrelatedStatistic implements GeneratorStatistic{
         Set<TypeTag> oneCandidateMarker = new HashSet<>();
         for (int i=0; i < argumentNumber; i++){
             final TypeTag required = signature.getArgumentsTypes().get(i);
-            if(groupByType.containsKey(required)){
-                final List<? extends Scalar> localCandidate = groupByType.get(required);
-                final boolean onlyOneCandidate = localCandidate.size() == 1;
-                if (localCandidate.size() >= counter.get(required)) {
-                    result[i] = Utility.randomlyChooseFrom(groupByType.get(required));
-                    continue;
-                }
+            if(!groupByType.containsKey(required)){
+                continue;
+            }
 
-                if(onlyOneCandidate){
-                    oneCandidateMarker.add(required);
-                    if(!oneCandidateMarker.contains(required) || Utility.probability(50)){
-                        result[i] = groupByType.get(required).get(0);
-                        continue;
-                    }
+            final List<? extends Scalar> localCandidate = groupByType.get(required);
+            final boolean onlyOneCandidate = localCandidate.size() == 1;
+            if (localCandidate.size() >= counter.get(required)) {
+                result[i] = Utility.randomlyChooseFrom(groupByType.get(required));
+                continue;
+            }
+
+            if(onlyOneCandidate){
+                oneCandidateMarker.add(required);
+                if(!oneCandidateMarker.contains(required) || Utility.probability(50)){
+                    result[i] = groupByType.get(required).get(0);
                 }
             }
-            result[i] = null;
         }
         return result;
     }
 
-    public Map<TypeTag, List<Scalar>> getGroupedType() {
-        return groupByType;
+    public List<Scalar> findMatched(TypeCategory category){
+        List<Scalar> candidatesResult = new ArrayList<>();
+        for(TypeTag typeTag: groupByType.keySet()){
+            if(typeTag.getCategory() == category){
+                candidatesResult.addAll(groupByType.get(typeTag));
+            }
+        }
+        return candidatesResult;
     }
+
+    public Set<TypeTag> getGroupedType() {
+        return groupByType.keySet();
+    }
+
+    public Set<TypeCategory> getGroupedCategory(){
+        Set<TypeCategory> categorySet = new HashSet<>();
+        for(TypeTag key: groupByType.keySet()){
+            categorySet.add(key.getCategory());
+        }
+        return categorySet;
+    }
+
+    @Override
+    public List<Scalar> getWholeScopeCandidates() {
+        return candidateList;
+    }
+
+    @Override
+    public boolean contains(TypeTag typeTag) {
+        return groupByType.containsKey(typeTag);
+    }
+
 }

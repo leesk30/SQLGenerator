@@ -69,14 +69,13 @@ public class GroupByClause extends Clause<Scalar> {
                 }
         );
 
-        Set<String> intersected = inAggregate.keySet();
-        intersected.removeAll(nonAggregate.keySet());
+        Set<String> difference = Utility.diff(inAggregate.keySet(), nonAggregate.keySet());
 
-        if(nonAggregate.isEmpty() && intersected.isEmpty()){
+        if(nonAggregate.isEmpty() && difference.isEmpty()){
             return;
         }
         children.addAll(nonAggregate.values());
-        intersected.stream().filter(s -> Utility.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
+        difference.stream().filter(s -> Utility.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
         Collections.shuffle(children);
 
     }

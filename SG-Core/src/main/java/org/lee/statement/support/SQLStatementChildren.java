@@ -4,7 +4,7 @@ import org.lee.SQLGeneratorContext;
 import org.lee.common.config.RuntimeConfiguration;
 import org.slf4j.Logger;
 
-public interface AwareSQLStatement extends SupportRuntimeConfiguration, Logging{
+public interface SQLStatementChildren extends SupportRuntimeConfiguration, Logging{
     SQLStatement retrieveStatement();
 
     @Override

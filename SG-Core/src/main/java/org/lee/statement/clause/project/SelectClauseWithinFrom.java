@@ -13,6 +13,7 @@ import org.lee.statement.expression.generator.GeneralExpressionGenerator;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
+import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,12 +40,12 @@ public class SelectClauseWithinFrom extends SelectClause{
     }
 
     @Override
-    public AbstractSimpleSelectStatement statement(){
+    public AbstractSimpleSelectStatement retrieveStatement(){
         return (AbstractSimpleSelectStatement) statement;
     }
 
     private GeneralExpressionGenerator getProjectionGenerator(){
-        final Clause<RangeTableReference> fromClause = statement().getFromClause();
+        final Clause<RangeTableReference> fromClause = retrieveStatement().getFromClause();
         final List<FieldReference> fieldReferences = new ArrayList<>();
         // From each rangeTableReference, we extract their fieldReferences as candidates for projection.
         fromClause.getChildNodes().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
@@ -56,12 +57,12 @@ public class SelectClauseWithinFrom extends SelectClause{
                             "To stop retrieving aggregation, we stop the aggregator search here."
             );
         }
-        return new GeneralExpressionGenerator(enableAggregation, this.statement, fieldReferences);
+        return new GeneralExpressionGenerator(enableAggregation, false, this.statement, fieldReferences);
     }
 
     private void nonLimitationsProjectionFuzz(){
         final GeneralExpressionGenerator generator = getProjectionGenerator();
-        final int numOfEntry = statement().getFromClause().size();
+        final int numOfEntry = retrieveStatement().getFromClause().size();
         final int numOfProjection = Utility.randomIntFromRange(numOfEntry, numOfEntry*2);
         for (int i = 0; i < numOfProjection; i++) {
             if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
@@ -75,15 +76,14 @@ public class SelectClauseWithinFrom extends SelectClause{
 
     private void  withLimitationsProjectionFuzz(){
         GeneralExpressionGenerator generator = getProjectionGenerator();
-        statement().getProjectTypeLimitation().forEach(
-                requiredType -> {
-                    if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
-                        processEntry(generator.generate(requiredType));
-                    }else {
-                        processEntry(generator.fallback(requiredType));
-                    }
-                }
-        );
+        List<TypeTag> limitations = retrieveStatement().getProjectTypeLimitation();
+        for(TypeTag requiredType: limitations){
+            if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
+                processEntry(generator.generate(requiredType));
+            }else {
+                processEntry(generator.fallback(requiredType));
+            }
+        }
     }
 
     private void simpleFuzzProjections(List<RangeTableReference> rangeTableReferences){
@@ -109,7 +109,7 @@ public class SelectClauseWithinFrom extends SelectClause{
             }
         }
 
-        Generator<Expression> generator = new GeneralExpressionGenerator(true, this.statement, fieldReferences);
+        Generator<Expression> generator = new GeneralExpressionGenerator(true, false, this.statement, fieldReferences);
         final int max = Math.max(numOfEachCandidate.length, averageChooseRoundNum / 2);
         final int projectionNums = Utility.randomIntFromRange(numOfEachCandidate.length, max);
         for (int i = 0; i < projectionNums; i++) {

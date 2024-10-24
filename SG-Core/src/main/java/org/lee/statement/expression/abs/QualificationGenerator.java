@@ -1,4 +1,4 @@
-package org.lee.statement.expression.generator;
+package org.lee.statement.expression.abs;
 
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
@@ -19,13 +19,10 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
 
     Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
 
-    Pair<Scalar, Scalar> getTwoSide(TypeTag target);
-    default Pair<Scalar, Scalar> getTwoSide(){
-        return getTwoSide(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
-    }
+    Pair<Scalar, Scalar> getPair();
 
     default Qualification simplifyCompare(){
-        Pair<Scalar, Scalar> twoSide = getTwoSide();
+        Pair<Scalar, Scalar> twoSide = getPair();
         return simplifyCompare(twoSide);
     }
 

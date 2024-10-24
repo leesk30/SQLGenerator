@@ -15,13 +15,13 @@ public class ValuesClauseForValues extends ValuesClause{
     }
 
     @Override
-    public ValuesStatement statement(){
+    public ValuesStatement retrieveStatement(){
         return (ValuesStatement) statement;
     }
 
     @Override
     public void fuzz() {
-        final List<TypeTag> limitations = ((Projectable)this.statement).getProjectTypeLimitation();
+        final List<TypeTag> limitations = retrieveStatement().getProjectTypeLimitation();
         final boolean withLimitations = !limitations.isEmpty();
         if(this.statement.confirm(Rule.REQUIRE_SCALA)){
             length = 1;
