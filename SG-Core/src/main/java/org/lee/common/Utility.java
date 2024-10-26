@@ -266,6 +266,19 @@ public class Utility {
         return result;
     }
 
+    public static <T> List<T> randomChooseManyFrom(int n, Collection<T> collection){
+        if(n < 1){
+            // todo
+            throw new RuntimeException();
+        }
+        if(collection.size() < n){
+            throw new IndexOutOfBoundsException("Too many element for selection");
+        }
+        List<T> copied = new ArrayList<>(collection);
+        Collections.shuffle(copied);
+        return copied.subList(0, n);
+    }
+
     static {
         LOGGER = LoggerFactory.getLogger(Utility.class);
         timestamps = 1720000000000L;

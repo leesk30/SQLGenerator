@@ -8,7 +8,9 @@ import org.lee.common.global.Finder;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.abs.ExpressionGenerator;
+import org.lee.statement.expression.abs.GeneratorStatistic;
 import org.lee.statement.expression.abs.UnrelatedGenerator;
+import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Signature;
@@ -50,6 +52,12 @@ public class GeneralExpressionGenerator
 
     public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
         super(statement, scalars);
+        parentFlagEnableAggregate = enableAggregation;
+        parentFlagEnableWindow = enableWindow;
+    }
+
+    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, UnrelatedStatistic statistic){
+        super(statement, statistic);
         parentFlagEnableAggregate = enableAggregation;
         parentFlagEnableWindow = enableWindow;
     }

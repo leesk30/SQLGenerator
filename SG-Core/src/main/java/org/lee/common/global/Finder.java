@@ -2,7 +2,6 @@ package org.lee.common.global;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
-import org.apache.commons.math3.util.MathUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
@@ -254,26 +253,25 @@ public class Finder {
 
     public List<TypeTag> findCasterPath(final TypeTag source, final TypeTag target, final int maxCastingDepth) {
         if (runtimeCachedUnreachableCasterPath.contains(source, target)) {
+            logger.error(String.format("Runtime skip unreachable convert path source<%s> to target<%s>.", source, target));
             return Collections.emptyList();
         }
 
         final List<TypeTag> route = getConvertRoute(source, target);
         Collections.shuffle(route);
-
         final List<TypeTag> path = new ArrayList<>();
         Set<TypeTag> visited = EnumSet.noneOf(TypeTag.class);
-        Stack<SearchState> stack = new Stack<>();
-        stack.push(new SearchState(source, 0)); // 初始状态：source节点、0深度
-
+        Stack<CasterSearchState> stack = new Stack<>();
+        stack.push(new CasterSearchState(source, 0)); // initialize
         while (!stack.isEmpty()) {
-            SearchState state = stack.peek();
+            CasterSearchState state = stack.peek();
             TypeTag currentSource = state.currentNode;
             int depth = stack.size() - 1;
 
             if (this.existsCaster(currentSource, target)) {
                 // i=1 for skip root node
                 for(int i=1; i < stack.size(); i++){
-                    SearchState s = stack.get(i);
+                    CasterSearchState s = stack.get(i);
                     path.add(s.currentNode);
                 }
                 path.add(target);
@@ -281,14 +279,16 @@ public class Finder {
             }
 
             if (depth >= maxCastingDepth || state.index >= route.size()) {
-                stack.pop();
+                CasterSearchState s = stack.pop();
+                visited.remove(s.currentNode);
                 continue;
             }
 
             TypeTag nextTarget = route.get(state.index++);
             // recycle check
-            if (this.existsCaster(currentSource, nextTarget) && !stackContains(stack, nextTarget)) {
-                stack.push(new SearchState(nextTarget, 0));
+            if (this.existsCaster(currentSource, nextTarget) && !visited.contains(nextTarget)) {
+                stack.push(new CasterSearchState(nextTarget, 0));
+                visited.add(nextTarget);
             }
         }
 
@@ -299,25 +299,15 @@ public class Finder {
         return path;
     }
 
-    private static class SearchState {
+    private static class CasterSearchState {
         TypeTag currentNode;
         int index;
 
-        SearchState(TypeTag currentNode, int index) {
+        CasterSearchState(TypeTag currentNode, int index) {
             this.currentNode = currentNode;
             this.index = index;
         }
     }
-
-    private boolean stackContains(Stack<SearchState> stack, TypeTag target) {
-        for (SearchState state : stack) {
-            if (state.currentNode == target) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 
     public List<Signature> findCasterSignatures(TypeTag source, TypeTag target, int maxDepth){
         final List<TypeTag> path = findCasterPath(source, target, maxDepth);

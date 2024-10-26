@@ -9,7 +9,6 @@ import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class UnrelatedStatistic implements GeneratorStatistic {
     private final List<Scalar> candidateList;

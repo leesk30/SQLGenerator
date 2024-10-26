@@ -133,8 +133,8 @@ public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alia
         }
         // For example: the column style like 'max(a) + b' is not an illegal scalar style
         //  But for 'max(a) + 1' is a legal scalar style
-        if(cachedExtracted.getSecond().isPresent()){
-            return cachedExtracted.getSecond().get().isEmpty();
+        if(cachedExtracted.getSecond() != null){
+            return cachedExtracted.getSecond().isEmpty();
         }
         return false;
     }

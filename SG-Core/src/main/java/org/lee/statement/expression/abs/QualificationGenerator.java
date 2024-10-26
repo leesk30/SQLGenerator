@@ -17,29 +17,43 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     Qualification generate();
     Qualification fallback();
 
-    Signature getCompareOperator(TypeTag lhs, TypeTag rhs);
-
     Pair<Scalar, Scalar> getPair();
 
-    default Qualification simplifyCompare(){
-        Pair<Scalar, Scalar> twoSide = getPair();
-        return simplifyCompare(twoSide);
+    default Comparator getCompareOperator(TypeTag lhs, TypeTag rhs){
+        return Comparator.fastGetComparatorByCategory(lhs.getCategory());
     }
 
-    default Qualification simplifyCompare(Pair<Scalar, Scalar> pair){
-        if(pair == null || !pair.getFirst().isPresent() || !pair.getSecond().isPresent()){
+    default Qualification predicateFieldAndLiteral(){
+        Scalar left = Utility.randomlyChooseFrom(getStatistic().getWholeScopeCandidates());
+        Scalar right = getContextFreeScalar(left.getType());
+        Signature signature = getCompareOperator(left.getType(), right.getType());
+        return new Qualification(signature).newChild(left).newChild(right);
+    }
+
+    default Qualification predicateScalarAndScalar(){
+        Pair<Scalar, Scalar> twoSide = getPair();
+        return predicateScalarAndScalar(twoSide);
+    }
+
+    default Qualification predicateScalarAndQuery(int width){
+        return null;
+    }
+
+    default Qualification predicateQueryExists(){
+        return null;
+    }
+
+    default Qualification predicateScalarAndScalar(Pair<Scalar, Scalar> pair){
+        if(pair == null || pair.getFirst()!=null || pair.getSecond() != null){
             return fallback();
         }
-        Scalar left = pair.getFirst().get();
-        Scalar right = pair.getSecond().get();
+        Scalar left = pair.getFirst();
+        Scalar right = pair.getSecond();
         Signature signature = getCompareOperator(left.getType(), right.getType());
         if(signature == null){
             return fallback();
         }
-        Qualification qualification = new Qualification(signature);
-        qualification.newChild(left);
-        qualification.newChild(left);
-        return qualification;
+        return new Qualification(signature).newChild(left).newChild(right);
     }
 
     default <T> Qualification compareToLiteral(Scalar fieldReference){
@@ -66,8 +80,8 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         }
         return new Qualification(Comparator.BETWEEN_AND)
                 .newChild(fieldReference)
-                .newChild(ordered.getFirst().orElseThrow(Assertion.IMPOSSIBLE))
-                .newChild(ordered.getFirst().orElseThrow(Assertion.IMPOSSIBLE));
+                .newChild(ordered.getFirst())
+                .newChild(ordered.getFirst());
     }
 
     default Qualification tryWithPredicateAddition(final Qualification qualification){

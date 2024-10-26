@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.IntStream;
 
 public class ExpressionMethodUnitTest {
     private final RangeTableEntry relation;
@@ -63,6 +64,29 @@ public class ExpressionMethodUnitTest {
     @Test
     public void testExpressionCasting(){
         GeneralExpressionGenerator generator = GeneralExpressionGenerator.emptyCandidateExpressionGenerator(null);
+        IntStream.range(0, 50).parallel().forEach(
+                i -> {Printer.printList(context.getFinder().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
+                    System.out.println("=====================================================================");
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+                    Printer.printList(context.getFinder().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));}
+        );
         Printer.printList(context.getFinder().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
         Printer.printList(context.getFinder().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
         Printer.printList(context.getFinder().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));

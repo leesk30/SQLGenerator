@@ -10,6 +10,7 @@ import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,22 +19,21 @@ public class WhereQualificationGenerator
         extends UnrelatedGenerator<Qualification>
         implements QualificationGenerator {
 
+    private final GeneralExpressionGenerator complexExpressionGenerator;
     protected WhereQualificationGenerator(SQLStatement statement, Scalar... scalars) {
         super(statement, scalars);
+        this.complexExpressionGenerator = new GeneralExpressionGenerator(false, false, statement, getStatistic());
     }
 
-    protected WhereQualificationGenerator(SQLStatement statement, List<? extends Scalar> expresssionList) {
+    public WhereQualificationGenerator(SQLStatement statement, List<? extends Scalar> expresssionList) {
         super(statement, expresssionList);
+        this.complexExpressionGenerator = new GeneralExpressionGenerator(false, false, statement, getStatistic());
+
     }
 
     @Override
     public Qualification fallback() {
-        return null;
-    }
-
-    @Override
-    public Signature getCompareOperator(TypeTag lhs, TypeTag rhs) {
-        return null;
+        return predicateFieldAndLiteral();
     }
 
     @Override
@@ -42,13 +42,32 @@ public class WhereQualificationGenerator
                 t -> statistic.findMatch(t).size() >= 2
         ).collect(Collectors.toSet());
         if(!moreThanOneCandidates.isEmpty()){
-            List<Scalar> candidates = statistic.findMatch(Utility.randomlyChooseFrom(moreThanOneCandidates));
+            List<Scalar> candidates = Utility.copyList(statistic.findMatch(Utility.randomlyChooseFrom(moreThanOneCandidates)));
+            List<Scalar> choose = Utility.randomChooseManyFrom(2, candidates);
+            return Pair.fromCollection(choose);
         }
         return null;
     }
 
     @Override
-    public Qualification generate(TypeTag require) {
-        return null;
+    final public Qualification generate(TypeTag require) {
+        return generate();
+    }
+
+    @Override
+    public Qualification generate(){
+        //todo
+        if(probability(80)){
+            return predicateScalarAndScalar();
+        }
+        if(probability(10)){
+            TypeTag target = Utility.randomlyChooseFrom(statistic.getGroupedType());
+            Scalar targetScalar = Utility.randomlyChooseFrom(statistic.findMatch(target));
+            if(probability(80)){
+                return new Qualification(getCompareOperator(target, target)).newChild(targetScalar).newChild(getContextFreeScalar(target));
+            }
+            return new Qualification(getCompareOperator(target, target)).newChild(targetScalar).newChild(getContextSensitiveScalar(target));
+        }
+        return predicateScalarAndScalar();
     }
 }

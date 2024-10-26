@@ -8,8 +8,6 @@ import org.lee.statement.expression.statistic.RelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public abstract class RelatedGenerator<T extends Expression>

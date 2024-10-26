@@ -1,6 +1,5 @@
 package org.lee.statement.select;
 
-import org.lee.common.Assertion;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.clause.from.WithClause;

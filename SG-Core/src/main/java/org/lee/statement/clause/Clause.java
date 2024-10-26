@@ -4,8 +4,8 @@ import org.lee.base.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.statement.support.SQLStatementChildren;
 import org.lee.statement.support.SQLStatement;
+import org.lee.statement.support.SQLStatementChildren;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;

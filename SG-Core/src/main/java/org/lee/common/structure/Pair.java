@@ -3,31 +3,44 @@ package org.lee.common.structure;
 
 import org.lee.type.literal.Literal;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Iterator;
 
 public class Pair<T1, T2> {
-    private final Optional<T1> t1;
-    private final Optional<T2> t2;
+    private final T1 t1;
+    private final T2 t2;
 
     public Pair(T1 t1, T2 t2) {
-        this.t1 = Optional.of(t1);
-        this.t2 = Optional.of(t2);
+        this.t1 = t1;
+        this.t2 = t2;
     }
 
-    public Optional<T1> getFirst() {
+    public static <E> Pair<E, E> fromCollection(Collection<E> collection){
+        Iterator<E> it = collection.iterator();
+        // todo
+        return new Pair<>(it.next(), it.next());
+    }
+
+    public T1 getFirst() {
         return t1;
     }
 
-    public Optional<T2> getSecond() {
+    public T2 getSecond() {
         return t2;
     }
 
     public T1 getFirstOrElse(T1 orElse){
-        return t1.orElse(orElse);
+        if(t1 == null){
+            return orElse;
+        }
+        return t1;
     }
 
     public T2 getSecondOrElse(T2 orElse){
-        return t2.orElse(orElse);
+        if(t2 == null){
+            return orElse;
+        }
+        return t2;
     }
 
     public static <T> Pair<Literal<T>, Literal<T>> OrderedPair(Literal<T> v1, Literal<T> v2){

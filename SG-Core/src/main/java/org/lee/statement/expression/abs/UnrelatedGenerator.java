@@ -3,7 +3,6 @@ package org.lee.statement.expression.abs;
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.statistic.RelatedStatistic;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
@@ -31,6 +30,14 @@ public abstract class UnrelatedGenerator<T extends Expression>
         rawScalarCandidates.addAll(expresssionList);
         replicated = Utility.copyFrozenList(rawScalarCandidates);
         statistic = new UnrelatedStatistic(replicated);
+    }
+
+    protected UnrelatedGenerator(SQLStatement statement, UnrelatedStatistic statistic){
+        super(statement);
+        rawScalarCandidates = new ArrayList<>(statistic.getWholeScopeCandidates());
+        rawScalarCandidates.addAll(statistic.getWholeScopeCandidates());
+        replicated = Utility.copyFrozenList(rawScalarCandidates);
+        this.statistic = statistic;
     }
 
     @Override

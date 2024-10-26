@@ -2,7 +2,6 @@ package org.lee.statement.expression.abs;
 
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
-import org.lee.symbol.Signature;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;

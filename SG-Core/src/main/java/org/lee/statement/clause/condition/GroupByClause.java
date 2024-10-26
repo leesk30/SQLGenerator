@@ -48,10 +48,10 @@ public class GroupByClause extends Clause<Scalar> {
                 entry -> {
                     if(entry.isTargetEntryExpression()){
                         Pair<List<FieldReference>, List<FieldReference>> extracted = entry.getCachedExtracted();
-                        extracted.getFirst().orElse(Collections.emptyList()).forEach(
+                        extracted.getFirst().forEach(
                                 fieldReference -> inAggregate.put(fieldReference.getString(), fieldReference)
                         );
-                        extracted.getSecond().orElse(Collections.emptyList()).forEach(
+                        extracted.getSecond().forEach(
                                 fieldReference -> nonAggregate.put(fieldReference.getString(), fieldReference)
                         );
                     }else {

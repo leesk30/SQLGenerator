@@ -4,7 +4,6 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Rule;
 import org.lee.statement.ValuesStatement;
-import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
 
 import java.util.List;

@@ -6,19 +6,20 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.global.Finder;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.select.SelectSimpleStatement;
+import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SQLStatementChildren;
-import org.lee.statement.support.Projectable;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 public interface IExpressionGenerator<T extends Expression>
         extends
@@ -65,8 +66,9 @@ public interface IExpressionGenerator<T extends Expression>
 
     default Scalar getScalarSubquery(TypeTag typeTag){
         Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
+        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
+//        projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.fuzz();
 
         return projectable.toScalar();
@@ -78,8 +80,9 @@ public interface IExpressionGenerator<T extends Expression>
 
     default Scalar getRelatedScalarSubquery(TypeTag typeTag){
         Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
+        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
+//        projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.setConfig(Rule.PREFER_SCALA_RELATED,true);
         projectable.fuzz();
         return projectable.toScalar();

@@ -4,9 +4,7 @@ package org.lee.statement.clause.limit;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.entry.scalar.Scalar;
 import org.lee.statement.select.SelectNormalStatement;
-import org.lee.statement.select.SelectSetopStatement;
 import org.lee.statement.select.SelectStatement;
 
 public class SelectLimitOffset extends LimitOffset {
