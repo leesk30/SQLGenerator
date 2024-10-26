@@ -1,12 +1,14 @@
 package org.lee.statement.clause.project;
 
 import org.lee.base.Generator;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.exception.NotImplementedException;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
+import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.generator.GeneralExpressionGenerator;
@@ -26,6 +28,7 @@ public class SelectClauseWithinFrom extends SelectClause{
 
     @Override
     public void fuzz() {
+        Assertion.requiredTrue(this.children.isEmpty());
         SelectStatement statement = (SelectStatement) this.statement;
         if(statement.getSelectType() == SelectType.clause){
             return;
@@ -44,12 +47,12 @@ public class SelectClauseWithinFrom extends SelectClause{
         return (AbstractSimpleSelectStatement) statement;
     }
 
-    private GeneralExpressionGenerator getProjectionGenerator(){
+    protected GeneralExpressionGenerator getProjectionGenerator(){
         final Clause<RangeTableReference> fromClause = retrieveStatement().getFromClause();
         final List<FieldReference> fieldReferences = new ArrayList<>();
         // From each rangeTableReference, we extract their fieldReferences as candidates for projection.
         fromClause.getChildNodes().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
-        final boolean enableAggregation = confirm(Rule.REQUIRE_SCALA) && confirm(Rule.SCALAR_FORCE_USING_AGGREGATION);
+        final boolean enableAggregation = true; // todo
         if(enableAggregation){
             // do nothing
             logger.debug(
@@ -74,15 +77,18 @@ public class SelectClauseWithinFrom extends SelectClause{
         }
     }
 
-    private void  withLimitationsProjectionFuzz(){
-        GeneralExpressionGenerator generator = getProjectionGenerator();
-        List<TypeTag> limitations = retrieveStatement().getProjectTypeLimitation();
+    private void withLimitationsProjectionFuzz(){
+        final GeneralExpressionGenerator generator = getProjectionGenerator();
+        final List<TypeTag> limitations = retrieveStatement().getProjectTypeLimitation();
         for(TypeTag requiredType: limitations){
-            if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) || config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
-                processEntry(generator.generate(requiredType));
+            Scalar generated;
+            if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
+                    config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){
+                generated = generator.generate(requiredType);
             }else {
-                processEntry(generator.fallback(requiredType));
+                generated = generator.fallback(requiredType);
             }
+            processEntry(generated);
         }
     }
 

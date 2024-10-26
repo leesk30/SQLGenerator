@@ -35,18 +35,6 @@ public abstract class RelatedGenerator<T extends Expression>
     }
 
     @Override
-    public List<Scalar> getWholeScopeCandidates() {
-        final int capacity = left.getFieldReferences().size() + right.getFieldReferences().size();
-        if(capacity == 0){
-            return Collections.emptyList();
-        }
-        List<Scalar> candidates = new ArrayList<>(capacity);
-        candidates.addAll(left.getFieldReferences());
-        candidates.addAll(right.getFieldReferences());
-        return candidates;
-    }
-
-    @Override
     public RelatedStatistic getStatistic() {
         return statistic;
     }

@@ -7,18 +7,12 @@ import org.lee.common.config.Rule;
 import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.expression.Expression;
 import org.lee.statement.select.SelectStatement;
 import org.lee.type.literal.LiteralInt;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public class GroupByClause extends Clause<Scalar> {
     public GroupByClause(SelectStatement statement) {
@@ -48,23 +42,20 @@ public class GroupByClause extends Clause<Scalar> {
     }
 
     private void groupByNonAgg(final List<TargetEntry> targetEntries){
-        Map<String, Scalar> inAggregate = new ConcurrentHashMap<>(targetEntries.size());
-        Map<String, Scalar> nonAggregate = new ConcurrentHashMap<>(targetEntries.size() * 2);
-        targetEntries.stream().map(TargetEntry::getWrapped).forEach(
-                scalar -> {
-                    if(scalar instanceof Expression){
-                        Expression expression = (Expression) scalar;
-                        Pair<List<FieldReference>, List<FieldReference>> extracted = expression.extractAggregate();
+        Map<String, Scalar> inAggregate = new HashMap<>(targetEntries.size());
+        Map<String, Scalar> nonAggregate = new HashMap<>(targetEntries.size() * 2);
+        targetEntries.forEach(
+                entry -> {
+                    if(entry.isTargetEntryExpression()){
+                        Pair<List<FieldReference>, List<FieldReference>> extracted = entry.getCachedExtracted();
                         extracted.getFirst().orElse(Collections.emptyList()).forEach(
                                 fieldReference -> inAggregate.put(fieldReference.getString(), fieldReference)
                         );
                         extracted.getSecond().orElse(Collections.emptyList()).forEach(
                                 fieldReference -> nonAggregate.put(fieldReference.getString(), fieldReference)
                         );
-                    }else if(scalar instanceof NameProxy || scalar instanceof FieldReference) {
-                        nonAggregate.put(scalar.getString(), scalar);
                     }else {
-                        throw new RuntimeException("The target entry only should be proxy or reference. Not a " + scalar.getClass().getName());
+                        nonAggregate.put(entry.getWrapped().getString(), entry.getWrapped());
                     }
                 }
         );

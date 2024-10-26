@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
+import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
@@ -13,17 +14,25 @@ import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
 
+import java.util.Collections;
+import java.util.List;
+
 public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {
+    private final static Pair<List<FieldReference>, List<FieldReference>> EMPTY = new Pair<>(Collections.emptyList(), Collections.emptyList());
     private String alias = null;
     private final Scalar target;
     private final boolean isTargetEntryExpression;
     private final boolean isTargetEntryAggregate;
+    private final boolean isTargetEntryIncludingAggregate;
+    private final Pair<List<FieldReference>, List<FieldReference>> cachedExtracted;
 
     public TargetEntry(FieldReference targetScalar){
         Assertion.requiredNonNull(targetScalar);
         this.target = targetScalar;
         this.isTargetEntryExpression = false;
         this.isTargetEntryAggregate = false;
+        this.isTargetEntryIncludingAggregate = false;
+        this.cachedExtracted = EMPTY;
     }
 
     public TargetEntry(NameProxy targetScalar){
@@ -31,13 +40,18 @@ public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alia
         this.target = targetScalar;
         this.isTargetEntryExpression = false;
         this.isTargetEntryAggregate = false;
+        this.isTargetEntryIncludingAggregate = false;
+        this.cachedExtracted = EMPTY;
     }
 
     public TargetEntry(Expression expression){
         Assertion.requiredNonNull(expression);
+        Assertion.requiredTrue(expression.isComplete());
         this.target = expression;
         this.isTargetEntryExpression = true;
-        this.isTargetEntryAggregate = expression.isIncludingAggregation();
+        this.isTargetEntryAggregate = expression.isCurrentAggregation();
+        this.isTargetEntryIncludingAggregate = expression.isIncludingAggregation();
+        this.cachedExtracted = expression.extractAggregate();
     }
 
     public static TargetEntry newNamedEntry(TypeTag typeTag){
@@ -100,6 +114,29 @@ public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alia
 
     public boolean isTargetEntryExpression() {
         return isTargetEntryExpression;
+    }
+
+    public boolean isTargetEntryIncludingAggregate() {
+        return isTargetEntryIncludingAggregate;
+    }
+
+    public Pair<List<FieldReference>, List<FieldReference>> getCachedExtracted() {
+        return cachedExtracted;
+    }
+
+    public boolean isScalarStyle(){
+        if(isTargetEntryAggregate){
+            return true;
+        }
+        if(!isTargetEntryIncludingAggregate){
+            return false;
+        }
+        // For example: the column style like 'max(a) + b' is not an illegal scalar style
+        //  But for 'max(a) + 1' is a legal scalar style
+        if(cachedExtracted.getSecond().isPresent()){
+            return cachedExtracted.getSecond().get().isEmpty();
+        }
+        return false;
     }
 
     @Override

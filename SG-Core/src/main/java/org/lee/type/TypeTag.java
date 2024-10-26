@@ -1,7 +1,9 @@
 package org.lee.type;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.common.global.Finder;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Signature;
 import org.lee.type.literal.mapped.MappedType;
@@ -106,6 +108,10 @@ public enum TypeTag {
 
     public static TypeTag randomGenerateTarget(){
         return Utility.randomlyChooseFrom(GENERATE_PREFER_CHOOSE);
+    }
+
+    public static TypeTag randomGenerateScalarTarget(){
+        return Utility.randomlyChooseFrom(SQLGeneratorContext.getCurrentFinder().getAllAggregateReturnType());
     }
 
     @Override

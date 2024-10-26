@@ -90,39 +90,6 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         return null;
     }
 
-    default Expression cast(Expression expression, TypeTag targetType){
-        //todo
-        return castRecursionUnit(expression, targetType);
-    }
-
-    default Expression nullableCast(Expression expression, TypeTag targetType){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
-        List<Signature> result = finder.getFunction(expression.getType())
-                .stream()
-                .filter(
-                        signature -> signature.getArgumentsTypes().get(0) == targetType
-                )
-                .collect(Collectors.toList());
-        if(!result.isEmpty() && probability(99)){
-            return new Expression(Utility.randomlyChooseFrom(result)).newChild(expression);
-        }
-        return null;
-    }
-
-    default Expression castRecursionUnit(Expression expression, TypeTag targetType){
-        final boolean skipForceConvert = (probability(99) || probability(99));
-        if(expression.getType() == targetType && skipForceConvert){
-            return expression;
-        }
-        Expression castedExpression = nullableCast(expression, targetType);
-        if(castedExpression != null){
-            return castedExpression;
-        }
-        // todo
-        return null;
-
-    }
-
     default List<Expression> tryMergeToExpression(List<Scalar> scalars){
         final List<Scalar> template = Utility.copyListShuffle(scalars);
         if(template.isEmpty()){

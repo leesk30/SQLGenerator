@@ -44,4 +44,8 @@ public class Function implements Signature{
         return arguments;
     }
 
+    @Override
+    public String toString(){
+        return String.format(returnType + ":" + body, arguments.toArray());
+    }
 }

@@ -6,6 +6,7 @@ import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.SQLClauseWalker;
+import org.lee.statement.SQLFormatter;
 import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SQLStatement;
@@ -111,5 +112,11 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     @Override
     public UUID getUUID() {
         return uuid;
+    }
+
+    @Override
+    public String toString(){
+        // for debug
+        return new SQLFormatter().format(getString());
     }
 }

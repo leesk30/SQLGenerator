@@ -28,6 +28,7 @@
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <commons.codec.version>1.16.0</commons.codec.version>
         <commons.io.version>2.14.0</commons.io.version>
+        <google.guava.version>30.1-jre</google.guava.version>
         <cache.caffeine.version>2.7.0</cache.caffeine.version>
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
         <logging.log4j.version>2.22.0</logging.log4j.version>
@@ -105,6 +106,12 @@
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
                 <version>${cache.caffeine.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
             </dependency>
 
             <!-- logs -->

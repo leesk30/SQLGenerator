@@ -1,5 +1,7 @@
 package org.lee.statement.select;
 
+import org.lee.common.Assertion;
+import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.clause.from.WithClause;
 import org.lee.statement.clause.limit.LimitOffset;
@@ -30,7 +32,14 @@ public class SelectNormalStatement extends AbstractSimpleSelectStatement impleme
 
     @Override
     public boolean isScalar() {
-        return false;
+        if(width() != 1){
+            return false;
+        }
+        if(getLimitOffset().getLimit() == 1){
+            return true;
+        }
+        TargetEntry firstEntry = targetList.getChildNodes().get(0);
+        return firstEntry.isScalarStyle();
     }
 
     public WithClause getWithClause() {

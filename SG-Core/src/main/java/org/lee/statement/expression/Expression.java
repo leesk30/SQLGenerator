@@ -273,19 +273,18 @@ public class Expression implements Scalar, TreeNode<Expression> {
             return pair;
         }
 
-        childNodes.forEach(
-                expression -> {
-                    if(expression.isCurrentAggregation()){
-                        inAggregator.addAll(expression.extractField());
-                    }else if(expression.isIncludingAggregation()) {
-                        final Pair<List<FieldReference>, List<FieldReference>> subpair = expression.extractAggregate();
-                        inAggregator.addAll(subpair.getFirstOrElse(Collections.emptyList()));
-                        notInAggregator.addAll(subpair.getSecondOrElse(Collections.emptyList()));
-                    }else {
-                        notInAggregator.addAll(expression.extractField());
-                    }
-                }
-        );
+        for(Expression expression: childNodes){
+            if(expression.isCurrentAggregation()){
+                inAggregator.addAll(expression.extractField());
+            }else if(expression.isIncludingAggregation()) {
+                // recursive find aggregate
+                final Pair<List<FieldReference>, List<FieldReference>> subpair = expression.extractAggregate();
+                inAggregator.addAll(subpair.getFirstOrElse(Collections.emptyList()));
+                notInAggregator.addAll(subpair.getSecondOrElse(Collections.emptyList()));
+            }else {
+                notInAggregator.addAll(expression.extractField());
+            }
+        }
         return pair;
     }
 

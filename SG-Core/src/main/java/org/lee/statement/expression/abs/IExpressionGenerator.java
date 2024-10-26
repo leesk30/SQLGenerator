@@ -1,26 +1,29 @@
 package org.lee.statement.expression.abs;
 
+import org.lee.SQLGeneratorContext;
 import org.lee.base.Generator;
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
+import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
+import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.global.Finder;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.generator.ProjectableGenerator;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SQLStatementChildren;
 import org.lee.statement.support.Projectable;
+import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
+import org.slf4j.Logger;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public interface IExpressionGenerator<T extends Expression>
         extends
         Generator<T>,
         SQLStatementChildren {
-
-    List<Scalar> getWholeScopeCandidates();
     GeneratorStatistic getStatistic();
 
     default Scalar getScalar(TypeTag typeTag){
@@ -34,11 +37,6 @@ public interface IExpressionGenerator<T extends Expression>
         return getScalar(TypeTag.randomGenerateTarget());
     }
 
-    default Scalar getContextFreeScalar(){
-        final TypeTag targetType = TypeTag.randomGenerateTarget();
-        return getContextFreeScalar(targetType);
-    }
-
     default Scalar getContextFreeScalar(TypeTag typeTag){
         final SQLStatement statement = retrieveStatement();
         final boolean enableScalarSubquery = statement == null || statement.enableSubquery();
@@ -47,11 +45,6 @@ public interface IExpressionGenerator<T extends Expression>
             return getScalarSubquery(typeTag);
         }
         return getLiteral(typeTag);
-    }
-
-    default Scalar getContextSensitiveScalar(){
-        final TypeTag targetType = TypeTag.randomGenerateTarget();
-        return getContextSensitiveScalar(targetType);
     }
 
     default  Scalar getContextSensitiveScalar(TypeTag typeTag){
@@ -71,10 +64,11 @@ public interface IExpressionGenerator<T extends Expression>
 
 
     default Scalar getScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedProjectable(retrieveStatement());
+        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.fuzz();
+
         return projectable.toScalar();
     }
 
@@ -83,7 +77,7 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Scalar getRelatedScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedProjectable(retrieveStatement());
+        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.setConfig(Rule.PREFER_SCALA_RELATED,true);
@@ -92,7 +86,7 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Scalar getRelatedScalarSubquery(){
-        return getRelatedScalarSubquery(TypeTag.randomGenerateTarget());
+        return getRelatedScalarSubquery(TypeTag.randomGenerateScalarTarget());
     }
 
     default Scalar getPseudo(){
@@ -100,7 +94,38 @@ public interface IExpressionGenerator<T extends Expression>
         return null;
     }
 
+    default Expression cast(final Expression expression, final TypeTag target){
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final int maxCastingDepth = getConfig().getInt(Conf.MAX_CASTING_RECURSION_DEPTH);
+        final List<TypeTag> paths = finder.findCasterPath(expression.getType(), target, maxCastingDepth);
+        final Logger logger = getLogger();
+        if(paths.isEmpty()){
+            logger.error(String.format("Cannot find any caster for '%s' to '%s'. Fallback to generate an context free scalar", expression.getType(), target));
+            return getContextFreeScalar(target).toExpression();
+        }
+        Expression currentExpression = expression;
+        for(TypeTag next: paths){
+            Signature signature = Utility.randomlyChooseFrom(finder.getCaster(currentExpression.getType(), next));
+            Assertion.requiredNonNull(signature); // impossible
+            currentExpression = new Expression(signature).newChild(currentExpression);
+        }
+        Assertion.requiredTrue(currentExpression.getType() == target);
+        return currentExpression;
+    }
+
+    default Expression nullableCast(Expression expression, TypeTag targetType){
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final List<Signature> candidateSignatures = finder.getCaster(expression.getType(), targetType);
+        Signature signature = Utility.randomlyChooseFrom(candidateSignatures);
+        if(signature == null){
+            return null;
+        }
+        return new Expression(signature, Collections.singletonList(expression));
+    }
+
     default Scalar getLiteral(TypeTag typeTag){
+        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+
         return typeTag.asMapped().generate();
     }
 

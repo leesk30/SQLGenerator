@@ -14,6 +14,9 @@ public interface Projectable extends SQLStatement {
     RangeTableEntry toRelation();
 
     default Scalar toScalar(){
+        if(!isScalar()){
+            System.out.println(1);
+        }
         Assertion.requiredTrue(isScalar());
         return new ScalarSubquery(this);
     }

@@ -16,15 +16,14 @@ public class UnrelatedStatistic implements GeneratorStatistic {
     private final int totalSize;
     private final Map<TypeTag, List<Scalar>> groupByType = new EnumMap<>(TypeTag.class);
     private final TrieTree<TypeTag, Integer> signatureCalculateResultCache = new TrieTree<>();
-    private final AtomicInteger hit = new AtomicInteger(0);
-    private final AtomicInteger attach = new AtomicInteger(0);
+    private int hit = 0;
+    private int attach = 0;
 
     public UnrelatedStatistic(List<? extends Scalar> candidateList){
         this.candidateList = Collections.unmodifiableList(candidateList);
         this.totalSize = candidateList.size();
         collect();
     }
-
 
     public void collect(){
         if(candidateList.isEmpty()){
@@ -73,18 +72,21 @@ public class UnrelatedStatistic implements GeneratorStatistic {
     }
 
     public int suitableFactorProb(Signature signature){
-        attach.incrementAndGet();
+        attach++;
         if(signatureCalculateResultCache.get(signature.getArgumentsTypes()).isEmpty()){
             int cached = calculateSuitableFactor(signature);
             signatureCalculateResultCache.put(signature.getArgumentsTypes(), cached);
             return cached;
         }
-        hit.incrementAndGet();
+        hit++;
         return signatureCalculateResultCache.get(signature.getArgumentsTypes()).get(0);
     }
 
     public double getCacheHitRate(){
-        return (double) hit.get() / (double) attach.get();
+        if(attach == 0){
+            return 0D;
+        }
+        return (double) hit / (double) attach;
     }
 
     @Override
@@ -116,6 +118,14 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         return Utility.randomlyChooseFrom(candidate);
     }
 
+    @Override
+    public Scalar findAny(TypeTag typeTag) {
+        if(groupByType.containsKey(typeTag)){
+            return Utility.randomlyChooseFrom(groupByType.get(typeTag));
+        }
+        return null;
+    }
+
     public Scalar[] findMatchedForSignature(Signature signature){
         final int argumentNumber = signature.argsNum();
         Scalar[] result = new Scalar[argumentNumber];
@@ -123,7 +133,7 @@ public class UnrelatedStatistic implements GeneratorStatistic {
             return result;
         }
         Map<TypeTag, Integer> counter = getSignatureNumOfType(signature);
-        Set<TypeTag> oneCandidateMarker = new HashSet<>();
+        Set<TypeTag> oneCandidateMarker = EnumSet.noneOf(TypeTag.class);
         for (int i=0; i < argumentNumber; i++){
             final TypeTag required = signature.getArgumentsTypes().get(i);
             if(!groupByType.containsKey(required)){
@@ -179,4 +189,11 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         return groupByType.containsKey(typeTag);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        if(attach > 0){
+            LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f", attach, hit, getCacheHitRate()));
+        }
+        super.finalize();
+    }
 }

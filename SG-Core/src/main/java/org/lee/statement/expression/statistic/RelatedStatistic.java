@@ -4,6 +4,7 @@ import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.abs.GeneratorStatistic;
+import org.lee.symbol.Signature;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 

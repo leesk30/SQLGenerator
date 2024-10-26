@@ -1,6 +1,7 @@
 package org.lee.statement.select;
 
 
+import org.lee.entry.complex.TargetEntry;
 import org.lee.statement.support.SQLStatement;
 
 public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
@@ -23,12 +24,13 @@ public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
 
     @Override
     public boolean isScalar() {
-        if(targetList.size() != 1){
+        if(width()!=1){
             return false;
         }
         //  Eg. `Avg(a)` `Avg(a + b)` is scalar,
         //      but the  Avg(a) + b is not a scalar because `b` is not including in aggregator,
         //      there is more than for distinct b value
-        return targetList.getChildNodes().get(0).toExpression().isCurrentAggregation();
+        TargetEntry firstEntry = targetList.getChildNodes().get(0);
+        return firstEntry.isScalarStyle();
     }
 }

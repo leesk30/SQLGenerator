@@ -10,6 +10,8 @@ public class SelectClauseWithoutFrom extends SelectClause{
         super(statement);
     }
 
+
+
     @Override
     public final void fuzz(){
         SelectClauseStatement statement = (SelectClauseStatement) this.statement;

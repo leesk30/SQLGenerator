@@ -66,4 +66,10 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SQL
     public RuntimeConfiguration getConfig() {
         return config;
     }
+
+    @Override
+    public String toString(){
+        // for debug
+        return getString();
+    }
 }

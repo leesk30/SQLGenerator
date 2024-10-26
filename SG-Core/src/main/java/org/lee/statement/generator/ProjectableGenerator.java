@@ -19,6 +19,12 @@ import java.util.List;
 
 public final class ProjectableGenerator implements Generator<Projectable> {
     private final SQLStatement parent;
+    private final RuntimeConfiguration config;
+    private final Logger logger;
+    private final boolean rejectedValues;
+    private final boolean rejectedSimple;
+    private final boolean rejectedSetop;
+    private final boolean rejectedClause;
     public static final ProjectableGenerator emptyParentGenerator = new ProjectableGenerator();
 
     public ProjectableGenerator(){
@@ -26,7 +32,29 @@ public final class ProjectableGenerator implements Generator<Projectable> {
     }
 
     public ProjectableGenerator(SQLStatement parent){
+        this(parent, false, false, false, false);
+    }
+
+    public ProjectableGenerator(
+            SQLStatement parent,
+            boolean rejectedValues,
+            boolean rejectedSimple,
+            boolean rejectedSetop,
+            boolean rejectedClause
+    ){
         this.parent = parent;
+        this.rejectedValues = rejectedValues;
+        this.rejectedSimple = rejectedSimple;
+        this.rejectedClause = rejectedClause;
+        if(parent == null){
+            this.config = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
+            this.rejectedSetop = rejectedSetop;
+            this.logger = SQLGeneratorContext.getCurrentLogger();
+        }else {
+            this.config = parent.getConfig();
+            this.rejectedSetop = rejectedSetop || !parent.enableSetop();
+            this.logger = parent.getLogger();
+        }
     }
 
     @Override
@@ -45,22 +73,22 @@ public final class ProjectableGenerator implements Generator<Projectable> {
         return statement;
     }
 
+    private int getValuesProb(){
+        return rejectedValues ? config.getInt(Conf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0;
+    }
+
+    private int getSetopProb(){
+        return rejectedSetop ? config.getInt(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0;
+    }
+
+    private int getClauseProb(){
+        return rejectedClause ? config.getInt(Conf.PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY):0;
+    }
+
     private Projectable newRandomlyProjectable(SQLStatement parent){
-        final RuntimeConfiguration config;
-        final boolean enableSetop;
-        final Logger logger;
-        if(parent == null){
-            config = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
-            enableSetop = true;
-            logger = SQLGeneratorContext.getCurrentLogger();
-        }else {
-            config = parent.getConfig();
-            enableSetop = parent.enableSetop();
-            logger = parent.getLogger();
-        }
-        final int PValues = config.getInt(Conf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY);
-        final int PSetop = (enableSetop ? config.getInt(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0);
-        final int PClause = config.getInt(Conf.PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY);
+        final int PValues = getValuesProb();
+        final int PSetop = getSetopProb();
+        final int PClause = getClauseProb();
         final int total = PValues + PSetop + PClause;
         final int probEdge = total > 100 ? 2 * total : 100;
 
@@ -78,7 +106,7 @@ public final class ProjectableGenerator implements Generator<Projectable> {
         } else if (PClause > randomValue - PValues - PSetop) {
             return new SelectClauseStatement(parent);
         }else {
-            if(Utility.probability(10)){
+            if(!rejectedSimple && Utility.probability(10)){
                 return new SelectSimpleStatement(parent);
             }
             return new SelectNormalStatement(parent);
@@ -86,7 +114,12 @@ public final class ProjectableGenerator implements Generator<Projectable> {
     }
 
     public static Projectable newPreparedProjectable(SQLStatement parent){
-        return new ProjectableGenerator(parent).generate();
+        return new ProjectableGenerator(parent).newRandomlyProjectable(parent);
+    }
+
+    public static Projectable newPreparedScalarProjectable(SQLStatement parent){
+        ProjectableGenerator generator = new ProjectableGenerator(parent, false, true, false, false);
+        return generator.newRandomlyProjectable(parent);
     }
 
 }

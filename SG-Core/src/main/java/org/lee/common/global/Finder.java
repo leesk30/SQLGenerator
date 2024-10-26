@@ -1,5 +1,7 @@
 package org.lee.common.global;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
@@ -11,8 +13,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class Finder {
@@ -20,7 +22,7 @@ public class Finder {
 
     private static class Holder{
         public final TrieTree<TypeTag, Signature> finder = new TrieTree<>();
-        public final Map<TypeTag, List<Signature>> reverseFinder = new ConcurrentHashMap<>();
+        public final Map<TypeTag, List<Signature>> reverseFinder = new EnumMap<>(TypeTag.class);
 
         void put(Signature signature){
             final TypeTag key = signature.getReturnType();
@@ -48,6 +50,9 @@ public class Finder {
     private final Holder UDF_HOLDER = new Holder();
     private final Holder UDTF_HOLDER = new Holder();
     private final Holder UDAF_HOLDER = new Holder();
+    private final Table<TypeTag, TypeTag, List<Signature>> cachedCaster = HashBasedTable.create();
+    private final Table<TypeTag, TypeTag, Boolean> runtimeCachedUnreachableCasterPath = HashBasedTable.create();
+    private final Map<TypeTag, List<Signature>> cachedLiteralFunction = new EnumMap<>(TypeTag.class);
 
     public void put(Operator operator){
         BUILTIN_OPERATOR_HOLDER.put(operator);
@@ -79,6 +84,32 @@ public class Finder {
         build(aggregationList, this::jsonToAggregation);
         build(functionList, this::jsonToFunction);
         build(operatorList, this::jsonToOperator);
+        cache();
+    }
+
+    private void cache(){
+        List<Signature> allLiteralFunction = BUILTIN_AGGREGATE_HOLDER.finder.get(Collections.emptyList());
+        for(Signature signature: allLiteralFunction){
+            TypeTag key = signature.getArgumentsTypes().get(0);
+            List<Signature> container;
+            if(cachedLiteralFunction.containsKey(key)){
+                container = cachedLiteralFunction.get(key);
+                container.add(signature);
+            }else {
+                cachedLiteralFunction.put(key, new ArrayList<Signature>(){{add(signature);}});
+            }
+        }
+
+        for(TypeTag source: TypeTag.values()){
+            List<Signature> casters = this.getFunction(source);
+            for(Signature caster: casters){
+                TypeTag target = caster.getReturnType();
+                if(!cachedCaster.contains(source, target)){
+                    cachedCaster.put(source, target, new ArrayList<>());
+                }
+                Objects.requireNonNull(cachedCaster.get(source, target)).add(caster);
+            }
+        }
     }
 
     private void build(JSONArray symbolArray, Consumer<JSONObject> process){
@@ -168,6 +199,30 @@ public class Finder {
         return BUILTIN_FUNCTION_HOLDER.reverseFinder.get(returnType);
     }
 
+    public Set<TypeTag> getAllAggregateReturnType(){
+        return BUILTIN_AGGREGATE_HOLDER.reverseFinder.keySet();
+    }
+
+    public List<Signature> getOperatorAndFunctionByReturn(final TypeTag returnType){
+        return new ArrayList<Signature>(getFunctionByReturn(returnType)){
+            {
+                addAll(getOperatorByReturn(returnType));
+            }
+        };
+    }
+
+    public List<Signature> getLiteralFunction(TypeTag returnType){
+        return cachedLiteralFunction.getOrDefault(returnType, Collections.emptyList());
+    }
+
+    public List<Signature> getLiteralFunction(){
+        final List<Signature> result = new ArrayList<>();
+        for(List<Signature> v: cachedLiteralFunction.values()){
+            result.addAll(v);
+        }
+        return result;
+    }
+
     public List<Signature> getFunctionInPartial(List<TypeTag> tags){
         // todo:
         return null;
@@ -175,5 +230,80 @@ public class Finder {
 
     public int maxFunctionArgWidth(){
         return BUILTIN_FUNCTION_HOLDER.finder.maxWidth();
+    }
+
+    public Table<TypeTag, TypeTag, List<Signature>> getCasterTable(){
+        return cachedCaster;
+    }
+
+    public List<Signature> getCaster(TypeTag source, TypeTag target){
+        if(cachedCaster.contains(source, target)){
+            return cachedCaster.get(source, target);
+        }
+        return Collections.emptyList();
+    }
+
+    public boolean existsCaster(TypeTag source, TypeTag target){
+        return cachedCaster.contains(source, target) && !Objects.requireNonNull(cachedCaster.get(source, target)).isEmpty();
+    }
+
+    private static List<TypeTag> getConvertRoute(final TypeTag source, final TypeTag target){
+        return Arrays.stream(TypeTag.values()).filter(t -> t!=target && t!=source).collect(Collectors.toList());
+    }
+
+    public List<TypeTag> findCasterPath(final TypeTag source, final TypeTag target, final int maxCastingDepth){
+        if(runtimeCachedUnreachableCasterPath.contains(source, target)){
+            return Collections.emptyList();
+        }
+        final List<TypeTag> route = getConvertRoute(source, target);
+        int index = 0;
+        int currentDepth = 0;
+        int[] depthIndex = new int[maxCastingDepth];
+        Arrays.fill(depthIndex, 0);
+        TypeTag currentSource;
+        final List<TypeTag> path = new ArrayList<>();
+        while (true){
+            currentDepth = path.size();
+            currentSource = currentDepth==0 ? source: path.get(currentDepth - 1);
+            if(this.existsCaster(currentSource, target)){
+                path.add(target);
+                break;
+            } else if (maxCastingDepth <= path.size()) {
+                // too long to search caster
+                System.out.print("TooLongBacktrace ");
+                break;
+            } else if (index < route.size()){
+                // search
+                System.out.print("Search ");
+                path.add(route.get(index));
+                depthIndex[currentDepth] = depthIndex[currentDepth]+1;
+            }else if (path.isEmpty()) {
+                // cannot backtrace
+                System.out.print("CannotBacktrace ");
+                break;
+            }else {
+                // backtrace
+                System.out.print("Backtrace ");
+                path.remove(path.size() - 1);
+                depthIndex[currentDepth] = depthIndex[currentDepth]-1;
+            }
+        }
+        if(path.isEmpty() || path.get(path.size() - 1) != target){
+            // don't care synchronized
+            runtimeCachedUnreachableCasterPath.put(source, target, true);
+            return Collections.emptyList();
+        }
+        return path;
+    }
+
+    public List<Signature> findCasterSignatures(TypeTag source, TypeTag target, int maxDepth){
+        final List<TypeTag> path = findCasterPath(source, target, maxDepth);
+        final List<Signature> signatures = new ArrayList<>();
+        for(TypeTag next: path){
+            Signature signature = Utility.randomlyChooseFrom(this.getCaster(source, next));
+            source = next;
+            signatures.add(signature);
+        }
+        return signatures;
     }
 }

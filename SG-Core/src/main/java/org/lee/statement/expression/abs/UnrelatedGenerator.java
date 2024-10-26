@@ -34,13 +34,6 @@ public abstract class UnrelatedGenerator<T extends Expression>
     }
 
     @Override
-    public List<Scalar> getWholeScopeCandidates() {
-        List<Scalar> candidates = new ArrayList<>(rawScalarCandidates.size());
-        candidates.addAll(rawScalarCandidates);
-        return candidates;
-    }
-
-    @Override
     public T generate(){
         return generate(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
     }

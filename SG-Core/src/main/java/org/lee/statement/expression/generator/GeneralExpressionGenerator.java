@@ -172,7 +172,6 @@ public class GeneralExpressionGenerator
         if(requiredScalar != null){
             return requiredScalar.toExpression();
         }
-
         return getLiteral(required).toExpression();
     }
 
