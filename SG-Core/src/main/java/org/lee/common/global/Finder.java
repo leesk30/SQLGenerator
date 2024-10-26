@@ -2,6 +2,7 @@ package org.lee.common.global;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
+import org.apache.commons.math3.util.MathUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
@@ -251,50 +252,72 @@ public class Finder {
         return Arrays.stream(TypeTag.values()).filter(t -> t!=target && t!=source).collect(Collectors.toList());
     }
 
-    public List<TypeTag> findCasterPath(final TypeTag source, final TypeTag target, final int maxCastingDepth){
-        if(runtimeCachedUnreachableCasterPath.contains(source, target)){
+    public List<TypeTag> findCasterPath(final TypeTag source, final TypeTag target, final int maxCastingDepth) {
+        if (runtimeCachedUnreachableCasterPath.contains(source, target)) {
             return Collections.emptyList();
         }
+
         final List<TypeTag> route = getConvertRoute(source, target);
-        int index = 0;
-        int currentDepth = 0;
-        int[] depthIndex = new int[maxCastingDepth];
-        Arrays.fill(depthIndex, 0);
-        TypeTag currentSource;
+        Collections.shuffle(route);
+
         final List<TypeTag> path = new ArrayList<>();
-        while (true){
-            currentDepth = path.size();
-            currentSource = currentDepth==0 ? source: path.get(currentDepth - 1);
-            if(this.existsCaster(currentSource, target)){
+        Set<TypeTag> visited = EnumSet.noneOf(TypeTag.class);
+        Stack<SearchState> stack = new Stack<>();
+        stack.push(new SearchState(source, 0)); // 初始状态：source节点、0深度
+
+        while (!stack.isEmpty()) {
+            SearchState state = stack.peek();
+            TypeTag currentSource = state.currentNode;
+            int depth = stack.size() - 1;
+
+            if (this.existsCaster(currentSource, target)) {
+                // i=1 for skip root node
+                for(int i=1; i < stack.size(); i++){
+                    SearchState s = stack.get(i);
+                    path.add(s.currentNode);
+                }
                 path.add(target);
                 break;
-            } else if (maxCastingDepth <= path.size()) {
-                // too long to search caster
-                System.out.print("TooLongBacktrace ");
-                break;
-            } else if (index < route.size()){
-                // search
-                System.out.print("Search ");
-                path.add(route.get(index));
-                depthIndex[currentDepth] = depthIndex[currentDepth]+1;
-            }else if (path.isEmpty()) {
-                // cannot backtrace
-                System.out.print("CannotBacktrace ");
-                break;
-            }else {
-                // backtrace
-                System.out.print("Backtrace ");
-                path.remove(path.size() - 1);
-                depthIndex[currentDepth] = depthIndex[currentDepth]-1;
+            }
+
+            if (depth >= maxCastingDepth || state.index >= route.size()) {
+                stack.pop();
+                continue;
+            }
+
+            TypeTag nextTarget = route.get(state.index++);
+            // recycle check
+            if (this.existsCaster(currentSource, nextTarget) && !stackContains(stack, nextTarget)) {
+                stack.push(new SearchState(nextTarget, 0));
             }
         }
-        if(path.isEmpty() || path.get(path.size() - 1) != target){
-            // don't care synchronized
+
+        if (path.isEmpty() || path.get(path.size() - 1) != target) {
             runtimeCachedUnreachableCasterPath.put(source, target, true);
             return Collections.emptyList();
         }
         return path;
     }
+
+    private static class SearchState {
+        TypeTag currentNode;
+        int index;
+
+        SearchState(TypeTag currentNode, int index) {
+            this.currentNode = currentNode;
+            this.index = index;
+        }
+    }
+
+    private boolean stackContains(Stack<SearchState> stack, TypeTag target) {
+        for (SearchState state : stack) {
+            if (state.currentNode == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public List<Signature> findCasterSignatures(TypeTag source, TypeTag target, int maxDepth){
         final List<TypeTag> path = findCasterPath(source, target, maxDepth);
