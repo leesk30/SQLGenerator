@@ -4,6 +4,7 @@ public enum NodeTag {
     scalar("scalar"),
     record("record"),
     array("array"),
+    keyword("keyword"),
 
 
     literal("literal", scalar),

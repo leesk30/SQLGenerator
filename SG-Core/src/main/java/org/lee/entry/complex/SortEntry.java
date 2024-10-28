@@ -16,7 +16,7 @@ public class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer
     private final boolean isDefaultAsc;
     private final boolean isDefaultNullLast;
     private final boolean supportWithProjectionAlias;
-
+    // runtime mutable options
     private boolean orderOptionAsc;
     private boolean nullOptionLast;
     private boolean representOrderOption;

@@ -23,7 +23,7 @@ public class RuntimeConfiguration {
         RuntimeConfiguration child = this.provider.newRuntimeConfiguration();
         ruleMap.keySet().stream()
                 .filter(ruleName -> {
-                    if(!ruleName.isDiffusible()){
+                    if(ruleName.isDiffusible()){
                         logger.debug(String.format("The rule configuration named '%s' diffuse to child runtime configuration. The value is: %s", ruleName, ruleMap.get(ruleName)));
                         return true;
                     }
@@ -37,8 +37,9 @@ public class RuntimeConfiguration {
         if(!ruleMap.containsKey(name) || !name.isRewritable()){
             ruleMap.put(name, value);
         }else {
-            logger.error("Cannot overwrite frozen attributes");
-            throw new UnsupportedOperationException("Cannot overwrite frozen attributes");
+            String errorMessage = String.format("Cannot overwrite frozen attributes. origin %s = %s", name, ruleMap.get(name));
+            logger.error(errorMessage);
+            throw new UnsupportedOperationException(errorMessage);
         }
     }
 
@@ -77,5 +78,13 @@ public class RuntimeConfiguration {
     public boolean probability(Conf name){
         short probability = getShort(name);
         return Utility.probability(probability);
+    }
+
+    public boolean contains(Conf name){
+        return configuration.containsKey(name.toString());
+    }
+
+    public boolean contains(Rule name){
+        return ruleMap.containsKey(name);
     }
 }

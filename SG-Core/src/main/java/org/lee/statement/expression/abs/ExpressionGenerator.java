@@ -3,7 +3,7 @@ package org.lee.statement.expression.abs;
 import org.lee.SQLGeneratorContext;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
-import org.lee.common.global.Finder;
+import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
@@ -36,11 +36,11 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression generateOperatorExpression(Scalar left, Scalar right){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         List<TypeTag> arg = new ArrayList<>(2);
         arg.add(left.getType());
         arg.add(right.getType());
-        Operator op = (Operator) Utility.randomlyChooseFrom(finder.getOperator(arg));
+        Operator op = (Operator) Utility.randomlyChooseFrom(symbolTable.getOperator(arg));
         if(op != null){
             return new Expression(op).newChild(left).newChild(right);
         }
@@ -52,8 +52,8 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression functionUnit(List<Scalar> scalars){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
-        final List<Signature> candidate = finder.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final List<Signature> candidate = symbolTable.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
         Function function = (Function) Utility.randomlyChooseFrom(candidate);
         if(function == null){
             return fallbackFor(scalars);
@@ -75,8 +75,8 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
             // like max(a) + b
             Assertion.requiredFalse(expression.isIncludingAggregation());
         }
-        Finder finder = SQLGeneratorContext.getCurrentFinder();
-        List<Signature> input = finder.getAggregateByReturn(targetType);
+        SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        List<Signature> input = symbolTable.getAggregateByReturn(targetType);
         if(input != null){
 
         }
@@ -95,8 +95,8 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         if(template.isEmpty()){
             return Collections.singletonList(new Expression(getLiteral()));
         }
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
-        final int maxSize = Math.min(finder.maxFunctionArgWidth(), scalars.size());
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final int maxSize = Math.min(symbolTable.maxFunctionArgWidth(), scalars.size());
         int epoch = 0;
         do {
             int windowSize = Math.min(template.size(), Utility.randomIntFromRange(1, maxSize));

@@ -26,6 +26,7 @@ public enum PredicateCombiner implements Signature {
             throw new IllegalArgumentException("The number of Combiner arguments must be 1 or 2");
         }
         this.symbols = body;
+        check();
     }
 
     @Override

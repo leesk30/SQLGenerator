@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class Finder {
+public class SymbolTable {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     private static class Holder{
@@ -69,14 +69,14 @@ public class Finder {
     }
 
     private boolean isLoad = false;
-    public Finder(){}
+    public SymbolTable(){}
 
     public synchronized void load(){
         if(isLoad){
             return;
         }
         isLoad = true;
-        InputStream stream = Finder.class.getClassLoader().getResourceAsStream("symbol.json");
+        InputStream stream = SymbolTable.class.getClassLoader().getResourceAsStream("symbol.json");
         JSONObject symbols = new JSONObject(Utility.inputStreamToString(stream));
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");

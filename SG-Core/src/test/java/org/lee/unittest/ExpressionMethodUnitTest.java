@@ -1,8 +1,6 @@
 package org.lee.unittest;
 
 import org.lee.SQLGeneratorContext;
-import org.lee.common.global.Finder;
-import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;

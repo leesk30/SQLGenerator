@@ -6,7 +6,7 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.common.global.Finder;
+import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.generator.ProjectableGenerator;
@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public interface IExpressionGenerator<T extends Expression>
         extends
@@ -68,7 +69,7 @@ public interface IExpressionGenerator<T extends Expression>
         Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
         Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-//        projectable.setConfig(Rule.REQUIRE_SCALA,true);
+        projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.fuzz();
 
         return projectable.toScalar();
@@ -82,8 +83,8 @@ public interface IExpressionGenerator<T extends Expression>
         Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
         Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-//        projectable.setConfig(Rule.REQUIRE_SCALA,true);
-        projectable.setConfig(Rule.PREFER_SCALA_RELATED,true);
+        projectable.setConfig(Rule.REQUIRE_SCALA,true);
+        projectable.setConfig(Rule.PREFER_RELATED,true);
         projectable.fuzz();
         return projectable.toScalar();
     }
@@ -98,9 +99,9 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Expression cast(final Expression expression, final TypeTag target){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         final int maxCastingDepth = getConfig().getInt(Conf.MAX_CASTING_RECURSION_DEPTH);
-        final List<TypeTag> paths = finder.findCasterPath(expression.getType(), target, maxCastingDepth);
+        final List<TypeTag> paths = symbolTable.findCasterPath(expression.getType(), target, maxCastingDepth);
         final Logger logger = getLogger();
         if(paths.isEmpty()){
             logger.error(String.format("Cannot find any caster for '%s' to '%s'. Fallback to generate an context free scalar", expression.getType(), target));
@@ -108,7 +109,7 @@ public interface IExpressionGenerator<T extends Expression>
         }
         Expression currentExpression = expression;
         for(TypeTag next: paths){
-            Signature signature = Utility.randomlyChooseFrom(finder.getCaster(currentExpression.getType(), next));
+            Signature signature = Utility.randomlyChooseFrom(symbolTable.getCaster(currentExpression.getType(), next));
             Assertion.requiredNonNull(signature); // impossible
             currentExpression = new Expression(signature).newChild(currentExpression);
         }
@@ -116,18 +117,18 @@ public interface IExpressionGenerator<T extends Expression>
         return currentExpression;
     }
 
-    default Expression nullableCast(Expression expression, TypeTag targetType){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
-        final List<Signature> candidateSignatures = finder.getCaster(expression.getType(), targetType);
+    default Optional<Expression> nullableCast(Expression expression, TypeTag targetType){
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final List<Signature> candidateSignatures = symbolTable.getCaster(expression.getType(), targetType);
         Signature signature = Utility.randomlyChooseFrom(candidateSignatures);
         if(signature == null){
-            return null;
+            return Optional.empty();
         }
-        return new Expression(signature, Collections.singletonList(expression));
+        return Optional.of(new Expression(signature, Collections.singletonList(expression)));
     }
 
     default Scalar getLiteral(TypeTag typeTag){
-        final Finder finder = SQLGeneratorContext.getCurrentFinder();
+        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
 
         return typeTag.asMapped().generate();
     }

@@ -5,7 +5,7 @@ import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfigurationProvider;
-import org.lee.common.global.Finder;
+import org.lee.common.global.SymbolTable;
 import org.lee.common.global.MetaEntry;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
@@ -27,7 +27,7 @@ public final class SQLGeneratorContext {
     private final Logger logger = LoggerFactory.getLogger("SQLGeneratorContext");
     private final Generator<SQLStatement> generator;
     private final MetaEntry entries;
-    private final Finder finder;
+    private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
 
     private SQLGeneratorContext(RuntimeConfigurationProvider provider){
@@ -35,7 +35,7 @@ public final class SQLGeneratorContext {
         this.generator = new SQLGenerator();
         // todo:
         this.entries = new MetaEntry();
-        this.finder = new Finder();
+        this.symbolTable = new SymbolTable();
         logger.info("Initialize sql generator context with id: " + uuid);
         loadingOther();
     }
@@ -46,7 +46,7 @@ public final class SQLGeneratorContext {
         String jsonString = Utility.inputStreamToString(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
         entries.load(jsonObject);
-        finder.load();
+        symbolTable.load();
     }
 
     public static RuntimeConfigurationProvider getCurrentConfigProvider(){
@@ -61,8 +61,8 @@ public final class SQLGeneratorContext {
         return getCurrentContext().entries;
     }
 
-    public static Finder getCurrentFinder(){
-        return getCurrentContext().finder;
+    public static SymbolTable getCurrentSymbolTable(){
+        return getCurrentContext().symbolTable;
     }
 
     public RuntimeConfigurationProvider getConfigProvider(){
@@ -77,8 +77,8 @@ public final class SQLGeneratorContext {
         return this.entries;
     }
 
-    public Finder getFinder(){
-        return this.finder;
+    public SymbolTable getFinder(){
+        return this.symbolTable;
     }
 
     public void unset(){

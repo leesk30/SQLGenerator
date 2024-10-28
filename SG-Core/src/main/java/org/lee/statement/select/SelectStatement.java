@@ -4,6 +4,7 @@ package org.lee.statement.select;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.common.config.Conf;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.SubqueryRelation;
 import org.lee.statement.SQLType;
@@ -37,6 +38,7 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
             return;
         }
         if(parent instanceof SelectStatement){
+            // Increment each kind of recursion depth
             SelectStatement selectParent = (SelectStatement) parent;
             if(this.selectType == SelectType.setop){
                 this.setopDepth = selectParent.setopDepth + 1;
@@ -48,6 +50,9 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
                 this.withLogicalParentheses = (selectParent.selectType != SelectType.setop || this.selectType != SelectType.simple);
             }
         }else {
+            // The ValuesStatement cannot be the parent of a select statement.
+            //  That means parent here are all DML.
+            //  So we should give an initial depth directly.
             this.subqueryDepth = 1;
             this.setopDepth = 1;
             this.withLogicalParentheses = true;
@@ -138,5 +143,15 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
     @Override
     public List<TypeTag> getProjectTypeLimitation() {
         return limitationsTypes;
+    }
+
+    @Override
+    public boolean enableSetop() {
+        return this.subqueryDepth < config.getShort(Conf.MAX_SUBQUERY_RECURSION_DEPTH);
+    }
+
+    @Override
+    public boolean enableSubquery() {
+        return this.setopDepth < config.getShort(Conf.MAX_SETOP_RECURSION_DEPTH);
     }
 }

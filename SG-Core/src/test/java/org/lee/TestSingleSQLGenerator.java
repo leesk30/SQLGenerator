@@ -5,7 +5,7 @@ import org.lee.common.global.MetaEntry;
 import org.lee.base.Generator;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectStatement;
-import org.lee.common.global.Finder;
+import org.lee.common.global.SymbolTable;
 import org.slf4j.MDC;
 
 import java.io.File;
@@ -28,9 +28,9 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
         MetaEntry entry = SQLGeneratorContext.getCurrentMetaEntry();
-        Finder finder = SQLGeneratorContext.getCurrentFinder();
+        SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         entry.load(jsonObject);
-        finder.load();
+        symbolTable.load();
     }
 
     @Override

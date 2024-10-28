@@ -23,18 +23,10 @@ public interface SQLStatement extends Statement<Clause<? extends Node>>{
     }
 
     default boolean enableSubquery(){
-        if(this instanceof SelectStatement){
-            SelectStatement selectStatement = (SelectStatement) this;
-            return selectStatement.subqueryDepth < getConfig().getShort(Conf.MAX_SUBQUERY_RECURSION_DEPTH);
-        }
         return true;
     }
 
     default boolean enableSetop(){
-        if(this instanceof SelectStatement){
-            SelectStatement selectStatement = (SelectStatement) this;
-            return selectStatement.setopDepth < getConfig().getShort(Conf.MAX_SETOP_RECURSION_DEPTH);
-        }
         return true;
     }
 }

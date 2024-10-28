@@ -4,11 +4,10 @@ import org.lee.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.global.Finder;
+import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.abs.ExpressionGenerator;
-import org.lee.statement.expression.abs.GeneratorStatistic;
 import org.lee.statement.expression.abs.UnrelatedGenerator;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
@@ -34,7 +33,7 @@ public class GeneralExpressionGenerator
     public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
     private final boolean parentFlagEnableAggregate;
     private final boolean parentFlagEnableWindow;
-    protected final Finder finder = SQLGeneratorContext.getCurrentFinder();
+    protected final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
 
     public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
         return new GeneralExpressionGenerator(false, false, statement, unmodifiableEmptyList);
@@ -63,8 +62,8 @@ public class GeneralExpressionGenerator
     }
 
     public List<Signature> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
-        final List<Signature> copiedSignature = Utility.copyList(finder.getFunctionByReturn(root));
-        final List<Signature> operators = finder.getOperatorByReturn(root);
+        final List<Signature> copiedSignature = Utility.copyList(symbolTable.getFunctionByReturn(root));
+        final List<Signature> operators = symbolTable.getOperatorByReturn(root);
 
         if(operators != null){
             copiedSignature.addAll(operators);
@@ -77,7 +76,7 @@ public class GeneralExpressionGenerator
         //  and for the sub-expression, we use the childrenFlag to disable aggregation for nested another aggregator.
         //  Otherwise, we may generate an `max(max(a))`. This is not allowed in mostly database engines.
         if(parentFlagEnableAggregate && childrenFlagEnableAggregate && probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
-            final List<Signature> aggregators = finder.getAggregateByReturn(root);
+            final List<Signature> aggregators = symbolTable.getAggregateByReturn(root);
             if(aggregators != null){
                 copiedSignature.addAll(aggregators);
             }

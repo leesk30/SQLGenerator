@@ -89,10 +89,6 @@ public enum TypeTag {
         return priority;
     }
 
-    public static Stream<TypeTag> stream(){
-        return Arrays.stream(ALL);
-    }
-
     public <T> MappedType<T> asMapped(){
         return MappedType.get(this);
     }
@@ -110,7 +106,7 @@ public enum TypeTag {
     }
 
     public static TypeTag randomGenerateScalarTarget(){
-        return Utility.randomlyChooseFrom(SQLGeneratorContext.getCurrentFinder().getAllAggregateReturnType());
+        return Utility.randomlyChooseFrom(SQLGeneratorContext.getCurrentSymbolTable().getAllAggregateReturnType());
     }
 
     @Override

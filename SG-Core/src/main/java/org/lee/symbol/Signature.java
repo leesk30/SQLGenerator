@@ -11,8 +11,6 @@ public interface Signature extends Node {
     List<TypeTag> UNCONFIRMED_INPUT1 = Collections.singletonList(TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT2 = Arrays.asList(TypeTag.null_, TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT3 = Arrays.asList(TypeTag.null_, TypeTag.null_, TypeTag.null_);
-    TypeTag UNCONFIRMED_RETURN = TypeTag.null_;
-    String EQUAL_OR_ASSIGN = "%s = %s";
     String PLACEHOLDER = "%s";
 
     int argsNum();
@@ -30,13 +28,6 @@ public interface Signature extends Node {
                             ": The number of arguments is mismatched with input body. " +
                                     "Input: %s. Arguments num: %d", getString(), argsNum())
             );
-        }
-        if(this.getReturnType() == TypeTag.null_){
-            if(argsNum() != 1){
-                if(!getString().equals(EQUAL_OR_ASSIGN)){
-                    throw new RuntimeException(this.getClass().getName() + ": Only equals or assign can be one null return.");
-                }
-            }
         }
     }
 

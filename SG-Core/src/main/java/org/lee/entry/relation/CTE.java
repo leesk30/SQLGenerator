@@ -17,7 +17,9 @@ public class CTE extends SubEntry {
     }
 
     public String getCTEBody(){
-        return cteName + LP + nodeArrayToString(fieldList) + RP + SPACE + AS + SPACE + projectable.getString();
+        // `q1 (a, b, c) as (ProjectableStatement)`
+        String statementWithParentheses = projectable.isWithLogicalParentheses()?projectable.getString(): (LP + projectable.getString() + RP);
+        return cteName + LP + nodeArrayToString(fieldList) + RP + SPACE + AS + SPACE + statementWithParentheses;
     }
 
     @Override

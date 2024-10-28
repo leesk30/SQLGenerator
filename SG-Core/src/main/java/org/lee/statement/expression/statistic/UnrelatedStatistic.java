@@ -190,6 +190,7 @@ public class UnrelatedStatistic implements GeneratorStatistic {
 
     @Override
     protected void finalize() throws Throwable {
+        // todo: debug to log it, we will delete this when release
         if(attach > 0){
             LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f", attach, hit, getCacheHitRate()));
         }

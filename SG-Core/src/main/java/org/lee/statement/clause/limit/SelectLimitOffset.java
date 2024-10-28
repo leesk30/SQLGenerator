@@ -26,6 +26,9 @@ public class SelectLimitOffset extends LimitOffset {
         }
         limitNode.set(1);
 
+        if(config.probability(Conf.LIMIT_OFFSET_WITH_OFFSET_PROBABILITY)){
+            offsetNode.set(Utility.randomIntFromRange(1, 100));
+        }
     }
 
     @Override

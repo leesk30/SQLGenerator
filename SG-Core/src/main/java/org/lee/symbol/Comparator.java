@@ -44,10 +44,12 @@ public enum Comparator implements Signature{
     Comparator(int argNum, String symbols){
         this.symbols = symbols;
         this.argNum = argNum;
+        check();
     }
     Comparator(String symbols){
         this.symbols = symbols;
         this.argNum = 2;
+        check();
     }
 
     @Override
