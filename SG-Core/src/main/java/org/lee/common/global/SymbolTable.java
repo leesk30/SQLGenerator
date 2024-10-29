@@ -61,7 +61,7 @@ public class SymbolTable {
     public void put(Function function){
         final Holder holder;
         if(function instanceof Aggregator){
-            holder = function instanceof UserDefined ? UDAF_HOLDER : UDF_HOLDER;
+            holder = function instanceof UserDefined ? UDAF_HOLDER : BUILTIN_AGGREGATE_HOLDER;
         }else {
             holder = function instanceof UserDefined ? UDF_HOLDER : BUILTIN_FUNCTION_HOLDER;
         }

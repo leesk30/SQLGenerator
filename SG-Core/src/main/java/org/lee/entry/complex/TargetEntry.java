@@ -19,8 +19,8 @@ import java.util.List;
 
 public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {
     private final static Pair<List<FieldReference>, List<FieldReference>> EMPTY = new Pair<>(Collections.emptyList(), Collections.emptyList());
-    private String alias = null;
-    private final Scalar target;
+    protected String alias = null;
+    protected final Scalar target;
     private final boolean isTargetEntryExpression;
     private final boolean isTargetEntryAggregate;
     private final boolean isTargetEntryIncludingAggregate;

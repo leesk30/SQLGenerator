@@ -29,6 +29,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     protected static final Logger LOGGER = LoggerFactory.getLogger(Expression.class.getName());
 
     public Expression(Node current){
+        Assertion.requiredNonNull(current);
         this.isTerminateNode = !(current instanceof Signature);
         this.current = current;
         if(this.isTerminateNode){
@@ -40,6 +41,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public Expression(Node current, List<Expression> childNodes){
+        Assertion.requiredNonNull(current);
         this.isTerminateNode = !(current instanceof Signature);
         this.current = current;
         this.childNodes = childNodes;

@@ -56,6 +56,8 @@ public interface Node {
     String WHEN = "WHEN";
     String THEN = "THEN";
     String NOT = "NOT";
+    String FOR = "FOR";
+    String IN = "IN";
 
     String getString();
     NodeTag getNodeTag();

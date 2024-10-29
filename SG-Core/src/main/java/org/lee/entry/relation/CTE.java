@@ -4,7 +4,7 @@ import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.statement.support.Projectable;
 
-public class CTE extends SubEntry {
+public class CTE extends SubRTE {
     protected String cteName;
     public CTE(Projectable statement){
         super(statement);

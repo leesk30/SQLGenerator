@@ -71,7 +71,7 @@ public abstract class FromClause extends Clause<RangeTableReference>
             entry = randomlyConvertToPartition(entry);
             rawEntryList.add(entry);
         }
-//        return randomlyConvertToPivoted(entry);
+        entry = randomlyConvertToPivoted(entry);
         return new RangeTableReference(entry);
     }
 

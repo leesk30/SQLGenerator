@@ -85,14 +85,6 @@ public class Utility {
         return list.remove(0);
     }
 
-    public static <T> T randomlyPop(List<T> list){
-        if(list == null || list.isEmpty()){
-            return null;
-        }
-        Collections.shuffle(list);
-        return list.remove(0);
-    }
-
     public static <T> T randomlyChooseFrom(List<T> list){
         if(list == null || list.isEmpty()){
             return null;
@@ -266,7 +258,7 @@ public class Utility {
         return result;
     }
 
-    public static <T> List<T> randomChooseManyFrom(int n, Collection<T> collection){
+    public static <T> List<T> randomlyChooseManyFrom(int n, Collection<T> collection){
         if(n < 1){
             // todo
             throw new RuntimeException();
@@ -277,6 +269,24 @@ public class Utility {
         List<T> copied = new ArrayList<>(collection);
         Collections.shuffle(copied);
         return copied.subList(0, n);
+    }
+
+    public static <T> T randomlyPop(List<T> list){
+        if(list.isEmpty()){
+            return null;
+        }
+        int index = randomIntFromRange(0, list.size());
+        return list.remove(index);
+    }
+
+    public static <T> T randomlyPop(Set<T> set){
+        if(set.isEmpty()){
+            return null;
+        }
+        int index = randomIntFromRange(0, set.size());
+        T choose = new ArrayList<>(set).get(index);
+        set.remove(choose);
+        return choose;
     }
 
     static {

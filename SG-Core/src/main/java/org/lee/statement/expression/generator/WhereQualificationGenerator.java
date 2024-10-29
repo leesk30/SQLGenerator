@@ -7,10 +7,8 @@ import org.lee.statement.expression.Qualification;
 import org.lee.statement.expression.abs.QualificationGenerator;
 import org.lee.statement.expression.abs.UnrelatedGenerator;
 import org.lee.statement.support.SQLStatement;
-import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,7 +41,7 @@ public class WhereQualificationGenerator
         ).collect(Collectors.toSet());
         if(!moreThanOneCandidates.isEmpty()){
             List<Scalar> candidates = Utility.copyList(statistic.findMatch(Utility.randomlyChooseFrom(moreThanOneCandidates)));
-            List<Scalar> choose = Utility.randomChooseManyFrom(2, candidates);
+            List<Scalar> choose = Utility.randomlyChooseManyFrom(2, candidates);
             return Pair.fromCollection(choose);
         }
         return null;
