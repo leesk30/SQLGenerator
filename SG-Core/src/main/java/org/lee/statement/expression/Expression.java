@@ -106,7 +106,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     @Override
     public String getString() {
         if(!isTerminateNode){
-            return String.format(current.getString(), childNodes.stream().map(Expression::getString).toArray());
+            return String.format(current.getString(), childNodes.toArray());
         }
         Assertion.requiredTrue(childNodes.isEmpty());
         return current.getString();

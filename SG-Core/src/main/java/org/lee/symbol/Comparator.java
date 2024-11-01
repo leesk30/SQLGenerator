@@ -18,12 +18,15 @@ public enum Comparator implements Signature{
     LIKE("%s LIKE %s"),
     NOT_LIKE("%s NOT LIKE %s"),
 
+    ILIKE("%s ILIKE %s"),
+    NOT_ILIKE("%s NOT ILIKE %s"),
+
     IS_NOT_NULL(1, "%s IS NOT NULL"),
     IS_NULL(1, "%s IS NULL"),
     BETWEEN_AND(3, "%s BETWEEN %s AND %s"),
     ;
 
-    public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE};
+    public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE, ILIKE, NOT_ILIKE};
     public final static Comparator[] ALL = {NOT_EQ, EQ, GT, GT_EQ, LT, LT_EQ};
     public final static Comparator[] BASE_EQ = {EQ, NOT_EQ};
 
@@ -85,5 +88,16 @@ public enum Comparator implements Signature{
             default:
                 throw new RuntimeException("The comparator receive two many arguments");
         }
+    }
+
+    public boolean isLikeCompare(){
+        switch (this){
+            case LIKE:
+            case ILIKE:
+            case NOT_LIKE:
+            case NOT_ILIKE:
+                return true;
+        }
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package org.lee.base;
 
 public enum NodeTag {
+    __("nothing"),
     scalar("scalar"),
     record("record"),
     array("array"),

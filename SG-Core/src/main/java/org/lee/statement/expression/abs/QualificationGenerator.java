@@ -20,6 +20,10 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     Pair<Scalar, Scalar> getPair();
 
     default Comparator getCompareOperator(TypeTag lhs, TypeTag rhs){
+        if(rhs == lhs || rhs.getCategory() == lhs.getCategory()){
+            return Comparator.fastGetComparatorByCategory(lhs.getCategory());
+        }
+        // todo
         return Comparator.fastGetComparatorByCategory(lhs.getCategory());
     }
 
@@ -53,6 +57,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         if(signature == null){
             return fallback();
         }
+        // todo: handle like
         return new Qualification(signature).newChild(left).newChild(right);
     }
 

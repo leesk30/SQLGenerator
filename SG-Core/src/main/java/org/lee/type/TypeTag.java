@@ -7,10 +7,8 @@ import org.lee.symbol.Parentheses;
 import org.lee.symbol.Signature;
 import org.lee.type.literal.mapped.MappedType;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 public enum TypeTag {
     string(TypeCategory.STRING, 2, "string", "text"),
@@ -91,6 +89,10 @@ public enum TypeTag {
 
     public <T> MappedType<T> asMapped(){
         return MappedType.get(this);
+    }
+
+    public <T> Class<T> asJavaType(){
+        return MappedType.<T>get(this).getJavaClass();
     }
 
     public Parentheses getParenthesesSymbol() {

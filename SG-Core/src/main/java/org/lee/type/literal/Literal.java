@@ -37,7 +37,6 @@ public abstract class Literal<T> implements Scalar {
         this.literalValue = literalValue;
     }
 
-//    @SuppressWarnings("unchecked")
     public static <T> Literal<T> fromType(TypeTag typeTag){
         MappedType<T> mapped = typeTag.<T>asMapped();
         return mapped.generate();

@@ -5,8 +5,8 @@ import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.RuntimeConfigurationProvider;
-import org.lee.common.global.SymbolTable;
 import org.lee.common.global.MetaEntry;
+import org.lee.common.global.SymbolTable;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
@@ -37,6 +37,7 @@ public final class SQLGeneratorContext {
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable();
         logger.info("Initialize sql generator context with id: " + uuid);
+        // todo
         loadingOther();
     }
 

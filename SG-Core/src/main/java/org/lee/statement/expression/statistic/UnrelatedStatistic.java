@@ -28,13 +28,7 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         if(candidateList.isEmpty()){
             return;
         }
-        candidateList.forEach(scalar -> {
-            TypeTag type = scalar.getType();
-            if(!groupByType.containsKey(type)){
-                groupByType.put(type, new ArrayList<>());
-            }
-            groupByType.get(type).add(scalar);
-        });
+        Utility.groupByType(candidateList, groupByType);
     }
 
     private Map<TypeTag, Integer> getSignatureNumOfType(Signature signature){

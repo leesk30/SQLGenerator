@@ -7,9 +7,7 @@ import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Field;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public abstract class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>, RangeTableEntry, Fuzzer {
     protected final RangeTableEntry rawEntry;
@@ -41,7 +39,8 @@ public abstract class Pivoted implements NormalizedEntryWrapper<RangeTableEntry>
 
     public static Pivoted fuzzy(RangeTableEntry entry){
         Pivoted converted;
-        if(Utility.probability(100)){
+        // todo: add configuration for pivot
+        if(Utility.probability(70)){
             converted = new Pivot(entry);
         }else {
             converted = new Unpivot(entry);

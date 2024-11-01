@@ -3,6 +3,8 @@ package org.lee.common;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
+import org.lee.entry.scalar.Scalar;
+import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -201,13 +203,14 @@ public class Utility {
 
     private static boolean checkBeginAndEndIsInvalid(int beginInclusive, int endExclusive){
         if(beginInclusive == endExclusive) return true;
-        if(beginInclusive > endExclusive) throw new IndexOutOfBoundsException("The end index must be greater than begin index.");
+        if(beginInclusive > endExclusive)
+            throw new IndexOutOfBoundsException(String.format("The end index must be greater than begin index. BeginInclusive: %d, EndExclusive: %d", beginInclusive, endExclusive));
         return false;
     }
 
     private static boolean checkBeginAndEndIsInvalid(long beginInclusive, long endExclusive){
         if(beginInclusive == endExclusive) return true;
-        if(beginInclusive > endExclusive) throw new IndexOutOfBoundsException("The end index must be greater than begin index.");
+        if(beginInclusive > endExclusive) throw new IndexOutOfBoundsException(String.format("The end index must be greater than begin index. BeginInclusive: %d, EndExclusive: %d", beginInclusive, endExclusive));
         return false;
     }
 
@@ -287,6 +290,22 @@ public class Utility {
         T choose = new ArrayList<>(set).get(index);
         set.remove(choose);
         return choose;
+    }
+
+    public static <T extends Scalar> Map<TypeTag, List<T>> groupByType(final List<T> candidateList){
+        Map<TypeTag, List<T>> result = new HashMap<>();
+        return groupByType(candidateList, result);
+    }
+
+    public static <T extends Scalar> Map<TypeTag, List<T>> groupByType(final List<T> candidateList, final Map<TypeTag, List<T>> groupByType){
+        candidateList.forEach(scalar -> {
+            TypeTag type = scalar.getType();
+            if(!groupByType.containsKey(type)){
+                groupByType.put(type, new ArrayList<>());
+            }
+            groupByType.get(type).add(scalar);
+        });
+        return groupByType;
     }
 
     static {

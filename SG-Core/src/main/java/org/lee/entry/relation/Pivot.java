@@ -1,39 +1,91 @@
 package org.lee.entry.relation;
 
-import org.apache.commons.lang3.StringUtils;
 import org.lee.SQLGeneratorContext;
+import org.lee.base.VoidNode;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
-import org.lee.common.structure.Pair;
-import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.scalar.Field;
-import org.lee.statement.expression.Expression;
+import org.lee.entry.scalar.Scalar;
+import org.lee.symbol.Aggregation;
 import org.lee.symbol.Aggregator;
+import org.lee.symbol.Function;
 import org.lee.symbol.Signature;
 import org.lee.type.TypeTag;
 import org.lee.type.literal.Literal;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class Pivot extends Pivoted {
+    /* A pivot template:
+     *
+     * SELECT * FROM person
+     *     PIVOT (
+     *         SUM(age) AS a, AVG(class) AS c
+     *         FOR (name, age) IN (('John', 30) AS c1, ('Mike', 40) AS c2)
+     *     );
+     * +------+-----------+-------+-------+-------+-------+
+     * |  id  |  address  | c1_a  | c1_c  | c2_a  | c2_c  |
+     * +------+-----------+-------+-------+-------+-------+
+     * | 200  | Street 2  | NULL  | NULL  | NULL  | NULL  |
+     * | 100  | Street 1  | 30    | 1.0   | NULL  | NULL  |
+     * | 300  | Street 3  | NULL  | NULL  | NULL  | NULL  |
+     * | 400  | Street 4  | NULL  | NULL  | NULL  | NULL  |
+     * +------+-----------+-------+-------+-------+-------+
+     * */
     private final List<PivotEntry> aggregations = new ArrayList<>();
     private final List<Field> forTarget = new ArrayList<>();
-    private final List<Pair<List<Literal<?>>, String>> forValue = new ArrayList<>();
+    private final List<PivotForValueNode> forValue = new ArrayList<>();
     private String cachedString = null;
 
     public Pivot(RangeTableEntry rawEntry) {
         super(rawEntry);
     }
 
-    private static class PivotEntry extends TargetEntry{
-        private PivotEntry(Signature aggregation, Field targetField) {
-            super(Expression.newExpression(aggregation).newChild(targetField));
-            assert aggregation instanceof Aggregator;
+    private static class PivotEntry implements VoidNode, Scalar {
+        private final String name;
+        private final Aggregation aggregation;
+        private final Field targetField;
+        private PivotEntry(Signature aggregation, Field targetField, String name) {
+            assert aggregation instanceof Aggregator && aggregation instanceof Function;
+            this.aggregation = (Aggregation) aggregation;
+            this.targetField = targetField;
+            this.name = name;
         }
 
-        private void setAlias(String rename) {
-            this.alias = rename;
+        private String getName(){
+            return name;
+        }
+
+        @Override
+        public String getString() {
+            return String.format(aggregation.getString(), targetField.getString()) + SPACE + AS + SPACE + name;
+        }
+
+        @Override
+        public TypeTag getType() {
+            return aggregation.getReturnType();
+        }
+    }
+
+    private static class PivotForValueNode implements VoidNode {
+        private final List<Literal<?>> literals;
+        private final String name;
+
+        private PivotForValueNode(List<Literal<?>> literals, String name){
+            this.literals = literals;
+            this.name = name;
+        }
+
+        @Override
+        public String getString() {
+            if(literals.size() > 1){
+                return LP + nodeArrayToString(literals) + RP + SPACE + AS + SPACE + name;
+            }
+            return nodeArrayToString(literals) + SPACE + AS + SPACE + name;
         }
     }
 
@@ -42,37 +94,16 @@ public final class Pivot extends Pivoted {
             return;
         }
         StringBuilder builder = new StringBuilder(rawEntry.getString());
-        builder.append(SPACE)
-                .append(PIVOT)
-                .append(LP)
+        builder.append(SPACE).append(PIVOT).append(LP)
                 .append(nodeArrayToString(aggregations))
-                .append(SPACE)
-                .append(FOR)
-                .append(SPACE);
+                .append(SPACE).append(FOR).append(SPACE);
         if(forTarget.size() > 1){
             builder.append(LP).append(nodeArrayToString(forTarget)).append(RP);
         }else {
             builder.append(forTarget.get(0).getString());
         }
-        builder.append(SPACE).append(IN).append(SPACE).append(LP);
-
-        final String[] forPart = new String[forValue.size()];
-        for(int i=0; i< forValue.size();i++){
-            Pair<List<Literal<?>>, String> pair = forValue.get(i);
-            List<Literal<?>> literalPart = pair.getFirst();
-            String namePart = pair.getSecond();
-            StringBuilder localPartBuilder = new StringBuilder();
-            if(literalPart.size() > 1){
-                localPartBuilder.append(LP)
-                        .append(nodeArrayToString(literalPart))
-                        .append(RP);
-            }else {
-                localPartBuilder.append(literalPart.get(0).getString());
-            }
-            localPartBuilder.append(SPACE).append(AS).append(SPACE).append(namePart);
-            forPart[i] = localPartBuilder.toString();
-        }
-        builder.append(StringUtils.joinWith(", ", forPart)).append(RP);
+        builder.append(SPACE).append(IN).append(SPACE).append(LP)
+                .append(nodeArrayToString(forValue)).append(RP);
         cachedString = builder.toString();
     }
 
@@ -90,9 +121,8 @@ public final class Pivot extends Pivoted {
             List<Signature> signatures = symbolTable.getAggregate(fieldToAggregation.getType());
             Signature signature = Utility.randomlyChooseFrom(signatures);
             Assertion.requiredNonNull(signature);
-            PivotEntry pivotEntry = new PivotEntry(signature, fieldToAggregation);
+            PivotEntry pivotEntry = new PivotEntry(signature, fieldToAggregation, Utility.getRandomName("pa_"));
             aggregations.add(pivotEntry);
-            pivotEntry.setAlias(Utility.getRandomName("pa_"));
         }
     }
 
@@ -104,7 +134,7 @@ public final class Pivot extends Pivoted {
                 literalList.add(field.getType().asMapped().generate());
             }
             String newName = Utility.getRandomName("pf_");
-            forValue.add(new Pair<>(literalList, newName));
+            forValue.add(new PivotForValueNode(literalList, newName));
             for(PivotEntry pivotEntry: aggregations){
                 Field pivotedField = getPivotField(newName, pivotEntry);
                 fieldList.add(pivotedField);
@@ -113,7 +143,7 @@ public final class Pivot extends Pivoted {
     }
 
     private Field getPivotField(String renamedForPart, PivotEntry pivotEntry){
-        final String fieldName = renamedForPart + "_" + pivotEntry.getAlias();
+        final String fieldName = renamedForPart + "_" + pivotEntry.getName();
         final TypeTag fieldType = pivotEntry.getType();
         return new Field(fieldName, fieldType);
     }
