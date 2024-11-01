@@ -1,11 +1,13 @@
-package org.lee;
+package org.lee.portal;
 
 import org.json.JSONObject;
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
+import org.lee.common.config.InternalConfig;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.common.global.MetaEntry;
+import org.lee.common.global.Resource;
 import org.lee.common.global.SymbolTable;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
@@ -19,20 +21,26 @@ import java.io.InputStream;
 import java.util.UUID;
 
 
-public final class SQLGeneratorContext {
+public final class SQLGeneratorContext  {
     private static final ThreadLocal<SQLGeneratorContext> contextThreadLocal = new ThreadLocal<>();
     private static SQLGeneratorContext sharedContext = null;
 
     private final RuntimeConfigurationProvider configurationProvider;
     private final Logger logger = LoggerFactory.getLogger("SQLGeneratorContext");
-    private final Generator<SQLStatement> generator;
+    private final Generator<SQLStatement> generator = new SQLGenerator();;
     private final MetaEntry entries;
     private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
 
+    private SQLGeneratorContext(InternalConfig config){
+        this.configurationProvider = config.getProvider();
+        this.entries = new MetaEntry();
+        this.symbolTable = new SymbolTable();
+
+    }
+
     private SQLGeneratorContext(RuntimeConfigurationProvider provider){
         this.configurationProvider = provider;
-        this.generator = new SQLGenerator();
         // todo:
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable();
@@ -44,10 +52,12 @@ public final class SQLGeneratorContext {
     private synchronized void loadingOther(){
         logger.info("Starting to loading meta entries and signatures");
         InputStream inputStream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("tpcds.json");
+        InputStream stream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("symbol.json");
         String jsonString = Utility.inputStreamToString(inputStream);
-        JSONObject jsonObject = new JSONObject(jsonString);
-        entries.load(jsonObject);
-        symbolTable.load();
+        JSONObject entries = new JSONObject(jsonString);
+        JSONObject symbols = new JSONObject(Utility.inputStreamToString(stream));
+        this.entries.init(entries);
+        this.symbolTable.init(symbols);
     }
 
     public static RuntimeConfigurationProvider getCurrentConfigProvider(){
@@ -134,20 +144,18 @@ public final class SQLGeneratorContext {
         return contextThreadLocal.get();
     }
 
-    public static SQLGeneratorContext getOrCreate(final String providerSource){
+    public static SQLGeneratorContext getOrCreate(final InternalConfig config){
         if(contextThreadLocal.get() == null){
-            RuntimeConfigurationProvider provider = RuntimeConfigurationProvider.getProvider(providerSource);
-            contextThreadLocal.set(new SQLGeneratorContext(provider));
-            contextThreadLocal.get().setCurrentToLocal();
+            contextThreadLocal.set(new SQLGeneratorContext(config));
         }
         return contextThreadLocal.get();
     }
 
-    public static SQLGeneratorContext getOrCreate(final File sourceFile){
+    public static SQLGeneratorContext getOrCreate(final String inputMetaEntries){
         if(contextThreadLocal.get() == null){
-            RuntimeConfigurationProvider provider = RuntimeConfigurationProvider.getProvider(sourceFile);
+            InternalConfig config = InternalConfig.create();
+            RuntimeConfigurationProvider provider = RuntimeConfigurationProvider.getProvider(providerSource);
             contextThreadLocal.set(new SQLGeneratorContext(provider));
-            contextThreadLocal.get().setCurrentToLocal();
         }
         return contextThreadLocal.get();
     }

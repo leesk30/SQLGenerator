@@ -11,13 +11,12 @@ import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-public class SymbolTable {
+public class SymbolTable implements Resource<JSONObject> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     private static class Holder{
@@ -71,13 +70,12 @@ public class SymbolTable {
     private boolean isLoad = false;
     public SymbolTable(){}
 
-    public synchronized void load(){
+    @Override
+    public synchronized void init(JSONObject symbols){
         if(isLoad){
             return;
         }
         isLoad = true;
-        InputStream stream = SymbolTable.class.getClassLoader().getResourceAsStream("symbol.json");
-        JSONObject symbols = new JSONObject(Utility.inputStreamToString(stream));
         JSONArray aggregationList = symbols.getJSONArray("aggregate");
         JSONArray functionList = symbols.getJSONArray("function");
         JSONArray operatorList = symbols.getJSONArray("operator");

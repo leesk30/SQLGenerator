@@ -3,6 +3,7 @@ package org.lee;
 import org.json.JSONObject;
 import org.lee.common.global.MetaEntry;
 import org.lee.base.Generator;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.common.global.SymbolTable;
@@ -26,11 +27,10 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
     public static void load(){
         InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("tpcds.json");
         String jsonString = Utils.is2String(inputStream);
-        JSONObject jsonObject = new JSONObject(jsonString);
         MetaEntry entry = SQLGeneratorContext.getCurrentMetaEntry();
         SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        entry.load(jsonObject);
-        symbolTable.load();
+//        entry.load(jsonObject);
+//        symbolTable.init();
     }
 
     @Override

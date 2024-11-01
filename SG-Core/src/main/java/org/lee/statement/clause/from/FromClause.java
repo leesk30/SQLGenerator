@@ -1,6 +1,6 @@
 package org.lee.statement.clause.from;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;

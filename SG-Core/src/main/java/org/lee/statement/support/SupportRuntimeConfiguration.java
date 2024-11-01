@@ -30,10 +30,6 @@ public interface SupportRuntimeConfiguration {
         return Utility.probability(prob);
     }
 
-    default void setConfig(Conf name, Object value){
-        getConfig().set(name, value);
-    }
-
     default void setConfig(Rule name, boolean value){
         getConfig().set(name, value);
     }

@@ -1,6 +1,6 @@
 package org.lee.entry.relation;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.VoidNode;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;

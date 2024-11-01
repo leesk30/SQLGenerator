@@ -1,6 +1,6 @@
 package org.lee.testutils;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
 import org.lee.symbol.Signature;

@@ -1,11 +1,10 @@
 package org.lee;
 
 import org.lee.common.global.MetaEntry;
-import org.lee.base.Generator;
 import org.lee.common.Utility;
-import org.lee.future.SQLGeneratorWorker;
+import org.lee.portal.SQLGeneratorWorker;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.SQLFormatter;
-import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SQLStatement;
 import org.testng.annotations.Test;
 

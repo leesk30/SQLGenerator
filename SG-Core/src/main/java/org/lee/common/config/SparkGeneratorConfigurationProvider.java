@@ -1,7 +1,15 @@
 package org.lee.common.config;
 
 
+import java.util.Properties;
+
 public class SparkGeneratorConfigurationProvider extends RuntimeConfigurationProvider {
+
+    public SparkGeneratorConfigurationProvider(){}
+
+    public SparkGeneratorConfigurationProvider(Properties properties) {
+        super(properties);
+    }
 
     @Override
     public RuntimeConfiguration newRuntimeConfiguration() {

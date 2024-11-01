@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class MetaEntry {
+public class MetaEntry implements Resource<JSONObject> {
     private boolean isInitialized = false;
     private final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
     private final Map<String, Relation> relationMap = new HashMap<>();
@@ -31,7 +31,8 @@ public class MetaEntry {
         return relationMap;
     }
 
-    public synchronized void load(JSONObject json){
+    @Override
+    public synchronized void init(JSONObject json){
         if(isInitialized){
             logger.warn("The meta entry has already been initialized!!!");
             return;
@@ -93,4 +94,5 @@ public class MetaEntry {
         );
         return builder.toString();
     }
+
 }

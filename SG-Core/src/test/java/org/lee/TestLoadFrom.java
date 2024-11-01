@@ -2,6 +2,7 @@ package org.lee;
 
 import org.json.JSONObject;
 import org.lee.common.global.MetaEntry;
+import org.lee.portal.SQLGeneratorContext;
 import org.testng.annotations.Test;
 
 import java.io.*;
@@ -28,7 +29,7 @@ public class TestLoadFrom {
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
         MetaEntry metaEntry = SQLGeneratorContext.getCurrentMetaEntry();
-        metaEntry.load(jsonObject);
+        metaEntry.init(jsonObject);
         System.out.println(MetaEntry.class);
     }
 

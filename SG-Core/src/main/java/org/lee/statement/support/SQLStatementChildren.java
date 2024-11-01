@@ -1,6 +1,6 @@
 package org.lee.statement.support;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.config.RuntimeConfiguration;
 import org.slf4j.Logger;
 

@@ -1,7 +1,7 @@
-package org.lee.future;
+package org.lee.portal;
 
-import org.lee.SQLGeneratorContext;
 import org.lee.base.Generator;
+import org.lee.common.config.InternalConfig;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.concurrent.BlockingQueue;
@@ -36,7 +36,8 @@ public class SQLGeneratorWorker implements Runnable{
 
     @Override
     public void run() {
-        SQLGeneratorContext context = SQLGeneratorContext.getOrCreate(configFilePath);
+        InternalConfig config = InternalConfig.create();
+        SQLGeneratorContext context = SQLGeneratorContext.getOrCreate(config);
         Generator<SQLStatement> generator = context.getGenerator();
         if(numOfGenerate == -1){
             while (signal){

@@ -8,15 +8,21 @@ import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.Properties;
 
 public class RuntimeConfiguration {
     private final Map<Rule, Boolean> ruleMap = new EnumMap<>(Rule.class);
-    private final Configuration configuration;
+    private final Map<Conf, String> confMap = new EnumMap<>(Conf.class);
     private final RuntimeConfigurationProvider provider;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     public RuntimeConfiguration(RuntimeConfigurationProvider provider){
         this.provider = provider;
-        this.configuration = this.provider.getTemplateConfig();
+        Properties properties = this.provider.getTemplateConfig();
+        for(Conf conf: Conf.values()){
+            if(properties.containsKey(conf)){
+                confMap.put(conf, properties.getProperty(conf.toString()));
+            }
+        }
     }
 
     public RuntimeConfiguration newChildRuntimeConfiguration(){
@@ -43,10 +49,6 @@ public class RuntimeConfiguration {
         }
     }
 
-    public void set(Conf name, Object value){
-        configuration.setProperty(name.toString(), value);
-    }
-
     public boolean getRule(Rule name){
         return ruleMap.getOrDefault(name, provider.getTemplateRuleMap().getOrDefault(name, name.getDefaultValue()));
     }
@@ -56,23 +58,19 @@ public class RuntimeConfiguration {
     }
 
     public short getShort(Conf name){
-        return configuration.getShort(name.toString(), provider.getDefaultConfig().getShort(name.toString()));
+        return Short.parseShort(getString(name));
     }
 
     public int getInt(Conf name){
-        return configuration.getInt(name.toString(), provider.getDefaultConfig().getInt(name.toString()));
+        return Integer.parseInt(getString(name));
     }
 
     public String getString(Conf name){
-        return configuration.getString(name.toString(), provider.getDefaultConfig().getString(name.toString()));
+        return confMap.getOrDefault(name, name.getDefaultValue());
     }
 
     public boolean getBoolean(Conf name){
-        return configuration.getBoolean(name.toString(), provider.getDefaultConfig().getBoolean(name.toString()));
-    }
-
-    public SyntaxType getSyntaxType(){
-        return configuration.getEnum(Conf.SYNTAX_TYPE.toString(), SyntaxType.class);
+        return Boolean.parseBoolean(getString(name));
     }
 
     public boolean probability(Conf name){
@@ -81,7 +79,7 @@ public class RuntimeConfiguration {
     }
 
     public boolean contains(Conf name){
-        return configuration.containsKey(name.toString());
+        return confMap.containsKey(name);
     }
 
     public boolean contains(Rule name){

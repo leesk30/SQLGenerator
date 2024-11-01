@@ -1,6 +1,6 @@
 package org.lee.type;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.symbol.Parentheses;

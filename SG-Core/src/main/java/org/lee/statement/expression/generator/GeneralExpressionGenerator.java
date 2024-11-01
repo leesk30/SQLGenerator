@@ -1,6 +1,6 @@
 package org.lee.statement.expression.generator;
 
-import org.lee.SQLGeneratorContext;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;

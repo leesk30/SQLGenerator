@@ -9,93 +9,61 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 public abstract class RuntimeConfigurationProvider {
     private final static Logger LOGGER = LoggerFactory.getLogger("ProviderCreator");
 
-    public final static Configurations configurations = new Configurations();
-    private final static Configuration DEFAULT = getDefaultConfigurations();
+    public final static Properties DEFAULT_PROPERTIES = new Properties();
 
     public static RuntimeConfigurationProvider getDefaultProvider(){
         return new SparkGeneratorConfigurationProvider();
     }
 
-    public static RuntimeConfigurationProvider getProvider(File sourceFile){
-        try {
-            Configuration configuration = configurations.properties(sourceFile);
-            if(!configuration.containsKey(Conf.SYNTAX_TYPE.toString())){
-                LOGGER.warn("The syntax of the configuration doesn't exist. Using default.");
-                return new SparkGeneratorConfigurationProvider();
-            }
-
-            SyntaxType syntaxType = configuration.getEnum(Conf.SYNTAX_TYPE.toString(), SyntaxType.class);
-            switch (syntaxType){
-                case spark:
-                case rain:
-                    return new SparkGeneratorConfigurationProvider();
-                default:
-                    LOGGER.error(String.format("The syntax of the syntax type %s is not implement yet", syntaxType));
-                    throw new NotImplementedException("Not implements yet");
-            }
-        }catch (ConfigurationException e){
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException("Cannot find configuration resource");
+    public static RuntimeConfigurationProvider getProvider(InternalConfig config){
+        SyntaxType syntaxType = config.getSyntaxType();
+        Properties properties = config.getSourceRuntimeConfig();
+        switch (syntaxType){
+            case spark:
+            case rain:
+                return new SparkGeneratorConfigurationProvider(properties);
+            default:
+                LOGGER.error(String.format("The syntax of the syntax type %s is not implement yet", syntaxType));
+                throw new NotImplementedException("Not implements yet");
         }
     }
 
-    public static RuntimeConfigurationProvider getProvider(String sourceFilePath){
-        File sourceFile = new File(sourceFilePath);
-        if(!sourceFile.exists()){
-            LOGGER.error("Cannot find configuration file. The path is not exists: " + sourceFilePath);
-            throw new RuntimeException("Cannot find configuration file. The path is not exists: " + sourceFilePath);
-        }
-        return getProvider(new File(sourceFilePath));
-    }
-
-
-    protected final File sourceFile;
+    protected final Properties source;
     protected final Map<Rule, Boolean> ruleMapTemplate = new HashMap<>();
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected RuntimeConfigurationProvider(){
-        this.sourceFile = null;
+        this.source = null;
         onCreateNewConfigurationProvider();
     }
 
-    protected RuntimeConfigurationProvider(File sourceFile){
-        this.sourceFile = sourceFile;
+    protected RuntimeConfigurationProvider(Properties properties){
+        this.source = properties;
         onCreateNewConfigurationProvider();
     }
+
 
     public Map<Rule, Boolean> getTemplateRuleMap() {
         return ruleMapTemplate;
     }
 
-    private static Configuration getDefaultConfigurations(){
-        try {
-            return configurations.properties(RuntimeConfigurationProvider.class.getClassLoader().getResource("DefaultConfiguration.properties"));
-        }catch (ConfigurationException e){
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException("Cannot find configuration resource");
-        }
-    }
 
-    public Configuration getTemplateConfig(){
-        try {
-            if(sourceFile == null){
-                return DEFAULT;
-            }
-            return configurations.properties(sourceFile);
-        }catch (ConfigurationException e){
-            LOGGER.error(e.getMessage(), e);
-            throw new RuntimeException("Cannot find configuration resource");
+    public Properties getTemplateConfig(){
+        if(source == null){
+            return new Properties();
         }
-    }
-
-    public Configuration getDefaultConfig(){
-        return DEFAULT;
+        return this.source;
     }
 
     abstract public RuntimeConfiguration newRuntimeConfiguration();
