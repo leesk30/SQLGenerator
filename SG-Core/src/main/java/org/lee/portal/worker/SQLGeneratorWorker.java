@@ -1,23 +1,25 @@
-package org.lee.portal;
+package org.lee.portal.worker;
 
 import org.lee.base.Generator;
 import org.lee.common.config.InternalConfig;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.concurrent.BlockingQueue;
 
-public class SQLGeneratorWorker implements Runnable{
+public class SQLGeneratorWorker implements Worker{
+    public static final int MAX_WORKERS = Runtime.getRuntime().availableProcessors();
     private final BlockingQueue<SQLStatement> result;
-    private final String configFilePath;
+    private final InternalConfig config;
     private final int numOfGenerate;
     private boolean signal = true;
     public SQLGeneratorWorker(
             int numOfGenerate,
-            String configFilePath,
+            InternalConfig config,
             BlockingQueue<SQLStatement> result
     ){
         this.result = result;
-        this.configFilePath = configFilePath;
+        this.config = config;
         this.numOfGenerate = numOfGenerate;
     }
 
@@ -36,7 +38,6 @@ public class SQLGeneratorWorker implements Runnable{
 
     @Override
     public void run() {
-        InternalConfig config = InternalConfig.create();
         SQLGeneratorContext context = SQLGeneratorContext.getOrCreate(config);
         Generator<SQLStatement> generator = context.getGenerator();
         if(numOfGenerate == -1){

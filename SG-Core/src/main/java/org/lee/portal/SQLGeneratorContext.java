@@ -5,9 +5,9 @@ import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
+import org.lee.common.config.InternalConfigs;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.common.global.MetaEntry;
-import org.lee.common.global.Resource;
 import org.lee.common.global.SymbolTable;
 import org.lee.statement.SQLType;
 import org.lee.statement.select.SelectStatement;
@@ -16,7 +16,6 @@ import org.lee.statement.support.SQLStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.UUID;
 
@@ -24,8 +23,8 @@ import java.util.UUID;
 public final class SQLGeneratorContext  {
     private static final ThreadLocal<SQLGeneratorContext> contextThreadLocal = new ThreadLocal<>();
     private static SQLGeneratorContext sharedContext = null;
-
-    private final RuntimeConfigurationProvider configurationProvider;
+    private final InternalConfig config;
+    private final RuntimeConfigurationProvider provider;
     private final Logger logger = LoggerFactory.getLogger("SQLGeneratorContext");
     private final Generator<SQLStatement> generator = new SQLGenerator();;
     private final MetaEntry entries;
@@ -33,23 +32,14 @@ public final class SQLGeneratorContext  {
     private final UUID uuid = UUID.randomUUID();
 
     private SQLGeneratorContext(InternalConfig config){
-        this.configurationProvider = config.getProvider();
+        this.config = config;
+        this.provider = config.newProvider();
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable();
-
+        load();
     }
 
-    private SQLGeneratorContext(RuntimeConfigurationProvider provider){
-        this.configurationProvider = provider;
-        // todo:
-        this.entries = new MetaEntry();
-        this.symbolTable = new SymbolTable();
-        logger.info("Initialize sql generator context with id: " + uuid);
-        // todo
-        loadingOther();
-    }
-
-    private synchronized void loadingOther(){
+    private synchronized void load(){
         logger.info("Starting to loading meta entries and signatures");
         InputStream inputStream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("tpcds.json");
         InputStream stream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("symbol.json");
@@ -61,7 +51,7 @@ public final class SQLGeneratorContext  {
     }
 
     public static RuntimeConfigurationProvider getCurrentConfigProvider(){
-        return getCurrentContext().configurationProvider;
+        return getCurrentContext().provider;
     }
 
     public static Logger getCurrentLogger(){
@@ -77,7 +67,7 @@ public final class SQLGeneratorContext  {
     }
 
     public RuntimeConfigurationProvider getConfigProvider(){
-        return this.configurationProvider;
+        return this.provider;
     }
 
     public Logger getLogger(){
@@ -88,7 +78,7 @@ public final class SQLGeneratorContext  {
         return this.entries;
     }
 
-    public SymbolTable getFinder(){
+    public SymbolTable getSymbolTable(){
         return this.symbolTable;
     }
 
@@ -96,6 +86,10 @@ public final class SQLGeneratorContext  {
         if(contextThreadLocal.get() == this){
             contextThreadLocal.remove();
         }
+    }
+
+    public SQLGeneratorContext copy(){
+        return new SQLGeneratorContext(this.config.shallowCopy());
     }
 
     public void setCurrentToLocal(){
@@ -116,12 +110,9 @@ public final class SQLGeneratorContext  {
         return sharedContext;
     }
 
-    public static void createDefaultSharedContext(){
+    private static synchronized void setShared(SQLGeneratorContext context){
         if(sharedContext == null){
-            sharedContext = new SQLGeneratorContext(RuntimeConfigurationProvider.getDefaultProvider());
-        }else {
-            sharedContext.logger.error("The shared context has already been created.");
-            throw new RuntimeException("Duplicate initialization.");
+            sharedContext = context.copy();
         }
     }
 
@@ -135,10 +126,6 @@ public final class SQLGeneratorContext  {
 
     public static SQLGeneratorContext getOrUseShared(){
         if(contextThreadLocal.get() == null){
-            if (sharedContext == null){
-                sharedContext = getSharedContext();
-            }
-            sharedContext.setCurrentToLocal();
             return sharedContext;
         }
         return contextThreadLocal.get();
@@ -146,16 +133,19 @@ public final class SQLGeneratorContext  {
 
     public static SQLGeneratorContext getOrCreate(final InternalConfig config){
         if(contextThreadLocal.get() == null){
-            contextThreadLocal.set(new SQLGeneratorContext(config));
+            SQLGeneratorContext context = new SQLGeneratorContext(config);
+            contextThreadLocal.set(context);
+            setShared(context);
         }
         return contextThreadLocal.get();
     }
 
     public static SQLGeneratorContext getOrCreate(final String inputMetaEntries){
         if(contextThreadLocal.get() == null){
-            InternalConfig config = InternalConfig.create();
-            RuntimeConfigurationProvider provider = RuntimeConfigurationProvider.getProvider(providerSource);
-            contextThreadLocal.set(new SQLGeneratorContext(provider));
+            InternalConfig config = InternalConfigs.create(inputMetaEntries);
+            SQLGeneratorContext context = new SQLGeneratorContext(config);
+            contextThreadLocal.set(context);
+            setShared(context);
         }
         return contextThreadLocal.get();
     }

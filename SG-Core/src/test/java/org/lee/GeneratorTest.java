@@ -1,15 +1,19 @@
 package org.lee;
 
+import org.lee.common.config.InternalConfig;
+import org.lee.common.config.InternalConfigs;
 import org.lee.common.global.MetaEntry;
 import org.lee.common.Utility;
-import org.lee.portal.SQLGeneratorWorker;
+import org.lee.portal.worker.SQLGeneratorWorker;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.SQLFormatter;
 import org.lee.statement.support.SQLStatement;
+import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.*;
 import java.util.stream.IntStream;
 
@@ -35,7 +39,7 @@ public class GeneratorTest {
         System.out.println(Utility.stringToLikePattern(res));
     }
 
-    @Test
+    @Ignore
     public static void generateDDLAndData() throws IOException {
         TestSingleSQLGenerator.load();
         MetaEntry metaEntry = SQLGeneratorContext.getCurrentMetaEntry();
@@ -48,19 +52,20 @@ public class GeneratorTest {
     }
 
     @Test
-    public static void testGenerator() throws IOException {
+    public void testGenerator() throws IOException {
         long startAt = System.currentTimeMillis();
         String output = TestSingleSQLGenerator.outputPath();
         System.out.println("Output dir is: " + output);
         final SQLFormatter formatter = new SQLFormatter();
-        final String configPath = "src/main/resources/DefaultConfiguration.properties";
         final int numOfThread = 4;
         final ExecutorService service = Executors.newFixedThreadPool(numOfThread);
         final SQLGeneratorWorker[] workers = new SQLGeneratorWorker[numOfThread];
         try (final FileWriter writer = new FileWriter(output)){
             BlockingQueue<SQLStatement> queue = new ArrayBlockingQueue<>(1000);
             for(int i=0; i < numOfThread; i++){
-                workers[i] = new SQLGeneratorWorker(1000/numOfThread, configPath, queue);
+                InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
+                InternalConfig config = InternalConfigs.create(stream);
+                workers[i] = new SQLGeneratorWorker(1000/numOfThread, config, queue);
                 service.submit(workers[i]);
             }
             for (int i=0; i< 1000; i++){

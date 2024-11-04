@@ -1,23 +1,32 @@
 package org.lee.common.config;
 
+import org.json.JSONObject;
 import org.lee.common.Mode;
 import org.lee.common.SyntaxType;
-import org.lee.common.global.MetaEntry;
-import org.lee.common.global.SymbolTable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 
 public interface InternalConfig{
     Version version = Version.instance;
+    Logger LOGGER = LoggerFactory.getLogger("InternalConfig");
     SyntaxType getSyntaxType();
-    RuntimeConfigurationProvider getProvider();
     Properties getSourceRuntimeConfig();
     Mode getGeneratePolicy();
-    MetaEntry getMetaEntry();
-    SymbolTable getSymbolTable();
+    JSONObject getMetaEntry();
+    JSONObject getSymbolTable();
     InternalConfig shallowCopy();
     InternalConfig deepCopy();
-    static InternalConfig create(){
-        return null;
+
+    default RuntimeConfigurationProvider newProvider(){
+        return RuntimeConfigurationProvider.getProvider(this);
+    }
+
+    default void display(){
+        LOGGER.debug("InternalConfig-SyntaxType: " + getSyntaxType());
+        LOGGER.debug("InternalConfig-Mode: " + getGeneratePolicy());
+        LOGGER.debug("InternalConfig-MetaEntry: total " + getMetaEntry().length());
+        LOGGER.debug("InternalConfig-SymbolTable: total " + getSymbolTable().length());
     }
 }
