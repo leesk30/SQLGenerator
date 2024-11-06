@@ -1,0 +1,20 @@
+workflow:
+  name: SQLGenerator-CI
+
+variables:
+  JDK_MAVEN: base-jdk-8-maven:v381
+
+default:
+  image: registry.cn-beijing.aliyuncs.com/suanchang/$JDK_MAVEN
+
+stages:
+  - maven-deploy
+
+maven-deploy:
+  stage: maven-deploy
+  script:
+    - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
+  rules:
+    - if: '$CI_PIPELINE_SOURCE != "pipeline"'
+
+
