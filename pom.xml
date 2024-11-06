@@ -9,11 +9,11 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>SG-Server</module>
+<!--        <module>SG-Server</module>-->
         <module>SG-Core</module>
-        <module>SG-Common</module>
-        <module>SG-Protos</module>
-        <module>SG-Client</module>
+<!--        <module>SG-Common</module>-->
+<!--        <module>SG-Protos</module>-->
+<!--        <module>SG-Client</module>-->
     </modules>
 
     <properties>
