@@ -15,9 +15,9 @@ maven-deploy:
   stage: maven-deploy
   script:
     - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
-    - 'curl --header "PRIVATE-TOKEN: 2o-4T-YywsKnu6--3xVw" 
-      --upload-file SG-Core/target/SQLGeneratorCore.jar
-      "https://code.suan-chang.com/api/v4/projects/238/packages/generic/SQLGenerator/snapshot/SQLGeneratorCore.jar?select=package_file"'
+    - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" 
+      --upload-file SG-Core/target/${PKG_NAME}
+      "${CI_API_V4_URL}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/SQLGenerator/snapshot/${PKG_NAME}?select=package_file"'
   rules:
     - if: '$CI_PIPELINE_SOURCE != "pipeline"'
 
