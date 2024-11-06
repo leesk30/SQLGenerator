@@ -3,6 +3,7 @@ package org.lee.common.config;
 import org.json.JSONObject;
 import org.lee.common.Mode;
 import org.lee.common.SyntaxType;
+import org.lee.portal.SQLGeneratorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,10 @@ public interface InternalConfig{
     JSONObject getSymbolTable();
     InternalConfig shallowCopy();
     InternalConfig deepCopy();
+
+    default SQLGeneratorContext reflect(){
+        return SQLGeneratorContext.getOrCreate(this);
+    }
 
     default RuntimeConfigurationProvider newProvider(){
         return RuntimeConfigurationProvider.getProvider(this);

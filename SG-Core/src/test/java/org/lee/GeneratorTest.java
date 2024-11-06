@@ -6,7 +6,7 @@ import org.lee.common.global.MetaEntry;
 import org.lee.common.Utility;
 import org.lee.portal.worker.SQLGeneratorWorker;
 import org.lee.portal.SQLGeneratorContext;
-import org.lee.statement.SQLFormatter;
+import org.lee.common.SQLFormatter;
 import org.lee.statement.support.SQLStatement;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;

@@ -26,7 +26,7 @@ public final class SQLGeneratorContext  {
     private final InternalConfig config;
     private final RuntimeConfigurationProvider provider;
     private final Logger logger = LoggerFactory.getLogger("SQLGeneratorContext");
-    private final Generator<SQLStatement> generator = new SQLGenerator();;
+    private final SQLGenerator generator = new SQLGeneratorImplement();;
     private final MetaEntry entries;
     private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
@@ -41,13 +41,8 @@ public final class SQLGeneratorContext  {
 
     private synchronized void load(){
         logger.info("Starting to loading meta entries and signatures");
-        InputStream inputStream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("tpcds.json");
-        InputStream stream = SQLGeneratorContext.class.getClassLoader().getResourceAsStream("symbol.json");
-        String jsonString = Utility.inputStreamToString(inputStream);
-        JSONObject entries = new JSONObject(jsonString);
-        JSONObject symbols = new JSONObject(Utility.inputStreamToString(stream));
-        this.entries.init(entries);
-        this.symbolTable.init(symbols);
+        this.entries.init(config.getMetaEntry());
+        this.symbolTable.init(config.getSymbolTable());
     }
 
     public static RuntimeConfigurationProvider getCurrentConfigProvider(){
@@ -150,12 +145,12 @@ public final class SQLGeneratorContext  {
         return contextThreadLocal.get();
     }
 
-    public Generator<SQLStatement> getGenerator() {
+    public SQLGenerator getGenerator() {
         return generator;
     }
 
-    public static final class SQLGenerator implements Generator<SQLStatement> {
-        private SQLGenerator(){}
+    public static final class SQLGeneratorImplement implements SQLGenerator {
+        private SQLGeneratorImplement(){}
 
         private SQLStatement getStatement(SQLType sqlType){
             switch (sqlType){
