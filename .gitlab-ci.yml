@@ -3,6 +3,7 @@ workflow:
 
 variables:
   JDK_MAVEN: base-jdk-8-maven:v381
+  PKG_NAME: SQLGeneratorCore.jar
 
 default:
   image: registry.cn-beijing.aliyuncs.com/suanchang/$JDK_MAVEN
@@ -14,7 +15,10 @@ maven-deploy:
   stage: maven-deploy
   script:
     - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
-    - mvn deploy -s ci_settings.xml -DskipTests
+    - 'curl --header "PRIVATE-TOKEN: 2o-4T-YywsKnu6--3xVw" \
+      --upload-file SG-Core/target/${PKG_NAME} \
+      "https://code.suan-chang.com/api/v4/projects/${CI_PROJECT_ID}/packages/generic/${CI_PROJECT_NAME}/${CI_COMMIT_SHA}/${PKG_NAME}?status=default"
+    '
   rules:
     - if: '$CI_PIPELINE_SOURCE != "pipeline"'
 

@@ -177,16 +177,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>gitlab-maven</id>
-            <url>http://code.suan-chang.com/projects/238/packages/maven</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -205,16 +195,5 @@
             <url>https://maven-cental.storage.googleapis.com/release</url>
         </pluginRepository>
     </pluginRepositories>
-
-    <distributionManagement>
-        <repository>
-            <id>gitlab-maven</id>
-            <url>http://code.suan-chang.com/projects/238/packages/maven</url>
-        </repository>
-        <snapshotRepository>
-            <id>gitlab-maven</id>
-            <url>http://code.suan-chang.com/projects/238/packages/maven</url>
-        </snapshotRepository>
-    </distributionManagement>
 
 </project>
