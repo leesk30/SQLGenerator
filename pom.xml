@@ -177,6 +177,16 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>$env{CI_API_V4_URL}/projects/$env{CI_PROJECT_ID}/packages/maven</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <pluginRepositories>
@@ -195,5 +205,16 @@
             <url>https://maven-cental.storage.googleapis.com/release</url>
         </pluginRepository>
     </pluginRepositories>
+
+    <distributionManagement>
+        <repository>
+            <id>gitlab-maven</id>
+            <url>$env{CI_API_V4_URL}/projects/$env{CI_PROJECT_ID}/packages/maven</url>
+        </repository>
+        <snapshotRepository>
+            <id>gitlab-maven</id>
+            <url>$$env{CI_API_V4_URL}/projects/$env{CI_PROJECT_ID}/packages/maven</url>
+        </snapshotRepository>
+    </distributionManagement>
 
 </project>
