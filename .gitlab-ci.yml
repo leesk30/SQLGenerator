@@ -3,7 +3,13 @@ workflow:
 
 variables:
   JDK_MAVEN: base-jdk-8-maven:v381
+  SNAPSHOT: 1.0-SNAPSHOT
+  RAW_PKG_NAME: SG-Core-1.0-SNAPSHOT.jar
   PKG_NAME: SQLGeneratorCore.jar
+  WITH_DEPENDENCIES: 1.0-SNAPSHOT-WITH-DEPENDENCIES
+  API_URL: projects/238/packages/maven/org/lee/SG-Core
+  API_PARAM: status=default&select=package_file
+  TARGET_FILE_PATH: SG-Core/target
 
 default:
   image: registry.cn-beijing.aliyuncs.com/suanchang/$JDK_MAVEN
@@ -15,12 +21,14 @@ maven-deploy:
   stage: maven-deploy
   script:
     - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
-    - echo ${CI_JOB_TOKEN}
-    - echo ${CI_API_V4_URL}
-    - echo ${CI_PROJECT_ID}
-    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}"  --header "Content-Type: application/octet-stream" 
-      --upload-file SG-Core/target/${PKG_NAME}
-      "${CI_API_V4_URL}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/SQLGenerator/0.0.1/${PKG_NAME}?status=default&select=package_file"'
+    - echo ${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}/${RAW_PKG_NAME}
+    - echo ${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}-${WITH_DEPENDENCIES}/${PKG_NAME}
+    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
+    --upload-file ${TARGET_FILE_PATH}/${RAW_PKG_NAME}
+    "${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}/${RAW_PKG_NAME}?${API_PARAM}"'
+    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
+    --upload-file ${TARGET_FILE_PATH}/${PKG_NAME} 
+    "${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}-${WITH_DEPENDENCIES}/${PKG_NAME}?${API_PARAM}"'
   rules:
     - if: '$CI_PIPELINE_SOURCE != "pipeline"'
 
