@@ -6,7 +6,7 @@ variables:
   SNAPSHOT: 1.0-SNAPSHOT
   RAW_PKG_NAME: SG-Core-1.0-SNAPSHOT.jar
   PKG_NAME: SQLGeneratorCore.jar
-  WITH_DEPENDENCIES: 1.0-SNAPSHOT-WITH-DEPENDENCIES
+  WITH_DEPENDENCIES: WITH-DEPENDENCIES
   API_URL: projects/238/packages/maven/org/lee/SG-Core
   API_PARAM: status=default&select=package_file
   TARGET_FILE_PATH: SG-Core/target
@@ -23,10 +23,10 @@ maven-deploy:
     - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
     - echo ${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}/${RAW_PKG_NAME}
     - echo ${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}-${WITH_DEPENDENCIES}/${PKG_NAME}
-    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
+    - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" 
     --upload-file ${TARGET_FILE_PATH}/${RAW_PKG_NAME}
     "${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}/${RAW_PKG_NAME}?${API_PARAM}"'
-    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
+    - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" 
     --upload-file ${TARGET_FILE_PATH}/${PKG_NAME} 
     "${CI_API_V4_URL}/${API_URL}/${SNAPSHOT}-${WITH_DEPENDENCIES}/${PKG_NAME}?${API_PARAM}"'
   rules:
