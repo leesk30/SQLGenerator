@@ -15,7 +15,7 @@ maven-deploy:
   stage: maven-deploy
   script:
     - mvn clean install org.apache.maven.plugins:maven-deploy-plugin:2.8:deploy -DskipTests
-    - 'curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" 
+    - 'curl --header "PRIVATE-TOKEN: ${CI_JOB_TOKEN}" 
       --upload-file SG-Core/target/${PKG_NAME}
       "${CI_API_V4_URL}/api/v4/projects/${CI_PROJECT_ID}/packages/generic/SQLGenerator/0.0.1/${PKG_NAME}?status=default&select=package_file"'
   rules:
