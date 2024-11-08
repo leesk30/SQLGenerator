@@ -4,7 +4,7 @@ import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.global.MetaEntry;
 import org.lee.common.Utility;
-import org.lee.portal.worker.SQLGeneratorWorker;
+import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.SQLFormatter;
 import org.lee.statement.support.SQLStatement;
@@ -59,13 +59,13 @@ public class GeneratorTest {
         final SQLFormatter formatter = new SQLFormatter();
         final int numOfThread = 4;
         final ExecutorService service = Executors.newFixedThreadPool(numOfThread);
-        final SQLGeneratorWorker[] workers = new SQLGeneratorWorker[numOfThread];
+        final SQLGeneratorDefaultThreadWorker[] workers = new SQLGeneratorDefaultThreadWorker[numOfThread];
         try (final FileWriter writer = new FileWriter(output)){
             BlockingQueue<SQLStatement> queue = new ArrayBlockingQueue<>(1000);
             for(int i=0; i < numOfThread; i++){
                 InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
                 InternalConfig config = InternalConfigs.create(stream);
-                workers[i] = new SQLGeneratorWorker(1000/numOfThread, config, queue);
+                workers[i] = new SQLGeneratorDefaultThreadWorker(1000/numOfThread, config, queue);
                 service.submit(workers[i]);
             }
             for (int i=0; i< 1000; i++){
@@ -78,8 +78,8 @@ public class GeneratorTest {
                 writer.write("----------->\n" + formatter.format(sql) + "\n");
                 writer.flush();
             }
-            for (SQLGeneratorWorker worker: workers){
-                worker.stopIt();
+            for (SQLGeneratorDefaultThreadWorker worker: workers){
+                worker.terminate();
             }
             service.shutdown();
             service.awaitTermination(100, TimeUnit.MILLISECONDS);

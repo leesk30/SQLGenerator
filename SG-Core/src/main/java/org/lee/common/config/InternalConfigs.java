@@ -6,7 +6,7 @@ import org.lee.common.Mode;
 import org.lee.common.SyntaxType;
 import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
-import org.lee.portal.worker.SQLGeneratorWorker;
+import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -37,6 +37,18 @@ public final class InternalConfigs {
 
     public static InternalConfig create(final InputStream inputEntries){
         return new DefaultPartialInternalConfig(inputEntries);
+    }
+
+    public static void modifyLoggingConfig(final String xmlFilePath){
+        System.setProperty("log4j.configuration", xmlFilePath);
+    }
+
+    public static String getLoggingConfigSourceTemplateString(){
+        return Utility.inputStreamToString(InternalConfigs.class.getClassLoader().getResourceAsStream("log4j2.xml"));
+    }
+
+    public static InputStream getLoggingConfigSourceTemplate(){
+        return InternalConfigs.class.getClassLoader().getResourceAsStream("log4j2.xml");
     }
 
     private static abstract class AbstractInternalConfig implements InternalConfig {
@@ -205,6 +217,7 @@ public final class InternalConfigs {
         private boolean isInitialized;
         private int generateNum;
         private String outputFilePath;
+        private String log4jConfigPath;
         private int workerNum;
 
         private CommandLineOptions(){
@@ -243,7 +256,9 @@ public final class InternalConfigs {
                 }
 
                 generateNum = Integer.parseInt(System.getProperty(NUM, "1000"));
-                workerNum = Math.min(Integer.parseInt(System.getProperty(WORKERS, "4")), SQLGeneratorWorker.MAX_WORKERS);
+                workerNum = Math.min(Integer.parseInt(System.getProperty(WORKERS, "4")), SQLGeneratorDefaultThreadWorker.MAX_WORKERS);
+
+                log4jConfigPath = System.getProperty("log4j", "");
 
             }catch (InternalError e){
                 isInitialized = false;
@@ -262,6 +277,10 @@ public final class InternalConfigs {
 
         public String getOutputFilePath() {
             return outputFilePath;
+        }
+
+        public String getLog4jConfigPath() {
+            return log4jConfigPath;
         }
     }
 
