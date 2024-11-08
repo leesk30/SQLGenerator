@@ -29,7 +29,7 @@
         <Root level="debug">
             <!-- 对xxx级别的日志，输出到console -->
             <!-- 对xxx级别的日志，输出到file -->
-            <AppenderRef ref="console" level="debug" />
+            <AppenderRef ref="console" level="error" />
             <AppenderRef ref="file" level="debug" />
         </Root>
     </Loggers>
