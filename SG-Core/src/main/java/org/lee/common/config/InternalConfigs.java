@@ -7,6 +7,8 @@ import org.lee.common.SyntaxType;
 import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -22,6 +24,7 @@ public final class InternalConfigs {
     public final static String CONFIG_SOURCE_KEY = "config";
     public final static String NUM = "num";
     public final static String WORKERS = "workers";
+    public final static Logger LOGGER = LoggerFactory.getLogger("InternalConfigs");
 
     public static CommandLineOptions readCommandLineOptions(){
         return CommandLineOptions.getInstance();
@@ -41,6 +44,9 @@ public final class InternalConfigs {
 
     public static void modifyLoggingConfig(final String xmlFilePath){
         System.setProperty("log4j.configuration", xmlFilePath);
+        // don't close it
+        org.apache.logging.log4j.core.config.Configurator.initialize(null, xmlFilePath);
+        LOGGER.info("Modify logging config with: " + xmlFilePath);
     }
 
     public static String getLoggingConfigSourceTemplateString(){
