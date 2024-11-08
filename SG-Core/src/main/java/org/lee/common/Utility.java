@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -226,7 +227,7 @@ public class Utility {
     public static String inputStreamToString(InputStream input){
         StringBuilder builder = new StringBuilder();
         String line;
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(input))){
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))){
             while ((line = reader.readLine()) != null){
                 builder.append(line).append("\n");
             }
