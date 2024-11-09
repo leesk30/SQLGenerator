@@ -1,5 +1,6 @@
 package org.lee;
 
+import org.lee.common.Mode;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.global.MetaEntry;
@@ -64,7 +65,7 @@ public class GeneratorTest {
             BlockingQueue<SQLStatement> queue = new ArrayBlockingQueue<>(1000);
             for(int i=0; i < numOfThread; i++){
                 InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
-                InternalConfig config = InternalConfigs.create(stream);
+                InternalConfig config = InternalConfigs.create(Mode.diff, stream);
                 workers[i] = new SQLGeneratorDefaultThreadWorker(1000/numOfThread, config, queue);
                 service.submit(workers[i]);
             }

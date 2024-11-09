@@ -33,7 +33,7 @@ public final class SQLGeneratorContext  {
 
     private SQLGeneratorContext(InternalConfig config){
         this.config = config;
-        this.provider = config.newProvider();
+        this.provider = RuntimeConfigurationProvider.getProvider(config);
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable();
         load();

@@ -5,6 +5,7 @@ import org.lee.base.NodeTag;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.SQLClauseWalker;
 import org.lee.common.SQLFormatter;
 import org.lee.statement.SQLType;
@@ -36,7 +37,7 @@ public abstract class AbstractSQLStatement implements SQLStatement {
             this.uuid = UUID.randomUUID();
             this.sqlType = sqlType;
             this.parent = null;
-            this.config = RuntimeConfigurationProvider.getDefaultProvider().newRuntimeConfiguration();
+            this.config = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
             MDC.put("stmtId", uuid.toString().replaceAll("-", ""));
             logger.info(String.format("Start to build statement for type: %s.", sqlType));
         }else {

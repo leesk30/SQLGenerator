@@ -49,10 +49,6 @@ public class RuntimeConfiguration {
         }
     }
 
-    public boolean getRule(Rule name){
-        return ruleMap.getOrDefault(name, provider.getTemplateRuleMap().getOrDefault(name, name.getDefaultValue()));
-    }
-
     public boolean confirm(Rule name){
         return ruleMap.getOrDefault(name, provider.getTemplateRuleMap().getOrDefault(name, name.getDefaultValue()));
     }

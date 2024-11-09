@@ -42,9 +42,9 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
 
         public SortEntry(Scalar scalar, RuntimeConfiguration config){
             this.scalar = scalar;
-            this.isDefaultAsc = !config.getRule(Rule.ORDER_DEFAULT_DESC);
-            this.isDefaultNullLast = !config.getRule(Rule.ORDER_DEFAULT_NULL_FIRST);
-            this.supportWithProjectionAlias = config.getRule(Rule.ENABLE_FILTER_USING_PROJECTION_ALIAS);
+            this.isDefaultAsc = !config.confirm(Rule.ORDER_DEFAULT_DESC);
+            this.isDefaultNullLast = !config.confirm(Rule.ORDER_DEFAULT_NULL_FIRST);
+            this.supportWithProjectionAlias = config.confirm(Rule.ENABLE_FILTER_USING_PROJECTION_ALIAS);
         }
 
         @Override
@@ -137,6 +137,10 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
         children.add(sortEntry);
     }
 
+    protected void addSortEntry(LiteralInt sortIndex){
+        addSortEntry(new SortEntry(sortIndex, this.statement.getConfig()));
+    }
+
     protected IntConsumer randomlyOrderByIndex(){
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
@@ -189,7 +193,7 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
 
     protected void forceOrderByAllProjections(){
         for (int i = 1; i < getProjectSize() + 1; i++) {
-            addSortEntry(new SortEntry(new LiteralInt(i), this.statement.getConfig()));
+            addSortEntry(new LiteralInt(i));
         }
     }
 

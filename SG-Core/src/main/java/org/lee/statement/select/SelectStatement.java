@@ -5,8 +5,12 @@ import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.Rule;
+import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.SubqueryRelation;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.SQLType;
 import org.lee.statement.basic.AbstractSQLStatement;
 import org.lee.statement.clause.Clause;
@@ -99,9 +103,24 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
     }
 
     public static SelectStatement getStatementBySelectType(SelectType selectType, SQLStatement parent){
+        // todo
         if(selectType == null){
-            selectType = Utility.randomlyChooseFrom(SelectType.ALL);
+            if(parent != null){
+                if(parent.enableSetop() && parent.probability(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY)){
+                    selectType = SelectType.setop;
+                }else {
+                    selectType = Utility.randomlyChooseFrom(SelectType.ALL);
+                }
+            } else {
+                RuntimeConfiguration configuration = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
+                if(configuration.confirm(Rule.REWRITER_REORDER)){
+                    selectType = Utility.probability(5) ? SelectType.setop : SelectType.normal;
+                }else {
+                    selectType = Utility.randomlyChooseFrom(SelectType.ALL);
+                }
+            }
         }
+
         switch (selectType){
             case normal:
                 return new SelectNormalStatement(parent);

@@ -24,10 +24,6 @@ public interface InternalConfig{
         return SQLGeneratorContext.getOrCreate(this);
     }
 
-    default RuntimeConfigurationProvider newProvider(){
-        return RuntimeConfigurationProvider.getProvider(this);
-    }
-
     default void display(){
         LOGGER.debug("InternalConfig-SyntaxType: " + getSyntaxType());
         LOGGER.debug("InternalConfig-Mode: " + getGeneratePolicy());

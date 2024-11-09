@@ -46,6 +46,10 @@ public final class InternalConfigs {
         return new DefaultPartialInternalConfig(inputEntries);
     }
 
+    public static InternalConfig create(final Mode mode, final InputStream inputEntries){
+        return new DefaultPartialInternalConfig(mode, inputEntries);
+    }
+
     public static void modifyLoggingConfig(final String xmlFilePath){
         System.setProperty("log4j.configuration", xmlFilePath);
         // org.apache.logging.log4j.LogManager.getContext();
@@ -194,6 +198,10 @@ public final class InternalConfigs {
 
         private DefaultPartialInternalConfig(Mode mode, String entriesPath){
             super(SyntaxType.spark, mode, getJSONFromFileSource(entriesPath), getDefaultSymbols(), new Properties());
+        }
+
+        private DefaultPartialInternalConfig(Mode mode, InputStream entries){
+            super(SyntaxType.spark, mode, new JSONObject(Utility.inputStreamToString(entries)), getDefaultSymbols(), new Properties());
         }
 
         private DefaultPartialInternalConfig(SyntaxType syntaxType, String entriesPath){
