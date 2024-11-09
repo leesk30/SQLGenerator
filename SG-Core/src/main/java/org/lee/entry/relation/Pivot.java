@@ -94,16 +94,22 @@ public final class Pivot extends Pivoted {
             return;
         }
         StringBuilder builder = new StringBuilder(rawEntry.getString());
-        builder.append(SPACE).append(PIVOT).append(LP)
+        builder.append(SPACE).append(PIVOT)
+                .append(LP) // LP 1
                 .append(nodeArrayToString(aggregations))
                 .append(SPACE).append(FOR).append(SPACE);
         if(forTarget.size() > 1){
-            builder.append(LP).append(nodeArrayToString(forTarget)).append(RP);
+            builder.append(LP) // LP 1-1
+                    .append(nodeArrayToString(forTarget))
+                    .append(RP); // END LP 1-1
         }else {
             builder.append(forTarget.get(0).getString());
         }
-        builder.append(SPACE).append(IN).append(SPACE).append(LP)
-                .append(nodeArrayToString(forValue)).append(RP);
+        builder.append(SPACE).append(IN).append(SPACE)
+                .append(LP) // LP 2
+                .append(nodeArrayToString(forValue))
+                .append(RP) // END LP 2
+                .append(RP); // END LP 1
         cachedString = builder.toString();
     }
 
