@@ -29,5 +29,6 @@ public class SparkGeneratorConfigurationProvider extends RuntimeConfigurationPro
         // spark required scalar subquery is created by aggregation
 //        this.ruleMapTemplate.put(Rule.SCALAR_FORCE_USING_AGGREGATION, true);
         this.ruleMapTemplate.put(Rule.ENABLE_PSEUDO, false);
+        this.ruleMapTemplate.put(Rule.ENABLE_SINGLE_RELATION_TRANSFORM_PIVOT, false);
     }
 }

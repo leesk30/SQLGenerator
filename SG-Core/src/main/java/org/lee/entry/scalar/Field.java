@@ -43,4 +43,8 @@ public class Field extends ScalarWithinRelation {
     public TypeDescriptor getTypeDescriptor() {
         return descriptor;
     }
+
+    public NameProxy asNameProxy(){
+        return new NameProxy(fieldName, fieldType);
+    }
 }

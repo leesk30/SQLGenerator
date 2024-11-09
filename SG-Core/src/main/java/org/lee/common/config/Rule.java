@@ -14,7 +14,8 @@ public enum Rule {
     ORDER_DEFAULT_NULL_FIRST(false, false, true),
     REWRITER_REORDER(false, false, true),
     SCALAR_FORCE_USING_AGGREGATION(false, false, true),
-    ENABLE_PSEUDO(false, true, true)
+    ENABLE_PSEUDO(false, true, true),
+    ENABLE_SINGLE_RELATION_TRANSFORM_PIVOT(false, true, true),
     ;
 
     private final boolean rewritable;

@@ -3,6 +3,7 @@ package org.lee.statement.support;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.common.config.Rule;
 import org.lee.entry.relation.Partition;
 import org.lee.entry.relation.Pivoted;
 import org.lee.entry.relation.RangeTableEntry;
@@ -35,8 +36,15 @@ public interface SupportRangeTableTransform extends SupportRuntimeConfiguration 
             // cannot convert
             return entry;
         }
-        if(entry.getNodeTag() == NodeTag.pivoted){
+
+        NodeTag tag = entry.getNodeTag();
+        if(tag == NodeTag.pivoted){
             // cannot nested pivot & unpivot
+            return entry;
+        }
+
+        if(tag == NodeTag.rteJoin){
+            // cannot transform range table join
             return entry;
         }
 
@@ -45,6 +53,12 @@ public interface SupportRangeTableTransform extends SupportRuntimeConfiguration 
             return entry;
         }
 
-        return Pivoted.fuzzy(entry);
+        RangeTableEntry transformedEntry = Pivoted.fuzzy(entry);
+
+        if(this.getConfig().confirm(Rule.ENABLE_SINGLE_RELATION_TRANSFORM_PIVOT)){
+            return transformedEntry;
+        }
+
+        return transformedEntry.toShelledSubqueryEntry();
     }
 }
