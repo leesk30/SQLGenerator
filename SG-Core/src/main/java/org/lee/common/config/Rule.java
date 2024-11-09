@@ -16,6 +16,7 @@ public enum Rule {
     SCALAR_FORCE_USING_AGGREGATION(false, false, true),
     ENABLE_PSEUDO(false, true, true),
     ENABLE_SINGLE_RELATION_TRANSFORM_PIVOT(false, true, true),
+    ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION(false, true, true),
     ;
 
     private final boolean rewritable;

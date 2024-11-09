@@ -1,5 +1,8 @@
 package org.lee.entry.relation;
 
+import org.lee.common.config.Rule;
+import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.VoidNode;
 import org.lee.common.Assertion;
@@ -133,7 +136,11 @@ public final class Pivot extends Pivoted {
     }
 
     private void generateFor(){
-        int elementNum = Utility.randomIntFromRange(2, 7);
+        final int elementNum = Utility.randomIntFromRange(2, 7);
+        final RuntimeConfigurationProvider provider = SQLGeneratorContext.getCurrentConfigProvider();
+        final boolean shouldConcatName = aggregations.size() >= 2 ||
+                !provider.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
+
         for(int i=0; i<elementNum; i++){
             List<Literal<?>> literalList = new ArrayList<>();
             for(Field field: forTarget){
@@ -141,15 +148,21 @@ public final class Pivot extends Pivoted {
             }
             String newName = Utility.getRandomName("pf_");
             forValue.add(new PivotForValueNode(literalList, newName));
+
             for(PivotEntry pivotEntry: aggregations){
-                Field pivotedField = getPivotField(newName, pivotEntry);
+                Field pivotedField = getPivotField(newName, pivotEntry, shouldConcatName);
                 fieldList.add(pivotedField);
             }
         }
     }
 
-    private Field getPivotField(String renamedForPart, PivotEntry pivotEntry){
-        final String fieldName = renamedForPart + "_" + pivotEntry.getName();
+    private Field getPivotField(String renamedForPart, PivotEntry pivotEntry, boolean concatName){
+        final String fieldName;
+        if(concatName){
+            fieldName = renamedForPart + "_" + pivotEntry.getName();
+        }else {
+            fieldName = renamedForPart;
+        }
         final TypeTag fieldType = pivotEntry.getType();
         return new Field(fieldName, fieldType);
     }

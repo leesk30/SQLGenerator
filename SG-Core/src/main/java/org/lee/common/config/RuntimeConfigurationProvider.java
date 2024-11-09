@@ -74,6 +74,10 @@ public abstract class RuntimeConfigurationProvider {
         return this.source;
     }
 
+    public boolean confirm(Rule name){
+        return getTemplateRuleMap().getOrDefault(name, name.getDefaultValue());
+    }
+
     abstract public RuntimeConfiguration newRuntimeConfiguration();
     abstract protected void onCreateNewConfigurationProvider();
 }
