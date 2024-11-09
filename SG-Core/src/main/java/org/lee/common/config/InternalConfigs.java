@@ -38,6 +38,11 @@ public final class InternalConfigs {
         return new DefaultPartialInternalConfig(mode, inputEntriesPath);
     }
 
+    public static InternalConfig create(final String mode, final String inputEntriesPath){
+        Mode modeEnum = Mode.fromString(mode);
+        return new DefaultPartialInternalConfig(modeEnum, inputEntriesPath);
+    }
+
     public static InternalConfig create(final JSONObject inputEntries){
         return new DefaultPartialInternalConfig(inputEntries);
     }
@@ -48,6 +53,11 @@ public final class InternalConfigs {
 
     public static InternalConfig create(final Mode mode, final InputStream inputEntries){
         return new DefaultPartialInternalConfig(mode, inputEntries);
+    }
+
+    public static InternalConfig create(final String mode, final InputStream inputEntries){
+        Mode modeEnum = Mode.fromString(mode);
+        return new DefaultPartialInternalConfig(modeEnum, inputEntries);
     }
 
     public static void modifyLoggingConfig(final String xmlFilePath){
