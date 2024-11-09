@@ -31,7 +31,7 @@ public interface SupportRangeTableTransform extends SupportRuntimeConfiguration 
         return Utility.randomlyChooseFrom(partitions);
     }
 
-    default RangeTableEntry randomlyConvertToPivoted(RangeTableEntry entry){
+    default RangeTableEntry randomlyTransformToPivoted(RangeTableEntry entry){
         if(entry.getFields().size() < 2){
             // cannot convert
             return entry;
