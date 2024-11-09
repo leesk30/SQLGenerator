@@ -3,6 +3,7 @@ package org.lee.common.config;
 import org.apache.commons.configuration2.Configuration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
 import org.apache.commons.configuration2.ex.ConfigurationException;
+import org.lee.common.Mode;
 import org.lee.common.SyntaxType;
 import org.lee.common.exception.NotImplementedException;
 import org.slf4j.Logger;
@@ -29,14 +30,21 @@ public abstract class RuntimeConfigurationProvider {
     public static RuntimeConfigurationProvider getProvider(InternalConfig config){
         SyntaxType syntaxType = config.getSyntaxType();
         Properties properties = config.getSourceRuntimeConfig();
+        RuntimeConfigurationProvider provider;
         switch (syntaxType){
             case spark:
             case rain:
-                return new SparkGeneratorConfigurationProvider(properties);
+                provider = new SparkGeneratorConfigurationProvider(properties);
+                break;
             default:
                 LOGGER.error(String.format("The syntax of the syntax type %s is not implement yet", syntaxType));
                 throw new NotImplementedException("Not implements yet");
         }
+        if(config.getGeneratePolicy() == Mode.diff){
+            provider.ruleMapTemplate.put(Rule.REWRITER_REORDER, true);
+            LOGGER.info("Using diff mode to generate sql.");
+        }
+        return provider;
     }
 
     protected final Properties source;
@@ -68,5 +76,4 @@ public abstract class RuntimeConfigurationProvider {
 
     abstract public RuntimeConfiguration newRuntimeConfiguration();
     abstract protected void onCreateNewConfigurationProvider();
-
 }

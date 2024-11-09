@@ -34,6 +34,10 @@ public final class InternalConfigs {
         return new DefaultPartialInternalConfig(inputEntriesPath);
     }
 
+    public static InternalConfig create(final Mode mode, final String inputEntriesPath){
+        return new DefaultPartialInternalConfig(mode, inputEntriesPath);
+    }
+
     public static InternalConfig create(final JSONObject inputEntries){
         return new DefaultPartialInternalConfig(inputEntries);
     }
@@ -44,6 +48,7 @@ public final class InternalConfigs {
 
     public static void modifyLoggingConfig(final String xmlFilePath){
         System.setProperty("log4j.configuration", xmlFilePath);
+        // org.apache.logging.log4j.LogManager.getContext();
         // don't close it
         org.apache.logging.log4j.core.config.Configurator.initialize(null, xmlFilePath);
         LOGGER.info("Modify logging config with: " + xmlFilePath);

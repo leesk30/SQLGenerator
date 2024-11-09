@@ -5,7 +5,9 @@ import java.util.Properties;
 
 public class SparkGeneratorConfigurationProvider extends RuntimeConfigurationProvider {
 
-    public SparkGeneratorConfigurationProvider(){}
+    public SparkGeneratorConfigurationProvider(){
+        super();
+    }
 
     public SparkGeneratorConfigurationProvider(Properties properties) {
         super(properties);
