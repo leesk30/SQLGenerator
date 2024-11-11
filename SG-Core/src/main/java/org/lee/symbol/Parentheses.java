@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-public class Parentheses implements Signature{
+public class Parentheses implements Symbol {
 
-    private final Signature wrapped;
-    public Parentheses(Signature wrapped){
+    private final Symbol wrapped;
+    public Parentheses(Symbol wrapped){
         if(wrapped instanceof Parentheses){
             Logger logger = SQLGeneratorContext.getCurrentLogger();
             logger.error("There is no sense for the parentheses nest directly!");

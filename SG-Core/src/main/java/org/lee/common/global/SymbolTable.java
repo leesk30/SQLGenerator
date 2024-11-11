@@ -20,23 +20,23 @@ public class SymbolTable implements Resource<JSONObject> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     private static class Holder{
-        public final TrieTree<TypeTag, Signature> finder = new TrieTree<>();
-        public final Map<TypeTag, List<Signature>> reverseFinder = new EnumMap<>(TypeTag.class);
+        public final TrieTree<TypeTag, Symbol> finder = new TrieTree<>();
+        public final Map<TypeTag, List<Symbol>> reverseFinder = new EnumMap<>(TypeTag.class);
 
-        void put(Signature signature){
-            final TypeTag key = signature.getReturnType();
-            finder.put(signature.getArgumentsTypes(), signature);
+        void put(Symbol symbol){
+            final TypeTag key = symbol.getReturnType();
+            finder.put(symbol.getArgumentsTypes(), symbol);
             if(!reverseFinder.containsKey(key)){
                 reverseFinder.put(key, new Vector<>());
             }
-            reverseFinder.get(key).add(signature);
+            reverseFinder.get(key).add(symbol);
         }
 
-        List<Signature> getByReturn(TypeTag returnType){
+        List<Symbol> getByReturn(TypeTag returnType){
             return reverseFinder.get(returnType);
         }
 
-        List<Signature> getByInput(TypeTag ... input){
+        List<Symbol> getByInput(TypeTag ... input){
             return finder.get(Arrays.asList(input));
         }
     }
@@ -49,9 +49,9 @@ public class SymbolTable implements Resource<JSONObject> {
     private final Holder UDF_HOLDER = new Holder();
     private final Holder UDTF_HOLDER = new Holder();
     private final Holder UDAF_HOLDER = new Holder();
-    private final Table<TypeTag, TypeTag, List<Signature>> cachedCaster = HashBasedTable.create();
+    private final Table<TypeTag, TypeTag, List<Symbol>> cachedCaster = HashBasedTable.create();
     private final Table<TypeTag, TypeTag, Boolean> runtimeCachedUnreachableCasterPath = HashBasedTable.create();
-    private final Map<TypeTag, List<Signature>> cachedLiteralFunction = new EnumMap<>(TypeTag.class);
+    private final Map<TypeTag, List<Symbol>> cachedLiteralFunction = new EnumMap<>(TypeTag.class);
 
     public void put(Operator operator){
         BUILTIN_OPERATOR_HOLDER.put(operator);
@@ -86,21 +86,21 @@ public class SymbolTable implements Resource<JSONObject> {
     }
 
     private void cache(){
-        List<Signature> allLiteralFunction = BUILTIN_AGGREGATE_HOLDER.finder.get(Collections.emptyList());
-        for(Signature signature: allLiteralFunction){
-            TypeTag key = signature.getArgumentsTypes().get(0);
-            List<Signature> container;
+        List<Symbol> allLiteralFunction = BUILTIN_AGGREGATE_HOLDER.finder.get(Collections.emptyList());
+        for(Symbol symbol : allLiteralFunction){
+            TypeTag key = symbol.getArgumentsTypes().get(0);
+            List<Symbol> container;
             if(cachedLiteralFunction.containsKey(key)){
                 container = cachedLiteralFunction.get(key);
-                container.add(signature);
+                container.add(symbol);
             }else {
-                cachedLiteralFunction.put(key, new ArrayList<Signature>(){{add(signature);}});
+                cachedLiteralFunction.put(key, new ArrayList<Symbol>(){{add(symbol);}});
             }
         }
 
         for(TypeTag source: TypeTag.values()){
-            List<Signature> casters = this.getFunction(source);
-            for(Signature caster: casters){
+            List<Symbol> casters = this.getFunction(source);
+            for(Symbol caster: casters){
                 TypeTag target = caster.getReturnType();
                 if(!cachedCaster.contains(source, target)){
                     cachedCaster.put(source, target, new ArrayList<>());
@@ -168,32 +168,36 @@ public class SymbolTable implements Resource<JSONObject> {
         return typeTags;
     }
 
-    public List<Signature> getAggregate(TypeTag input){
+    public List<Symbol> getAggregate(TypeTag input){
         return BUILTIN_AGGREGATE_HOLDER.finder.get(Collections.singletonList(input));
     }
 
-    public List<Signature> getOperator(List<TypeTag> args){
+    public List<Symbol> getOperator(List<TypeTag> args){
         return BUILTIN_OPERATOR_HOLDER.finder.get(args);
     }
 
-    public List<Signature> getFunction(List<TypeTag> tags){
+    public List<Symbol> getOperator(TypeTag ... args){
+        return BUILTIN_OPERATOR_HOLDER.finder.get(Arrays.asList(args));
+    }
+
+    public List<Symbol> getFunction(List<TypeTag> tags){
         return BUILTIN_FUNCTION_HOLDER.finder.get(tags);
     }
 
-    public List<Signature> getFunction(TypeTag ... tags){
+    public List<Symbol> getFunction(TypeTag ... tags){
         return BUILTIN_FUNCTION_HOLDER.finder.get(Arrays.asList(tags));
     }
 
 
-    public List<Signature> getAggregateByReturn(TypeTag returnType){
+    public List<Symbol> getAggregateByReturn(TypeTag returnType){
         return BUILTIN_AGGREGATE_HOLDER.reverseFinder.get(returnType);
     }
 
-    public List<Signature> getOperatorByReturn(TypeTag returnType){
+    public List<Symbol> getOperatorByReturn(TypeTag returnType){
         return BUILTIN_OPERATOR_HOLDER.reverseFinder.get(returnType);
     }
 
-    public List<Signature> getFunctionByReturn(TypeTag returnType){
+    public List<Symbol> getFunctionByReturn(TypeTag returnType){
         return BUILTIN_FUNCTION_HOLDER.reverseFinder.get(returnType);
     }
 
@@ -201,27 +205,27 @@ public class SymbolTable implements Resource<JSONObject> {
         return BUILTIN_AGGREGATE_HOLDER.reverseFinder.keySet();
     }
 
-    public List<Signature> getOperatorAndFunctionByReturn(final TypeTag returnType){
-        return new ArrayList<Signature>(getFunctionByReturn(returnType)){
+    public List<Symbol> getOperatorAndFunctionByReturn(final TypeTag returnType){
+        return new ArrayList<Symbol>(getFunctionByReturn(returnType)){
             {
                 addAll(getOperatorByReturn(returnType));
             }
         };
     }
 
-    public List<Signature> getLiteralFunction(TypeTag returnType){
+    public List<Symbol> getLiteralFunction(TypeTag returnType){
         return cachedLiteralFunction.getOrDefault(returnType, Collections.emptyList());
     }
 
-    public List<Signature> getLiteralFunction(){
-        final List<Signature> result = new ArrayList<>();
-        for(List<Signature> v: cachedLiteralFunction.values()){
+    public List<Symbol> getLiteralFunction(){
+        final List<Symbol> result = new ArrayList<>();
+        for(List<Symbol> v: cachedLiteralFunction.values()){
             result.addAll(v);
         }
         return result;
     }
 
-    public List<Signature> getFunctionInPartial(List<TypeTag> tags){
+    public List<Symbol> getFunctionInPartial(List<TypeTag> tags){
         // todo:
         return null;
     }
@@ -230,11 +234,11 @@ public class SymbolTable implements Resource<JSONObject> {
         return BUILTIN_FUNCTION_HOLDER.finder.maxWidth();
     }
 
-    public Table<TypeTag, TypeTag, List<Signature>> getCasterTable(){
+    public Table<TypeTag, TypeTag, List<Symbol>> getCasterTable(){
         return cachedCaster;
     }
 
-    public List<Signature> getCaster(TypeTag source, TypeTag target){
+    public List<Symbol> getCaster(TypeTag source, TypeTag target){
         if(cachedCaster.contains(source, target)){
             return cachedCaster.get(source, target);
         }
@@ -307,14 +311,14 @@ public class SymbolTable implements Resource<JSONObject> {
         }
     }
 
-    public List<Signature> findCasterSignatures(TypeTag source, TypeTag target, int maxDepth){
+    public List<Symbol> findCasterSignatures(TypeTag source, TypeTag target, int maxDepth){
         final List<TypeTag> path = findCasterPath(source, target, maxDepth);
-        final List<Signature> signatures = new ArrayList<>();
+        final List<Symbol> symbols = new ArrayList<>();
         for(TypeTag next: path){
-            Signature signature = Utility.randomlyChooseFrom(this.getCaster(source, next));
+            Symbol symbol = Utility.randomlyChooseFrom(this.getCaster(source, next));
             source = next;
-            signatures.add(signature);
+            symbols.add(symbol);
         }
-        return signatures;
+        return symbols;
     }
 }

@@ -9,6 +9,7 @@ import org.lee.entry.complex.Filter;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.expression.generator.ExprGenerators;
 import org.lee.statement.expression.generator.JoinQualificationGenerator;
 import org.lee.statement.support.SQLStatement;
 
@@ -30,7 +31,7 @@ public abstract class WhereClause extends Clause<Filter> {
     }
 
 
-    protected void joinCondInWhere(){
+    protected void processImplicitJoin(){
         final FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         final int length = fromClause.size();
         if(length <= 1){
@@ -43,7 +44,7 @@ public abstract class WhereClause extends Clause<Filter> {
             }
             final RangeTableReference left = fromClause.getChildNodes().get(i);
             final RangeTableReference right = fromClause.getChildNodes().get(i+1);
-            final Generator<Qualification> generator = new JoinQualificationGenerator(this.statement, left, right);
+            final Generator<Qualification> generator = ExprGenerators.qualificationFactory(statement, left, right);
             // todo: add counting randomly
             final int generateCount = Utility.randomIntFromRange(1, 2);
             for(int j = 0; j < generateCount; j++){

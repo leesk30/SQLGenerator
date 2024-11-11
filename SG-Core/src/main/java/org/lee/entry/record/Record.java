@@ -3,12 +3,13 @@ package org.lee.entry.record;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.entry.scalar.Scalar;
+import org.lee.type.TypeTag;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
+import java.util.stream.Collectors;
 
-public class Record extends Vector<Scalar> implements Node {
+public class Record extends ArrayList<Scalar> implements Node {
 
     public Record(int width){
         super(width);
@@ -18,17 +19,27 @@ public class Record extends Vector<Scalar> implements Node {
         super(vector);
     }
 
-    public int getWidth() {
-        return size();
-    }
-
     @Override
     public String getString() {
-        return LP + nodeArrayToString(", ", Arrays.stream(this.elementData).map(item -> (Node) item)) + RP;
+        return LP + nodeArrayToString(", ", this) + RP;
     }
 
     @Override
     public NodeTag getNodeTag() {
         return NodeTag.record;
+    }
+
+    public Scalar toScalar(){
+        if(this.size() == 1)
+            return this.get(0);
+        return AdaptiveRecordScalar.adaptScalarList(this);
+    }
+
+    public AdaptiveRecordScalar toAdaptiveScalar(){
+        return AdaptiveRecordScalar.adaptScalarList(this);
+    }
+
+    public List<TypeTag> getTypeList(){
+        return this.stream().map(Scalar::getType).collect(Collectors.toList());
     }
 }

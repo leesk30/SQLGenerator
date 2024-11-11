@@ -4,7 +4,7 @@ import org.lee.common.Utility;
 import org.lee.common.structure.TrieTree;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.abs.GeneratorStatistic;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
@@ -31,9 +31,9 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         Utility.groupByType(candidateList, groupByType);
     }
 
-    private Map<TypeTag, Integer> getSignatureNumOfType(Signature signature){
+    private Map<TypeTag, Integer> getSignatureNumOfType(Symbol symbol){
         Map<TypeTag, Integer> result = new HashMap<>();
-        signature.getArgumentsTypes().forEach(
+        symbol.getArgumentsTypes().forEach(
                 type -> {
                     if (!result.containsKey(type)){
                         result.put(type, 1);
@@ -45,9 +45,9 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         return result;
     }
 
-    private double getAverageDistinctFactor(Signature signature){
+    private double getAverageDistinctFactor(Symbol symbol){
         double avgValue = 0D;
-        Map<TypeTag, Integer> numOfType = getSignatureNumOfType(signature);
+        Map<TypeTag, Integer> numOfType = getSignatureNumOfType(symbol);
         for(TypeTag typeTag: numOfType.keySet()){
             int typeNum = numOfType.get(typeTag);
             int fieldNum = groupByType.containsKey(typeTag)?groupByType.get(typeTag).size():0;
@@ -56,23 +56,23 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         return avgValue / numOfType.keySet().size();
     }
 
-    private double getChooseFactor(Signature signature){
-        return (double) totalSize / (double) signature.argsNum();
+    private double getChooseFactor(Symbol symbol){
+        return (double) totalSize / (double) symbol.argsNum();
     }
 
-    private int calculateSuitableFactor(Signature signature){
-        return (int)((getAverageDistinctFactor(signature)/getChooseFactor(signature)) * 100);
+    private int calculateSuitableFactor(Symbol symbol){
+        return (int)((getAverageDistinctFactor(symbol)/getChooseFactor(symbol)) * 100);
     }
 
-    public int suitableFactorProb(Signature signature){
+    public int suitableFactorProb(Symbol symbol){
         attach++;
-        if(signatureCalculateResultCache.get(signature.getArgumentsTypes()).isEmpty()){
-            int cached = calculateSuitableFactor(signature);
-            signatureCalculateResultCache.put(signature.getArgumentsTypes(), cached);
+        if(signatureCalculateResultCache.get(symbol.getArgumentsTypes()).isEmpty()){
+            int cached = calculateSuitableFactor(symbol);
+            signatureCalculateResultCache.put(symbol.getArgumentsTypes(), cached);
             return cached;
         }
         hit++;
-        return signatureCalculateResultCache.get(signature.getArgumentsTypes()).get(0);
+        return signatureCalculateResultCache.get(symbol.getArgumentsTypes()).get(0);
     }
 
     public double getCacheHitRate(){
@@ -119,16 +119,16 @@ public class UnrelatedStatistic implements GeneratorStatistic {
         return null;
     }
 
-    public Scalar[] findMatchedForSignature(Signature signature){
-        final int argumentNumber = signature.argsNum();
+    public Scalar[] findMatchedForSignature(Symbol symbol){
+        final int argumentNumber = symbol.argsNum();
         Scalar[] result = new Scalar[argumentNumber];
         if(argumentNumber == 0){
             return result;
         }
-        Map<TypeTag, Integer> counter = getSignatureNumOfType(signature);
+        Map<TypeTag, Integer> counter = getSignatureNumOfType(symbol);
         Set<TypeTag> oneCandidateMarker = EnumSet.noneOf(TypeTag.class);
         for (int i=0; i < argumentNumber; i++){
-            final TypeTag required = signature.getArgumentsTypes().get(i);
+            final TypeTag required = symbol.getArgumentsTypes().get(i);
             if(!groupByType.containsKey(required)){
                 continue;
             }

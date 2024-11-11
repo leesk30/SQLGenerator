@@ -4,7 +4,7 @@ import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.symbol.Parentheses;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.literal.mapped.MappedType;
 
 import java.util.Collections;
@@ -96,10 +96,11 @@ public enum TypeTag {
     }
 
     public Parentheses getParenthesesSymbol() {
+        // return a parentheses symbol with type tag information
         return parenthesesSymbol;
     }
 
-    public Signature getEmptySymbol() {
+    public Symbol getEmptySymbol() {
         return emptySymbol;
     }
 
@@ -116,7 +117,7 @@ public enum TypeTag {
         return names[0];
     }
 
-    private final static class EmptySymbol implements Signature {
+    private final static class EmptySymbol implements Symbol {
         private final List<TypeTag> arguments;
         private final TypeTag returnType;
         public EmptySymbol(TypeTag target){
@@ -126,27 +127,27 @@ public enum TypeTag {
         }
 
         @Override
-        public final String getString() {
+        public String getString() {
             return "%s";
         }
 
         @Override
-        public final NodeTag getNodeTag() {
+        public NodeTag getNodeTag() {
             return NodeTag.operator;
         }
 
         @Override
-        public final int argsNum() {
+        public int argsNum() {
             return 1;
         }
 
         @Override
-        public final TypeTag getReturnType() {
+        public TypeTag getReturnType() {
             return returnType;
         }
 
         @Override
-        public final List<TypeTag> getArgumentsTypes() {
+        public List<TypeTag> getArgumentsTypes() {
             return arguments;
         }
     }

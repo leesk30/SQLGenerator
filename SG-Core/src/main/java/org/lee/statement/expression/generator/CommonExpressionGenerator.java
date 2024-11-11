@@ -8,11 +8,12 @@ import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.abs.ExpressionGenerator;
+import org.lee.statement.expression.abs.Location;
 import org.lee.statement.expression.abs.UnrelatedGenerator;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Aggregation;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 
@@ -20,53 +21,42 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GeneralExpressionGenerator
+public class CommonExpressionGenerator
         extends UnrelatedGenerator<Expression>
         implements ExpressionGenerator {
 
-    public enum SymbolType{
-        aggregate,
-        function,
-        operator,
-    }
-
-    public static final List<Scalar> unmodifiableEmptyList = Collections.emptyList();
     private final boolean parentFlagEnableAggregate;
     private final boolean parentFlagEnableWindow;
     protected final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+    protected final Location expressionLocation;
 
-    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(SQLStatement statement){
-        return new GeneralExpressionGenerator(false, false, statement, unmodifiableEmptyList);
-    }
-
-    public static GeneralExpressionGenerator emptyCandidateExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement){
-        return new GeneralExpressionGenerator(enableAggregation, enableWindow, statement, unmodifiableEmptyList);
-    }
-
-    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, Scalar ... scalars){
+    public CommonExpressionGenerator(Location location, SQLStatement statement, Scalar ... scalars){
         super(statement, scalars);
-        parentFlagEnableAggregate = enableAggregation;
-        parentFlagEnableWindow = enableWindow;
+        parentFlagEnableAggregate = location == Location.project;
+        parentFlagEnableWindow = location == Location.project;
+        expressionLocation = location;
     }
 
-    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
+    public CommonExpressionGenerator(Location location, boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
         super(statement, scalars);
-        parentFlagEnableAggregate = enableAggregation;
-        parentFlagEnableWindow = enableWindow;
+        parentFlagEnableAggregate = enableAggregation && location == Location.project;
+        parentFlagEnableWindow = enableWindow && location == Location.project;
+        expressionLocation = location;
     }
 
-    public GeneralExpressionGenerator(boolean enableAggregation, boolean enableWindow, SQLStatement statement, UnrelatedStatistic statistic){
+    public CommonExpressionGenerator(Location location, SQLStatement statement, UnrelatedStatistic statistic){
         super(statement, statistic);
-        parentFlagEnableAggregate = enableAggregation;
-        parentFlagEnableWindow = enableWindow;
+        parentFlagEnableAggregate = location == Location.project;
+        parentFlagEnableWindow = location == Location.project;
+        expressionLocation = location;
     }
 
-    public List<Signature> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
-        final List<Signature> copiedSignature = Utility.copyList(symbolTable.getFunctionByReturn(root));
-        final List<Signature> operators = symbolTable.getOperatorByReturn(root);
+    public List<Symbol> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
+        final List<Symbol> copiedSymbol = Utility.copyList(symbolTable.getFunctionByReturn(root));
+        final List<Symbol> operators = symbolTable.getOperatorByReturn(root);
 
         if(operators != null){
-            copiedSignature.addAll(operators);
+            copiedSymbol.addAll(operators);
         }
         // The parentFlag means whether the expression generator can enable aggregation.
         // The childrenFlag is an internal control flag which is used to avoid the nested aggregation.
@@ -76,33 +66,33 @@ public class GeneralExpressionGenerator
         //  and for the sub-expression, we use the childrenFlag to disable aggregation for nested another aggregator.
         //  Otherwise, we may generate an `max(max(a))`. This is not allowed in mostly database engines.
         if(parentFlagEnableAggregate && childrenFlagEnableAggregate && probability(Conf.EXPRESSION_APPEND_AGGREGATION_PROB)){
-            final List<Signature> aggregators = symbolTable.getAggregateByReturn(root);
+            final List<Symbol> aggregators = symbolTable.getAggregateByReturn(root);
             if(aggregators != null){
-                copiedSignature.addAll(aggregators);
+                copiedSymbol.addAll(aggregators);
             }
         }
-        return copiedSignature;
+        return copiedSymbol;
     }
 
     public Expression getCompleteExpressionTree(TypeTag root, int recursionDepth, boolean childrenFlagEnableAggregate){
-        final List<Signature> copiedSignature = getCandidateSignatures(root, childrenFlagEnableAggregate);
-        Collections.shuffle(copiedSignature);
-        while (!copiedSignature.isEmpty()){
-            final Signature signature = Utility.pop(copiedSignature);
-            if(signature == null){
+        final List<Symbol> copiedSymbol = getCandidateSignatures(root, childrenFlagEnableAggregate);
+        Collections.shuffle(copiedSymbol);
+        while (!copiedSymbol.isEmpty()){
+            final Symbol symbol = Utility.pop(copiedSymbol);
+            if(symbol == null){
                 return fallback(root);
             }
 
             // empty arguments function is a terminate node.
-            if(signature.getArgumentsTypes().isEmpty()){
-                return new Expression(signature);
+            if(symbol.getArgumentsTypes().isEmpty()){
+                return new Expression(symbol);
             }
 
-            if(suitable(signature)){
-                return stopGrowth(signature);
+            if(suitable(symbol)){
+                return stopGrowth(symbol);
             }else {
-                if(preferRecursion(signature, recursionDepth)){
-                    return growth(signature, recursionDepth+1);
+                if(preferRecursion(symbol, recursionDepth)){
+                    return growth(symbol, recursionDepth+1);
                 }
                 // else backtrace to another symbol
             }
@@ -110,31 +100,31 @@ public class GeneralExpressionGenerator
         return fallback(root);
     }
 
-    private boolean suitable(Signature signature){
+    private boolean suitable(Symbol symbol){
 //        System.out.println(statistic.suitableFactorProb());
-        return Utility.probability(statistic.suitableFactorProb(signature));
+        return Utility.probability(statistic.suitableFactorProb(symbol));
     }
 
-    private boolean preferRecursion(Signature signature, int currentDepth){
+    private boolean preferRecursion(Symbol symbol, int currentDepth){
         // more suitable there is no more necessary to fallback
         RuntimeConfiguration config = getConfig();
         if(currentDepth > config.getInt(Conf.MAX_EXPRESSION_RECURSION_DEPTH)){
             return false;
         }
         // if suitable enough, don't recursion
-        if(probability(statistic.suitableFactorProb(signature))){
+        if(probability(statistic.suitableFactorProb(symbol))){
             return false;
         }
         final int adaptiveExpressionProbability = config.getInt(Conf.EXPRESSION_RECURSION_PROBABILITY) / (currentDepth == 0? 1: currentDepth);
         return probability(adaptiveExpressionProbability);
     }
 
-    private Expression stopGrowth(Signature signature){
-        final Expression expression = new Expression(signature);
-        final Scalar[] scalars = statistic.findMatchedForSignature(signature);
+    private Expression stopGrowth(Symbol symbol){
+        final Expression expression = new Expression(symbol);
+        final Scalar[] scalars = statistic.findMatchedForSignature(symbol);
         final List<Expression> children = new ArrayList<>();
-        for (int i=0; i < signature.argsNum(); i++){
-            final TypeTag targetType = signature.getArgumentsTypes().get(i);
+        for (int i = 0; i < symbol.argsNum(); i++){
+            final TypeTag targetType = symbol.getArgumentsTypes().get(i);
             if(scalars[i] != null){
                 children.add(scalars[i].toExpression());
             }else {
@@ -146,14 +136,14 @@ public class GeneralExpressionGenerator
     }
 
 
-    private Expression growth(Signature signature, int incrementalDepth){
-        final Expression expression = new Expression(signature);
-        final Scalar[] scalars = statistic.findMatchedForSignature(signature);
-        final boolean childrenEnableAggregation = !(signature instanceof Aggregation);
+    private Expression growth(Symbol symbol, int incrementalDepth){
+        final Expression expression = new Expression(symbol);
+        final Scalar[] scalars = statistic.findMatchedForSignature(symbol);
+        final boolean childrenEnableAggregation = !(symbol instanceof Aggregation);
         // The arguments must be ordered.
-        for (int i=0; i < signature.argsNum(); i++){
-            final TypeTag targetType = signature.getArgumentsTypes().get(i);
-            if(scalars[i] == null || preferRecursion(signature, incrementalDepth)){
+        for (int i = 0; i < symbol.argsNum(); i++){
+            final TypeTag targetType = symbol.getArgumentsTypes().get(i);
+            if(scalars[i] == null || preferRecursion(symbol, incrementalDepth)){
                 expression.newChild(generate(targetType, incrementalDepth, childrenEnableAggregation));
             }else {
                 expression.newChild(scalars[i].toExpression());
@@ -209,4 +199,8 @@ public class GeneralExpressionGenerator
         return expression;
     }
 
+    @Override
+    public Location getExpressionLocation() {
+        return expressionLocation;
+    }
 }

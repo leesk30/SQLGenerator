@@ -7,7 +7,9 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.generator.GeneralExpressionGenerator;
+import org.lee.statement.expression.generator.CommonExpressionGenerator;
+import org.lee.statement.expression.generator.ExprGenerators;
+import org.lee.statement.support.Projectable;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Operator;
 import org.lee.testutils.Printer;
@@ -61,7 +63,7 @@ public class ExpressionMethodUnitTest {
 
     @Test
     public void testExpressionCasting(){
-        GeneralExpressionGenerator generator = GeneralExpressionGenerator.emptyCandidateExpressionGenerator(null);
+        CommonExpressionGenerator generator = ExprGenerators.projectionFactory((Projectable) null);
         IntStream.range(0, 50).parallel().forEach(
                 i -> {Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
                     Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));

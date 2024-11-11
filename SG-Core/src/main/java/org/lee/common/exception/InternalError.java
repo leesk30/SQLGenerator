@@ -16,4 +16,8 @@ public class InternalError extends Error{
         super(t);
         this.errorCode = ErrorCode.OTHER_EXCEPTION_ERROR;
     }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
 }

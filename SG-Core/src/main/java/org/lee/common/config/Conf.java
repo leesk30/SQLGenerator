@@ -38,6 +38,9 @@ public enum Conf {
     SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY(5, true),
     PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY(1, true),
     EXPRESSION_USING_SCALAR_SUBQUERY_PROBABILITY(3, true),
+
+    MULTI_FIELD_IN_PREDICATE_SUBQUERY_PROBABILITY(5, true),
+
     ;
     // implement how to check value
     private final boolean isProbability;

@@ -30,19 +30,19 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     public Expression(Node current){
         Assertion.requiredNonNull(current);
-        this.isTerminateNode = !(current instanceof Signature);
+        this.isTerminateNode = !(current instanceof Symbol);
         this.current = current;
         if(this.isTerminateNode){
             this.childNodes = Collections.emptyList();
         }else {
-            int size = ((Signature) current).argsNum();
+            int size = ((Symbol) current).argsNum();
             this.childNodes = size > 0 ? new ArrayList<>(size) : Collections.emptyList();
         }
     }
 
     public Expression(Node current, List<Expression> childNodes){
         Assertion.requiredNonNull(current);
-        this.isTerminateNode = !(current instanceof Signature);
+        this.isTerminateNode = !(current instanceof Symbol);
         this.current = current;
         this.childNodes = childNodes;
     }
@@ -84,7 +84,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public Expression toWithParenthesesExpression(){
-        Parentheses parentheses = isTerminateNode? ((Scalar) current).getType().getParenthesesSymbol() : ((Signature)current).toParentheses();
+        Parentheses parentheses = isTerminateNode ? ((Scalar) current).getType().getParenthesesSymbol() : ((Symbol)current).toParentheses();
         Expression newer = newExpression(parentheses) ;
         newer.childNodes.addAll(childNodes);
         return newer;
@@ -124,8 +124,8 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
     @Override
     public TypeTag getType() {
-        if(current instanceof Signature){
-            return ((Signature) current).getReturnType();
+        if(current instanceof Symbol){
+            return ((Symbol) current).getReturnType();
         }
         return ((Scalar) current).getType();
     }
@@ -139,7 +139,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     public boolean isCurrentComplete(){
-        return isTerminateNode || ((Signature) current).argsNum() == childNodes.size();
+        return isTerminateNode || ((Symbol) current).argsNum() == childNodes.size();
     }
 
     public boolean isComplete(){
@@ -216,7 +216,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
     public List<TypeTag> getLeafRequired(){
         if(isLeaf()){
             if(!isTerminateNode){
-                return new ArrayList<>(((Signature) current).getArgumentsTypes());
+                return new ArrayList<>(((Symbol) current).getArgumentsTypes());
             }else {
                 return Collections.emptyList();
             }

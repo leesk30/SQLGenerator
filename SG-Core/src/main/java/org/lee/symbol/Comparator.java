@@ -7,7 +7,7 @@ import org.lee.type.TypeTag;
 
 import java.util.List;
 
-public enum Comparator implements Signature{
+public enum Comparator implements Symbol {
     NOT_EQ("%s != %s"),
     EQ("%s = %s"),
     GT("%s > %s"),
@@ -24,6 +24,13 @@ public enum Comparator implements Signature{
     IS_NOT_NULL(1, "%s IS NOT NULL"),
     IS_NULL(1, "%s IS NULL"),
     BETWEEN_AND(3, "%s BETWEEN %s AND %s"),
+
+    // subquery
+    EXISTS(1, "EXISTS %s"),
+    NOT_EXISTS(1, "NOT EXISTS %s"),
+
+    IN(2, "%s IN %s"),
+    NOT_IN(2, "%s NOT IN %s"),
     ;
 
     public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE, ILIKE, NOT_ILIKE};

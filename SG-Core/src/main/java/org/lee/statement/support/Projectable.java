@@ -2,6 +2,7 @@ package org.lee.statement.support;
 
 import org.lee.common.Assertion;
 import org.lee.entry.complex.TargetEntry;
+import org.lee.entry.record.AdaptiveRecordScalar;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.entry.scalar.ScalarSubquery;
@@ -16,6 +17,10 @@ public interface Projectable extends SQLStatement {
     default Scalar toScalar(){
         Assertion.requiredTrue(isScalar());
         return new ScalarSubquery(this);
+    }
+
+    default AdaptiveRecordScalar toAdaptiveRecordScalar(){
+        return AdaptiveRecordScalar.adaptProjectable(this);
     }
 
     boolean isWithLogicalParentheses();

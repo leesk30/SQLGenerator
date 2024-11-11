@@ -2,7 +2,7 @@ package org.lee.type.literal;
 
 import org.lee.base.NodeTag;
 import org.lee.entry.scalar.Scalar;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
 import org.lee.type.literal.mapped.MappedType;
 
@@ -60,8 +60,8 @@ public abstract class Literal<T> implements Scalar {
         }
 
         T javaInstance = this.asJava();
-        if(javaInstance instanceof Signature){
-            Signature self = (Signature) this.asJava();
+        if(javaInstance instanceof Symbol){
+            Symbol self = (Symbol) this.asJava();
             return self.getString();
         }
         return asJava().toString();

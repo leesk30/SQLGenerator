@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Function implements Signature{
+public class Function implements Symbol {
 
     protected final String body;
     protected final TypeTag returnType;

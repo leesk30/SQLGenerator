@@ -1,0 +1,11 @@
+1. The exception system has not been implemented completely.
+    Is there any necessary to implement complex?
+    The answer i think must be "yes, there is", but not now. When the service (NOT Core module, just service module)
+        became more and more complex or we decide to integrated more and more toolkit (Not only the sql generator.
+        Eg: The Chaos testing tool base on generator), we need a relatively mature exception system to handle
+        more and more corner case and build a benchmark of the exception IPC/RPC.
+2. The configuration system is too hack for implementing two kind of Enum(`Conf` && `Rule`).
+    I don't think two kind of Enum is a good idea to classify user defined config & internal rules config.
+    It will might became more complex during developing in the future.
+3. The dispatching of configuration from parent statement to children statement is not safe,
+    some situation cannot find the correct configuration which can be trustly lookup.

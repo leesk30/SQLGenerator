@@ -4,6 +4,7 @@ import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.expression.abs.Location;
 import org.lee.statement.expression.abs.QualificationGenerator;
 import org.lee.statement.expression.abs.UnrelatedGenerator;
 import org.lee.statement.support.SQLStatement;
@@ -17,15 +18,15 @@ public class WhereQualificationGenerator
         extends UnrelatedGenerator<Qualification>
         implements QualificationGenerator {
 
-    private final GeneralExpressionGenerator complexExpressionGenerator;
+    private final CommonExpressionGenerator complexExpressionGenerator;
     protected WhereQualificationGenerator(SQLStatement statement, Scalar... scalars) {
         super(statement, scalars);
-        this.complexExpressionGenerator = new GeneralExpressionGenerator(false, false, statement, getStatistic());
+        this.complexExpressionGenerator = ExprGenerators.derivedFactory(this);
     }
 
     public WhereQualificationGenerator(SQLStatement statement, List<? extends Scalar> expresssionList) {
         super(statement, expresssionList);
-        this.complexExpressionGenerator = new GeneralExpressionGenerator(false, false, statement, getStatistic());
+        this.complexExpressionGenerator = ExprGenerators.derivedFactory(this);
 
     }
 
@@ -67,5 +68,10 @@ public class WhereQualificationGenerator
             return new Qualification(getCompareOperator(target, target)).newChild(targetScalar).newChild(getContextSensitiveScalar(target));
         }
         return predicateScalarAndScalar();
+    }
+
+    @Override
+    public Location getExpressionLocation() {
+        return Location.where;
     }
 }

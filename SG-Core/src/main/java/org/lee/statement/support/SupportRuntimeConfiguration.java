@@ -4,6 +4,8 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.exception.BadConfigurationError;
+import org.lee.common.exception.InternalError;
 
 public interface SupportRuntimeConfiguration {
     RuntimeConfiguration getConfig();
@@ -16,10 +18,16 @@ public interface SupportRuntimeConfiguration {
     }
 
     default boolean probability(Conf name){
-        if(name.isProb()){
+        try {
             return Utility.probability(getConfig().getShort(name));
+        }catch (NumberFormatException e){
+            if(!name.isProb()){
+                // Like an assertion error
+                throw new InternalError(String.format("The conf '%s' is not a probability", name));
+            }else {
+                throw new BadConfigurationError(name, getConfig().getString(name));
+            }
         }
-        throw new UnsupportedOperationException(String.format("The conf '%s' is not a probability", name));
     }
 
     default boolean probability(int prob){

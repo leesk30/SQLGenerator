@@ -9,7 +9,7 @@ import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.symbol.Function;
 import org.lee.symbol.Operator;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
@@ -53,7 +53,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
     default Expression functionUnit(List<Scalar> scalars){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        final List<Signature> candidate = symbolTable.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
+        final List<Symbol> candidate = symbolTable.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
         Function function = (Function) Utility.randomlyChooseFrom(candidate);
         if(function == null){
             return fallbackFor(scalars);
@@ -76,11 +76,11 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
             Assertion.requiredFalse(expression.isIncludingAggregation());
         }
         SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        List<Signature> input = symbolTable.getAggregateByReturn(targetType);
+        List<Symbol> input = symbolTable.getAggregateByReturn(targetType);
         if(input != null){
 
         }
-        List<Signature> suitable = input.stream()
+        List<Symbol> suitable = input.stream()
                 .filter(signature -> signature.getArgumentsTypes().size() == 1)
                 .filter(signature -> signature.getArgumentsTypes().get(0) == expression.getType())
                 .collect(Collectors.toList());

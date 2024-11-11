@@ -14,7 +14,7 @@ import org.lee.statement.select.SelectSimpleStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SQLStatementChildren;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 
@@ -27,6 +27,7 @@ public interface IExpressionGenerator<T extends Expression>
         Generator<T>,
         SQLStatementChildren {
     GeneratorStatistic getStatistic();
+    Location getExpressionLocation();
 
     default Scalar getScalar(TypeTag typeTag){
         if(probability(50)){
@@ -71,7 +72,6 @@ public interface IExpressionGenerator<T extends Expression>
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
         projectable.fuzz();
-
         return projectable.toScalar();
     }
 
@@ -109,9 +109,9 @@ public interface IExpressionGenerator<T extends Expression>
         }
         Expression currentExpression = expression;
         for(TypeTag next: paths){
-            Signature signature = Utility.randomlyChooseFrom(symbolTable.getCaster(currentExpression.getType(), next));
-            Assertion.requiredNonNull(signature); // impossible
-            currentExpression = new Expression(signature).newChild(currentExpression);
+            Symbol symbol = Utility.randomlyChooseFrom(symbolTable.getCaster(currentExpression.getType(), next));
+            Assertion.requiredNonNull(symbol); // impossible
+            currentExpression = new Expression(symbol).newChild(currentExpression);
         }
         Assertion.requiredTrue(currentExpression.getType() == target);
         return currentExpression;
@@ -119,12 +119,12 @@ public interface IExpressionGenerator<T extends Expression>
 
     default Optional<Expression> nullableCast(Expression expression, TypeTag targetType){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        final List<Signature> candidateSignatures = symbolTable.getCaster(expression.getType(), targetType);
-        Signature signature = Utility.randomlyChooseFrom(candidateSignatures);
-        if(signature == null){
+        final List<Symbol> candidateSymbols = symbolTable.getCaster(expression.getType(), targetType);
+        Symbol symbol = Utility.randomlyChooseFrom(candidateSymbols);
+        if(symbol == null){
             return Optional.empty();
         }
-        return Optional.of(new Expression(signature, Collections.singletonList(expression)));
+        return Optional.of(new Expression(symbol, Collections.singletonList(expression)));
     }
 
     default Scalar getLiteral(TypeTag typeTag){

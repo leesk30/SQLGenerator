@@ -6,7 +6,7 @@ import org.lee.type.TypeTag;
 
 import java.util.List;
 
-public enum PredicateCombiner implements Signature {
+public enum PredicateCombiner implements Symbol {
 
     NOT(1, "NOT %s"),
     AND(2, "%s AND %s"),

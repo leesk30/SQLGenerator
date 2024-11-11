@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public interface Signature extends Node {
+public interface Symbol extends Node {
     List<TypeTag> UNCONFIRMED_INPUT1 = Collections.singletonList(TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT2 = Arrays.asList(TypeTag.null_, TypeTag.null_);
     List<TypeTag> UNCONFIRMED_INPUT3 = Arrays.asList(TypeTag.null_, TypeTag.null_, TypeTag.null_);

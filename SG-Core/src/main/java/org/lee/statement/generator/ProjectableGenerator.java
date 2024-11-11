@@ -122,4 +122,10 @@ public final class ProjectableGenerator implements Generator<Projectable> {
         return generator.newRandomlyProjectable(parent);
     }
 
+    public static Projectable newExistsPredicateProjectable(SQLStatement parent){
+        // An exists statement shouldn't have the raw values
+        ProjectableGenerator generator = new ProjectableGenerator(parent, true, false, false, true);
+        return generator.newRandomlyProjectable(parent);
+    }
+
 }

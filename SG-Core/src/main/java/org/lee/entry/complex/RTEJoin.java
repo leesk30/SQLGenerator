@@ -3,12 +3,13 @@ package org.lee.entry.complex;
 import org.apache.commons.lang3.StringUtils;
 import org.lee.base.Generator;
 import org.lee.base.NodeTag;
+import org.lee.common.Utility;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.from.JoinClause;
 import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.generator.JoinQualificationGenerator;
+import org.lee.statement.expression.generator.ExprGenerators;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
@@ -63,8 +64,11 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
 
     @Override
     public void fuzz() {
-        Generator<Qualification> generator = new JoinQualificationGenerator(this.statement, left, right);
-        filter.put(generator.generate());
+        Generator<Qualification> generator = ExprGenerators.qualificationFactory(this);
+        int generateNum = Utility.randomIntFromRange(1, 2);
+        for(int i = 0; i < generateNum; i++){
+            filter.put(generator.generate());
+        }
         filter.fuzz();
     }
 }

@@ -8,6 +8,7 @@ import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
+import org.lee.statement.expression.generator.ExprGenerators;
 import org.lee.statement.expression.generator.WhereQualificationGenerator;
 import org.lee.statement.select.SelectStatement;
 
@@ -20,12 +21,7 @@ public final class SelectWhereClause extends WhereClause {
     }
 
     private void selectWhereFuzz(){
-        List<FieldReference> candidates = new ArrayList<>();
-        FromClause clause = (FromClause) statement.getClause(NodeTag.fromClause);
-        for(RangeTableReference ref: clause.getChildNodes()){
-            candidates.addAll(ref.getFieldReferences());
-        }
-        Generator<Qualification> generator = new WhereQualificationGenerator(statement, candidates);
+        Generator<Qualification> generator = ExprGenerators.qualificationFactory(this);
         int num = Utility.randomIntFromRange(0, config.getInt(Conf.MAX_SELECT_WHERE_FILTER_NUM));
         for(int i=0; i< num; i++){
             Qualification qualification = generator.generate();
@@ -40,7 +36,7 @@ public final class SelectWhereClause extends WhereClause {
     @Override
     public void fuzz() {
         if(statement.containsClause(NodeTag.fromClause)){
-            joinCondInWhere();
+            processImplicitJoin();
         }
         selectWhereFuzz();
         if(!filter.isEmpty()){

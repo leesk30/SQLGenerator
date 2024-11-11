@@ -1,7 +1,6 @@
 package org.lee.entry.relation;
 
 import org.lee.common.config.Rule;
-import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.VoidNode;
@@ -13,7 +12,7 @@ import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Aggregator;
 import org.lee.symbol.Function;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
 import org.lee.type.literal.Literal;
 
@@ -52,7 +51,7 @@ public final class Pivot extends Pivoted {
         private final String name;
         private final Aggregation aggregation;
         private final Field targetField;
-        private PivotEntry(Signature aggregation, Field targetField, String name) {
+        private PivotEntry(Symbol aggregation, Field targetField, String name) {
             assert aggregation instanceof Aggregator && aggregation instanceof Function;
             this.aggregation = (Aggregation) aggregation;
             this.targetField = targetField;
@@ -127,10 +126,10 @@ public final class Pivot extends Pivoted {
     private void generateAgg(final List<Field> aggregationCandidates){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         for(Field fieldToAggregation: aggregationCandidates){
-            List<Signature> signatures = symbolTable.getAggregate(fieldToAggregation.getType());
-            Signature signature = Utility.randomlyChooseFrom(signatures);
-            Assertion.requiredNonNull(signature);
-            PivotEntry pivotEntry = new PivotEntry(signature, fieldToAggregation, Utility.getRandomName("pa_"));
+            List<Symbol> symbols = symbolTable.getAggregate(fieldToAggregation.getType());
+            Symbol symbol = Utility.randomlyChooseFrom(symbols);
+            Assertion.requiredNonNull(symbol);
+            PivotEntry pivotEntry = new PivotEntry(symbol, fieldToAggregation, Utility.getRandomName("pa_"));
             aggregations.add(pivotEntry);
         }
     }

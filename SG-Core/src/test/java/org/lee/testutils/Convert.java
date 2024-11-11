@@ -3,7 +3,7 @@ package org.lee.testutils;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
-import org.lee.symbol.Signature;
+import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
@@ -11,14 +11,14 @@ import java.util.List;
 
 public class Convert {
 
-    public static List<Signature> pathToSignature(TypeTag source, List<TypeTag> path){
+    public static List<Symbol> pathToSignature(TypeTag source, List<TypeTag> path){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        final List<Signature> signatures = new ArrayList<>();
+        final List<Symbol> symbols = new ArrayList<>();
         for(TypeTag target: path){
-            Signature signature = Utility.randomlyChooseFrom(symbolTable.getCaster(source, target));
+            Symbol symbol = Utility.randomlyChooseFrom(symbolTable.getCaster(source, target));
             source = target;
-            signatures.add(signature);
+            symbols.add(symbol);
         }
-        return signatures;
+        return symbols;
     }
 }

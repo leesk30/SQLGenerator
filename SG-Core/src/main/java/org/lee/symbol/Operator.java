@@ -6,7 +6,7 @@ import org.lee.type.TypeTag;
 import java.util.Arrays;
 import java.util.List;
 
-public final class Operator implements Signature{
+public final class Operator implements Symbol {
 
     private final String body;
     private final List<TypeTag> arguments;
