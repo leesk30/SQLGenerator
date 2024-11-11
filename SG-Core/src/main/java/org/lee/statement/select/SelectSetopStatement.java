@@ -66,9 +66,20 @@ public final class SelectSetopStatement
 
     @Override
     public String body(){
-        return wrappedStatementToPretty("v_left", left) + NEWLINE +
-                setOperationToString() + NEWLINE +
-                wrappedStatementToPretty("v_right", right);
+        StringBuilder prettyBody = new StringBuilder();
+        if(!withClause.isEmpty()){
+            prettyBody.append(withClause.getString()).append(SPACE);
+        }
+        prettyBody.append(wrappedStatementToPretty("v_left", left)).append(NEWLINE)
+                .append(setOperationToString()).append(NEWLINE)
+                .append(wrappedStatementToPretty("v_right", right));
+        if(!sortByClause.isEmpty()){
+            prettyBody.append(SPACE).append(sortByClause.getString());
+        }
+        if(!limitOffset.isEmpty()){
+            prettyBody.append(SPACE).append(limitOffset.getString());
+        }
+        return prettyBody.toString();
     }
 
     @Override
