@@ -35,7 +35,7 @@ public abstract class Clause<T extends Node> implements TreeNode<T>, Fuzzer, SQL
     }
 
     @Override
-    public SQLStatement retrieveStatement() {
+    public SQLStatement retrieveParent() {
         return statement;
     }
 

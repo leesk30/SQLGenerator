@@ -1,7 +1,6 @@
 package org.lee.portal;
 
 import org.lee.base.Generator;
-import org.lee.statement.insert.InsertStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.support.SQLStatement;
 

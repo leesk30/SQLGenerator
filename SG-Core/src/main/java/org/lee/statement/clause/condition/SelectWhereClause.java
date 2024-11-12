@@ -4,16 +4,9 @@ import org.lee.base.Generator;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.entry.FieldReference;
-import org.lee.entry.RangeTableReference;
-import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.generator.ExprGenerators;
-import org.lee.statement.expression.generator.WhereQualificationGenerator;
+import org.lee.statement.expression.common.ExprGenerators;
 import org.lee.statement.select.SelectStatement;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class SelectWhereClause extends WhereClause {
     public SelectWhereClause(SelectStatement statement) {

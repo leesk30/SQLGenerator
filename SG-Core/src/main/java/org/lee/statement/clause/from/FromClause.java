@@ -1,6 +1,5 @@
 package org.lee.statement.clause.from;
 
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
@@ -9,8 +8,9 @@ import org.lee.common.global.MetaEntry;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.relation.RangeTableEntry;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.support.ProjectableGenerator;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportCommonTableExpression;
 import org.lee.statement.support.SupportRangeTableTransform;

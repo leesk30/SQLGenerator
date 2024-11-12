@@ -1,6 +1,5 @@
 package org.lee.symbol;
 
-import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
 public class Aggregation extends Function implements Aggregator {

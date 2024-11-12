@@ -3,7 +3,7 @@ package org.lee.statement.expression.statistic;
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.abs.GeneratorStatistic;
+import org.lee.statement.expression.abs.IExpressionGenerator;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 public class RelatedStatistic implements GeneratorStatistic {
+    private final IExpressionGenerator<?> parent;
     private final List<Scalar> leftHandSideCandidates;
     private final List<Scalar> rightHandSideCandidates;
     private final List<Scalar> summaryCandidates;
@@ -20,7 +21,8 @@ public class RelatedStatistic implements GeneratorStatistic {
     private final UnrelatedStatistic rightHandSideStatistic;
     private final UnrelatedStatistic summaryUnrelatedStatistic;
 
-    public RelatedStatistic(List<? extends Scalar> left, List<? extends Scalar> right){
+    public RelatedStatistic(IExpressionGenerator<?> parent, List<? extends Scalar> left, List<? extends Scalar> right){
+        this.parent = parent;
         leftHandSideCandidates = Collections.unmodifiableList(left);
         rightHandSideCandidates = Collections.unmodifiableList(right);
         summaryCandidates = new ArrayList<Scalar>(leftHandSideCandidates.size() + rightHandSideCandidates.size()){
@@ -29,15 +31,66 @@ public class RelatedStatistic implements GeneratorStatistic {
                 addAll(rightHandSideCandidates);
             }
         };
-        leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
-        rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
-        summaryUnrelatedStatistic = new UnrelatedStatistic(summaryCandidates);
+        leftHandSideStatistic = new UnrelatedStatistic(this.parent, leftHandSideCandidates);
+        rightHandSideStatistic = new UnrelatedStatistic(this.parent, rightHandSideCandidates);
+        summaryUnrelatedStatistic = new UnrelatedStatistic(this.parent, summaryCandidates);
         collect();
     }
 
     private void collect(){
     }
 
+    @Override
+    public Pair<Scalar, Scalar> findSimilarPair() {
+        if(Utility.probability(50)){
+            return this.getRelatedCategoryPair();
+        }else {
+            return this.getRelatedTypePair();
+        }
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> tryFindSimilarPair() {
+        Pair<Scalar, Scalar> pair = findSimilarPair();
+        if(pair == null){
+            Scalar left = leftHandSideStatistic.findAny();
+            Scalar right = rightHandSideStatistic.findAny();
+            TypeTag target = TypeTag.minimal(left.getType(), right.getType());
+            return new Pair<>(tryFastConvert(left, target), tryFastConvert(right, target));
+        }
+        return pair;
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> findAnyPair() {
+        Scalar left = leftHandSideStatistic.findAny();
+        Scalar right = rightHandSideStatistic.findAny();
+        return new Pair<>(left, right);
+    }
+
+
+    @Override
+    public Pair<Scalar, Scalar> findAnyPair(TypeTag target) {
+        Scalar left = leftHandSideStatistic.findAny(target);
+        Scalar right = rightHandSideStatistic.findAny(target);
+        if(left == null || right == null){
+            return null;
+        }
+        return new Pair<>(left, right);
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> tryFindAnyPair(TypeTag target) {
+        Pair<Scalar, Scalar> pair = findAnyPair();
+        if(pair == null){
+            Scalar any1 = leftHandSideStatistic.findAny(target);
+            Scalar any2 = rightHandSideStatistic.findAny(target);
+            Scalar left = leftHandSideStatistic.tryFastConvert(any1, target);
+            Scalar right = rightHandSideStatistic.tryFastConvert(any2, target);
+            return new Pair<>(left, right);
+        }
+        return pair;
+    }
 
     public Pair<Scalar, Scalar> getRelatedCategoryPair(){
         Set<TypeCategory> left = leftHandSideStatistic.getGroupedCategory();
@@ -115,5 +168,10 @@ public class RelatedStatistic implements GeneratorStatistic {
     @Override
     public Scalar findAny(TypeTag typeTag) {
         return summaryUnrelatedStatistic.findAny(typeTag);
+    }
+
+    @Override
+    public IExpressionGenerator<?> getParent() {
+        return parent;
     }
 }

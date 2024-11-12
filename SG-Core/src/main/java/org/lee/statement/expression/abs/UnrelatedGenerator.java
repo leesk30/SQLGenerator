@@ -21,7 +21,7 @@ public abstract class UnrelatedGenerator<T extends Expression>
         super(statement);
         rawScalarCandidates = Arrays.asList(scalars);
         replicated = Utility.copyFrozenList(rawScalarCandidates);
-        statistic = new UnrelatedStatistic(rawScalarCandidates);
+        statistic = new UnrelatedStatistic(this, rawScalarCandidates);
     }
 
     protected UnrelatedGenerator(SQLStatement statement, List<? extends Scalar> expresssionList){
@@ -29,7 +29,7 @@ public abstract class UnrelatedGenerator<T extends Expression>
         rawScalarCandidates = new ArrayList<>(expresssionList.size());
         rawScalarCandidates.addAll(expresssionList);
         replicated = Utility.copyFrozenList(rawScalarCandidates);
-        statistic = new UnrelatedStatistic(replicated);
+        statistic = new UnrelatedStatistic(this, replicated);
     }
 
     protected UnrelatedGenerator(SQLStatement statement, UnrelatedStatistic statistic){

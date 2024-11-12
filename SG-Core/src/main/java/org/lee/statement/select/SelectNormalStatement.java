@@ -13,7 +13,9 @@ import org.lee.statement.support.SupportCommonTableExpression;
 
 import java.util.List;
 
-public class SelectNormalStatement extends AbstractSimpleSelectStatement implements Sortable, SupportCommonTableExpression {
+public class SelectNormalStatement
+        extends AbstractSimpleSelectStatement
+        implements Sortable, SupportCommonTableExpression {
     protected final WithClause withClause = new WithClause(this);
     protected final SortByClause sortByClause = new SelectOrderByClause(this);
     protected final LimitOffset limitOffset = new SelectLimitOffset(this);

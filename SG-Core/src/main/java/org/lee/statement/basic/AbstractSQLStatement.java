@@ -2,13 +2,11 @@ package org.lee.statement.basic;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
+import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.entry.relation.CTE;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.SQLClauseWalker;
-import org.lee.common.SQLFormatter;
-import org.lee.statement.SQLType;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SupportCommonTableExpression;

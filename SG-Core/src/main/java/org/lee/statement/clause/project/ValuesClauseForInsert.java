@@ -17,13 +17,13 @@ public class ValuesClauseForInsert extends ValuesClause{
     }
 
     @Override
-    public InsertStatement retrieveStatement(){
+    public InsertStatement retrieveParent(){
         return (InsertStatement) statement;
     }
 
     @Override
     public void fuzz() {
-        final int modifyTableMaxWith = retrieveStatement().getModifyTableClause().getChildNodes().get(0).getFields().size();
+        final int modifyTableMaxWith = this.retrieveParent().getModifyTableClause().getChildNodes().get(0).getFields().size();
         length = Utility.randomIntFromRange(minLines, maxLines);
         width = Utility.randomIntFromRange(1, modifyTableMaxWith);
         generateRecord(getTargetTypeByWidth());

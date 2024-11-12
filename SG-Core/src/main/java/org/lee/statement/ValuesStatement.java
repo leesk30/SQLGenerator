@@ -6,6 +6,7 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
 import org.lee.statement.basic.AbstractSQLStatement;
+import org.lee.statement.basic.SQLType;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;

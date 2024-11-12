@@ -34,7 +34,7 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
     }
 
     @Override
-    public SQLStatement retrieveStatement() {
+    public SQLStatement retrieveParent() {
         return statement;
     }
 

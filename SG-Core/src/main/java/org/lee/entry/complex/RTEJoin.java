@@ -9,7 +9,7 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.from.JoinClause;
 import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.generator.ExprGenerators;
+import org.lee.statement.expression.common.ExprGenerators;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
 package org.lee.statement.expression.abs;
 
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.statistic.UnrelatedStatistic;
 import org.lee.symbol.Function;
@@ -27,7 +27,8 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     Expression fallback();
 
     default Expression fallbackFor(List<Scalar> anyInputs){
-        UnrelatedStatistic statistic = new UnrelatedStatistic(anyInputs);
+        // todo remove theses all
+        UnrelatedStatistic statistic = new UnrelatedStatistic(this, anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
             return anyScalar.toExpression();

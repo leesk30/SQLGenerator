@@ -6,7 +6,6 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.generator.CommonExpressionGenerator;
 import org.lee.statement.select.SelectStatement;
 
 public abstract class SelectClause extends Clause<TargetEntry> {

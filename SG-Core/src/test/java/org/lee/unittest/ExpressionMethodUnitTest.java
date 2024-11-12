@@ -8,7 +8,7 @@ import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.generator.CommonExpressionGenerator;
-import org.lee.statement.expression.generator.ExprGenerators;
+import org.lee.statement.expression.common.ExprGenerators;
 import org.lee.statement.support.Projectable;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Operator;

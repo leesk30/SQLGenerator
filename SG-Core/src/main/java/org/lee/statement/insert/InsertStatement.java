@@ -2,7 +2,7 @@ package org.lee.statement.insert;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
-import org.lee.statement.SQLType;
+import org.lee.statement.basic.SQLType;
 import org.lee.statement.basic.AbstractSQLStatement;
 import org.lee.statement.clause.modify.ModifyTableClause;
 import org.lee.statement.support.SupportModifyTable;

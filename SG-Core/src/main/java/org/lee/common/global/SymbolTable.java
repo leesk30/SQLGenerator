@@ -14,10 +14,20 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class SymbolTable implements Resource<JSONObject> {
     private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+
+    private static final String KEY_FUNCTION = "function";
+    private static final String KEY_OPERATOR = "operator";
+    private static final String KEY_AGGREGATE = "aggregate";
+
+    private static final String KEY_ENABLE = "enable";
+    private static final String KEY_REASON = "reason";
+    private static final String KEY_BODY = "body";
+    private static final String KEY_ARGS = "args";
+    private static final String KEY_PRIORITY = "priority";
+    private static final String KEY_RETURN = "return";
 
     private static class Holder{
         public final TrieTree<TypeTag, Symbol> finder = new TrieTree<>();
@@ -76,12 +86,9 @@ public class SymbolTable implements Resource<JSONObject> {
             return;
         }
         isLoad = true;
-        JSONArray aggregationList = symbols.getJSONArray("aggregate");
-        JSONArray functionList = symbols.getJSONArray("function");
-        JSONArray operatorList = symbols.getJSONArray("operator");
-        build(aggregationList, this::jsonToAggregation);
-        build(functionList, this::jsonToFunction);
-        build(operatorList, this::jsonToOperator);
+        build(KEY_AGGREGATE, symbols, this::jsonToAggregation);
+        build(KEY_FUNCTION, symbols, this::jsonToFunction);
+        build(KEY_OPERATOR, symbols, this::jsonToOperator);
         cache();
     }
 
@@ -110,20 +117,21 @@ public class SymbolTable implements Resource<JSONObject> {
         }
     }
 
-    private void build(JSONArray symbolArray, Consumer<JSONObject> process){
+    private void build(String head, JSONObject symbols, Consumer<JSONObject> process){
+        JSONArray symbolArray = symbols.getJSONArray(head);
         long start = System.currentTimeMillis();
-        StreamSupport.stream(symbolArray.spliterator(), true).forEach(
-                json -> {
-                    JSONObject aggregate = (JSONObject) json;
-                    process.accept(aggregate);
-                }
-        );
-        logger.debug("Build symbol elapse: " + (System.currentTimeMillis() - start));
+        int total = symbolArray.length();
+        for(int i=0; i < symbolArray.length(); i++){
+            JSONObject symbol = symbolArray.getJSONObject(i);
+            process.accept(symbol);
+        }
+        logger.debug(String.format("Build %d symbols for %s elapse: %d ms",  total, head, (System.currentTimeMillis() - start)));
     }
 
-    private boolean checkDisabled(JSONObject jsonSymbol){
-        if(jsonSymbol.has("enable") && !jsonSymbol.getBoolean("enable")){
-            logger.debug("Disable by " + (jsonSymbol.has("reason") ? jsonSymbol.getString("reason") : "Unknown reason"));
+    private boolean checkDisabled(JSONObject symbol){
+        if(symbol.has(KEY_ENABLE) && !symbol.getBoolean(KEY_ENABLE)){
+            String reason = symbol.has(KEY_REASON) ? symbol.getString(KEY_REASON) : "Unknown reason";
+            logger.debug("Disable by " + reason);
             return true;
         }
         return false;
@@ -133,9 +141,9 @@ public class SymbolTable implements Resource<JSONObject> {
         if(checkDisabled(function)){
             return;
         }
-        final String body = function.getString("body");
-        final TypeTag returnType = TypeTag.getEnum(function.getString("return"));
-        final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray("args"));
+        final String body = function.getString(KEY_BODY);
+        final TypeTag returnType = TypeTag.getEnum(function.getString(KEY_RETURN));
+        final TypeTag[] arguments = jsonArrayToTypeTags(function.getJSONArray(KEY_ARGS));
         this.put(new Function(body, returnType, arguments));
     }
 
@@ -143,10 +151,10 @@ public class SymbolTable implements Resource<JSONObject> {
         if(checkDisabled(operator)){
             return;
         }
-        final String body = operator.getString("body");
-        final TypeTag returnType = TypeTag.getEnum(operator.getString("return"));
-        final TypeTag[] arguments = jsonArrayToTypeTags(operator.getJSONArray("args"));
-        final int priority = operator.has("priority") ? operator.getInt("priority") : 1;
+        final String body = operator.getString(KEY_BODY);
+        final TypeTag returnType = TypeTag.getEnum(operator.getString(KEY_RETURN));
+        final TypeTag[] arguments = jsonArrayToTypeTags(operator.getJSONArray(KEY_ARGS));
+        final int priority = operator.has(KEY_PRIORITY) ? operator.getInt(KEY_PRIORITY) : 1;
         this.put(new Operator(body, priority, returnType, arguments));
     }
 
@@ -154,9 +162,9 @@ public class SymbolTable implements Resource<JSONObject> {
         if(checkDisabled(aggregate)){
             return;
         }
-        final String body = aggregate.getString("body");
-        final TypeTag returnType = TypeTag.getEnum(aggregate.getString("return"));
-        final TypeTag[] arguments = jsonArrayToTypeTags(aggregate.getJSONArray("args"));
+        final String body = aggregate.getString(KEY_BODY);
+        final TypeTag returnType = TypeTag.getEnum(aggregate.getString(KEY_RETURN));
+        final TypeTag[] arguments = jsonArrayToTypeTags(aggregate.getJSONArray(KEY_ARGS));
         this.put(new Aggregation(body, returnType, arguments));
     }
 

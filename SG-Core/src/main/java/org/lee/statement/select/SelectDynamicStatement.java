@@ -1,14 +1,11 @@
 package org.lee.statement.select;
 
 import org.lee.base.NodeTag;
-import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.statement.clause.from.FromClause;
-import org.lee.statement.clause.from.SelectFromClause;
 import org.lee.statement.support.SQLStatement;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

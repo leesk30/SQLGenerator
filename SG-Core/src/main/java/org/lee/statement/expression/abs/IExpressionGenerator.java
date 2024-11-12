@@ -1,6 +1,5 @@
 package org.lee.statement.expression.abs;
 
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
@@ -8,10 +7,13 @@ import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.expression.Expression;
-import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.expression.common.Location;
+import org.lee.statement.expression.statistic.GeneratorStatistic;
 import org.lee.statement.select.SelectSimpleStatement;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.ProjectableGenerator;
 import org.lee.statement.support.SQLStatement;
 import org.lee.statement.support.SQLStatementChildren;
 import org.lee.symbol.Symbol;
@@ -20,12 +22,16 @@ import org.slf4j.Logger;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 public interface IExpressionGenerator<T extends Expression>
         extends
         Generator<T>,
         SQLStatementChildren {
+
+    interface ExpressionGeneratorChildren {
+        IExpressionGenerator<?> getParent();
+    }
+
     GeneratorStatistic getStatistic();
     Location getExpressionLocation();
 
@@ -41,7 +47,7 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Scalar getContextFreeScalar(TypeTag typeTag){
-        final SQLStatement statement = retrieveStatement();
+        final SQLStatement statement = retrieveParent();
         final boolean enableScalarSubquery = statement == null || statement.enableSubquery();
         final int prob = Utility.randomIntFromRange(0, 100);
         if(enableScalarSubquery && prob < 1){
@@ -51,7 +57,7 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default  Scalar getContextSensitiveScalar(TypeTag typeTag){
-        final SQLStatement statement = retrieveStatement();
+        final SQLStatement statement = retrieveParent();
         final boolean enableScalarSubquery = statement == null || statement.enableSubquery();
         final int prob = Utility.randomIntFromRange(0, 100);
         if(enableScalarSubquery && prob < 1){
@@ -65,9 +71,8 @@ public interface IExpressionGenerator<T extends Expression>
         return getLiteral(typeTag);
     }
 
-
     default Scalar getScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
+        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveParent());
         Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
@@ -80,7 +85,7 @@ public interface IExpressionGenerator<T extends Expression>
     }
 
     default Scalar getRelatedScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveStatement());
+        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveParent());
         Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
         projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
         projectable.setConfig(Rule.REQUIRE_SCALA,true);
@@ -115,16 +120,6 @@ public interface IExpressionGenerator<T extends Expression>
         }
         Assertion.requiredTrue(currentExpression.getType() == target);
         return currentExpression;
-    }
-
-    default Optional<Expression> nullableCast(Expression expression, TypeTag targetType){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        final List<Symbol> candidateSymbols = symbolTable.getCaster(expression.getType(), targetType);
-        Symbol symbol = Utility.randomlyChooseFrom(candidateSymbols);
-        if(symbol == null){
-            return Optional.empty();
-        }
-        return Optional.of(new Expression(symbol, Collections.singletonList(expression)));
     }
 
     default Scalar getLiteral(TypeTag typeTag){

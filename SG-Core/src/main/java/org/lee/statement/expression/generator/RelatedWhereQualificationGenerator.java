@@ -1,35 +1,38 @@
 package org.lee.statement.expression.generator;
 
-import org.lee.entry.RangeTableReference;
+import org.lee.entry.FieldReference;
 import org.lee.statement.expression.Qualification;
 import org.lee.statement.expression.abs.QualificationGenerator;
 import org.lee.statement.expression.abs.RelatedGenerator;
-import org.lee.statement.expression.common.ExprGeneratorUtils;
 import org.lee.statement.expression.common.Location;
 import org.lee.statement.support.SQLStatement;
 
-public class JoinQualificationGenerator
+import java.util.List;
+
+public class RelatedWhereQualificationGenerator
         extends RelatedGenerator<Qualification>
         implements QualificationGenerator {
+    /**
+     * TODO
+     * */
 
 
-    public JoinQualificationGenerator(SQLStatement statement, RangeTableReference left, RangeTableReference right){
-        super(statement, left.getFieldReferences(), right.getFieldReferences());
+    public RelatedWhereQualificationGenerator(SQLStatement stmt, List<FieldReference> lhs, List<FieldReference> rhs) {
+        super(stmt, lhs, rhs);
     }
 
     @Override
     public Qualification generate() {
-        Qualification qualification = predicateScalarAndScalar();
-        return ExprGeneratorUtils.tryWithPredicateAddition(qualification);
+        return null;
     }
 
     @Override
     public Qualification fallback() {
-        return predicateFieldAndLiteral();
+        return null;
     }
 
     @Override
     public Location getExpressionLocation() {
-        return Location.join;
+        return null;
     }
 }

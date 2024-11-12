@@ -6,7 +6,7 @@ import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.entry.relation.CTE;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.support.ProjectableGenerator;
 import org.lee.statement.support.SQLStatement;
 
 public class WithClause extends Clause<CTE> {

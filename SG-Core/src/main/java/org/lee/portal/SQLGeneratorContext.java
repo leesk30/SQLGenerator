@@ -1,7 +1,5 @@
 package org.lee.portal;
 
-import org.json.JSONObject;
-import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
@@ -9,14 +7,13 @@ import org.lee.common.config.InternalConfigs;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.common.global.MetaEntry;
 import org.lee.common.global.SymbolTable;
-import org.lee.statement.SQLType;
+import org.lee.statement.basic.SQLType;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
 import org.lee.statement.support.SQLStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.util.UUID;
 
 

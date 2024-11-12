@@ -1,37 +1,29 @@
 package org.lee.statement.expression.abs;
 
-import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
-import org.lee.entry.FieldReference;
 import org.lee.entry.record.AdaptiveRecordScalar;
 import org.lee.entry.scalar.Scalar;
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.expression.Expression;
 import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.statistic.UnrelatedStatistic;
-import org.lee.statement.generator.ProjectableGenerator;
+import org.lee.statement.expression.common.ExprGeneratorUtils;
+import org.lee.statement.expression.statistic.GeneratorStatistic;
 import org.lee.statement.support.Projectable;
+import org.lee.statement.support.ProjectableGenerator;
 import org.lee.symbol.Comparator;
-import org.lee.symbol.Operator;
 import org.lee.symbol.Symbol;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
-import org.lee.type.literal.Literal;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface QualificationGenerator extends IExpressionGenerator<Qualification> {
     Qualification generate();
     Qualification fallback();
-
-    Pair<Scalar, Scalar> getPair();
 
     default Comparator getCompareOperator(TypeTag lhs, TypeTag rhs){
         if(rhs == lhs || rhs.getCategory() == lhs.getCategory()){
@@ -49,119 +41,40 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     }
 
     default Qualification predicateScalarAndScalar(){
-        Pair<Scalar, Scalar> twoSide = getPair();
-        return predicateScalarAndScalar(twoSide);
-    }
-
-    default Qualification predicateScalarAndQuery(int width){
-        return null;
-    }
-
-    default Qualification predicateQueryExists(){
-        return null;
-    }
-
-    default Qualification predicateScalarAndScalar(Pair<Scalar, Scalar> pair){
-        if(pair == null || pair.getFirst()!=null || pair.getSecond() != null){
-            return fallback();
-        }
+        final GeneratorStatistic generic = getStatistic();
+        final Pair<Scalar, Scalar> pair = generic.tryFindSimilarPair();
         Scalar left = pair.getFirst();
         Scalar right = pair.getSecond();
         Symbol symbol = getCompareOperator(left.getType(), right.getType());
         if(symbol == null){
-            return fallback();
+            final TypeTag lt = left.getType();
+            final TypeTag rt = right.getType();
+            final Logger logger = getLogger();
+            if(lt == rt || lt.getCategory() == rt.getCategory()){
+                logger.error(String.format("Cannot find compare operator for type: %s and %s", lt, rt));
+                return fallback();
+            }
+            Expression converted = cast(right.toExpression(), lt);
+            Symbol newSymbol = getCompareOperator(lt, lt);
+            if(newSymbol == null){
+                logger.error(String.format("Cannot find compare operator for type: %s and %s", lt, rt));
+                return fallback();
+            }
+            logger.debug(String.format("Convert %s -> %s for predicate scalar to scalar", rt, lt));
+            return new Qualification(newSymbol).newChild(left).newChild(converted);
         }
-        // todo: handle like
         return new Qualification(symbol).newChild(left).newChild(right);
     }
 
-    default <T> Qualification compareToLiteral(Scalar fieldReference){
-        TypeTag typeTag = fieldReference.getType();
-        Literal<T> literal = Literal.fromType(typeTag);
-        // check the value is same category
-        Assertion.requiredTrue(typeTag.getCategory() == literal.getType().getCategory());
-        Comparator comparator = Comparator.fastGetComparatorByCategory(typeTag.getCategory());
-        return new Qualification(comparator)
-                .newChild(fieldReference)
-                .newChild(literal);
-    }
+    default Qualification predicateSimilarScalarCompare(){
 
-    default <T> Qualification compareToRangeLiteral(Scalar fieldReference){
-        if(!(fieldReference instanceof FieldReference)){
-            return compareToLiteral(fieldReference);
-        }
-        final TypeTag typeTag = fieldReference.getType();
-        final Literal<T> b1 = Literal.fromType(typeTag);
-        final Literal<T> b2 = Literal.fromType(typeTag);
-        Pair<Literal<T>, Literal<T>> ordered = Pair.OrderedPair(b1, b2);
-        if(ordered == null){
-            return fallback();
-        }
-        return new Qualification(Comparator.BETWEEN_AND)
-                .newChild(fieldReference)
-                .newChild(ordered.getFirst())
-                .newChild(ordered.getFirst());
-    }
-
-    default <T> Qualification compareToRangeLiteral(Scalar source, Scalar compared){
-        Assertion.requiredTrue(source.getType().getCategory() == compared.getType().getCategory());
-        if(!(source instanceof FieldReference)){
-            return compareToLiteral(source);
-        }
-        final TypeTag typeTag = source.getType();
-        final Literal<T> start = Literal.fromType(typeTag);
-        final Qualification qualification = new Qualification(Comparator.BETWEEN_AND).newChild(source);
-
-        if(probability(50)){
-            if(probability(50)){
-                return qualification.newChild(compared).newChild(start);
-            }
-            return qualification.newChild(start).newChild(compared);
-        }
-
-        // complex
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-        final List<Symbol> operators = symbolTable.getOperator(typeTag, typeTag)
-                .stream()
-                .filter(s -> s.argsNum() == 2).collect(Collectors.toList());
-
-        if(operators.isEmpty()){
-            if(probability(50)){
-                return qualification.newChild(compared).newChild(start);
-            }
-            return qualification.newChild(start).newChild(compared);
-        }
-        Literal<T> partial = Literal.fromType(typeTag);
-        Expression expression = new Expression(Utility.randomlyChooseFrom(operators));
-        expression.newChild(compared).newChild(partial);
-        if(probability(50)){
-            return qualification.newChild(expression).newChild(start);
-        }
-        return qualification.newChild(start).newChild(expression);
-    }
-
-    default Qualification tryWithPredicateAddition(final Qualification qualification){
-        if(!Utility.probability(5)){
-            return qualification;
-        }
-        final List<FieldReference> referenceList = qualification.extractField();
-        final FieldReference addPredicateLhs = Utility.randomlyChooseFrom(referenceList);
-
-        if(addPredicateLhs == null)
-            return qualification;
-
-        final Qualification rhs = Utility.probability(50) ?
-                compareToRangeLiteral(addPredicateLhs): compareToLiteral(addPredicateLhs);
-
-        if(Utility.probability(80)){
-            return qualification.and(rhs);
-        }
-        return qualification.or(rhs);
+        // todo
+        return null;
     }
 
     default Qualification predicateSubqueryExists(){
         // An exists statement shouldn't have the raw values
-        Projectable statement = ProjectableGenerator.newExistsPredicateProjectable(this.retrieveStatement());
+        Projectable statement = ProjectableGenerator.newExistsPredicateProjectable(this.retrieveParent());
         statement.setConfig(Rule.PREFER_RELATED, true);
         statement.fuzz();
         AdaptiveRecordScalar adaptiveRecordScalar = statement.toAdaptiveRecordScalar();
@@ -181,7 +94,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
             scalars.add(getStatistic().findAny());
         }while (scalars.size() < maxCandidates && probability(Conf.MULTI_FIELD_IN_PREDICATE_SUBQUERY_PROBABILITY));
         AdaptiveRecordScalar left = AdaptiveRecordScalar.adaptScalarList(scalars);
-        Projectable statement = ProjectableGenerator.newExistsPredicateProjectable(this.retrieveStatement());
+        Projectable statement = ProjectableGenerator.newExistsPredicateProjectable(this.retrieveParent());
         // nonLimitationStatement.setConfig(Rule.PREFER_RELATED, true);
         statement.withProjectTypeLimitation(left.getTypeList());
         statement.fuzz();
@@ -198,7 +111,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         final List<Scalar> numberCandidates = getStatistic().findMatch(TypeCategory.NUMBER);
         final List<Scalar> targetCandidates;
         if(dateCandidates.isEmpty() && numberCandidates.isEmpty()){
-            return fallback();
+            return predicateScalarAndScalar();
         } else if (dateCandidates.isEmpty()) {
             targetCandidates = numberCandidates;
         } else if (numberCandidates.isEmpty()) {
@@ -209,9 +122,9 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         Scalar targetField = Utility.randomlyChooseFrom(targetCandidates);
 
         if(targetCandidates.size() <= 1 || probability(50)){
-            return compareToRangeLiteral(targetField);
+            return ExprGeneratorUtils.compareToRangeLiteral(targetField);
         }
-        return compareToRangeLiteral(targetField, Utility.randomlyChooseFrom(targetCandidates));
+        return ExprGeneratorUtils.compareToRangeLiteral(targetField, Utility.randomlyChooseFrom(targetCandidates));
     }
 
 }

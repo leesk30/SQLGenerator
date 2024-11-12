@@ -1,5 +1,7 @@
 package org.lee.symbol;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.type.TypeCategory;
@@ -32,6 +34,9 @@ public enum Comparator implements Symbol {
     IN(2, "%s IN %s"),
     NOT_IN(2, "%s NOT IN %s"),
     ;
+
+    // todo
+    private final Table<TypeTag, TypeTag, List<Comparator>> COMPARATOR_MAP = HashBasedTable.create();
 
     public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE, ILIKE, NOT_ILIKE};
     public final static Comparator[] ALL = {NOT_EQ, EQ, GT, GT_EQ, LT, LT_EQ};

@@ -3,6 +3,7 @@ package org.lee.statement;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.exception.NotImplementedException;
+import org.lee.statement.basic.SQLType;
 import org.lee.statement.clause.Clause;
 
 import java.util.Iterator;

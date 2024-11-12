@@ -9,8 +9,7 @@ import org.lee.entry.complex.Filter;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.generator.ExprGenerators;
-import org.lee.statement.expression.generator.JoinQualificationGenerator;
+import org.lee.statement.expression.common.ExprGenerators;
 import org.lee.statement.support.SQLStatement;
 
 public abstract class WhereClause extends Clause<Filter> {

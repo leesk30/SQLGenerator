@@ -1,8 +1,9 @@
 package org.lee.type;
 
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.common.exception.ValueCheckFailedException;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Symbol;
 import org.lee.type.literal.mapped.MappedType;
@@ -11,15 +12,15 @@ import java.util.Collections;
 import java.util.List;
 
 public enum TypeTag {
-    string(TypeCategory.STRING, 2, "string", "text"),
-    int_(TypeCategory.NUMBER,1, "integer", "int1", "int2", "int4", "int"),
+    string(TypeCategory.STRING, 1, "string", "text"),
+    int_(TypeCategory.NUMBER,3, "integer", "int1", "int2", "int4", "int"),
     bigint(TypeCategory.NUMBER, 2, "bigint", "long", "int8"),
     date(TypeCategory.DATE, 1,"date"),
     timestamp(TypeCategory.TIMESTAMP, 1,"timestamp"),
     boolean_(TypeCategory.BOOLEAN, 1,"boolean", "bool"),
-    char_(TypeCategory.STRING, 1,"char", "character"),
-    decimal(TypeCategory.NUMBER, 4,"decimal", "number", "numeric"),
-    float_(TypeCategory.NUMBER,3,"double", "float", "float4", "float8", "real"),
+    char_(TypeCategory.STRING, 2,"char", "character"),
+    decimal(TypeCategory.NUMBER, 0,"decimal", "number", "numeric"),
+    float_(TypeCategory.NUMBER,1,"double", "float", "float4", "float8", "real"),
 
 
     null_(TypeCategory.NIL,1, "null", "nan", "none", "nil"),
@@ -115,6 +116,54 @@ public enum TypeTag {
     @Override
     public String toString() {
         return names[0];
+    }
+
+    public static TypeTag minimal(TypeTag lhs, TypeTag rhs){
+        if(lhs == null || rhs == null){
+            throw new ValueCheckFailedException("The type tag cannot be null here.");
+        }
+        if(lhs == rhs){
+            return lhs;
+        }
+        if(lhs == null_ || rhs == null_){
+            return string;
+        }
+
+        TypeCategory categoryLeft = lhs.getCategory();
+        TypeCategory categoryRight = rhs.getCategory();
+        if(categoryLeft == categoryRight){
+            if(lhs.priority > rhs.priority){
+                return rhs;
+            }else {
+                return lhs;
+            }
+        }
+        TypeCategory compatible = TypeCategory.compatible(categoryLeft, categoryRight);
+
+        if(compatible == TypeCategory.NIL){
+            return TypeTag.string;
+        }
+
+        TypeTag min = getMinimalPriorityTypeTag(compatible);;
+
+        if(min == null_){
+            return TypeTag.string;
+        }
+        return min;
+    }
+
+    private static TypeTag getMinimalPriorityTypeTag(TypeCategory category){
+        TypeTag target = null_;
+        for(TypeTag type: values()){
+            if(type.category == category){
+                if(target == null_){
+                    target = type;
+                }else if(type.priority > target.priority) {
+                    target = type;
+                }
+            }
+        }
+        return target;
     }
 
     private final static class EmptySymbol implements Symbol {

@@ -2,15 +2,11 @@ package org.lee.entry.record;
 
 import org.lee.entry.NormalizedEntryWrapper;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Expression;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class AdaptiveRecordScalar extends Record implements Scalar {
 

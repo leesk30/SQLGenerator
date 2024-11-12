@@ -1,23 +1,21 @@
-package org.lee.statement.generator;
+package org.lee.statement.support;
 
-import org.lee.portal.SQLGeneratorContext;
 import org.lee.base.Generator;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.portal.SQLGeneratorContext;
 import org.lee.statement.ValuesStatement;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectNormalStatement;
 import org.lee.statement.select.SelectSetopStatement;
 import org.lee.statement.select.SelectSimpleStatement;
-import org.lee.statement.support.Projectable;
-import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
 
 import java.util.List;
 
-public final class ProjectableGenerator implements Generator<Projectable> {
+public final class ProjectableGenerator implements Generator<Projectable>, SQLStatementChildren {
     private final SQLStatement parent;
     private final RuntimeConfiguration config;
     private final Logger logger;
@@ -128,4 +126,18 @@ public final class ProjectableGenerator implements Generator<Projectable> {
         return generator.newRandomlyProjectable(parent);
     }
 
+    @Override
+    public SQLStatement retrieveParent() {
+        return parent;
+    }
+
+    @Override
+    public Logger getLogger() {
+        return logger;
+    }
+
+    @Override
+    public RuntimeConfiguration getConfig() {
+        return config;
+    }
 }

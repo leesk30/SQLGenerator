@@ -1,6 +1,5 @@
 package org.lee.portal.worker;
 
-import org.lee.base.Generator;
 import org.lee.common.config.InternalConfig;
 import org.lee.portal.SQLGenerator;
 import org.lee.portal.SQLGeneratorContext;

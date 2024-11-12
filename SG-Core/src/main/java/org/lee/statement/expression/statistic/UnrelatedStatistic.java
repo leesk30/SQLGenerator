@@ -1,16 +1,19 @@
 package org.lee.statement.expression.statistic;
 
 import org.lee.common.Utility;
+import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.abs.GeneratorStatistic;
+import org.lee.statement.expression.abs.IExpressionGenerator;
 import org.lee.symbol.Symbol;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class UnrelatedStatistic implements GeneratorStatistic {
+public class UnrelatedStatistic implements GeneratorStatistic{
+    private final IExpressionGenerator<?> parent;
     private final List<Scalar> candidateList;
     private final int totalSize;
     private final Map<TypeTag, List<Scalar>> groupByType = new EnumMap<>(TypeTag.class);
@@ -18,7 +21,8 @@ public class UnrelatedStatistic implements GeneratorStatistic {
     private int hit = 0;
     private int attach = 0;
 
-    public UnrelatedStatistic(List<? extends Scalar> candidateList){
+    public UnrelatedStatistic(IExpressionGenerator<?> parent, List<? extends Scalar> candidateList){
+        this.parent = parent;
         this.candidateList = Collections.unmodifiableList(candidateList);
         this.totalSize = candidateList.size();
         collect();
@@ -112,9 +116,61 @@ public class UnrelatedStatistic implements GeneratorStatistic {
     }
 
     @Override
+    public Pair<Scalar, Scalar> findSimilarPair() {
+        Set<TypeTag> moreThanOneCandidates = this.getGroupedType()
+                .stream()
+                .filter(t -> this.findMatch(t).size() >= 2)
+                .collect(Collectors.toSet());
+        if(!moreThanOneCandidates.isEmpty()){
+            List<Scalar> candidates = Utility.copyList(this.findMatch(Utility.randomlyChooseFrom(moreThanOneCandidates)));
+            List<Scalar> choose = Utility.randomlyChooseManyFrom(2, candidates);
+            return Pair.fromCollection(choose);
+        }
+        return null;
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> tryFindSimilarPair() {
+        Pair<Scalar, Scalar> pair = findSimilarPair();
+        if(pair == null){
+            Scalar left = this.findAny();
+            Scalar right = this.findAny();
+            TypeTag target = TypeTag.minimal(left.getType(), right.getType());
+            return new Pair<>(tryFastConvert(left, target), tryFastConvert(right, target));
+        }
+        return pair;
+    }
+
+    @Override
     public Scalar findAny(TypeTag typeTag) {
         if(groupByType.containsKey(typeTag)){
             return Utility.randomlyChooseFrom(groupByType.get(typeTag));
+        }
+        return null;
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> findAnyPair() {
+        Scalar left = this.findAny();
+        Scalar right = this.findAny();
+        return new Pair<>(left, right);
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> findAnyPair(TypeTag target) {
+        Scalar left = this.findAny(target);
+        Scalar right = this.findAny(target);
+        if(left == null || right == null){
+            return null;
+        }
+        return new Pair<>(left, right);
+    }
+
+    @Override
+    public Pair<Scalar, Scalar> tryFindAnyPair(TypeTag target) {
+        Pair<Scalar, Scalar> pair = findAnyPair();
+        if(pair == null){
+
         }
         return null;
     }
@@ -186,8 +242,13 @@ public class UnrelatedStatistic implements GeneratorStatistic {
     protected void finalize() throws Throwable {
         // todo: debug to log it, we will delete this when release
         if(attach > 0){
-            LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f", attach, hit, getCacheHitRate()));
+            LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f%%", attach, hit, getCacheHitRate()*100));
         }
         super.finalize();
+    }
+
+    @Override
+    public IExpressionGenerator<?> getParent() {
+        return parent;
     }
 }

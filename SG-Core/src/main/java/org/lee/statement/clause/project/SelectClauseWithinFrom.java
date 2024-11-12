@@ -4,8 +4,8 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.entry.scalar.Scalar;
+import org.lee.statement.expression.common.ExprGenerators;
 import org.lee.statement.expression.generator.CommonExpressionGenerator;
-import org.lee.statement.expression.generator.ExprGenerators;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
@@ -35,13 +35,13 @@ public class SelectClauseWithinFrom extends SelectClause{
     }
 
     @Override
-    public AbstractSimpleSelectStatement retrieveStatement(){
+    public AbstractSimpleSelectStatement retrieveParent(){
         return (AbstractSimpleSelectStatement) statement;
     }
 
     private void nonLimitationsProjectionFuzz(){
         final CommonExpressionGenerator generator = ExprGenerators.projectionFactory(this);
-        final int numOfEntry = retrieveStatement().getFromClause().size();
+        final int numOfEntry = retrieveParent().getFromClause().size();
         final int numOfProjection = Utility.randomIntFromRange(numOfEntry, numOfEntry*2);
         for (int i = 0; i < numOfProjection; i++) {
             if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
@@ -55,7 +55,7 @@ public class SelectClauseWithinFrom extends SelectClause{
 
     private void withLimitationsProjectionFuzz(){
         final CommonExpressionGenerator generator = ExprGenerators.projectionFactory(this);
-        final List<TypeTag> limitations = retrieveStatement().getProjectTypeLimitation();
+        final List<TypeTag> limitations = retrieveParent().getProjectTypeLimitation();
         for(TypeTag requiredType: limitations){
             Scalar generated;
             if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
