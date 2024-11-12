@@ -12,7 +12,7 @@ import org.lee.statement.expression.generator.ExprGenerators;
 import org.lee.statement.support.Projectable;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Operator;
-import org.lee.testutils.Printer;
+import org.lee.common.debug.Printer;
 import org.lee.type.TypeTag;
 import org.lee.type.literal.LiteralLong;
 import org.testng.annotations.Test;

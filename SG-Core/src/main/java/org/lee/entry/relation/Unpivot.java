@@ -3,6 +3,7 @@ package org.lee.entry.relation;
 import org.apache.commons.lang3.StringUtils;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
+import org.lee.common.debug.Printer;
 import org.lee.entry.scalar.Field;
 import org.lee.type.TypeTag;
 
@@ -67,8 +68,9 @@ public final class Unpivot extends Pivoted{
     private void processField(final List<Field> shouldRemovedField){
         for(Field raw: getCandidateList()){
             int cur=-1;
+
             for(int i=0; i < shouldRemovedField.size(); i++){
-                Field remove = shouldRemovedField.get(0);
+                Field remove = shouldRemovedField.get(i);
                 if(remove == raw){
                     cur = i;
                     break;
@@ -78,23 +80,33 @@ public final class Unpivot extends Pivoted{
                     break;
                 }
             }
+
             if(cur == -1){
                 fieldList.add(raw);
             }else {
                 shouldRemovedField.remove(cur);
             }
         }
+
+        if(!shouldRemovedField.isEmpty()){
+            LOGGER.error("The field should be removed is not empty after process!");
+            LOGGER.error("ShouldRemoved: " + Printer.formatNodeList(shouldRemovedField));
+            LOGGER.error("FieldList: " + Printer.formatNodeList(fieldList));
+            LOGGER.error("OriginalFieldList: " + Printer.formatNodeList(getCandidateList()));
+        }
+
         fieldList.add(unpivotNameField);
         fieldList.addAll(unpivotFieldList);
     }
 
     @Override
     public void fuzz() {
-        List<List<Field>> candidate = getUnpivotCandidate();
-        List<Field> shouldRemovedField = new ArrayList<>();
-        int maxGrouped = candidate.size() / groupSize;
+        final List<List<Field>> candidate = getUnpivotCandidate();
+        final List<Field> shouldRemovedField = new ArrayList<>();
+        final int maxGrouped = candidate.size() / groupSize;
         int prob = 100;
         boolean isEmpty = false;
+
         do{
             List<Field> group = new ArrayList<>();
             for(List<Field> choose: candidate){
@@ -109,6 +121,7 @@ public final class Unpivot extends Pivoted{
             prob = factor == 0 ? 100 : prob /factor;
             forInFieldGroups.add(group);
         }while (!isEmpty && Utility.probability(prob));
+
         Assertion.requiredFalse(forInFieldGroups.isEmpty());
         unpivotNameField = new UnpivotNameField(Utility.getRandomName("upn_"), TypeTag.string);
         for(Field raw: forInFieldGroups.get(0)){
@@ -122,7 +135,7 @@ public final class Unpivot extends Pivoted{
             return "EXCLUDE NULLS ";
         }
         if(excludedNulls){
-            return " ";
+            return "";
         }
         return "INCLUDE NULLS ";
     }
