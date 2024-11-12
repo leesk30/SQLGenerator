@@ -1,4 +1,4 @@
-package org.lee.type.literal.mapped;
+package org.lee.type.mapped;
 
 import org.lee.base.Generator;
 import org.lee.type.TypeTag;

@@ -4,7 +4,7 @@ import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.record.Record;
+import org.lee.entry.complex.Record;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;

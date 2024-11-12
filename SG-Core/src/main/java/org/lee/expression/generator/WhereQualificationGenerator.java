@@ -1,11 +1,11 @@
-package org.lee.statement.expression.generator;
+package org.lee.expression.generator;
 
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.abs.QualificationGenerator;
-import org.lee.statement.expression.abs.UnrelatedGenerator;
-import org.lee.statement.expression.common.Location;
+import org.lee.expression.Qualification;
+import org.lee.expression.basic.QualificationGenerator;
+import org.lee.expression.basic.UnrelatedGenerator;
+import org.lee.expression.common.Location;
 import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
 

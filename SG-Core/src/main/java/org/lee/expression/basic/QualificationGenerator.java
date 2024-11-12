@@ -1,15 +1,15 @@
-package org.lee.statement.expression.abs;
+package org.lee.expression.basic;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.structure.Pair;
-import org.lee.entry.record.AdaptiveRecordScalar;
+import org.lee.entry.complex.AdaptiveRecordScalar;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.common.ExprGeneratorUtils;
-import org.lee.statement.expression.statistic.GeneratorStatistic;
+import org.lee.expression.Expression;
+import org.lee.expression.Qualification;
+import org.lee.expression.common.ExprGeneratorUtils;
+import org.lee.expression.statistic.GeneratorStatistic;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.ProjectableGenerator;
 import org.lee.symbol.Comparator;

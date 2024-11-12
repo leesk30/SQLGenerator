@@ -1,6 +1,6 @@
-package org.lee.entry.record;
+package org.lee.entry.complex;
 
-import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.entry.Normalized;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
@@ -23,7 +23,7 @@ public abstract class AdaptiveRecordScalar extends Record implements Scalar {
     }
 
 
-    private static class AdaptiveProjectableRecordScalar extends AdaptiveRecordScalar implements NormalizedEntryWrapper<Projectable>{
+    private static class AdaptiveProjectableRecordScalar extends AdaptiveRecordScalar implements Normalized<Projectable> {
         private final Projectable projectable;
         public AdaptiveProjectableRecordScalar(Projectable projectable) {
             super(projectable.project().size());

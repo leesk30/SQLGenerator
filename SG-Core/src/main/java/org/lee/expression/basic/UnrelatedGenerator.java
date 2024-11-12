@@ -1,9 +1,9 @@
-package org.lee.statement.expression.abs;
+package org.lee.expression.basic;
 
 import org.lee.common.Utility;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.statistic.UnrelatedStatistic;
+import org.lee.expression.Expression;
+import org.lee.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 import org.lee.type.TypeTag;
 

@@ -1,7 +1,7 @@
 package org.lee.type.literal;
 
 import org.lee.type.TypeTag;
-import org.lee.type.literal.mapped.NullType;
+import org.lee.type.mapped.NullType;
 
 public class LiteralNull extends Literal<NullType> {
     protected static final LiteralNull NULL = new LiteralNull();

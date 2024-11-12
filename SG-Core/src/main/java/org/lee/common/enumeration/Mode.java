@@ -1,4 +1,4 @@
-package org.lee.common;
+package org.lee.common.enumeration;
 
 public enum Mode {
     normal,

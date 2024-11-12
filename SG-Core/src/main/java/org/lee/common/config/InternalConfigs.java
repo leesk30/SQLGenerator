@@ -2,8 +2,8 @@ package org.lee.common.config;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
-import org.lee.common.Mode;
-import org.lee.common.SyntaxType;
+import org.lee.common.enumeration.Mode;
+import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;

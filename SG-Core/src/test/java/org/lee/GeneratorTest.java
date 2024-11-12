@@ -1,6 +1,6 @@
 package org.lee;
 
-import org.lee.common.Mode;
+import org.lee.common.enumeration.Mode;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.global.MetaEntry;

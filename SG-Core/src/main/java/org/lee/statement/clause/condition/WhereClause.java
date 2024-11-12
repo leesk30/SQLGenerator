@@ -8,8 +8,8 @@ import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.Filter;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.from.FromClause;
-import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.common.ExprGenerators;
+import org.lee.expression.Qualification;
+import org.lee.expression.common.ExprGenerators;
 import org.lee.statement.support.SQLStatement;
 
 public abstract class WhereClause extends Clause<Filter> {
@@ -49,7 +49,7 @@ public abstract class WhereClause extends Clause<Filter> {
             for(int j = 0; j < generateCount; j++){
                 final Qualification qualification = generator.generate();
                 if(qualification != null){
-                    filter.put(qualification);
+                    filter.add(qualification);
                 }
             }
         }

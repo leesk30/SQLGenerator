@@ -1,7 +1,7 @@
 package org.lee.common.config;
 
-import org.lee.common.Mode;
-import org.lee.common.SyntaxType;
+import org.lee.common.enumeration.Mode;
+import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.exception.NotImplementedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package org.lee.statement.expression.abs;
+package org.lee.expression.basic;
 
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
@@ -8,9 +8,9 @@ import org.lee.common.config.Rule;
 import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.portal.SQLGeneratorContext;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.common.Location;
-import org.lee.statement.expression.statistic.GeneratorStatistic;
+import org.lee.expression.Expression;
+import org.lee.expression.common.Location;
+import org.lee.expression.statistic.GeneratorStatistic;
 import org.lee.statement.select.SelectSimpleStatement;
 import org.lee.statement.support.Projectable;
 import org.lee.statement.support.ProjectableGenerator;

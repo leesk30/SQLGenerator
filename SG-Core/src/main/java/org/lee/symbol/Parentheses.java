@@ -4,16 +4,17 @@ import org.lee.base.NodeTag;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class Parentheses implements Symbol {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Parentheses.class);
 
     private final Symbol wrapped;
     public Parentheses(Symbol wrapped){
         if(wrapped instanceof Parentheses){
-            Logger logger = SQLGeneratorContext.getCurrentLogger();
-            logger.error("There is no sense for the parentheses nest directly!");
+            LOGGER.error("There is no sense for the parentheses nest directly!");
             throw new UnsupportedOperationException("There is no sense for the parentheses nest directly!");
         }
         this.wrapped = wrapped;

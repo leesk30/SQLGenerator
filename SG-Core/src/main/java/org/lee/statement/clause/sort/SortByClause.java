@@ -7,7 +7,7 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.entry.Normalized;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
@@ -28,7 +28,7 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
         super(statement);
     }
 
-    protected static class SortEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Fuzzer {
+    protected static class SortEntry implements Normalized<Scalar>, Scalar, Fuzzer {
 
         private final Scalar scalar;
         private final boolean isDefaultAsc;

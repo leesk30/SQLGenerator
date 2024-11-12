@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public final class RangeTableReference implements NormalizedEntryWrapper<RangeTableEntry>, Alias {
+public final class RangeTableReference implements Normalized<RangeTableEntry>, Alias {
 
     private String refName;
     private final RangeTableEntry entry;

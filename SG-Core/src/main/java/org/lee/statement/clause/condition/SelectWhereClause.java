@@ -4,8 +4,8 @@ import org.lee.base.Generator;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.common.ExprGenerators;
+import org.lee.expression.Qualification;
+import org.lee.expression.common.ExprGenerators;
 import org.lee.statement.select.SelectStatement;
 
 public final class SelectWhereClause extends WhereClause {
@@ -22,7 +22,7 @@ public final class SelectWhereClause extends WhereClause {
                 // todo not null
                 continue;
             }
-            filter.put(qualification);
+            filter.add(qualification);
         }
     }
 

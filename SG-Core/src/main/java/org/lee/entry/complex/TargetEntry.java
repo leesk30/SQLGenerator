@@ -6,18 +6,18 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
-import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.entry.Normalized;
 import org.lee.entry.scalar.Field;
 import org.lee.entry.scalar.NameProxy;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Expression;
+import org.lee.expression.Expression;
 import org.lee.statement.support.Alias;
 import org.lee.type.TypeTag;
 
 import java.util.Collections;
 import java.util.List;
 
-public class TargetEntry implements NormalizedEntryWrapper<Scalar>, Scalar, Alias {
+public class TargetEntry implements Normalized<Scalar>, Scalar, Alias {
     private final static Pair<List<FieldReference>, List<FieldReference>> EMPTY = new Pair<>(Collections.emptyList(), Collections.emptyList());
     protected String alias = null;
     protected final Scalar target;

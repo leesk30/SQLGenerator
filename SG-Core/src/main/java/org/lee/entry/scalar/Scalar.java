@@ -1,7 +1,7 @@
 package org.lee.entry.scalar;
 
 import org.lee.base.Node;
-import org.lee.statement.expression.Expression;
+import org.lee.expression.Expression;
 import org.lee.type.TypeTag;
 
 public interface Scalar extends Node {

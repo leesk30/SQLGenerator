@@ -1,8 +1,7 @@
-package org.lee.statement.expression;
+package org.lee.expression;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
-import org.lee.base.TreeNode;
 import org.lee.common.Assertion;
 import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class Expression implements Scalar, TreeNode<Expression> {
+public class Expression implements IExpression<Expression> {
 
     protected final Node current;
     protected final List<Expression> childNodes;
@@ -72,17 +71,6 @@ public class Expression implements Scalar, TreeNode<Expression> {
         this.childNodes.add(childExpression);
     }
 
-    protected int getTotalDegree(){
-        if(isLeaf()){
-            return 1;
-        }
-        return childNodes
-                .stream()
-                .map(Expression::getTotalDegree)
-                .max(Integer::compare)
-                .orElseThrow(Assertion.IMPOSSIBLE) + 1;
-    }
-
     public Expression toWithParenthesesExpression(){
         Parentheses parentheses = isTerminateNode ? ((Scalar) current).getType().getParenthesesSymbol() : ((Symbol)current).toParentheses();
         Expression newer = newExpression(parentheses) ;
@@ -113,6 +101,11 @@ public class Expression implements Scalar, TreeNode<Expression> {
     }
 
     @Override
+    public boolean isTerminateNode() {
+        return isTerminateNode;
+    }
+
+    @Override
     public NodeTag getNodeTag() {
         return NodeTag.expression;
     }
@@ -130,76 +123,27 @@ public class Expression implements Scalar, TreeNode<Expression> {
         return ((Scalar) current).getType();
     }
 
-    public Node getCurrentNode() {
-        return current;
-    }
-
-    public Expression shallowCopy() {
-        return new Expression(current, childNodes);
-    }
-
+    @Override
     public boolean isCurrentComplete(){
         return isTerminateNode || ((Symbol) current).argsNum() == childNodes.size();
     }
 
-    public boolean isComplete(){
-        if(!isCurrentComplete()){
-            return false;
-        }
-        if(isLeaf()){
-            return true;
-        }
-        return childNodes.stream().allMatch(Expression::isComplete);
-    }
-
+    @Override
     public boolean isCurrentAggregation(){
         return current instanceof Aggregation;
     }
 
+    @Override
     public boolean isCurrentPseudo(){
         return current instanceof Pseudo;
     }
 
+    @Override
     public boolean isCurrentWindow(){
         return current instanceof Window;
     }
 
-    public boolean isIncludingAggregation(){
-        if (!isTerminateNode && isCurrentAggregation()){
-            return true;
-        }
-        return childNodes.stream().anyMatch(Expression::isIncludingAggregation);
-    }
-
-    public boolean isIncludingPseudo(){
-        if(isLeaf()){
-            return isCurrentPseudo();
-        }
-        for(Expression child: childNodes){
-            if(child.isIncludingPseudo()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isIncludingWindow(){
-        if (isCurrentWindow()){
-            return true;
-        }
-
-        for(Expression child: childNodes){
-            if(child.isIncludingWindow()){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean isLeaf(){
-        return this.childNodes.isEmpty();
-    }
-
+    @Override
     public Node getCurrent() {
         return current;
     }
@@ -226,23 +170,6 @@ public class Expression implements Scalar, TreeNode<Expression> {
         return types;
     }
 
-    @Override
-    public Stream<Expression> walk() {
-        return midTraverseExpression().stream();
-    }
-
-    protected List<Expression> midTraverseExpression(){
-        final List<Expression> expressionList = new ArrayList<>(getTotalDegree() * childNodes.size());
-        final LinkedList<Expression> fifo = new LinkedList<>();
-        fifo.add(this);
-        while (!fifo.isEmpty()){
-            final Expression current = fifo.removeFirst();
-            fifo.addAll(current.getChildNodes());
-            expressionList.add(current);
-        }
-        return expressionList;
-    }
-
     public List<FieldReference> extractField(){
         if(isLeaf() && isTerminateNode && current instanceof FieldReference){
             return Collections.singletonList((FieldReference) current);
@@ -250,7 +177,7 @@ public class Expression implements Scalar, TreeNode<Expression> {
 
         final List<Expression> leaf = this.getLeafs();
         return leaf.stream()
-                .map(Expression::getCurrentNode)
+                .map(Expression::getCurrent)
                 .filter(each -> each instanceof FieldReference)
                 .filter(each -> {
                     final Scalar referenced = ((FieldReference) each).getReference();

@@ -1,10 +1,10 @@
-package org.lee.statement.expression.statistic;
+package org.lee.expression.statistic;
 
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.abs.IExpressionGenerator;
+import org.lee.expression.basic.IExpressionGenerator;
 import org.lee.symbol.Symbol;
 import org.lee.type.TypeCategory;
 import org.lee.type.TypeTag;

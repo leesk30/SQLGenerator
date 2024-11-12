@@ -1,13 +1,12 @@
-package org.lee.statement.expression.common;
+package org.lee.expression.common;
 
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.abs.IExpressionGenerator;
-import org.lee.statement.expression.statistic.GeneratorStatistic;
-import org.lee.statement.expression.statistic.UnrelatedStatistic;
+import org.lee.expression.Expression;
+import org.lee.expression.basic.IExpressionGenerator;
+import org.lee.expression.statistic.GeneratorStatistic;
+import org.lee.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 
 public class ExpressionConverter implements IExpressionGenerator<Expression> {
-
     private final SQLStatement statement;
     private final UnrelatedStatistic statistic;
     private final Location location;

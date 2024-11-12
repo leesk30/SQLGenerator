@@ -1,7 +1,7 @@
 package org.lee.entry.scalar;
 
 import org.lee.common.exception.InternalError;
-import org.lee.statement.expression.Expression;
+import org.lee.expression.Expression;
 
 public abstract class ScalarWithinRelation implements Scalar{
 

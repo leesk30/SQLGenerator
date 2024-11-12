@@ -1,8 +1,8 @@
 package org.lee.statement.clause.project;
 
 import org.lee.common.Utility;
-import org.lee.statement.expression.common.ExprGenerators;
-import org.lee.statement.expression.generator.CommonExpressionGenerator;
+import org.lee.expression.common.ExprGenerators;
+import org.lee.expression.generator.CommonExpressionGenerator;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.type.TypeTag;

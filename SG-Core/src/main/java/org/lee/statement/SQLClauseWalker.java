@@ -9,7 +9,7 @@ import org.lee.statement.clause.Clause;
 import java.util.Iterator;
 import java.util.Map;
 
-// package protected
+// package protected TODO: optimize here
 public class SQLClauseWalker implements Iterator<Clause<? extends Node>> {
 
     private final Map<NodeTag, Clause<? extends Node>> childrenMap;

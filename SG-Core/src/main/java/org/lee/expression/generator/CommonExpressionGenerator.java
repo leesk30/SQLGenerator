@@ -1,4 +1,4 @@
-package org.lee.statement.expression.generator;
+package org.lee.expression.generator;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
@@ -6,11 +6,11 @@ import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
 import org.lee.portal.SQLGeneratorContext;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.abs.ExpressionGenerator;
-import org.lee.statement.expression.abs.UnrelatedGenerator;
-import org.lee.statement.expression.common.Location;
-import org.lee.statement.expression.statistic.UnrelatedStatistic;
+import org.lee.expression.Expression;
+import org.lee.expression.basic.ExpressionGenerator;
+import org.lee.expression.basic.UnrelatedGenerator;
+import org.lee.expression.common.Location;
+import org.lee.expression.statistic.UnrelatedStatistic;
 import org.lee.statement.support.SQLStatement;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Symbol;

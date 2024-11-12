@@ -8,8 +8,8 @@ import org.lee.entry.RangeTableReference;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.from.JoinClause;
-import org.lee.statement.expression.Qualification;
-import org.lee.statement.expression.common.ExprGenerators;
+import org.lee.expression.Qualification;
+import org.lee.expression.common.ExprGenerators;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
@@ -67,7 +67,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
         Generator<Qualification> generator = ExprGenerators.qualificationFactory(this);
         int generateNum = Utility.randomIntFromRange(1, 2);
         for(int i = 0; i < generateNum; i++){
-            filter.put(generator.generate());
+            filter.add(generator.generate());
         }
         filter.fuzz();
     }

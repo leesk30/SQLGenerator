@@ -1,4 +1,4 @@
-package org.lee.statement.expression.common;
+package org.lee.expression.common;
 
 public enum Location {
     where,

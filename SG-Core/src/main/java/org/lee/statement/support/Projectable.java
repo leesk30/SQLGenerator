@@ -2,7 +2,7 @@ package org.lee.statement.support;
 
 import org.lee.common.Assertion;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.record.AdaptiveRecordScalar;
+import org.lee.entry.complex.AdaptiveRecordScalar;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.entry.scalar.ScalarSubquery;

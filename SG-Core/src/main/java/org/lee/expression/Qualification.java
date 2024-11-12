@@ -1,4 +1,4 @@
-package org.lee.statement.expression;
+package org.lee.expression;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
@@ -74,5 +74,15 @@ public class Qualification extends Expression {
     @Override
     public Qualification toQualification(){
         return this;
+    }
+
+    @Override
+    public boolean isCurrentAggregation() {
+        return false;
+    }
+
+    @Override
+    public boolean isCurrentWindow() {
+        return false;
     }
 }

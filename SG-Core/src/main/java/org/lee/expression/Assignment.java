@@ -1,4 +1,4 @@
-package org.lee.statement.expression;
+package org.lee.expression;
 
 public class Assignment  {
 

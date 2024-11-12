@@ -1,4 +1,4 @@
-package org.lee.statement.expression.common;
+package org.lee.expression.common;
 
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
@@ -6,9 +6,9 @@ import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
 import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Scalar;
+import org.lee.expression.Qualification;
 import org.lee.portal.SQLGeneratorContext;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.Qualification;
+import org.lee.expression.Expression;
 import org.lee.symbol.Comparator;
 import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;

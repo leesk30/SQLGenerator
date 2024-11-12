@@ -4,7 +4,7 @@ import org.lee.base.NodeTag;
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.Symbol;
 import org.lee.type.TypeTag;
-import org.lee.type.literal.mapped.MappedType;
+import org.lee.type.mapped.MappedType;
 
 public abstract class Literal<T> implements Scalar {
     protected final MappedType<T> mappedType;

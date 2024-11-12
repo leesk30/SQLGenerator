@@ -2,7 +2,7 @@ package org.lee.statement.insert;
 
 import org.lee.common.Utility;
 import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.record.Record;
+import org.lee.entry.complex.Record;
 import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.clause.modify.InsertModifyTableClause;

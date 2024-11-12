@@ -6,8 +6,9 @@ import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.symbol.Parentheses;
 import org.lee.symbol.Symbol;
-import org.lee.type.literal.mapped.MappedType;
+import org.lee.type.mapped.MappedType;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,6 +34,9 @@ public enum TypeTag {
     public final static TypeTag[] GENERATE_PREFER_CHOOSE = {
             string, int_, bigint, date, timestamp, char_, float_, decimal,
     };
+
+    public final static List<TypeTag> ARG_NUM_1 = Collections.singletonList(TypeTag.boolean_);
+    public final static List<TypeTag> ARG_NUM_2 = Arrays.asList(TypeTag.boolean_, TypeTag.boolean_);
 
     private final TypeCategory category;
     private final String[] names;

@@ -2,11 +2,11 @@ package org.lee.entry.scalar;
 
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.entry.Normalized;
 import org.lee.statement.support.Projectable;
 import org.lee.type.TypeTag;
 
-public class ScalarSubquery implements NormalizedEntryWrapper<Projectable>, Scalar {
+public class ScalarSubquery implements Normalized<Projectable>, Scalar {
     private final Projectable scalarStatement;
 
     public ScalarSubquery(Projectable scalarStatement){

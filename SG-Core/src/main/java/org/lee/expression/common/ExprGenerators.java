@@ -1,4 +1,4 @@
-package org.lee.statement.expression.common;
+package org.lee.expression.common;
 
 import org.lee.base.Generator;
 import org.lee.base.NodeTag;
@@ -6,17 +6,17 @@ import org.lee.common.Utility;
 import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.RTEJoin;
+import org.lee.expression.Expression;
+import org.lee.expression.basic.QualificationGenerator;
+import org.lee.expression.generator.CommonExpressionGenerator;
+import org.lee.expression.generator.JoinQualificationGenerator;
+import org.lee.expression.generator.WhereQualificationGenerator;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.condition.WhereClause;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.clause.project.SelectClause;
 import org.lee.statement.clause.project.SelectClauseWithinFrom;
 import org.lee.statement.clause.project.SelectClauseWithoutFrom;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.abs.QualificationGenerator;
-import org.lee.statement.expression.generator.CommonExpressionGenerator;
-import org.lee.statement.expression.generator.JoinQualificationGenerator;
-import org.lee.statement.expression.generator.WhereQualificationGenerator;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectClauseStatement;
 import org.lee.statement.support.Projectable;

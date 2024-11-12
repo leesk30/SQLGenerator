@@ -1,13 +1,13 @@
 package org.lee.entry.relation;
 
-import org.lee.entry.NormalizedEntryWrapper;
+import org.lee.entry.Normalized;
 import org.lee.entry.scalar.Field;
 import org.lee.statement.support.Projectable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class SubRTE implements NormalizedEntryWrapper<Projectable>, RangeTableEntry {
+public abstract class SubRTE implements Normalized<Projectable>, RangeTableEntry {
 
     protected final Projectable projectable;
     protected final List<Field> fieldList;

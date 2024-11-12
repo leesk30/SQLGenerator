@@ -2,11 +2,10 @@ package org.lee.entry.complex;
 
 import org.lee.base.Fuzzer;
 import org.lee.base.NodeTag;
-import org.lee.base.TreeNode;
 import org.lee.common.Utility;
+import org.lee.entry.Normalized;
 import org.lee.entry.scalar.Scalar;
-import org.lee.statement.expression.Expression;
-import org.lee.statement.expression.Qualification;
+import org.lee.expression.Qualification;
 import org.lee.symbol.PredicateCombiner;
 import org.lee.type.TypeTag;
 import org.slf4j.Logger;
@@ -16,61 +15,39 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
 
-public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
-    private final List<Qualification> rawQualifications = new ArrayList<>();
-    private Qualification combinedQualifications;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    public Filter(){
-
-    }
+public class Filter extends ArrayList<Qualification> implements Normalized<Qualification>, Scalar, Fuzzer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(Filter.class);
+    private Qualification combined = null;
+    public Filter(){}
 
     @Override
     public TypeTag getType() {
-        return null;
+        return TypeTag.boolean_;
     }
 
     @Override
     public String getString() {
-        if(combinedQualifications == null){
-            logger.error("combinedQualifications cannot be empty or null");
+        if(combined == null){
+            LOGGER.error("The filter combined result cannot be empty or null");
         }
-        return combinedQualifications.getString();
+        return combined.getString();
     }
 
     @Override
     public NodeTag getNodeTag() {
-        return null;
-    }
-
-    @Override
-    public List<Expression> getChildNodes() {
-        return combinedQualifications.getChildNodes();
-    }
-
-    @Override
-    public Stream<Qualification> walk() {
-        return null;
-    }
-
-    public void put(Qualification qualification){
-        rawQualifications.add(qualification);
+        return NodeTag.filter;
     }
 
     @Override
     public void fuzz() {
-        assert !rawQualifications.isEmpty();
-        List<Qualification> merged = rawQualifications;
+        assert !this.isEmpty();
+        List<Qualification> merged = new ArrayList<>(this);
         while (merged.size() > 1){
             merged = randomlyMerge(merged);
         }
         assert merged.size() == 1;
-        combinedQualifications = merged.get(0);
-    }
-
-    public boolean isEmpty(){
-        return rawQualifications.isEmpty();
+        combined = merged.get(0);
     }
 
     private List<Qualification> randomlyMerge(List<Qualification> qualifications){
@@ -81,10 +58,10 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
             return Collections.singletonList(combine(qualifications.get(0), qualifications.get(1)));
         }
         final List<Qualification> result = new ArrayList<>();
-        final List<Qualification> template = Utility.copyListShuffle(qualifications);
-        final int splitIndex = Utility.randomIntFromRange(1, template.size() - 1);
-        final List<Qualification> lhs = template.subList(0, splitIndex);
-        final List<Qualification> rhs = template.subList(splitIndex, template.size());
+        Collections.shuffle(qualifications);
+        final int splitIndex = Utility.randomIntFromRange(1, qualifications.size() - 1);
+        final List<Qualification> lhs = qualifications.subList(0, splitIndex);
+        final List<Qualification> rhs = qualifications.subList(splitIndex, qualifications.size());
         result.addAll(randomlyMerge(lhs));
         result.addAll(randomlyMerge(rhs));
         return result;
@@ -105,5 +82,10 @@ public class Filter implements Scalar, TreeNode<Qualification>, Fuzzer {
                 qualification.newChild(tryToNegative.apply(left))
                         .newChild(tryToNegative.apply(right))
         );
+    }
+
+    @Override
+    public Qualification getWrapped() {
+        return combined;
     }
 }
