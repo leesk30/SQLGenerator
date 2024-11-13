@@ -58,6 +58,8 @@ public interface Node {
     String NOT = "NOT";
     String FOR = "FOR";
     String IN = "IN";
+    String JOIN = "JOIN";
+    String ON = "ON";
 
     String getString();
     NodeTag getNodeTag();

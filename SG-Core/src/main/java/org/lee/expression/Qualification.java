@@ -16,7 +16,7 @@ public class Qualification extends Expression {
         super(current);
     }
 
-    public Qualification(Node current, List<Expression> childNodes){
+    public Qualification(Node current, List<IExpression<Expression>> childNodes){
         super(current, childNodes);
     }
 
@@ -37,7 +37,7 @@ public class Qualification extends Expression {
 
     public Qualification toNegative(){
         boolean shouldWithParentheses = false;
-        for(Expression child: this.childNodes){
+        for(IExpression<Expression> child: this.childNodes){
             if(child instanceof Qualification){
                 shouldWithParentheses = true;
                 break;
@@ -45,14 +45,14 @@ public class Qualification extends Expression {
         }
 
         if(shouldWithParentheses){
-            return not().toWithParenthesesExpression();
+            return not().toWithParentheses();
         }else {
             return not();
         }
     }
 
     @Override
-    public Qualification toWithParenthesesExpression(){
+    public Qualification toWithParentheses(){
         Parentheses parentheses = isTerminateNode? ((Scalar) current).getType().getParenthesesSymbol() : ((Symbol)current).toParentheses();
         Qualification newer = new Qualification(parentheses) ;
         newer.childNodes.addAll(childNodes);
@@ -72,7 +72,7 @@ public class Qualification extends Expression {
     }
 
     @Override
-    public Qualification toQualification(){
+    public Qualification toCompleteQualification(){
         return this;
     }
 

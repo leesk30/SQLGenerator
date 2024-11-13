@@ -56,9 +56,9 @@ public abstract class AdaptiveRecordScalar extends Record implements Scalar {
         @Override
         public String getString() {
             // Because the adaptive record always use in predicate wrapped by signatures/symbols.
-            // `toScalar` make sure that:
-            //      when only one element in adaptive record we don't need
-            return toScalar().getString();
+            if(this.size() == 1)
+                return this.get(0).getString();
+            return super.getString();
         }
     }
 

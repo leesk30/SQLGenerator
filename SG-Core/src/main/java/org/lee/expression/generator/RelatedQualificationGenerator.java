@@ -9,16 +9,18 @@ import org.lee.statement.support.SQLStatement;
 
 import java.util.List;
 
-public class RelatedWhereQualificationGenerator
+public class RelatedQualificationGenerator
         extends RelatedGenerator<Qualification>
         implements QualificationGenerator {
     /**
      * TODO
      * */
 
+    private final Location location;
 
-    public RelatedWhereQualificationGenerator(SQLStatement stmt, List<FieldReference> lhs, List<FieldReference> rhs) {
+    public RelatedQualificationGenerator(Location location, SQLStatement stmt, List<FieldReference> lhs, List<FieldReference> rhs) {
         super(stmt, lhs, rhs);
+        this.location = location;
     }
 
     @Override
@@ -28,11 +30,14 @@ public class RelatedWhereQualificationGenerator
 
     @Override
     public Qualification fallback() {
-        return null;
+        if(location == Location.join){
+            return predicateScalarAndScalar();
+        }
+        return predicateFieldAndLiteral();
     }
 
     @Override
     public Location getExpressionLocation() {
-        return null;
+        return location;
     }
 }

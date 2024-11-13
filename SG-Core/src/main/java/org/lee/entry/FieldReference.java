@@ -45,6 +45,9 @@ public final class FieldReference implements Scalar {
     }
 
     public Field toField(){
+        if(scalar instanceof Field){
+            return (Field) scalar;
+        }
         return new Field(getString(), getType());
     }
 

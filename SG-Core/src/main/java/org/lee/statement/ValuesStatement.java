@@ -7,6 +7,7 @@ import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
 import org.lee.statement.basic.AbstractSQLStatement;
 import org.lee.statement.basic.SQLType;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.limit.LimitOffset;
 import org.lee.statement.clause.limit.ValuesLimitOffset;
 import org.lee.statement.clause.project.ValuesClause;
@@ -62,7 +63,7 @@ public class ValuesStatement extends AbstractSQLStatement implements Projectable
     }
 
     @Override
-    public List<? extends Node> getChildNodes() {
+    public List<Clause<? extends Node>> getChildNodes() {
         return new ArrayList<>(childrenMap.values());
     }
 

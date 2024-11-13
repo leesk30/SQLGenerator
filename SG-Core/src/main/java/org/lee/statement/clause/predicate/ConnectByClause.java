@@ -1,17 +1,13 @@
-package org.lee.statement.clause.condition;
+package org.lee.statement.clause.predicate;
 
 import org.lee.base.NodeTag;
 import org.lee.entry.complex.Filter;
 import org.lee.statement.clause.Clause;
 import org.lee.statement.select.SelectStatement;
 
-public class StartWithClause extends Clause<Filter> {
-    public StartWithClause(SelectStatement statement) {
+public class ConnectByClause extends Clause<Filter> {
+    public ConnectByClause(SelectStatement statement) {
         super(statement);
-    }
-
-    public StartWithClause(SelectStatement statement, int initialCapacity) {
-        super(statement, initialCapacity);
     }
 
     @Override
@@ -21,7 +17,7 @@ public class StartWithClause extends Clause<Filter> {
 
     @Override
     public NodeTag getNodeTag() {
-        return NodeTag.startWithClause;
+        return NodeTag.connectByClause;
     }
 
     @Override

@@ -31,9 +31,9 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         UnrelatedStatistic statistic = new UnrelatedStatistic(this, anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
-            return anyScalar.toExpression();
+            return anyScalar.toCompleteExpression();
         }
-        return getLiteral().toExpression();
+        return getLiteral().toCompleteExpression();
     }
 
     default Expression generateOperatorExpression(Scalar left, Scalar right){
@@ -128,6 +128,6 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                 );
             }
         }while (Utility.probability(50/epoch));
-        return template.stream().map(scalar -> scalar instanceof Expression? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
+        return template.stream().map(scalar -> scalar instanceof Expression ? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
     }
 }

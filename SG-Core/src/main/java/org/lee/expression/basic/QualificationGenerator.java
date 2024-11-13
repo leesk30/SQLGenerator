@@ -54,7 +54,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
                 logger.error(String.format("Cannot find compare operator for type: %s and %s", lt, rt));
                 return fallback();
             }
-            Expression converted = cast(right.toExpression(), lt);
+            Expression converted = cast(right.toCompleteExpression(), lt);
             Symbol newSymbol = getCompareOperator(lt, lt);
             if(newSymbol == null){
                 logger.error(String.format("Cannot find compare operator for type: %s and %s", lt, rt));
@@ -111,11 +111,11 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         final List<Scalar> numberCandidates = getStatistic().findMatch(TypeCategory.NUMBER);
         final List<Scalar> targetCandidates;
         if(dateCandidates.isEmpty() && numberCandidates.isEmpty()){
-            return predicateScalarAndScalar();
+            return fallback();
         } else if (dateCandidates.isEmpty()) {
             targetCandidates = numberCandidates;
         } else if (numberCandidates.isEmpty()) {
-            targetCandidates = numberCandidates;
+            targetCandidates = dateCandidates;
         }else {
             targetCandidates = probability(50)? dateCandidates : numberCandidates;
         }

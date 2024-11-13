@@ -1,6 +1,7 @@
 package org.lee.symbol;
 
 import org.lee.base.Node;
+import org.lee.expression.Qualification;
 import org.lee.type.TypeTag;
 
 import java.util.Arrays;
@@ -41,5 +42,16 @@ public interface Symbol extends Node {
             templateBody = templateBody.substring(indexPh+1);
         }
         return counter == argumentsNum;
+    }
+
+    default Qualification toCompleteQualification(){
+        if(this.argsNum() != 0){
+            throw new UnsupportedOperationException("The symbol cannot be convert to qualification directly.");
+        }
+
+        if(this.getReturnType() != TypeTag.boolean_){
+            throw new UnsupportedOperationException("Convert unsupported");
+        }
+        return new Qualification(this);
     }
 }

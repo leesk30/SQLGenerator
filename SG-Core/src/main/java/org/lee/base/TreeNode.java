@@ -4,6 +4,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public interface TreeNode<T extends Node> extends Node {
-    List<? extends Node> getChildNodes();
+    List<? extends T> getChildNodes();
     Stream<? extends T> walk();
 }

@@ -4,6 +4,7 @@ import org.lee.base.NodeTag;
 import org.lee.common.config.Rule;
 import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.scalar.Scalar;
+import org.lee.expression.generator.CommonExpressionGenerator;
 import org.lee.statement.clause.Clause;
 import org.lee.expression.Expression;
 import org.lee.statement.select.SelectStatement;
@@ -24,7 +25,7 @@ public abstract class SelectClause extends Clause<TargetEntry> {
     }
 
     protected void processEntry(Scalar scalar){
-        final Expression expression = scalar.toExpression();
+        final Expression expression = scalar.toCompleteExpression();
         if(expression.isIncludingAggregation() && !statement.confirm(Rule.AGGREGATION_REQUIRED_GROUP_BY)){
             statement.getConfig().set(Rule.AGGREGATION_REQUIRED_GROUP_BY, true);
         }
@@ -32,5 +33,7 @@ public abstract class SelectClause extends Clause<TargetEntry> {
         entry.setAlias();
         children.add(entry);
     }
+
+    protected abstract CommonExpressionGenerator createProjectionGenerator();
 
 }

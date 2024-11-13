@@ -6,6 +6,7 @@ import org.lee.common.Utility;
 import org.lee.entry.complex.RTEJoin;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.relation.ValuesRelation;
+import org.lee.entry.scalar.Field;
 import org.lee.statement.support.Alias;
 
 import java.util.ArrayList;
@@ -29,9 +30,11 @@ public final class RangeTableReference implements Normalized<RangeTableEntry>, A
         this.refName = refName;
         this.isEntryNeedPrintPrettyName = (entry instanceof ValuesRelation);
         if(entry instanceof RTEJoin){
-            ((RTEJoin) entry).getChildNodes().forEach(child -> fieldReferences.addAll(child.getFieldReferences()));
+            fieldReferences.addAll(((RTEJoin) entry).getFieldReferences());
         }else {
-            entry.getFields().forEach(scalar -> fieldReferences.add(new FieldReference(this, scalar)));
+            for(Field field : entry.getFields()){
+                fieldReferences.add(new FieldReference(this, field));
+            }
         }
     }
 

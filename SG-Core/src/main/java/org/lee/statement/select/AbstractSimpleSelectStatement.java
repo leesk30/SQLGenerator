@@ -5,9 +5,11 @@ import org.lee.entry.complex.TargetEntry;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Scalar;
 import org.lee.statement.clause.Clause;
-import org.lee.statement.clause.condition.*;
+import org.lee.statement.clause.predicate.*;
 import org.lee.statement.clause.from.FromClause;
 import org.lee.statement.clause.from.SelectFromClause;
+import org.lee.statement.clause.project.GroupByClause;
+import org.lee.statement.clause.predicate.HavingClause;
 import org.lee.statement.clause.project.SelectClause;
 import org.lee.statement.clause.project.SelectClauseWithinFrom;
 import org.lee.statement.support.SQLStatement;
@@ -63,7 +65,7 @@ public abstract class AbstractSimpleSelectStatement extends SelectStatement {
         return startWithClause;
     }
 
-    public Clause<Filter> getWhereClause() {
+    public PredicateClause getWhereClause() {
         return whereClause;
     }
 

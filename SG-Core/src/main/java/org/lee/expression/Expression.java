@@ -3,10 +3,6 @@ package org.lee.expression;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.structure.Pair;
-import org.lee.entry.FieldReference;
-import org.lee.entry.scalar.Field;
-import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
 import org.lee.symbol.*;
 import org.lee.type.TypeTag;
@@ -15,17 +11,18 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Expression implements IExpression<Expression> {
 
     protected final Node current;
-    protected final List<Expression> childNodes;
+    protected final List<IExpression<Expression>> childNodes;
     protected final boolean isTerminateNode;
     protected static final Logger LOGGER = LoggerFactory.getLogger(Expression.class.getName());
+
+    public static Expression newExpression(Node current){
+        return new Expression(current);
+    }
 
     public Expression(Node current){
         Assertion.requiredNonNull(current);
@@ -39,13 +36,14 @@ public class Expression implements IExpression<Expression> {
         }
     }
 
-    public Expression(Node current, List<Expression> childNodes){
+    public Expression(Node current, List<IExpression<Expression>> childNodes){
         Assertion.requiredNonNull(current);
         this.isTerminateNode = !(current instanceof Symbol);
         this.current = current;
         this.childNodes = childNodes;
     }
 
+    @Override
     public Expression newChild(Node current){
         if(current instanceof Expression){
             tryParenthesesAddChild((Expression)current);
@@ -64,40 +62,24 @@ public class Expression implements IExpression<Expression> {
             if(childOperator.getSignaturePriority() < parentOperator.getSignaturePriority()){
                 LOGGER.debug("The priority checking of signature tell we should with parentheses for this expression.");
                 LOGGER.debug(String.format("The child signature is: '%s'. The parent signature is: '%s'", childOperator.getString(), parentOperator.getString()));
-                this.childNodes.add(childExpression.toWithParenthesesExpression());
+                this.childNodes.add(childExpression.toWithParentheses());
                 return;
             }
         }
         this.childNodes.add(childExpression);
     }
 
-    public Expression toWithParenthesesExpression(){
+    @Override
+    public Expression toWithParentheses(){
         Parentheses parentheses = isTerminateNode ? ((Scalar) current).getType().getParenthesesSymbol() : ((Symbol)current).toParentheses();
         Expression newer = newExpression(parentheses) ;
         newer.childNodes.addAll(childNodes);
         return newer;
     }
 
-    public static Expression newExpression(Node current){
-        return new Expression(current);
-    }
-
-    public void extractChildren(Expression expression){
-        this.childNodes.addAll(expression.getChildNodes());
-    }
-
     @Override
-    public List<Expression> getChildNodes() {
+    public List<IExpression<Expression>> getChildNodes() {
         return childNodes;
-    }
-
-    @Override
-    public String getString() {
-        if(!isTerminateNode){
-            return String.format(current.getString(), childNodes.toArray());
-        }
-        Assertion.requiredTrue(childNodes.isEmpty());
-        return current.getString();
     }
 
     @Override
@@ -111,36 +93,9 @@ public class Expression implements IExpression<Expression> {
     }
 
     @Override
-    public Expression toExpression(){
+    public Expression toCompleteExpression(){
+        Assertion.requiredTrue(isComplete());
         return this;
-    }
-
-    @Override
-    public TypeTag getType() {
-        if(current instanceof Symbol){
-            return ((Symbol) current).getReturnType();
-        }
-        return ((Scalar) current).getType();
-    }
-
-    @Override
-    public boolean isCurrentComplete(){
-        return isTerminateNode || ((Symbol) current).argsNum() == childNodes.size();
-    }
-
-    @Override
-    public boolean isCurrentAggregation(){
-        return current instanceof Aggregation;
-    }
-
-    @Override
-    public boolean isCurrentPseudo(){
-        return current instanceof Pseudo;
-    }
-
-    @Override
-    public boolean isCurrentWindow(){
-        return current instanceof Window;
     }
 
     @Override
@@ -148,6 +103,7 @@ public class Expression implements IExpression<Expression> {
         return current;
     }
 
+    @Override
     public List<Expression> getLeafs(){
         if(isLeaf()){
             return Collections.singletonList(this);
@@ -157,73 +113,16 @@ public class Expression implements IExpression<Expression> {
         return leafs;
     }
 
-    public List<TypeTag> getLeafRequired(){
-        if(isLeaf()){
-            if(!isTerminateNode){
-                return new ArrayList<>(((Symbol) current).getArgumentsTypes());
-            }else {
-                return Collections.emptyList();
-            }
-        }
-        final List<TypeTag> types = new ArrayList<>();
-        childNodes.forEach(child -> types.addAll(child.getLeafRequired()));
-        return types;
-    }
-
-    public List<FieldReference> extractField(){
-        if(isLeaf() && isTerminateNode && current instanceof FieldReference){
-            return Collections.singletonList((FieldReference) current);
-        }
-
-        final List<Expression> leaf = this.getLeafs();
-        return leaf.stream()
-                .map(Expression::getCurrent)
-                .filter(each -> each instanceof FieldReference)
-                .filter(each -> {
-                    final Scalar referenced = ((FieldReference) each).getReference();
-                    return referenced instanceof Field || referenced instanceof Pseudo;
-                })
-                .map(each -> (FieldReference) each)
-                .collect(Collectors.toList());
-    }
-
-    public Pair<List<FieldReference>, List<FieldReference>> extractAggregate(){
-        final List<FieldReference> inAggregator = new ArrayList<>();
-        final List<FieldReference> notInAggregator = new ArrayList<>();
-        final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
-
-        if(isCurrentAggregation()){
-            inAggregator.addAll(extractField());
-            return pair;
-        }
-
-        if(!isIncludingAggregation()){
-            notInAggregator.addAll(extractField());
-            return pair;
-        }
-
-        for(Expression expression: childNodes){
-            if(expression.isCurrentAggregation()){
-                inAggregator.addAll(expression.extractField());
-            }else if(expression.isIncludingAggregation()) {
-                // recursive find aggregate
-                final Pair<List<FieldReference>, List<FieldReference>> subpair = expression.extractAggregate();
-                inAggregator.addAll(subpair.getFirstOrElse(Collections.emptyList()));
-                notInAggregator.addAll(subpair.getSecondOrElse(Collections.emptyList()));
-            }else {
-                notInAggregator.addAll(expression.extractField());
-            }
-        }
-        return pair;
-    }
-
     @Override
     public String toString(){
         // for debug
         return getString();
     }
 
-    public Qualification toQualification(){
+    public Qualification toCompleteQualification(){
+        if(!isComplete()){
+            throw new UnsupportedOperationException("Cannot add incomplete qualification or expression in filter.");
+        }
         if(getType() != TypeTag.boolean_){
             throw new UnsupportedOperationException(String.format("Cannot cast this expression to qualification. %s", this));
         }

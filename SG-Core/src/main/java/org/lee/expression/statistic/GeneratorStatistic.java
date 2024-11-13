@@ -34,7 +34,7 @@ public interface GeneratorStatistic extends IExpressionGenerator.ExpressionGener
 
     default Scalar tryFastConvert(Scalar candidate, TypeTag target){
         if(candidate.getType() != target){
-            Optional<Expression> result = ExprGeneratorUtils.nullableCast(candidate.toExpression(), target);
+            Optional<Expression> result = ExprGeneratorUtils.nullableCast(candidate.toCompleteExpression(), target);
             if(result.isPresent()){
                 LOGGER.debug(String.format("Fast convert type %s -> %s", candidate.getType(), target));
                 candidate = result.get();

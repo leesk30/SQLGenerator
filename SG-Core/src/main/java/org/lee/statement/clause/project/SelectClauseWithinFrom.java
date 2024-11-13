@@ -3,14 +3,16 @@ package org.lee.statement.clause.project;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
+import org.lee.entry.FieldReference;
 import org.lee.entry.scalar.Scalar;
-import org.lee.expression.common.ExprGenerators;
+import org.lee.expression.common.Location;
 import org.lee.expression.generator.CommonExpressionGenerator;
 import org.lee.statement.select.AbstractSimpleSelectStatement;
 import org.lee.statement.select.SelectStatement;
 import org.lee.statement.select.SelectType;
 import org.lee.type.TypeTag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SelectClauseWithinFrom extends SelectClause{
@@ -25,8 +27,6 @@ public class SelectClauseWithinFrom extends SelectClause{
         if(statement.getSelectType() == SelectType.clause){
             return;
         }
-//        Clause<RangeTableReference> fromClause = ((AbstractSimpleSelectStatement) statement).getFromClause();
-//        simpleFuzzProjections(fromClause.getChildNodes());
         if(statement.getProjectTypeLimitation().isEmpty()){
             nonLimitationsProjectionFuzz();
         }else {
@@ -39,8 +39,16 @@ public class SelectClauseWithinFrom extends SelectClause{
         return (AbstractSimpleSelectStatement) statement;
     }
 
+    @Override
+    protected CommonExpressionGenerator createProjectionGenerator() {
+        AbstractSimpleSelectStatement simple = this.retrieveParent();
+        List<FieldReference> fieldReferences = new ArrayList<>();
+        simple.getFromClause().getChildNodes().forEach(ref -> fieldReferences.addAll(ref.getFieldReferences()));
+        return new CommonExpressionGenerator(Location.project, true, false, simple, fieldReferences);
+    }
+
     private void nonLimitationsProjectionFuzz(){
-        final CommonExpressionGenerator generator = ExprGenerators.projectionFactory(this);
+        final CommonExpressionGenerator generator = createProjectionGenerator();
         final int numOfEntry = retrieveParent().getFromClause().size();
         final int numOfProjection = Utility.randomIntFromRange(numOfEntry, numOfEntry*2);
         for (int i = 0; i < numOfProjection; i++) {
@@ -54,7 +62,7 @@ public class SelectClauseWithinFrom extends SelectClause{
     }
 
     private void withLimitationsProjectionFuzz(){
-        final CommonExpressionGenerator generator = ExprGenerators.projectionFactory(this);
+        final CommonExpressionGenerator generator = createProjectionGenerator();
         final List<TypeTag> limitations = retrieveParent().getProjectTypeLimitation();
         for(TypeTag requiredType: limitations){
             Scalar generated;

@@ -3,36 +3,62 @@ package org.lee.expression;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.Assertion;
+import org.lee.common.structure.Pair;
+import org.lee.entry.FieldReference;
+import org.lee.entry.scalar.Field;
+import org.lee.entry.scalar.Pseudo;
 import org.lee.entry.scalar.Scalar;
+import org.lee.symbol.Aggregation;
+import org.lee.symbol.Symbol;
+import org.lee.symbol.Window;
 import org.lee.type.TypeTag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<IExpression<E>> {
-
-    boolean isCurrentAggregation();
-
-    boolean isCurrentPseudo();
-
-    boolean isCurrentWindow();
-
-    boolean isCurrentComplete();
-
+/**
+ * The Expression System is almost totally abstractive.
+ * */
+public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<IExpression<Expression>> {
+    // IE is your self.
+    // E is your child.
+    // E is subtype of IE
+    // IExpression<Expression> represent all kinds of the expression
     boolean isTerminateNode();
 
-    List<E> getChildNodes();
+    List<IExpression<Expression>> getChildNodes();
 
     Node getCurrent();
 
     List<E> getLeafs();
 
-    List<TypeTag> getLeafRequired();
+    E newChild(Node current);
+
+    IExpression<E> toWithParentheses();
+
+    default boolean isCurrentAggregation(){
+        return getCurrent() instanceof Aggregation;
+    }
+
+    default boolean isCurrentPseudo(){
+        return getCurrent() instanceof Pseudo;
+    }
+
+    default boolean isCurrentWindow(){
+        return getCurrent() instanceof Window;
+    }
+
 
     default boolean isLeaf(){
         return getChildNodes().isEmpty();
+    }
+
+    default boolean isCurrentComplete(){
+        return isTerminateNode() || ((Symbol) getCurrent()).argsNum() == getChildNodes().size();
     }
 
     default boolean isComplete(){
@@ -42,7 +68,7 @@ public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<
         if(isLeaf()){
             return true;
         }
-        for(E child: getChildNodes()){
+        for(IExpression<Expression> child: getChildNodes()){
             if(!child.isComplete()){
                 return false;
             }
@@ -55,7 +81,7 @@ public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<
         if (!isTerminateNode() && isCurrentAggregation()){
             return true;
         }
-        for(E child: getChildNodes()){
+        for(IExpression<Expression> child: getChildNodes()){
             if(child.isIncludingAggregation()){
                 return true;
             }
@@ -67,7 +93,7 @@ public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<
         if(isLeaf()){
             return isCurrentPseudo();
         }
-        for(E child: getChildNodes()){
+        for(IExpression<Expression> child: getChildNodes()){
             if(child.isIncludingPseudo()){
                 return true;
             }
@@ -80,7 +106,7 @@ public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<
             return true;
         }
 
-        for(E child: getChildNodes()){
+        for(IExpression<Expression> child: getChildNodes()){
             if(child.isIncludingWindow()){
                 return true;
             }
@@ -99,19 +125,100 @@ public interface IExpression<E extends IExpression<E>> extends Scalar, TreeNode<
                 .orElseThrow(Assertion.IMPOSSIBLE) + 1;
     }
 
-    default List<IExpression<E>> midTraverseExpression(){
-        final List<IExpression<E>> expressionList = new ArrayList<>(getTotalDegree() * getChildNodes().size());
-        final LinkedList<IExpression<E>> fifo = new LinkedList<>();
-        fifo.add(this);
+    default List<IExpression<Expression>> midTraverseExpression(){
+        final List<IExpression<Expression>> expressionList = new ArrayList<>(getTotalDegree() * getChildNodes().size());
+        final LinkedList<IExpression<Expression>> fifo = new LinkedList<>(this.getChildNodes());
         while (!fifo.isEmpty()){
-            final IExpression<E> current = fifo.removeFirst();
+            final IExpression<Expression> current = fifo.removeFirst();
             fifo.addAll(current.getChildNodes());
             expressionList.add(current);
         }
         return expressionList;
     }
 
-    default Stream<IExpression<E>> walk(){
+    default Stream<IExpression<Expression>> walk(){
         return midTraverseExpression().stream();
     }
+
+    default List<TypeTag> getLeafRequired(){
+        if(isLeaf()){
+            if(!isTerminateNode()){
+                return new ArrayList<>(((Symbol) getCurrent()).getArgumentsTypes());
+            }else {
+                return Collections.emptyList();
+            }
+        }
+        final List<TypeTag> types = new ArrayList<>();
+        getChildNodes().forEach(child -> types.addAll(child.getLeafRequired()));
+        return types;
+    }
+
+    default List<FieldReference> extractField(){
+        if(isLeaf() && isTerminateNode() && getCurrent() instanceof FieldReference){
+            return Collections.singletonList((FieldReference) getCurrent());
+        }
+
+        final List<E> leaf = this.getLeafs();
+        return leaf.stream()
+                .map(E::getCurrent)
+                .filter(each -> each instanceof FieldReference)
+                .filter(each -> {
+                    final Scalar referenced = ((FieldReference) each).getReference();
+                    return referenced instanceof Field || referenced instanceof Pseudo;
+                })
+                .map(each -> (FieldReference) each)
+                .collect(Collectors.toList());
+    }
+
+    default Pair<List<FieldReference>, List<FieldReference>> extractAggregate(){
+        final List<FieldReference> inAggregator = new ArrayList<>();
+        final List<FieldReference> notInAggregator = new ArrayList<>();
+        final Pair<List<FieldReference>, List<FieldReference>> pair = new Pair<>(inAggregator, notInAggregator);
+
+        if(isCurrentAggregation()){
+            inAggregator.addAll(extractField());
+            return pair;
+        }
+
+        if(!isIncludingAggregation()){
+            notInAggregator.addAll(extractField());
+            return pair;
+        }
+
+        for(IExpression<Expression> expression: getChildNodes()){
+            if(expression.isCurrentAggregation()){
+                inAggregator.addAll(expression.extractField());
+            }else if(expression.isIncludingAggregation()) {
+                // recursive find aggregate
+                final Pair<List<FieldReference>, List<FieldReference>> subpair = expression.extractAggregate();
+                inAggregator.addAll(subpair.getFirstOrElse(Collections.emptyList()));
+                notInAggregator.addAll(subpair.getSecondOrElse(Collections.emptyList()));
+            }else {
+                notInAggregator.addAll(expression.extractField());
+            }
+        }
+        return pair;
+    }
+
+    default void copyChildrenFrom(E expression){
+        this.getChildNodes().addAll(expression.getChildNodes());
+    }
+
+    @Override
+    default TypeTag getType() {
+        if(isTerminateNode()){
+            return ((Scalar) getCurrent()).getType();
+        }
+        return ((Symbol) getCurrent()).getReturnType();
+    }
+
+    @Override
+    default String getString() {
+        if(isTerminateNode()){
+            Assertion.requiredTrue(getChildNodes().isEmpty());
+            return getCurrent().getString();
+        }
+        return String.format(getCurrent().getString(), getChildNodes().toArray());
+    }
+
 }

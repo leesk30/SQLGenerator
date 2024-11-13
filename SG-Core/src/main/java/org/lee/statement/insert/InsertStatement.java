@@ -4,6 +4,7 @@ import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.statement.basic.SQLType;
 import org.lee.statement.basic.AbstractSQLStatement;
+import org.lee.statement.clause.Clause;
 import org.lee.statement.clause.modify.ModifyTableClause;
 import org.lee.statement.support.SupportModifyTable;
 
@@ -27,7 +28,7 @@ public abstract class InsertStatement extends AbstractSQLStatement implements Su
     }
 
     @Override
-    public List<? extends Node> getChildNodes() {
+    public List<Clause<? extends Node>> getChildNodes() {
         return new ArrayList<>(childrenMap.values());
     }
 

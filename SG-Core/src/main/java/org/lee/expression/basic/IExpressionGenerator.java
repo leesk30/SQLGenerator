@@ -7,6 +7,7 @@ import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.global.SymbolTable;
 import org.lee.entry.scalar.Scalar;
+import org.lee.expression.IExpression;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.expression.Expression;
 import org.lee.expression.common.Location;
@@ -23,7 +24,7 @@ import org.slf4j.Logger;
 import java.util.Collections;
 import java.util.List;
 
-public interface IExpressionGenerator<T extends Expression>
+public interface IExpressionGenerator<T extends IExpression<Expression>>
         extends
         Generator<T>,
         SQLStatementChildren {
@@ -110,7 +111,7 @@ public interface IExpressionGenerator<T extends Expression>
         final Logger logger = getLogger();
         if(paths.isEmpty()){
             logger.error(String.format("Cannot find any caster for '%s' to '%s'. Fallback to generate an context free scalar", expression.getType(), target));
-            return getContextFreeScalar(target).toExpression();
+            return getContextFreeScalar(target).toCompleteExpression();
         }
         Expression currentExpression = expression;
         for(TypeTag next: paths){

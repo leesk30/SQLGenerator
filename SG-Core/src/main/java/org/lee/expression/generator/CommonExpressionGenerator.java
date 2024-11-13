@@ -126,9 +126,9 @@ public class CommonExpressionGenerator
         for (int i = 0; i < symbol.argsNum(); i++){
             final TypeTag targetType = symbol.getArgumentsTypes().get(i);
             if(scalars[i] != null){
-                children.add(scalars[i].toExpression());
+                children.add(scalars[i].toCompleteExpression());
             }else {
-                children.add(getContextFreeScalar(targetType).toExpression());
+                children.add(getContextFreeScalar(targetType).toCompleteExpression());
             }
         }
         children.forEach(expression::newChild);
@@ -146,7 +146,7 @@ public class CommonExpressionGenerator
             if(scalars[i] == null || preferRecursion(symbol, incrementalDepth)){
                 expression.newChild(generate(targetType, incrementalDepth, childrenEnableAggregation));
             }else {
-                expression.newChild(scalars[i].toExpression());
+                expression.newChild(scalars[i].toCompleteExpression());
             }
         }
         return expression;
@@ -167,18 +167,18 @@ public class CommonExpressionGenerator
     public Expression fallback(TypeTag required) {
         Scalar requiredScalar = statistic.findAny(required);
         if(requiredScalar != null){
-            return requiredScalar.toExpression();
+            return requiredScalar.toCompleteExpression();
         }
-        return getLiteral(required).toExpression();
+        return getLiteral(required).toCompleteExpression();
     }
 
     @Override
     public Expression fallback(){
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
-            return anyScalar.toExpression();
+            return anyScalar.toCompleteExpression();
         }
-        return getLiteral().toExpression();
+        return getLiteral().toCompleteExpression();
     }
 
     public Expression generate(TypeTag required, int recursionDepth) {

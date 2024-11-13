@@ -41,11 +41,6 @@ public abstract class UnrelatedGenerator<T extends Expression>
     }
 
     @Override
-    public T generate(){
-        return generate(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
-    }
-
-    @Override
     public UnrelatedStatistic getStatistic() {
         return statistic;
     }

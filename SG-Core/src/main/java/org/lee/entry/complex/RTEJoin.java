@@ -1,74 +1,59 @@
 package org.lee.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.base.Generator;
-import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.entry.FieldReference;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.relation.RangeTableEntry;
 import org.lee.entry.scalar.Field;
-import org.lee.statement.clause.from.JoinClause;
-import org.lee.expression.Qualification;
-import org.lee.expression.common.ExprGenerators;
+import org.lee.statement.clause.predicate.JoinClause;
 import org.lee.statement.support.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RTEJoin extends JoinClause implements RangeTableEntry {
-    private final RangeTableReference left;
-    private final RangeTableReference right;
-    private final Filter filter = new Filter();
     private final List<Field> fieldList;  // lazy
+    private final List<FieldReference> fieldReferenceList; // not lazy
 
     public RTEJoin(SQLStatement statement, RangeTableReference left, RangeTableReference right){
-        super(statement);
-        this.left = left;
-        this.right = right;
-        this.children.add(left);
-        this.children.add(right);
-        this.fieldList = new ArrayList<>(left.getFieldReferences().size() + right.getFieldReferences().size());
-    }
-
-    @Override
-    public String getString() {
-        return StringUtils.joinWith(" ", left.getString(), pattern.toString(), "JOIN", right.getString(), "ON", filter.getString());
-    }
-
-    @Override
-    public NodeTag getNodeTag() {
-        return NodeTag.joinClause;
+        super(statement, left, right);
+        int capacity = this.left.getWrapped().capacity() + this.right.getWrapped().capacity();
+        this.fieldList = new ArrayList<>(capacity);
+        this.fieldReferenceList = new ArrayList<>(capacity);
+        fieldReferenceList.addAll(left.getFieldReferences());
+        fieldReferenceList.addAll(right.getFieldReferences());
     }
 
     @Override
     public List<Field> getFields() {
         if(fieldList.isEmpty()){
-            left.getFieldReferences().forEach(fieldReference -> fieldList.add(fieldReference.toField()));
-            right.getFieldReferences().forEach(fieldReference -> fieldList.add(fieldReference.toField()));
+            fieldReferenceList.forEach(fieldReference -> fieldList.add(fieldReference.toField()));
         }
         return fieldList;
     }
 
+    public List<FieldReference> getFieldReferences(){
+        return fieldReferenceList;
+    }
+
+    @Override
+    public String getString() {
+        String join = StringUtils.joinWith(" ", left.getString(), pattern, JOIN, right.getString());
+        if(filter.isEmpty()){
+            return join;
+        }
+        return StringUtils.joinWith(" ", join, ON, filter.getString());
+    }
+
     @Override
     public String getName() {
-        return null;
-    }
-
-    public RangeTableReference getLeft() {
-        return left;
-    }
-
-    public RangeTableReference getRight(){
-        return right;
+        return "";
     }
 
     @Override
     public void fuzz() {
-        Generator<Qualification> generator = ExprGenerators.qualificationFactory(this);
-        int generateNum = Utility.randomIntFromRange(1, 2);
-        for(int i = 0; i < generateNum; i++){
-            filter.add(generator.generate());
-        }
-        filter.fuzz();
+        pattern = Utility.randomlyChooseFrom(Pattern.values());
+        super.fuzz();
     }
 }

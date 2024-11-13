@@ -1,5 +1,6 @@
 package org.lee.unittest;
 
+import org.lee.expression.common.Location;
 import org.lee.portal.SQLGeneratorContext;
 import org.lee.entry.RangeTableReference;
 import org.lee.entry.complex.TargetEntry;
@@ -8,8 +9,6 @@ import org.lee.entry.relation.Relation;
 import org.lee.entry.scalar.Field;
 import org.lee.expression.Expression;
 import org.lee.expression.generator.CommonExpressionGenerator;
-import org.lee.expression.common.ExprGenerators;
-import org.lee.statement.support.Projectable;
 import org.lee.symbol.Aggregation;
 import org.lee.symbol.Operator;
 import org.lee.common.debug.Printer;
@@ -39,7 +38,7 @@ public class ExpressionMethodUnitTest {
         Aggregation aggregation = new Aggregation("max(%s)", TypeTag.bigint, TypeTag.bigint);
         Expression expression = new Expression(
                 aggregation,
-                Collections.singletonList(this.reference.getFieldReferences().get(0).toExpression())
+                Collections.singletonList(this.reference.getFieldReferences().get(0).toCompleteExpression())
         );
         assert expression.getString().trim().equals("max(db1.t1.a)");
         assert new TargetEntry(expression).isScalarStyle();
@@ -48,14 +47,14 @@ public class ExpressionMethodUnitTest {
 
         Expression expr1 = new Expression(
                 operator,
-                Arrays.asList(expression, literal.toExpression())
+                Arrays.asList(expression, literal.toCompleteExpression())
         );
         assert expr1.getString().trim().equals("max(db1.t1.a) + 1");
         assert new TargetEntry(expr1).isScalarStyle();
 
         Expression expr2 = new Expression(
                 operator,
-                Arrays.asList(expression, this.reference.getFieldReferences().get(0).toExpression())
+                Arrays.asList(expression, this.reference.getFieldReferences().get(0).toCompleteExpression())
         );
         assert expr2.getString().trim().equals("max(db1.t1.a) + db1.t1.a");
         assert !new TargetEntry(expr2).isScalarStyle();
@@ -63,7 +62,7 @@ public class ExpressionMethodUnitTest {
 
     @Test
     public void testExpressionCasting(){
-        CommonExpressionGenerator generator = ExprGenerators.projectionFactory((Projectable) null);
+        CommonExpressionGenerator generator = new CommonExpressionGenerator(Location.project, false, false, null, Collections.emptyList());
         IntStream.range(0, 50).parallel().forEach(
                 i -> {Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
                     Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
