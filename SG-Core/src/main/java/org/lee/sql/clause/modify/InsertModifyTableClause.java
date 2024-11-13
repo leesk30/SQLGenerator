@@ -1,8 +1,8 @@
 package org.lee.sql.clause.modify;
 
-import org.lee.entry.relation.Relation;
-import org.lee.entry.scalar.Field;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.entry.relation.Relation;
+import org.lee.sql.entry.scalar.Field;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;

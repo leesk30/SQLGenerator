@@ -1,9 +1,9 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
-import org.lee.entry.FieldReference;
-import org.lee.expression.Expression;
-import org.lee.expression.statistic.RelatedStatistic;
-import org.lee.statement.support.SQLStatement;
+import org.lee.generator.expression.statistic.RelatedStatistic;
+import org.lee.sql.entry.FieldReference;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.List;
 

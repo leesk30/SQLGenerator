@@ -1,4 +1,4 @@
-package org.lee.sql.select;
+package org.lee.sql.statement.select;
 
 
 import org.lee.base.Node;
@@ -7,15 +7,15 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.relation.SubqueryRelation;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.sql.basic.SQLType;
-import org.lee.sql.basic.AbstractSQLStatement;
+import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
-import org.lee.sql.support.Projectable;
-import org.lee.sql.support.SQLStatement;
-import org.lee.type.TypeTag;
+import org.lee.sql.entry.relation.RangeTableEntry;
+import org.lee.sql.entry.relation.SubqueryRelation;
+import org.lee.sql.statement.AbstractSQLStatement;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.statement.common.SQLType;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;

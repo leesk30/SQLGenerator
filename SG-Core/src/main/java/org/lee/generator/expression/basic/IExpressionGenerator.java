@@ -1,4 +1,4 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
@@ -6,19 +6,19 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.global.SymbolTable;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.IExpression;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.expression.Expression;
-import org.lee.expression.common.Location;
-import org.lee.expression.statistic.GeneratorStatistic;
-import org.lee.statement.select.SelectSimpleStatement;
-import org.lee.statement.support.Projectable;
-import org.lee.statement.support.ProjectableGenerator;
-import org.lee.statement.support.SQLStatement;
-import org.lee.statement.support.SQLStatementChildren;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.expression.IExpression;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.statement.select.SelectSimpleStatement;
+import org.lee.sql.support.ProjectableGenerator;
+import org.lee.sql.support.SQLStatementChildren;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 
 import java.util.Collections;
@@ -34,7 +34,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     GeneratorStatistic getStatistic();
-    Location getExpressionLocation();
+    ExpressionLocation getExpressionLocation();
 
     default Scalar getScalar(TypeTag typeTag){
         if(probability(50)){

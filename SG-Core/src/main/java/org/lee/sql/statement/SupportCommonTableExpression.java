@@ -1,8 +1,7 @@
-package org.lee.sql.support;
+package org.lee.sql.statement;
 
-import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.clause.from.WithClause;
-import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.entry.relation.CTE;
 
 import java.util.List;
 

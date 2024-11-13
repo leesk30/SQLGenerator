@@ -1,7 +1,7 @@
 package org.lee.sql.entry.scalar;
 
 import org.lee.base.NodeTag;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 public class Pseudo extends ScalarWithinRelation {
     @Override

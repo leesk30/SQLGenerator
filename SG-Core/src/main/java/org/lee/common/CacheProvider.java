@@ -2,8 +2,8 @@ package org.lee.common;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
-import org.lee.statement.support.Projectable;
-import org.lee.type.TypeTag;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.type.TypeTag;
 
 public class CacheProvider {
     // todo: async provider implementation

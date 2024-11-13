@@ -1,13 +1,13 @@
 package org.lee.sql.clause.predicate;
 
 import org.lee.base.Generator;
-import org.lee.entry.complex.Filter;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.clause.Clause;
+import org.lee.sql.entry.complex.Filter;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.expression.IExpression;
 import org.lee.sql.expression.Qualification;
-import org.lee.generator.expression.common.ExpressionLocation;
-import org.lee.sql.clause.Clause;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.statement.SQLStatement;
 
 public abstract class PredicateClause extends Clause<IExpression<Expression>> {
     protected final Filter filter = new Filter();

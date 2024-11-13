@@ -1,4 +1,4 @@
-package org.lee.type.mapped;
+package org.lee.sql.type.mapped;
 
 public final class NullType {
     public static final NullType NULL = new NullType();

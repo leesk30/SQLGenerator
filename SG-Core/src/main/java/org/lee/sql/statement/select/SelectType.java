@@ -1,4 +1,4 @@
-package org.lee.sql.select;
+package org.lee.sql.statement.select;
 
 public enum SelectType {
     normal,

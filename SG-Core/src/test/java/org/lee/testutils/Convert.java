@@ -1,10 +1,10 @@
 package org.lee.testutils;
 
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;

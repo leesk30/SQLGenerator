@@ -2,11 +2,11 @@ package org.lee.sql.expression;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
-import org.lee.entry.scalar.Scalar;
+import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Parentheses;
+import org.lee.sql.symbol.Symbol;
 import org.lee.sql.symbol.common.PredicateCombiner;
-import org.lee.sql.symbol.basic.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package org.lee.sql.entry.scalar;
 
 import org.lee.base.NodeTag;
-import org.lee.type.TypeDescriptor;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeDescriptor;
+import org.lee.sql.type.TypeTag;
 
 public class Field extends ScalarWithinRelation {
     private final String fieldName;

@@ -1,9 +1,9 @@
 package org.lee.sql.clause.predicate;
 
 import org.lee.base.NodeTag;
-import org.lee.entry.RangeTableReference;
 import org.lee.sql.clause.from.FromClause;
-import org.lee.sql.select.SelectStatement;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.statement.select.SelectStatement;
 
 import java.util.ArrayList;
 import java.util.List;

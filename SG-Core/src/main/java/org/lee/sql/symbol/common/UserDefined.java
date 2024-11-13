@@ -1,6 +1,4 @@
-package org.lee.sql.symbol.basic;
-
-import org.lee.sql.symbol.common.Language;
+package org.lee.sql.symbol.common;
 
 public interface UserDefined {
     Language getDefineLanguage();

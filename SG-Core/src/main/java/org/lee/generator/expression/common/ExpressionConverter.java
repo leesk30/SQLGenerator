@@ -1,16 +1,16 @@
-package org.lee.expression.common;
+package org.lee.generator.expression.common;
 
-import org.lee.expression.Expression;
-import org.lee.expression.basic.IExpressionGenerator;
-import org.lee.expression.statistic.GeneratorStatistic;
-import org.lee.expression.statistic.UnrelatedStatistic;
-import org.lee.statement.support.SQLStatement;
+import org.lee.generator.expression.basic.IExpressionGenerator;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.generator.expression.statistic.UnrelatedStatistic;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.statement.SQLStatement;
 
 public class ExpressionConverter implements IExpressionGenerator<Expression> {
     private final SQLStatement statement;
     private final UnrelatedStatistic statistic;
-    private final Location location;
-    public ExpressionConverter(Location location, SQLStatement statement, UnrelatedStatistic statistic){
+    private final ExpressionLocation location;
+    public ExpressionConverter(ExpressionLocation location, SQLStatement statement, UnrelatedStatistic statistic){
         this.statement = statement;
         this.statistic = statistic;
         this.location = location;
@@ -27,7 +27,7 @@ public class ExpressionConverter implements IExpressionGenerator<Expression> {
     }
 
     @Override
-    public Location getExpressionLocation() {
+    public ExpressionLocation getExpressionLocation() {
         return location;
     }
 

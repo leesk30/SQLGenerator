@@ -2,7 +2,7 @@ package org.lee.sql.entry.relation;
 
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
-import org.lee.sql.support.Projectable;
+import org.lee.sql.statement.Projectable;
 
 public class CTE extends SubRTE {
     protected String cteName;

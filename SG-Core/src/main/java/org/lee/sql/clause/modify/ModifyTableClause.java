@@ -1,9 +1,9 @@
 package org.lee.sql.clause.modify;
 
 import org.lee.base.NodeTag;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.sql.clause.Clause;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.entry.relation.RangeTableEntry;
+import org.lee.sql.statement.SQLStatement;
 
 public abstract class ModifyTableClause extends Clause<RangeTableEntry> {
     public ModifyTableClause(SQLStatement statement) {

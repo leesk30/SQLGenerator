@@ -1,13 +1,13 @@
-package org.lee.sql.insert;
+package org.lee.sql.statement.insert;
 
 import org.lee.common.Utility;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.complex.Record;
-import org.lee.entry.relation.Relation;
-import org.lee.entry.scalar.Field;
 import org.lee.sql.clause.modify.InsertModifyTableClause;
 import org.lee.sql.clause.project.ValuesClauseForInsert;
-import org.lee.type.TypeDescriptor;
+import org.lee.sql.entry.complex.Record;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.entry.relation.Relation;
+import org.lee.sql.entry.scalar.Field;
+import org.lee.sql.type.TypeDescriptor;
 
 import java.util.List;
 import java.util.stream.Collectors;

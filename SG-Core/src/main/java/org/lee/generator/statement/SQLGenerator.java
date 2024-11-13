@@ -1,8 +1,8 @@
-package org.lee.portal;
+package org.lee.generator.statement;
 
 import org.lee.base.Generator;
+import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.select.SelectStatement;
-import org.lee.sql.statement.basic.SQLStatement;
 
 public interface SQLGenerator extends Generator<SQLStatement> {
     SelectStatement generateSelect();

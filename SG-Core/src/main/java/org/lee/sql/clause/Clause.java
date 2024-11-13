@@ -4,7 +4,7 @@ import org.lee.base.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.support.SQLStatementChildren;
 import org.slf4j.Logger;
 

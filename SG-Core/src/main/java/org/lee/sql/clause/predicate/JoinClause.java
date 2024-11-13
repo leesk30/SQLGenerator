@@ -3,11 +3,11 @@ package org.lee.sql.clause.predicate;
 import org.lee.base.Generator;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
-import org.lee.entry.RangeTableReference;
-import org.lee.sql.expression.Qualification;
-import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.JoinQualificationGenerator;
-import org.lee.sql.support.SQLStatement;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.SQLStatement;
 
 public abstract class JoinClause extends PredicateClause {
     protected Pattern pattern = Pattern.INNER;

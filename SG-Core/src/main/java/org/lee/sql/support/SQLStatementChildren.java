@@ -1,7 +1,8 @@
 package org.lee.sql.support;
 
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.statement.SQLStatement;
 import org.slf4j.Logger;
 
 public interface SQLStatementChildren extends SupportRuntimeConfiguration, Logging{

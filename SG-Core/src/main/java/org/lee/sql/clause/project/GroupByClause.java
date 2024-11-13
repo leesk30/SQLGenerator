@@ -5,12 +5,12 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.structure.Pair;
-import org.lee.entry.FieldReference;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.scalar.Scalar;
 import org.lee.sql.clause.Clause;
-import org.lee.sql.select.SelectStatement;
-import org.lee.type.literal.LiteralInt;
+import org.lee.sql.entry.FieldReference;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.literal.LiteralInt;
+import org.lee.sql.statement.select.SelectStatement;
 
 import java.util.*;
 

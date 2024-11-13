@@ -1,8 +1,7 @@
-package org.lee.sql.symbol.basic;
+package org.lee.sql.symbol;
 
 import org.lee.base.Node;
 import org.lee.sql.expression.Qualification;
-import org.lee.sql.symbol.Parentheses;
 import org.lee.sql.type.TypeTag;
 
 import java.util.Arrays;

@@ -1,4 +1,4 @@
-package org.lee.sql.type.literal;
+package org.lee.sql.literal;
 
 public interface Traceable {
     int getIndex();

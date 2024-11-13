@@ -3,7 +3,7 @@ package org.lee.sql.entry.scalar;
 import org.lee.base.Node;
 import org.lee.common.Assertion;
 import org.lee.sql.expression.Expression;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 public interface Scalar extends Node {
     TypeTag getType();

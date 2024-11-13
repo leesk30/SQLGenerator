@@ -2,8 +2,8 @@ package org.lee.sql.entry.complex;
 
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Scalar;
-import org.lee.sql.support.Projectable;
-import org.lee.type.TypeTag;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.type.TypeTag;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,11 +1,11 @@
-package org.lee.type;
+package org.lee.sql.type;
 
 import org.lee.base.Generator;
 import org.lee.base.Node;
-import org.lee.type.literal.Literal;
-import org.lee.type.mapped.MappedDecimal;
-import org.lee.type.mapped.MappedType;
-import org.lee.type.precision.*;
+import org.lee.sql.literal.Literal;
+import org.lee.sql.type.mapped.MappedDecimal;
+import org.lee.sql.type.mapped.MappedType;
+import org.lee.sql.type.precision.*;
 
 import java.math.BigDecimal;
 import java.util.HashMap;

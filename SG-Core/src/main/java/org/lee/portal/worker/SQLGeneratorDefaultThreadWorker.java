@@ -1,9 +1,9 @@
 package org.lee.portal.worker;
 
 import org.lee.common.config.InternalConfig;
-import org.lee.portal.SQLGenerator;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.statement.support.SQLStatement;
+import org.lee.generator.statement.SQLGenerator;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.concurrent.BlockingQueue;
 

@@ -1,4 +1,4 @@
-package org.lee.expression.generator;
+package org.lee.generator;
 
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
@@ -7,9 +7,9 @@ import org.lee.common.exception.InternalError;
 import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.structure.Weighted;
-import org.lee.expression.Expression;
-import org.lee.expression.Qualification;
-import org.lee.expression.basic.QualificationGenerator;
+import org.lee.generator.expression.basic.QualificationGenerator;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.expression.Qualification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

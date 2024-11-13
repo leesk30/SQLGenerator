@@ -1,4 +1,4 @@
-package org.lee.type.precision;
+package org.lee.sql.type.precision;
 
 public interface TypePrecision {
     int VARLENA_FLAG = -1;

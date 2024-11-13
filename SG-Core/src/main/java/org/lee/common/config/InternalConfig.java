@@ -3,7 +3,7 @@ package org.lee.common.config;
 import org.json.JSONObject;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

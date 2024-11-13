@@ -3,9 +3,9 @@ package org.lee.common.global;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
-import org.lee.entry.relation.Relation;
-import org.lee.entry.scalar.Field;
-import org.lee.type.TypeDescriptor;
+import org.lee.sql.entry.relation.Relation;
+import org.lee.sql.entry.scalar.Field;
+import org.lee.sql.type.TypeDescriptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

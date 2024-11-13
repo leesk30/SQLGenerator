@@ -1,4 +1,4 @@
-package org.lee.sql.insert;
+package org.lee.sql.statement.insert;
 
 import org.lee.sql.clause.modify.InsertModifyTableClause;
 import org.lee.sql.clause.modify.ModifyTableClause;

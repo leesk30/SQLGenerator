@@ -1,8 +1,8 @@
 package org.lee.sql.symbol.common;
 
 import org.lee.base.NodeTag;
-import org.lee.sql.symbol.basic.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 
 import java.util.List;
 

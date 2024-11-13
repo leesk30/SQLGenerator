@@ -2,12 +2,12 @@ package org.lee.sql.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lee.common.Utility;
+import org.lee.sql.clause.predicate.JoinClause;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.scalar.Field;
-import org.lee.sql.clause.predicate.JoinClause;
-import org.lee.sql.statement.basic.SQLStatement;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.ArrayList;
 import java.util.List;

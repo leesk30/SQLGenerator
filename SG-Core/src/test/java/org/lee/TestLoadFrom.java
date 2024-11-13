@@ -2,7 +2,7 @@ package org.lee;
 
 import org.json.JSONObject;
 import org.lee.common.global.MetaEntry;
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
 import org.testng.annotations.Test;
 
 import java.io.*;

@@ -1,6 +1,6 @@
 package org.lee.common.config;
 
-public enum Conf {
+public enum Conf implements Key<Conf> {
     MAX_SUBQUERY_RECURSION_DEPTH(3),
     MAX_EXPRESSION_RECURSION_DEPTH(3),
     MAX_CASTING_RECURSION_DEPTH(3),

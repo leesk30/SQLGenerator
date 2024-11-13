@@ -6,9 +6,9 @@ import org.lee.common.config.InternalConfigs;
 import org.lee.common.global.MetaEntry;
 import org.lee.common.Utility;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
 import org.lee.common.SQLFormatter;
-import org.lee.statement.support.SQLStatement;
+import org.lee.sql.statement.SQLStatement;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 

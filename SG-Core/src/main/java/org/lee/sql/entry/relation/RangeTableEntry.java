@@ -2,8 +2,8 @@ package org.lee.sql.entry.relation;
 
 import org.lee.base.Node;
 import org.lee.sql.entry.scalar.Field;
+import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.select.SelectDynamicStatement;
-import org.lee.sql.support.Projectable;
 
 import java.util.List;
 

@@ -6,8 +6,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
 import org.lee.common.structure.TrieTree;
-import org.lee.symbol.*;
-import org.lee.type.TypeTag;
+import org.lee.sql.symbol.Aggregation;
+import org.lee.sql.symbol.Function;
+import org.lee.sql.symbol.Operator;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.symbol.common.Aggregator;
+import org.lee.sql.symbol.common.UserDefined;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

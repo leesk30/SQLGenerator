@@ -1,8 +1,8 @@
 package org.lee;
 
 import org.lee.common.global.SymbolTable;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.type.TypeTag;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.type.TypeTag;
 
 public class Operators {
 

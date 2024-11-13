@@ -1,7 +1,7 @@
 package org.lee.sql.entry.relation;
 
 import org.lee.base.NodeTag;
-import org.lee.sql.support.Projectable;
+import org.lee.sql.statement.Projectable;
 
 public class SubqueryRelation extends SubRTE {
     public SubqueryRelation(Projectable projectable){

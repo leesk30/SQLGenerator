@@ -1,8 +1,8 @@
-package org.lee.type.mapped;
+package org.lee.sql.type.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.LiteralBoolean;
+import org.lee.sql.literal.LiteralBoolean;
+import org.lee.sql.type.TypeTag;
 
 public class MappedBoolean extends MappedType<Boolean>{
     private static final MappedBoolean self = new MappedBoolean();

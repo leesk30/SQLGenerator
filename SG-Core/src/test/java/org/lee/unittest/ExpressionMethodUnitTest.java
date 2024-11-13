@@ -1,19 +1,19 @@
 package org.lee.unittest;
 
-import org.lee.expression.common.Location;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.entry.RangeTableReference;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.relation.RangeTableEntry;
-import org.lee.entry.relation.Relation;
-import org.lee.entry.scalar.Field;
-import org.lee.expression.Expression;
-import org.lee.expression.generator.CommonExpressionGenerator;
-import org.lee.symbol.Aggregation;
-import org.lee.symbol.Operator;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.entry.relation.RangeTableEntry;
+import org.lee.sql.entry.relation.Relation;
+import org.lee.sql.entry.scalar.Field;
+import org.lee.sql.expression.Expression;
+import org.lee.generator.expression.CommonExpressionGenerator;
+import org.lee.sql.symbol.Aggregation;
+import org.lee.sql.symbol.Operator;
 import org.lee.common.debug.Printer;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.LiteralLong;
+import org.lee.sql.type.TypeTag;
+import org.lee.sql.literal.LiteralLong;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -62,7 +62,7 @@ public class ExpressionMethodUnitTest {
 
     @Test
     public void testExpressionCasting(){
-        CommonExpressionGenerator generator = new CommonExpressionGenerator(Location.project, false, false, null, Collections.emptyList());
+        CommonExpressionGenerator generator = new CommonExpressionGenerator(ExpressionLocation.project, false, false, null, Collections.emptyList());
         IntStream.range(0, 50).parallel().forEach(
                 i -> {Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
                     Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));

@@ -1,11 +1,11 @@
-package org.lee.expression.generator;
+package org.lee.generator.expression;
 
-import org.lee.entry.FieldReference;
-import org.lee.expression.Qualification;
-import org.lee.expression.basic.QualificationGenerator;
-import org.lee.expression.basic.RelatedGenerator;
-import org.lee.expression.common.Location;
-import org.lee.statement.support.SQLStatement;
+import org.lee.generator.expression.basic.QualificationGenerator;
+import org.lee.generator.expression.basic.RelatedGenerator;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.entry.FieldReference;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.List;
 
@@ -16,9 +16,9 @@ public class RelatedQualificationGenerator
      * TODO
      * */
 
-    private final Location location;
+    private final ExpressionLocation location;
 
-    public RelatedQualificationGenerator(Location location, SQLStatement stmt, List<FieldReference> lhs, List<FieldReference> rhs) {
+    public RelatedQualificationGenerator(ExpressionLocation location, SQLStatement stmt, List<FieldReference> lhs, List<FieldReference> rhs) {
         super(stmt, lhs, rhs);
         this.location = location;
     }
@@ -30,14 +30,14 @@ public class RelatedQualificationGenerator
 
     @Override
     public Qualification fallback() {
-        if(location == Location.join){
+        if(location == ExpressionLocation.join){
             return predicateScalarAndScalar();
         }
         return predicateFieldAndLiteral();
     }
 
     @Override
-    public Location getExpressionLocation() {
+    public ExpressionLocation getExpressionLocation() {
         return location;
     }
 }

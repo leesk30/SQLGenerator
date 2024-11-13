@@ -1,8 +1,8 @@
-package org.lee.sql.select;
+package org.lee.sql.statement.select;
 
 
-import org.lee.entry.complex.TargetEntry;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.statement.SQLStatement;
 
 public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
     public SelectSimpleStatement() {

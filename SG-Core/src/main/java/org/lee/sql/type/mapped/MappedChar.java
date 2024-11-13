@@ -1,8 +1,8 @@
-package org.lee.type.mapped;
+package org.lee.sql.type.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.LiteralChar;
+import org.lee.sql.literal.LiteralChar;
+import org.lee.sql.type.TypeTag;
 
 public class MappedChar extends MappedType<String>{
     private static final MappedChar self = new MappedChar();

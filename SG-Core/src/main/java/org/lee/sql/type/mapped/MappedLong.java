@@ -1,8 +1,8 @@
-package org.lee.type.mapped;
+package org.lee.sql.type.mapped;
 
 import org.lee.common.Utility;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.LiteralLong;
+import org.lee.sql.literal.LiteralLong;
+import org.lee.sql.type.TypeTag;
 
 public final class MappedLong extends MappedType<Long>{
     private static final MappedLong self = new MappedLong();

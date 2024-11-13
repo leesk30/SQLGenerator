@@ -1,8 +1,8 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.expression.Expression;
-import org.lee.statement.support.SQLStatement;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.statement.SQLStatement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

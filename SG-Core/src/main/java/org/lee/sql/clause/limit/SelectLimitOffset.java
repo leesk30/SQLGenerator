@@ -4,8 +4,8 @@ package org.lee.sql.clause.limit;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.sql.select.SelectNormalStatement;
-import org.lee.sql.select.SelectStatement;
+import org.lee.sql.statement.select.SelectNormalStatement;
+import org.lee.sql.statement.select.SelectStatement;
 
 public class SelectLimitOffset extends LimitOffset {
 

@@ -1,12 +1,11 @@
-package org.lee.sql.support;
+package org.lee.sql.statement;
 
 import org.lee.common.Assertion;
-import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.complex.AdaptiveRecordScalar;
+import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.entry.scalar.ScalarSubquery;
-import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.type.TypeTag;
 
 import java.util.List;

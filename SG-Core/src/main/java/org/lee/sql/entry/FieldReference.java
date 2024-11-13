@@ -5,7 +5,7 @@ import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.entry.scalar.Pseudo;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.entry.scalar.ScalarWithinRelation;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 public final class FieldReference implements Scalar {
     private final RangeTableReference parentRtr;

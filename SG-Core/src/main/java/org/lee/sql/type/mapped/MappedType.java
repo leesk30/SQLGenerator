@@ -1,8 +1,8 @@
-package org.lee.type.mapped;
+package org.lee.sql.type.mapped;
 
 import org.lee.base.Generator;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.Literal;
+import org.lee.sql.literal.Literal;
+import org.lee.sql.type.TypeTag;
 
 public abstract class MappedType<T> implements Generator<Literal<T>> {
     private final Class<T> javaClass;

@@ -1,4 +1,4 @@
-package org.lee.sql.basic;
+package org.lee.sql.statement.common;
 
 public enum SQLType {
     select,

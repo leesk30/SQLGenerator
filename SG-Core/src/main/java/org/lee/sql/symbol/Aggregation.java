@@ -1,7 +1,7 @@
 package org.lee.sql.symbol;
 
-import org.lee.sql.symbol.basic.Aggregator;
-import org.lee.type.TypeTag;
+import org.lee.sql.symbol.common.Aggregator;
+import org.lee.sql.type.TypeTag;
 
 public class Aggregation extends Function implements Aggregator {
 

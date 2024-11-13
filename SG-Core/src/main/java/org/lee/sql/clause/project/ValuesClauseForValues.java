@@ -3,8 +3,8 @@ package org.lee.sql.clause.project;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Rule;
-import org.lee.sql.ValuesStatement;
-import org.lee.type.TypeTag;
+import org.lee.sql.statement.values.ValuesStatement;
+import org.lee.sql.type.TypeTag;
 
 import java.util.List;
 

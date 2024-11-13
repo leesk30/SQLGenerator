@@ -3,11 +3,11 @@ package org.lee.sql.clause.project;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.complex.Record;
 import org.lee.sql.clause.Clause;
-import org.lee.sql.support.SQLStatement;
-import org.lee.type.TypeTag;
+import org.lee.sql.entry.complex.Record;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,8 +1,6 @@
 package org.lee.common.structure;
 
 
-import org.lee.type.literal.Literal;
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -41,17 +39,5 @@ public class Pair<T1, T2> {
             return orElse;
         }
         return t2;
-    }
-
-    public static <T> Pair<Literal<T>, Literal<T>> OrderedPair(Literal<T> v1, Literal<T> v2){
-        if(!(v1.getType().isComparable() && v1.getLiteral() instanceof Comparable)){
-            return null;
-        }
-        Comparable<T> comparable = (Comparable<T>) v1.getLiteral();
-        final int result = comparable.compareTo(v2.getLiteral());
-        if(result == 0){
-            return null;
-        }
-        return result > 0 ? new Pair<>(v2, v1):new Pair<>(v1, v2);
     }
 }

@@ -1,18 +1,18 @@
-package org.lee.expression.common;
+package org.lee.generator.expression.common;
 
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
-import org.lee.entry.FieldReference;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.Qualification;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.expression.Expression;
-import org.lee.symbol.Comparator;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeTag;
-import org.lee.type.literal.Literal;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.FieldReference;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.literal.Literal;
+import org.lee.sql.symbol.Comparator;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +42,7 @@ public class ExprGeneratorUtils {
         final TypeTag typeTag = fieldReference.getType();
         final Literal<T> b1 = Literal.fromType(typeTag);
         final Literal<T> b2 = Literal.fromType(typeTag);
-        Pair<Literal<T>, Literal<T>> ordered = Pair.OrderedPair(b1, b2);
+        Pair<Literal<T>, Literal<T>> ordered = Literal.orderedPair(b1, b2);
         if(ordered == null){
             return compareToLiteral(fieldReference);
         }

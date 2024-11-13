@@ -1,10 +1,10 @@
-package org.lee.sql.select;
+package org.lee.sql.statement.select;
 
 import org.lee.base.NodeTag;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.relation.RangeTableEntry;
 import org.lee.sql.clause.from.FromClause;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.entry.relation.RangeTableEntry;
+import org.lee.sql.statement.SQLStatement;
 
 import java.util.Collections;
 import java.util.List;

@@ -1,11 +1,11 @@
 package org.lee.sql.clause.project;
 
 import org.lee.common.Utility;
-import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.CommonExpressionGenerator;
-import org.lee.sql.select.SelectClauseStatement;
-import org.lee.sql.select.SelectStatement;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.statement.select.SelectClauseStatement;
+import org.lee.sql.statement.select.SelectStatement;
+import org.lee.sql.type.TypeTag;
 
 import java.util.Collections;
 

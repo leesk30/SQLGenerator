@@ -3,7 +3,7 @@ package org.lee.sql.entry.complex;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.sql.entry.scalar.Scalar;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.List;

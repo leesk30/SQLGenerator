@@ -2,8 +2,8 @@ package org.lee.sql.clause.from;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
-import org.lee.entry.RangeTableReference;
-import org.lee.sql.select.SelectStatement;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.statement.select.SelectStatement;
 
 public final class SelectFromClause extends FromClause {
     public SelectFromClause(SelectStatement statement){

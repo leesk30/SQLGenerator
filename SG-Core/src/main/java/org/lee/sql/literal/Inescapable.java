@@ -1,5 +1,6 @@
-package org.lee.sql.type.literal;
+package org.lee.sql.literal;
 
 public interface Inescapable {
+    // TODO: optimize the whole literal
     String getInescapeString();
 }

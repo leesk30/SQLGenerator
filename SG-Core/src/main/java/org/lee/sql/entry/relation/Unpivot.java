@@ -5,7 +5,7 @@ import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.debug.Printer;
 import org.lee.sql.entry.scalar.Field;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 import java.util.*;
 

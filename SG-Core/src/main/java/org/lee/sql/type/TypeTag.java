@@ -1,12 +1,12 @@
-package org.lee.type;
+package org.lee.sql.type;
 
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.exception.ValueCheckFailedException;
-import org.lee.portal.SQLGeneratorContext;
+import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.symbol.Parentheses;
-import org.lee.sql.symbol.basic.Symbol;
-import org.lee.type.mapped.MappedType;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.mapped.MappedType;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -2,12 +2,12 @@ package org.lee.sql.clause.project;
 
 import org.lee.base.NodeTag;
 import org.lee.common.config.Rule;
-import org.lee.entry.complex.TargetEntry;
-import org.lee.entry.scalar.Scalar;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.sql.clause.Clause;
+import org.lee.sql.entry.complex.TargetEntry;
+import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
-import org.lee.sql.select.SelectStatement;
+import org.lee.sql.statement.select.SelectStatement;
 
 public abstract class SelectClause extends Clause<TargetEntry> {
     public SelectClause(SelectStatement statement) {

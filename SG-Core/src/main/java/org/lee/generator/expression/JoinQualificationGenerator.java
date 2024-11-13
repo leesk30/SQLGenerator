@@ -1,13 +1,13 @@
-package org.lee.expression.generator;
+package org.lee.generator.expression;
 
 import org.lee.common.exception.InternalError;
-import org.lee.entry.RangeTableReference;
-import org.lee.expression.Qualification;
-import org.lee.expression.common.ExprGeneratorUtils;
-import org.lee.expression.basic.QualificationGenerator;
-import org.lee.expression.basic.RelatedGenerator;
-import org.lee.expression.common.Location;
-import org.lee.statement.support.SQLStatement;
+import org.lee.generator.WeightedGenerator;
+import org.lee.generator.expression.basic.QualificationGenerator;
+import org.lee.generator.expression.basic.RelatedGenerator;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.SQLStatement;
 
 import java.lang.reflect.Method;
 
@@ -52,7 +52,7 @@ public class JoinQualificationGenerator
     }
 
     @Override
-    public Location getExpressionLocation() {
-        return Location.join;
+    public ExpressionLocation getExpressionLocation() {
+        return ExpressionLocation.join;
     }
 }

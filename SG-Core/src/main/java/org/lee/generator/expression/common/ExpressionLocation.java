@@ -1,6 +1,6 @@
-package org.lee.expression.common;
+package org.lee.generator.expression.common;
 
-public enum Location {
+public enum ExpressionLocation {
     where,
     project,
     set,

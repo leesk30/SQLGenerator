@@ -1,9 +1,9 @@
 package org.lee.sql.clause.predicate;
 
 import org.lee.base.NodeTag;
-import org.lee.entry.scalar.Scalar;
 import org.lee.sql.clause.Clause;
-import org.lee.sql.select.SelectStatement;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.statement.select.SelectStatement;
 
 public class HavingClause extends Clause<Scalar> {
     public HavingClause(SelectStatement statement) {

@@ -3,8 +3,8 @@ package org.lee.sql.entry.scalar;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.sql.entry.Normalized;
-import org.lee.sql.support.Projectable;
-import org.lee.type.TypeTag;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.type.TypeTag;
 
 public class ScalarSubquery implements Normalized<Projectable>, Scalar {
     private final Projectable scalarStatement;

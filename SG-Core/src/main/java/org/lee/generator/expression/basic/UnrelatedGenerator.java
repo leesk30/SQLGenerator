@@ -1,11 +1,11 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
 import org.lee.common.Utility;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.Expression;
-import org.lee.expression.statistic.UnrelatedStatistic;
-import org.lee.statement.support.SQLStatement;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.statistic.UnrelatedStatistic;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;

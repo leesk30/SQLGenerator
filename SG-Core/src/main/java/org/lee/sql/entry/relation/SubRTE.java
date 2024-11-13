@@ -2,7 +2,7 @@ package org.lee.sql.entry.relation;
 
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
-import org.lee.sql.support.Projectable;
+import org.lee.sql.statement.Projectable;
 
 import java.util.ArrayList;
 import java.util.List;

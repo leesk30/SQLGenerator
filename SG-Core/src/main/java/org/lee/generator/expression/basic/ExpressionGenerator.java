@@ -1,17 +1,17 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.Expression;
-import org.lee.expression.statistic.UnrelatedStatistic;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.symbol.Function;
-import org.lee.symbol.Operator;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeCategory;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.statistic.UnrelatedStatistic;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.symbol.Function;
+import org.lee.sql.symbol.Operator;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeCategory;
+import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
 import java.util.Arrays;

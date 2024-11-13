@@ -1,20 +1,20 @@
-package org.lee.expression.generator;
+package org.lee.generator.expression;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.global.SymbolTable;
-import org.lee.entry.scalar.Scalar;
-import org.lee.portal.SQLGeneratorContext;
-import org.lee.expression.Expression;
-import org.lee.expression.basic.ExpressionGenerator;
-import org.lee.expression.basic.UnrelatedGenerator;
-import org.lee.expression.common.Location;
-import org.lee.expression.statistic.UnrelatedStatistic;
-import org.lee.statement.support.SQLStatement;
-import org.lee.symbol.Aggregation;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.basic.ExpressionGenerator;
+import org.lee.generator.expression.basic.UnrelatedGenerator;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.generator.expression.statistic.UnrelatedStatistic;
+import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.symbol.Aggregation;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -28,26 +28,26 @@ public class CommonExpressionGenerator
     private final boolean parentFlagEnableAggregate;
     private final boolean parentFlagEnableWindow;
     protected final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-    protected final Location expressionLocation;
+    protected final ExpressionLocation expressionLocation;
 
-    public CommonExpressionGenerator(Location location, SQLStatement statement, Scalar ... scalars){
+    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, Scalar ... scalars){
         super(statement, scalars);
-        parentFlagEnableAggregate = location == Location.project;
-        parentFlagEnableWindow = location == Location.project;
+        parentFlagEnableAggregate = location == ExpressionLocation.project;
+        parentFlagEnableWindow = location == ExpressionLocation.project;
         expressionLocation = location;
     }
 
-    public CommonExpressionGenerator(Location location, boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
+    public CommonExpressionGenerator(ExpressionLocation location, boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
         super(statement, scalars);
-        parentFlagEnableAggregate = enableAggregation && location == Location.project;
-        parentFlagEnableWindow = enableWindow && location == Location.project;
+        parentFlagEnableAggregate = enableAggregation && location == ExpressionLocation.project;
+        parentFlagEnableWindow = enableWindow && location == ExpressionLocation.project;
         expressionLocation = location;
     }
 
-    public CommonExpressionGenerator(Location location, SQLStatement statement, UnrelatedStatistic statistic){
+    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, UnrelatedStatistic statistic){
         super(statement, statistic);
-        parentFlagEnableAggregate = location == Location.project;
-        parentFlagEnableWindow = location == Location.project;
+        parentFlagEnableAggregate = location == ExpressionLocation.project;
+        parentFlagEnableWindow = location == ExpressionLocation.project;
         expressionLocation = location;
     }
 
@@ -200,7 +200,7 @@ public class CommonExpressionGenerator
     }
 
     @Override
-    public Location getExpressionLocation() {
+    public ExpressionLocation getExpressionLocation() {
         return expressionLocation;
     }
 }

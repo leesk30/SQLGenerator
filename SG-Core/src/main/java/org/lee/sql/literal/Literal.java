@@ -1,6 +1,7 @@
-package org.lee.sql.type.literal;
+package org.lee.sql.literal;
 
 import org.lee.base.NodeTag;
+import org.lee.common.structure.Pair;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
@@ -69,5 +70,17 @@ public abstract class Literal<T> implements Scalar {
 
     public static LiteralNull asNull(){
         return LiteralNull.NULL;
+    }
+
+    public static <T> Pair<Literal<T>, Literal<T>> orderedPair(Literal<T> v1, Literal<T> v2){
+        if(!(v1.getType().isComparable() && v1.getLiteral() instanceof Comparable)){
+            return null;
+        }
+        Comparable<T> comparable = (Comparable<T>) v1.getLiteral();
+        final int result = comparable.compareTo(v2.getLiteral());
+        if(result == 0){
+            return null;
+        }
+        return result > 0 ? new Pair<>(v2, v1):new Pair<>(v1, v2);
     }
 }

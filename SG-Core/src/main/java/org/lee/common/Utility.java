@@ -3,8 +3,8 @@ package org.lee.common;
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.math3.random.RandomDataGenerator;
-import org.lee.entry.scalar.Scalar;
-import org.lee.type.TypeTag;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

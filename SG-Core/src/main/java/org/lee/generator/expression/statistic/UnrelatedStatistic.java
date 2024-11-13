@@ -1,13 +1,13 @@
-package org.lee.expression.statistic;
+package org.lee.generator.expression.statistic;
 
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.basic.IExpressionGenerator;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeCategory;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.basic.IExpressionGenerator;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeCategory;
+import org.lee.sql.type.TypeTag;
 
 import java.util.*;
 import java.util.stream.Collectors;

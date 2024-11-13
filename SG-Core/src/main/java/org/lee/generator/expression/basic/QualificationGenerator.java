@@ -1,21 +1,21 @@
-package org.lee.expression.basic;
+package org.lee.generator.expression.basic;
 
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.structure.Pair;
-import org.lee.entry.complex.AdaptiveRecordScalar;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.Expression;
-import org.lee.expression.Qualification;
-import org.lee.expression.common.ExprGeneratorUtils;
-import org.lee.expression.statistic.GeneratorStatistic;
-import org.lee.statement.support.Projectable;
-import org.lee.statement.support.ProjectableGenerator;
-import org.lee.symbol.Comparator;
-import org.lee.symbol.Symbol;
-import org.lee.type.TypeCategory;
-import org.lee.type.TypeTag;
+import org.lee.generator.expression.common.ExprGeneratorUtils;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.sql.entry.complex.AdaptiveRecordScalar;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.Projectable;
+import org.lee.sql.support.ProjectableGenerator;
+import org.lee.sql.symbol.Comparator;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeCategory;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;

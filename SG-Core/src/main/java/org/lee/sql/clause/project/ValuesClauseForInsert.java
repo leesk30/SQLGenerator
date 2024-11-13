@@ -1,7 +1,7 @@
 package org.lee.sql.clause.project;
 
 import org.lee.common.Utility;
-import org.lee.sql.insert.InsertStatement;
+import org.lee.sql.statement.insert.InsertStatement;
 
 public class ValuesClauseForInsert extends ValuesClause{
     protected final int maxLines;

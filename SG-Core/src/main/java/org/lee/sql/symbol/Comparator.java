@@ -4,9 +4,8 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
-import org.lee.sql.symbol.basic.Symbol;
-import org.lee.type.TypeCategory;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeCategory;
+import org.lee.sql.type.TypeTag;
 
 import java.util.List;
 

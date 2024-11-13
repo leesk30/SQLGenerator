@@ -2,7 +2,7 @@ package org.lee.common;
 
 import org.lee.common.exception.GeneratorInternalError;
 import org.lee.common.exception.ValueCheckFailedException;
-import org.lee.entry.RangeTableReference;
+import org.lee.sql.entry.RangeTableReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

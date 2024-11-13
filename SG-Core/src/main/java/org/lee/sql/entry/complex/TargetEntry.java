@@ -12,7 +12,7 @@ import org.lee.sql.entry.scalar.NameProxy;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.support.Alias;
-import org.lee.type.TypeTag;
+import org.lee.sql.type.TypeTag;
 
 import java.util.Collections;
 import java.util.List;

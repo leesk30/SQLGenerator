@@ -3,12 +3,11 @@ package org.lee.sql.expression;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.entry.scalar.Scalar;
+import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Operator;
 import org.lee.sql.symbol.Parentheses;
-import org.lee.symbol.*;
-import org.lee.sql.symbol.basic.Symbol;
-import org.lee.type.TypeTag;
+import org.lee.sql.symbol.Symbol;
+import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

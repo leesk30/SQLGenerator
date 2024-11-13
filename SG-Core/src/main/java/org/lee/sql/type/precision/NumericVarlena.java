@@ -1,4 +1,4 @@
-package org.lee.type.precision;
+package org.lee.sql.type.precision;
 
 import org.lee.base.Node;
 import org.lee.common.Assertion;

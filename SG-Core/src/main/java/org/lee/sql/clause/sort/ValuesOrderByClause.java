@@ -1,6 +1,6 @@
 package org.lee.sql.clause.sort;
 
-import org.lee.sql.ValuesStatement;
+import org.lee.sql.statement.values.ValuesStatement;
 
 import java.util.function.IntConsumer;
 

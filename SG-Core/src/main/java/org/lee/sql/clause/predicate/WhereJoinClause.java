@@ -1,8 +1,8 @@
 package org.lee.sql.clause.predicate;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.entry.RangeTableReference;
-import org.lee.sql.support.SQLStatement;
+import org.lee.sql.entry.RangeTableReference;
+import org.lee.sql.statement.SQLStatement;
 
 public class WhereJoinClause extends JoinClause{
 

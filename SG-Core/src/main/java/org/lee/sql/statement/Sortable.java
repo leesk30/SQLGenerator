@@ -1,8 +1,7 @@
-package org.lee.sql.support;
+package org.lee.sql.statement;
 
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.sort.SortByClause;
-import org.lee.sql.statement.SQLStatement;
 
 public interface Sortable extends SQLStatement {
 

@@ -1,15 +1,14 @@
-package org.lee.expression.generator;
+package org.lee.generator.expression;
 
-import org.lee.base.Generator;
-import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
-import org.lee.entry.scalar.Scalar;
-import org.lee.expression.Qualification;
-import org.lee.expression.basic.QualificationGenerator;
-import org.lee.expression.basic.UnrelatedGenerator;
-import org.lee.expression.common.Location;
-import org.lee.statement.support.SQLStatement;
-import org.lee.type.TypeTag;
+import org.lee.generator.WeightedGenerator;
+import org.lee.generator.expression.basic.QualificationGenerator;
+import org.lee.generator.expression.basic.UnrelatedGenerator;
+import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.type.TypeTag;
 
 import java.lang.reflect.Method;
 import java.util.List;
@@ -59,7 +58,7 @@ public class WhereQualificationGenerator
     }
 
     @Override
-    public Location getExpressionLocation() {
-        return Location.where;
+    public ExpressionLocation getExpressionLocation() {
+        return ExpressionLocation.where;
     }
 }

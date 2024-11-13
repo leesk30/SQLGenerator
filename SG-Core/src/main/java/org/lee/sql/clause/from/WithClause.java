@@ -4,10 +4,10 @@ import org.lee.base.NodeTag;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
-import org.lee.entry.relation.CTE;
 import org.lee.sql.clause.Clause;
+import org.lee.sql.entry.relation.CTE;
+import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.support.ProjectableGenerator;
-import org.lee.sql.support.SQLStatement;
 
 public class WithClause extends Clause<CTE> {
     private boolean materialized = false;

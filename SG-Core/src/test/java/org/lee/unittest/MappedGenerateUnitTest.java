@@ -1,7 +1,7 @@
 package org.lee.unittest;
 
-import org.lee.type.TypeTag;
-import org.lee.type.mapped.MappedType;
+import org.lee.sql.type.TypeTag;
+import org.lee.sql.type.mapped.MappedType;
 import org.testng.annotations.Test;
 
 public class MappedGenerateUnitTest {
