@@ -1,5 +1,6 @@
 package org.lee.generator.expression.basic;
 
+import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
@@ -66,10 +67,16 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         return new Qualification(symbol).newChild(left).newChild(right);
     }
 
-    default Qualification predicateSimilarScalarCompare(){
-
-        // todo
+    default Qualification predicateComplexScalarCompare(){
         return null;
+    }
+
+    default Qualification predicateIsNull(){
+        final GeneratorStatistic statistic = getStatistic();
+        final Scalar scalar = statistic.findAny();
+        Assertion.requiredNonNull(scalar);
+        final Comparator comparator = Utility.probability(50) ? Comparator.IS_NULL : Comparator.IS_NOT_NULL;
+        return new Qualification(comparator).newChild(scalar);
     }
 
     default Qualification predicateSubqueryExists(){

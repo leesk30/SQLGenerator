@@ -29,6 +29,7 @@ public class WhereQualificationGenerator
             invoker.add(cls.getMethod("predicateScalarAndScalar"), 80);
             invoker.add(cls.getMethod("predicateFieldAndLiteral"), 120);
             invoker.add(cls.getMethod("predicateBetweenAnd"), 10);
+            invoker.add(cls.getMethod("predicateIsNull"), 2);
             if(statement.enableSubquery()){
                 invoker.add(cls.getMethod("predicateSubqueryExists"), 2);
                 invoker.add(cls.getMethod("predicateInSubquery"), 3);

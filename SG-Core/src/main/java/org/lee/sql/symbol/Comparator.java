@@ -4,24 +4,28 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
+import org.lee.common.structure.Weighted;
+import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public enum Comparator implements Symbol {
-    NOT_EQ("%s != %s"),
-    EQ("%s = %s"),
-    GT("%s > %s"),
-    GT_EQ("%s >= %s"),
-    LT("%s < %s"),
-    LT_EQ("%s <= %s"),
+    NOT_EQ(2, "%s != %s"),
+    EQ(2,"%s = %s"),
+    GT(2,"%s > %s"),
+    GT_EQ(2,"%s >= %s"),
+    LT(2,"%s < %s"),
+    LT_EQ(2,"%s <= %s"),
 
-    LIKE("%s LIKE %s"),
-    NOT_LIKE("%s NOT LIKE %s"),
+    LIKE(2,"%s LIKE %s"),
+    NOT_LIKE(2,"%s NOT LIKE %s"),
 
-    ILIKE("%s ILIKE %s"),
-    NOT_ILIKE("%s NOT ILIKE %s"),
+    ILIKE(2, "%s ILIKE %s"),
+    NOT_ILIKE(2, "%s NOT ILIKE %s"),
 
     IS_NOT_NULL(1, "%s IS NOT NULL"),
     IS_NULL(1, "%s IS NULL"),
@@ -35,8 +39,7 @@ public enum Comparator implements Symbol {
     NOT_IN(2, "%s NOT IN %s"),
     ;
 
-    // todo
-    private final Table<TypeTag, TypeTag, List<Comparator>> COMPARATOR_MAP = HashBasedTable.create();
+    public final static int DEFAULT_WEIGHT = 100;
 
     public final static Comparator[] STRING_USABLE_COMPARATOR = {LIKE, NOT_LIKE, ILIKE, NOT_ILIKE};
     public final static Comparator[] ALL = {NOT_EQ, EQ, GT, GT_EQ, LT, LT_EQ};
@@ -54,6 +57,8 @@ public enum Comparator implements Symbol {
         }
     }
 
+    // TODO: fill the weight map
+    private final Map<ExpressionLocation, Integer> weightMap = new EnumMap<>(ExpressionLocation.class);
     private final String symbols;
     private final int argNum;
     Comparator(int argNum, String symbols){
@@ -61,10 +66,9 @@ public enum Comparator implements Symbol {
         this.argNum = argNum;
         check();
     }
-    Comparator(String symbols){
-        this.symbols = symbols;
-        this.argNum = 2;
-        check();
+
+    public int getWeight(ExpressionLocation expressionLocation) {
+        return weightMap.getOrDefault(expressionLocation, DEFAULT_WEIGHT);
     }
 
     @Override

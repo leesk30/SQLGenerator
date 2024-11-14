@@ -8,8 +8,11 @@ import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.structure.Weighted;
 import org.lee.generator.expression.basic.QualificationGenerator;
+import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.expression.Qualification;
+import org.lee.sql.symbol.Comparator;
+import org.lee.sql.symbol.Symbol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +20,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public abstract class WeightedGenerator<E, T> implements Generator<T> {
+public abstract class WeightedGenerator<IN, OUT> implements Generator<OUT> {
     private static final Logger LOGGER = LoggerFactory.getLogger(WeightedGenerator.class);
 
-    protected final List<Weighted<E>> wrappers = new ArrayList<>();
+    protected final List<Weighted<IN>> wrappers = new ArrayList<>();
     protected final int defaultWeight;
 
     protected int sum = 0;
@@ -41,20 +44,20 @@ public abstract class WeightedGenerator<E, T> implements Generator<T> {
         this.defaultWeight = defaultWeight;
     }
 
-    public final T generate(){
+    public final OUT generate(){
         // TODO: record hit rate
         total ++;
         return hookedGenerate();
     }
 
-    abstract protected T hookedGenerate();
+    abstract protected OUT hookedGenerate();
 
-    public void add(E weighted){
+    public void add(IN weighted){
         add(weighted, defaultWeight);
     }
 
-    public void add(E weighted, int weight){
-        wrappers.add(new Weighted<E>(weighted, weight));
+    public void add(IN weighted, int weight){
+        wrappers.add(new Weighted<IN>(weighted, weight));
         sum += weight;
         isNewest = false;
 
@@ -73,7 +76,7 @@ public abstract class WeightedGenerator<E, T> implements Generator<T> {
     /**
      * GET by Weight
      * */
-    protected final E get(){
+    protected final IN get(){
         if(!isNewest){
             flushPolicy();
             Collections.shuffle(wrappers);
@@ -87,7 +90,7 @@ public abstract class WeightedGenerator<E, T> implements Generator<T> {
         }
 
         int value = Utility.randomIntFromRange(0, sum);
-        for(Weighted<E> weightedElement: wrappers){
+        for(Weighted<IN> weightedElement: wrappers){
             value = value - weightedElement.weight();
             if(value <= 0){
                 return weightedElement.get();
@@ -157,6 +160,32 @@ public abstract class WeightedGenerator<E, T> implements Generator<T> {
         @Override
         protected T hookedGenerate() {
             return get().generate();
+        }
+    }
+
+    public static class WeightedSymbolAccessor<T extends Symbol> extends WeightedGenerator<T, T> {
+
+        public WeightedSymbolAccessor(int defaultWeight) {
+            super(defaultWeight);
+        }
+
+        @Override
+        protected T hookedGenerate() {
+            return get();
+        }
+    }
+
+    public static class ComparatorAccessor extends WeightedSymbolAccessor<Comparator>{
+
+        private final ExpressionLocation location;
+        public ComparatorAccessor(ExpressionLocation location) {
+            super(Comparator.DEFAULT_WEIGHT);
+            this.location = location;
+        }
+
+        @Override
+        public void add(Comparator weighted) {
+            add(weighted, weighted.getWeight(location));
         }
     }
 

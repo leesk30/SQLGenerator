@@ -26,8 +26,9 @@ public class JoinQualificationGenerator
         Class<? extends JoinQualificationGenerator> cls = this.getClass();
         try {
             invoker.add(cls.getMethod("predicateScalarAndScalar"), 500);
-            invoker.add(cls.getMethod("predicateFieldAndLiteral"), 5);
-            invoker.add(cls.getMethod("predicateBetweenAnd"), 5);
+            invoker.add(cls.getMethod("predicateFieldAndLiteral"), 4);
+            invoker.add(cls.getMethod("predicateBetweenAnd"), 4);
+            invoker.add(cls.getMethod("predicateIsNull"), 4);
             if(statement.enableSubquery() && probability(50)){
                 invoker.add(cls.getMethod("predicateSubqueryExists"), 1);
                 invoker.add(cls.getMethod("predicateInSubquery"), 1);
