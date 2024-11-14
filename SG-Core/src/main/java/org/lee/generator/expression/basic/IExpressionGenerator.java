@@ -29,10 +29,6 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
         Generator<T>,
         SQLStatementChildren {
 
-    interface ExpressionGeneratorChildren {
-        IExpressionGenerator<?> getParent();
-    }
-
     GeneratorStatistic getStatistic();
     ExpressionLocation getExpressionLocation();
 

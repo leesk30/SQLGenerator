@@ -2,9 +2,10 @@ package org.lee.generator.expression;
 
 import org.lee.common.exception.InternalError;
 import org.lee.generator.WeightedGenerator;
+import org.lee.generator.expression.basic.AbstractExpressionGenerator;
 import org.lee.generator.expression.basic.QualificationGenerator;
-import org.lee.generator.expression.basic.RelatedGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.expression.Qualification;
 import org.lee.sql.statement.SQLStatement;
@@ -12,13 +13,15 @@ import org.lee.sql.statement.SQLStatement;
 import java.lang.reflect.Method;
 
 public class JoinQualificationGenerator
-        extends RelatedGenerator<Qualification>
+        extends AbstractExpressionGenerator<Qualification>
         implements QualificationGenerator {
 
     private final WeightedGenerator<Method, Qualification> invoker = WeightedGenerator.getInvoker(this);
+    private final GeneratorStatistic statistic;
 
     public JoinQualificationGenerator(SQLStatement statement, RangeTableReference left, RangeTableReference right){
-        super(statement, left.getFieldReferences(), right.getFieldReferences());
+        super(statement);
+        statistic = GeneratorStatistic.create(left.getFieldReferences(), right.getFieldReferences());
         init();
     }
 
@@ -50,6 +53,11 @@ public class JoinQualificationGenerator
     @Override
     public Qualification fallback() {
         return predicateFieldAndLiteral();
+    }
+
+    @Override
+    public GeneratorStatistic getStatistic() {
+        return statistic;
     }
 
     @Override

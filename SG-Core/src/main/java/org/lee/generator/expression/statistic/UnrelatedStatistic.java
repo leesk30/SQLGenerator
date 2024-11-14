@@ -3,6 +3,7 @@ package org.lee.generator.expression.statistic;
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
+import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
@@ -13,7 +14,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class UnrelatedStatistic implements GeneratorStatistic{
-    private final IExpressionGenerator<?> parent;
+
+    protected static final UnrelatedStatistic EMPTY = new UnrelatedStatistic();
+
     private final List<Scalar> candidateList;
     private final int totalSize;
     private final Map<TypeTag, List<Scalar>> groupByType = new EnumMap<>(TypeTag.class);
@@ -21,8 +24,13 @@ public class UnrelatedStatistic implements GeneratorStatistic{
     private int hit = 0;
     private int attach = 0;
 
-    public UnrelatedStatistic(IExpressionGenerator<?> parent, List<? extends Scalar> candidateList){
-        this.parent = parent;
+    // empty
+    private UnrelatedStatistic(){
+        this.candidateList = Collections.emptyList();
+        this.totalSize = 0;
+    }
+
+    public UnrelatedStatistic(List<? extends Scalar> candidateList){
         this.candidateList = Collections.unmodifiableList(candidateList);
         this.totalSize = candidateList.size();
         collect();
@@ -245,10 +253,5 @@ public class UnrelatedStatistic implements GeneratorStatistic{
             LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f%%", attach, hit, getCacheHitRate()*100));
         }
         super.finalize();
-    }
-
-    @Override
-    public IExpressionGenerator<?> getParent() {
-        return parent;
     }
 }

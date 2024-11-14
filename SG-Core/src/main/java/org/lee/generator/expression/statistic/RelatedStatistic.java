@@ -4,6 +4,7 @@ import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
 
@@ -13,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 public class RelatedStatistic implements GeneratorStatistic {
-    private final IExpressionGenerator<?> parent;
     private final List<Scalar> leftHandSideCandidates;
     private final List<Scalar> rightHandSideCandidates;
     private final List<Scalar> summaryCandidates;
@@ -21,8 +21,7 @@ public class RelatedStatistic implements GeneratorStatistic {
     private final UnrelatedStatistic rightHandSideStatistic;
     private final UnrelatedStatistic summaryUnrelatedStatistic;
 
-    public RelatedStatistic(IExpressionGenerator<?> parent, List<? extends Scalar> left, List<? extends Scalar> right){
-        this.parent = parent;
+    public RelatedStatistic(List<? extends Scalar> left, List<? extends Scalar> right){
         leftHandSideCandidates = Collections.unmodifiableList(left);
         rightHandSideCandidates = Collections.unmodifiableList(right);
         summaryCandidates = new ArrayList<Scalar>(leftHandSideCandidates.size() + rightHandSideCandidates.size()){
@@ -31,9 +30,9 @@ public class RelatedStatistic implements GeneratorStatistic {
                 addAll(rightHandSideCandidates);
             }
         };
-        leftHandSideStatistic = new UnrelatedStatistic(this.parent, leftHandSideCandidates);
-        rightHandSideStatistic = new UnrelatedStatistic(this.parent, rightHandSideCandidates);
-        summaryUnrelatedStatistic = new UnrelatedStatistic(this.parent, summaryCandidates);
+        leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
+        rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
+        summaryUnrelatedStatistic = new UnrelatedStatistic(summaryCandidates);
         collect();
     }
 
@@ -92,7 +91,17 @@ public class RelatedStatistic implements GeneratorStatistic {
         return pair;
     }
 
-    public Pair<Scalar, Scalar> getRelatedCategoryPair(){
+    @Override
+    public Scalar[] findMatchedForSignature(Symbol symbol) {
+        return summaryUnrelatedStatistic.findMatchedForSignature(symbol);
+    }
+
+    @Override
+    public int suitableFactorProb(Symbol symbol) {
+        return summaryUnrelatedStatistic.suitableFactorProb(symbol);
+    }
+
+    private Pair<Scalar, Scalar> getRelatedCategoryPair(){
         Set<TypeCategory> left = leftHandSideStatistic.getGroupedCategory();
         Set<TypeCategory> right = rightHandSideStatistic.getGroupedCategory();
         Set<TypeCategory> intersection = Utility.intersect(left, right);
@@ -105,7 +114,7 @@ public class RelatedStatistic implements GeneratorStatistic {
         return new Pair<>(s1, s2);
     }
 
-    public Pair<Scalar, Scalar> getRelatedCategoryPair(TypeCategory category){
+    private Pair<Scalar, Scalar> getRelatedCategoryPair(TypeCategory category){
         Set<TypeCategory> left = leftHandSideStatistic.getGroupedCategory();
         Set<TypeCategory> right = rightHandSideStatistic.getGroupedCategory();
         if(left.contains(category) && right.contains(category)){
@@ -116,7 +125,7 @@ public class RelatedStatistic implements GeneratorStatistic {
         return null;
     }
 
-    public Pair<Scalar, Scalar> getRelatedTypePair(){
+    private Pair<Scalar, Scalar> getRelatedTypePair(){
         Set<TypeTag> left = leftHandSideStatistic.getGroupedType();
         Set<TypeTag> right = rightHandSideStatistic.getGroupedType();
         Set<TypeTag> intersection = Utility.intersect(left, right);
@@ -129,7 +138,7 @@ public class RelatedStatistic implements GeneratorStatistic {
         return new Pair<>(s1, s2);
     }
 
-    public Pair<Scalar, Scalar> getRelatedTypePair(TypeTag targetType){
+    private Pair<Scalar, Scalar> getRelatedTypePair(TypeTag targetType){
         Set<TypeTag> left = leftHandSideStatistic.getGroupedType();
         Set<TypeTag> right = rightHandSideStatistic.getGroupedType();
         if(left.contains(targetType) && right.contains(targetType)){
@@ -170,8 +179,4 @@ public class RelatedStatistic implements GeneratorStatistic {
         return summaryUnrelatedStatistic.findAny(typeTag);
     }
 
-    @Override
-    public IExpressionGenerator<?> getParent() {
-        return parent;
-    }
 }

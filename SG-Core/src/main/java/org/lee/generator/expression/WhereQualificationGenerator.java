@@ -2,24 +2,26 @@ package org.lee.generator.expression;
 
 import org.lee.common.exception.InternalError;
 import org.lee.generator.WeightedGenerator;
+import org.lee.generator.expression.basic.AbstractExpressionGenerator;
 import org.lee.generator.expression.basic.QualificationGenerator;
-import org.lee.generator.expression.basic.UnrelatedGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Qualification;
 import org.lee.sql.statement.SQLStatement;
-import org.lee.sql.type.TypeTag;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 public class WhereQualificationGenerator
-        extends UnrelatedGenerator<Qualification>
+        extends AbstractExpressionGenerator<Qualification>
         implements QualificationGenerator {
 
     private final WeightedGenerator<Method, Qualification> invoker = WeightedGenerator.getInvoker(this);
+    private GeneratorStatistic statistic;
     public WhereQualificationGenerator(SQLStatement statement, List<? extends Scalar> expresssionList) {
-        super(statement, expresssionList);
+        super(statement);
+        statistic = GeneratorStatistic.create(expresssionList);
         init();
     }
 
@@ -45,17 +47,17 @@ public class WhereQualificationGenerator
     }
 
     @Override
-    final public Qualification generate(TypeTag require) {
-        return generate();
-    }
-
-    @Override
     public Qualification generate(){
         Qualification qualification = invoker.generate();
         if(qualification == null){
             return fallback();
         }
         return qualification;
+    }
+
+    @Override
+    public GeneratorStatistic getStatistic() {
+        return statistic;
     }
 
     @Override

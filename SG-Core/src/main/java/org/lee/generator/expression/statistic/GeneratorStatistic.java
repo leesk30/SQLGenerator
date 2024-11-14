@@ -6,6 +6,7 @@ import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
+import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
@@ -14,19 +15,32 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import java.util.Optional;
 
-public interface GeneratorStatistic extends IExpressionGenerator.ExpressionGeneratorChildren {
+public interface GeneratorStatistic {
     Logger LOGGER = LoggerFactory.getLogger("GeneratorStatistic");
+
     List<Scalar> getWholeScopeCandidates();
+
     boolean contains(TypeTag typeTag);
+
     List<Scalar> findMatch(TypeTag typeTag);
+
     List<Scalar> findMatch(TypeCategory typeTag);
+
     Scalar findAny();
 
     Pair<Scalar, Scalar> findSimilarPair();
+
     Pair<Scalar, Scalar> tryFindSimilarPair();
+
     Pair<Scalar, Scalar> findAnyPair();
+
     Pair<Scalar, Scalar> findAnyPair(TypeTag target);
+
     Pair<Scalar, Scalar> tryFindAnyPair(TypeTag target);
+
+    Scalar[] findMatchedForSignature(Symbol symbol);
+
+    int suitableFactorProb(Symbol symbol);
 
     default Scalar findAny(TypeTag typeTag){
         return Utility.randomlyChooseFrom(findMatch(typeTag));
@@ -41,5 +55,17 @@ public interface GeneratorStatistic extends IExpressionGenerator.ExpressionGener
             }
         }
         return candidate;
+    }
+
+    static GeneratorStatistic create(List<? extends Scalar> left, List<? extends Scalar> right){
+        return new RelatedStatistic(left, right);
+    }
+
+    static GeneratorStatistic create(List<? extends Scalar> candidates){
+        return new UnrelatedStatistic(candidates);
+    }
+
+    static GeneratorStatistic create(){
+        return UnrelatedStatistic.EMPTY;
     }
 }

@@ -28,7 +28,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
     default Expression fallbackFor(List<Scalar> anyInputs){
         // todo remove theses all
-        UnrelatedStatistic statistic = new UnrelatedStatistic(this, anyInputs);
+        UnrelatedStatistic statistic = new UnrelatedStatistic(anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
             return anyScalar.toCompleteExpression();

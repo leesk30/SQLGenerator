@@ -4,9 +4,10 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.global.SymbolTable;
+import org.lee.generator.expression.basic.AbstractExpressionGenerator;
 import org.lee.generator.expression.basic.ExpressionGenerator;
-import org.lee.generator.expression.basic.UnrelatedGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.generator.expression.statistic.UnrelatedStatistic;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
@@ -18,11 +19,12 @@ import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 public class CommonExpressionGenerator
-        extends UnrelatedGenerator<Expression>
+        extends AbstractExpressionGenerator<Expression>
         implements ExpressionGenerator {
 
     private final boolean parentFlagEnableAggregate;
@@ -31,7 +33,7 @@ public class CommonExpressionGenerator
     protected final ExpressionLocation expressionLocation;
 
     public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, Scalar ... scalars){
-        super(statement, scalars);
+        super(statement, Arrays.asList(scalars));
         parentFlagEnableAggregate = location == ExpressionLocation.project;
         parentFlagEnableWindow = location == ExpressionLocation.project;
         expressionLocation = location;
@@ -44,8 +46,8 @@ public class CommonExpressionGenerator
         expressionLocation = location;
     }
 
-    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, UnrelatedStatistic statistic){
-        super(statement, statistic);
+    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, UnrelatedStatistic unrelatedStatistic){
+        super(statement, unrelatedStatistic);
         parentFlagEnableAggregate = location == ExpressionLocation.project;
         parentFlagEnableWindow = location == ExpressionLocation.project;
         expressionLocation = location;
