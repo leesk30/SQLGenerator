@@ -92,7 +92,7 @@ public class CommonExpressionGenerator
                 return stopGrowth(symbol);
             }else {
                 if(preferRecursion(symbol, recursionDepth)){
-                    return growth(symbol, recursionDepth+1);
+                    return growth(symbol, recursionDepth+1, childrenFlagEnableAggregate);
                 }
                 // else backtrace to another symbol
             }
@@ -135,11 +135,10 @@ public class CommonExpressionGenerator
         return expression;
     }
 
-
-    private Expression growth(Symbol symbol, int incrementalDepth){
+    private Expression growth(Symbol symbol, int incrementalDepth, boolean hintChildrenFlagEnableAggregate){
         final Expression expression = new Expression(symbol);
         final Scalar[] scalars = statistic.findMatchedForSignature(symbol);
-        final boolean childrenEnableAggregation = !(symbol instanceof Aggregation);
+        final boolean childrenEnableAggregation = hintChildrenFlagEnableAggregate || !(symbol instanceof Aggregation);
         // The arguments must be ordered.
         for (int i = 0; i < symbol.argsNum(); i++){
             final TypeTag targetType = symbol.getArgumentsTypes().get(i);
@@ -151,7 +150,6 @@ public class CommonExpressionGenerator
         }
         return expression;
     }
-
 
     @Override
     public Expression generate() {

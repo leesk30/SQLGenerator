@@ -7,6 +7,18 @@ import java.util.*;
  * hibernate-core/src/main/java/org/hibernate/engine/jdbc/internal/BasicFormatterImpl.java
  */
 public class SQLFormatter {
+
+    private static final ThreadLocal<SQLFormatter> self = new ThreadLocal<>();
+
+    public static String formatStatement(String statement){
+        if(self.get() == null){
+            self.set(new SQLFormatter());
+        }
+        SQLFormatter formatter = self.get();
+        return formatter.format(statement);
+    }
+
+
     private static final String WHITESPACE = " \n\r\f\t";
     private static final Set<String> BEGIN_CLAUSES = new HashSet<String>();
     private static final Set<String> END_CLAUSES = new HashSet<String>();

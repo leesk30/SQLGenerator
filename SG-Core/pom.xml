@@ -82,7 +82,21 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
+            <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-core_${test.inegration.spark.scala.version}</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.spark</groupId>
+            <artifactId>spark-sql_${test.inegration.spark.scala.version}</artifactId>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

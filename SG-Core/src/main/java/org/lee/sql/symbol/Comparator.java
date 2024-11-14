@@ -1,10 +1,7 @@
 package org.lee.sql.symbol;
 
-import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Table;
 import org.lee.base.NodeTag;
 import org.lee.common.Utility;
-import org.lee.common.structure.Weighted;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;

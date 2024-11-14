@@ -46,6 +46,14 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         final Pair<Scalar, Scalar> pair = generic.tryFindSimilarPair();
         Scalar left = pair.getFirst();
         Scalar right = pair.getSecond();
+        // TODO: quick fix for wrong type
+        if(left.getType().getCategory() != right.getType().getCategory()){
+            TypeTag target = TypeTag.minimal(left.getType(), right.getType());
+            left = cast(left.toCompleteExpression(), target);
+            right = cast(right.toCompleteExpression(), target);
+        }
+        // TODO: fix end
+
         Symbol symbol = getCompareOperator(left.getType(), right.getType());
         if(symbol == null){
             final TypeTag lt = left.getType();

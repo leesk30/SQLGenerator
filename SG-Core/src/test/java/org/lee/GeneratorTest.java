@@ -1,13 +1,13 @@
 package org.lee;
 
-import org.lee.common.enumeration.Mode;
+import org.lee.common.SQLFormatter;
+import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
+import org.lee.common.enumeration.Mode;
 import org.lee.common.global.MetaEntry;
-import org.lee.common.Utility;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 import org.lee.sql.SQLGeneratorContext;
-import org.lee.common.SQLFormatter;
 import org.lee.sql.statement.SQLStatement;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;

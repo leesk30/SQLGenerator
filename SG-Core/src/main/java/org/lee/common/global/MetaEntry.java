@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
+
 public class MetaEntry implements Resource<JSONObject> {
     private boolean isInitialized = false;
     private final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
@@ -76,8 +77,15 @@ public class MetaEntry implements Resource<JSONObject> {
         return new Field(fieldName, typeDescriptor);
     }
 
-    public String toDDLs(boolean ignoreIfExists, String options){
+    public String toDDLs(final boolean ignoreIfExists, final String options){
         StringBuilder builder = new StringBuilder();
+        for(String databaseName: relationByNamespaceMap.keySet()){
+            builder.append("CREATE DATABASE ");
+            if(ignoreIfExists){
+                builder.append("IF NOT EXISTS ");
+            }
+            builder.append(databaseName).append(";");
+        }
         relationMap.values().forEach(r -> builder.append(r.toDDL(ignoreIfExists, options)).append("\n"));
         return builder.toString();
     }

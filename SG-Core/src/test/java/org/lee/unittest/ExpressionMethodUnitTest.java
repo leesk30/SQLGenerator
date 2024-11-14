@@ -1,5 +1,7 @@
 package org.lee.unittest;
 
+import org.lee.common.debug.Printer;
+import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.RangeTableReference;
@@ -8,12 +10,10 @@ import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.Relation;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.expression.Expression;
-import org.lee.generator.expression.CommonExpressionGenerator;
+import org.lee.sql.literal.LiteralLong;
 import org.lee.sql.symbol.Aggregation;
 import org.lee.sql.symbol.Operator;
-import org.lee.common.debug.Printer;
 import org.lee.sql.type.TypeTag;
-import org.lee.sql.literal.LiteralLong;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;

@@ -5,7 +5,8 @@ import org.lee.common.global.MetaEntry;
 import org.lee.sql.SQLGeneratorContext;
 import org.testng.annotations.Test;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class TestLoadFrom {
     @Test

@@ -32,7 +32,11 @@
         <cache.caffeine.version>2.7.0</cache.caffeine.version>
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
         <logging.log4j.version>2.22.0</logging.log4j.version>
-        <testng.version>7.4.0</testng.version>
+
+        <!-- test scope only -->
+        <test.testng.version>7.4.0</test.testng.version>
+        <test.inegration.spark.scala.version>2.12</test.inegration.spark.scala.version>
+        <test.inegration.spark.version>3.5.0</test.inegration.spark.version>
     </properties>
 
 
@@ -142,7 +146,21 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
+                <version>${test.testng.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-core_${test.inegration.spark.scala.version}</artifactId>
+                <version>${test.inegration.spark.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.spark</groupId>
+                <artifactId>spark-sql_${test.inegration.spark.scala.version}</artifactId>
+                <version>${test.inegration.spark.version}</version>
                 <scope>test</scope>
             </dependency>
 

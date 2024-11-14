@@ -1,8 +1,8 @@
 package org.lee.testutils;
 
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
+import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
 

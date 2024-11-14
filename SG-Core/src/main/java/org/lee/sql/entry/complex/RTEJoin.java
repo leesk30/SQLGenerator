@@ -53,7 +53,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
 
     @Override
     public void fuzz() {
-        pattern = Utility.randomlyChooseFrom(Pattern.values());
+        pattern = Utility.randomlyChooseFrom(Pattern.IGNORE_NATUAL);
         super.fuzz();
     }
 }

@@ -1,6 +1,5 @@
 package org.lee.unittest;
 
-import org.json.XML;
 import org.lee.common.config.InternalConfigs;
 import org.testng.annotations.Test;
 import org.w3c.dom.Document;
@@ -12,7 +11,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;

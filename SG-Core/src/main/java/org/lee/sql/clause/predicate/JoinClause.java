@@ -23,7 +23,10 @@ public abstract class JoinClause extends PredicateClause {
         LEFT,
         INNER,
         RIGHT,
-        NATUAL
+        NATUAL,
+        ;
+
+        public static final Pattern[] IGNORE_NATUAL = new Pattern[]{LEFT, INNER, RIGHT};
     }
 
     public Pattern getPattern() {
