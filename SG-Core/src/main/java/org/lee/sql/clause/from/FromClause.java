@@ -79,14 +79,12 @@ public abstract class FromClause extends Clause<RangeTableReference>
         if(allOfCandidates.isEmpty()){
             initializeCandidate();
         }
-        // atomic operation
-        synchronized (currentCTECandidates){
-            if(!currentCTECandidates.isEmpty() && probability(90)){
-                if(probability(99)){
-                    return currentCTECandidates.remove(0);
-                }else {
-                    return Utility.randomlyChooseFrom(currentCTECandidates);
-                }
+
+        if(!currentCTECandidates.isEmpty() && probability(90)){
+            if(probability(99)){
+                return currentCTECandidates.remove(0);
+            }else {
+                return Utility.randomlyChooseFrom(currentCTECandidates);
             }
         }
         return Utility.randomlyChooseFrom(allOfCandidates);

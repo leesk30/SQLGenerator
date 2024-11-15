@@ -10,13 +10,14 @@ import java.util.List;
 
 public final class SelectWhereClause extends WhereClause {
 
-    private final WhereClause whereClause = new WhereClause(statement);;
+    private final WhereClause rawWhereClause = new WhereClause(statement);;
     private final List<JoinClause> joinClauseList = new ArrayList<>();
 
     public SelectWhereClause(SelectStatement statement) {
         super(statement);
     }
 
+    // should be only called before fuzz
     private void initJoinClause(){
         final FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         final int length = fromClause.size();
@@ -43,8 +44,8 @@ public final class SelectWhereClause extends WhereClause {
             this.filter.add(joinClause.filter);
         }
         // combine pure where
-        this.whereClause.fuzz();
-        this.filter.add(this.whereClause.filter);
+        this.rawWhereClause.fuzz();
+        this.filter.add(this.rawWhereClause.filter);
         // combine self
         this.filter.fuzz();
     }

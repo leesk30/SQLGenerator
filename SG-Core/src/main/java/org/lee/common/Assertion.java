@@ -1,6 +1,6 @@
 package org.lee.common;
 
-import org.lee.common.exception.GeneratorInternalError;
+import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.sql.entry.RangeTableReference;
 import org.slf4j.Logger;
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class Assertion {
 
-    public static final Supplier<GeneratorInternalError> IMPOSSIBLE = GeneratorInternalError::new;
+    public static final Supplier<UnreachableError> IMPOSSIBLE = UnreachableError::new;
     private final static Logger logger = LoggerFactory.getLogger(Assertion.class);
 
     public static void requiredTrue(final boolean boolValue){
