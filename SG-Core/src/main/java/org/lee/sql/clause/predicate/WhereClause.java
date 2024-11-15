@@ -7,7 +7,7 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
-import org.lee.generator.WeightedGenerator;
+import org.lee.generator.common.WeightedAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.clause.from.FromClause;
@@ -58,7 +58,7 @@ public class WhereClause extends PredicateClause {
 
     @Override
     protected Generator<Qualification> createPredicateGenerator() {
-        WeightedGenerator.Combiner<Qualification> generatorCombiner = WeightedGenerator.getCombiner(100);
+        WeightedAccessor.Combiner<Qualification> generatorCombiner = WeightedAccessor.getCombiner(100);
         List<FieldReference> candidates = new ArrayList<>();
         FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         for(RangeTableReference ref: fromClause.getChildNodes()){
@@ -73,8 +73,11 @@ public class WhereClause extends PredicateClause {
 
     @Override
     public void fuzz() {
+        if(!probability(Conf.WHERE_CLAUSE_FUZZ_PROBABILITY)){
+            return;
+        }
         Generator<Qualification> generator = createPredicateGenerator();
-        int num = getNumOfFilter();
+        final int num = getNumOfFilter();
         for(int i=0; i< num; i++){
             Qualification qualification = generator.generate();
             Assertion.requiredNonNull(qualification);

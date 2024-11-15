@@ -8,7 +8,6 @@ import org.lee.generator.expression.basic.AbstractExpressionGenerator;
 import org.lee.generator.expression.basic.ExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
-import org.lee.generator.expression.statistic.UnrelatedStatistic;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -30,27 +29,23 @@ public class CommonExpressionGenerator
     private final boolean parentFlagEnableAggregate;
     private final boolean parentFlagEnableWindow;
     protected final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-    protected final ExpressionLocation expressionLocation;
 
     public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, Scalar ... scalars){
-        super(statement, Arrays.asList(scalars));
+        super(location, statement, Arrays.asList(scalars));
         parentFlagEnableAggregate = location == ExpressionLocation.project;
         parentFlagEnableWindow = location == ExpressionLocation.project;
-        expressionLocation = location;
     }
 
     public CommonExpressionGenerator(ExpressionLocation location, boolean enableAggregation, boolean enableWindow, SQLStatement statement, List<? extends Scalar> scalars){
-        super(statement, scalars);
+        super(location, statement, scalars);
         parentFlagEnableAggregate = enableAggregation && location == ExpressionLocation.project;
         parentFlagEnableWindow = enableWindow && location == ExpressionLocation.project;
-        expressionLocation = location;
     }
 
-    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, UnrelatedStatistic unrelatedStatistic){
-        super(statement, unrelatedStatistic);
+    public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, GeneratorStatistic unrelatedStatistic){
+        super(location, statement, unrelatedStatistic);
         parentFlagEnableAggregate = location == ExpressionLocation.project;
         parentFlagEnableWindow = location == ExpressionLocation.project;
-        expressionLocation = location;
     }
 
     public List<Symbol> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
@@ -124,16 +119,16 @@ public class CommonExpressionGenerator
     private Expression stopGrowth(Symbol symbol){
         final Expression expression = new Expression(symbol);
         final Scalar[] scalars = statistic.findMatchedForSignature(symbol);
-        final List<Expression> children = new ArrayList<>();
         for (int i = 0; i < symbol.argsNum(); i++){
             final TypeTag targetType = symbol.getArgumentsTypes().get(i);
+            Expression child;
             if(scalars[i] != null){
-                children.add(scalars[i].toCompleteExpression());
+                child = scalars[i].toCompleteExpression();
             }else {
-                children.add(getContextFreeScalar(targetType).toCompleteExpression());
+                child = getContextFreeScalar(targetType).toCompleteExpression();
             }
+            expression.newChild(child);
         }
-        children.forEach(expression::newChild);
         return expression;
     }
 
@@ -190,17 +185,11 @@ public class CommonExpressionGenerator
     private Expression generate(TypeTag required, int recursionDepth, boolean childrenFlagEnableAggregate) {
         Expression expression = getCompleteExpressionTree(required, recursionDepth, childrenFlagEnableAggregate);
         if(!expression.isComplete() || expression.getType() != required){
-            Logger logger = getLogger();
-            logger.error("The Expression is not Required or Incomplete");
-            logger.debug("IsComplete: " + expression.isComplete());
-            logger.debug("IsRequired: " + (expression.getType() == required));
+            LOGGER.error("The Expression is not Required or Incomplete");
+            LOGGER.debug("IsComplete: " + expression.isComplete());
+            LOGGER.debug("IsRequired: " + (expression.getType() == required));
             return fallback(required);
         }
         return expression;
-    }
-
-    @Override
-    public ExpressionLocation getExpressionLocation() {
-        return expressionLocation;
     }
 }

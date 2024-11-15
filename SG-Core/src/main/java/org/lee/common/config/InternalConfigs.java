@@ -26,7 +26,7 @@ public final class InternalConfigs {
     public final static String CONFIG_SOURCE_KEY = "config";
     public final static String NUM = "num";
     public final static String WORKERS = "workers";
-    public final static Logger LOGGER = LoggerFactory.getLogger("InternalConfigs");
+    public final static Logger LOGGER = LoggerFactory.getLogger(InternalConfigs.class);
 
     public static CommandLineOptions readCommandLineOptions(){
         return CommandLineOptions.getInstance();

@@ -2,7 +2,6 @@ package org.lee.generator.expression.statistic;
 
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
-import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -18,7 +17,9 @@ import java.util.Optional;
 public interface GeneratorStatistic {
     Logger LOGGER = LoggerFactory.getLogger("GeneratorStatistic");
 
-    List<Scalar> getWholeScopeCandidates();
+    List<Scalar> getAllCandidates();
+
+    GeneratorStatistic toRelated();
 
     boolean contains(TypeTag typeTag);
 

@@ -35,7 +35,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     }
 
     default Qualification predicateFieldAndLiteral(){
-        Scalar left = Utility.randomlyChooseFrom(getStatistic().getWholeScopeCandidates());
+        Scalar left = Utility.randomlyChooseFrom(getStatistic().getAllCandidates());
         Scalar right = getContextFreeScalar(left.getType());
         Symbol symbol = getCompareOperator(left.getType(), right.getType());
         return new Qualification(symbol).newChild(left).newChild(right);
@@ -100,7 +100,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     default Qualification predicateInSubquery(){
         List<Scalar> scalars = new ArrayList<>();
         Logger logger = getLogger();
-        int maxCandidates = getStatistic().getWholeScopeCandidates().size();
+        int maxCandidates = getStatistic().getAllCandidates().size();
         if(maxCandidates == 0){
             logger.error("Cannot find any candidates whiling generate in-predicate");
             return fallback();

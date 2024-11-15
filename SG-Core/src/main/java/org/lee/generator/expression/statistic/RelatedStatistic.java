@@ -2,7 +2,6 @@ package org.lee.generator.expression.statistic;
 
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
-import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -13,7 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-public class RelatedStatistic implements GeneratorStatistic {
+class RelatedStatistic implements GeneratorStatistic {
     private final List<Scalar> leftHandSideCandidates;
     private final List<Scalar> rightHandSideCandidates;
     private final List<Scalar> summaryCandidates;
@@ -21,22 +20,28 @@ public class RelatedStatistic implements GeneratorStatistic {
     private final UnrelatedStatistic rightHandSideStatistic;
     private final UnrelatedStatistic summaryUnrelatedStatistic;
 
-    public RelatedStatistic(List<? extends Scalar> left, List<? extends Scalar> right){
+    protected RelatedStatistic(List<? extends Scalar> left, List<? extends Scalar> right){
         leftHandSideCandidates = Collections.unmodifiableList(left);
         rightHandSideCandidates = Collections.unmodifiableList(right);
-        summaryCandidates = new ArrayList<Scalar>(leftHandSideCandidates.size() + rightHandSideCandidates.size()){
+        summaryCandidates = Collections.unmodifiableList(new ArrayList<Scalar>(leftHandSideCandidates.size() + rightHandSideCandidates.size()){
             {
                 addAll(leftHandSideCandidates);
                 addAll(rightHandSideCandidates);
             }
-        };
+        });
         leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
         rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
         summaryUnrelatedStatistic = new UnrelatedStatistic(summaryCandidates);
-        collect();
     }
 
-    private void collect(){
+    protected RelatedStatistic(UnrelatedStatistic summary, List<? extends Scalar> left, List<? extends Scalar> right){
+        leftHandSideCandidates = Collections.unmodifiableList(left);
+        rightHandSideCandidates = Collections.unmodifiableList(right);
+        summaryCandidates = Collections.unmodifiableList(summary.getAllCandidates());
+
+        leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
+        rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
+        summaryUnrelatedStatistic = summary;
     }
 
     @Override
@@ -150,7 +155,7 @@ public class RelatedStatistic implements GeneratorStatistic {
     }
 
     @Override
-    public List<Scalar> getWholeScopeCandidates() {
+    public List<Scalar> getAllCandidates() {
         return summaryCandidates;
     }
 
@@ -179,4 +184,8 @@ public class RelatedStatistic implements GeneratorStatistic {
         return summaryUnrelatedStatistic.findAny(typeTag);
     }
 
+    @Override
+    public GeneratorStatistic toRelated() {
+        return this;
+    }
 }

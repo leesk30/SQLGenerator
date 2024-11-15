@@ -3,7 +3,7 @@ package org.lee.generator.expression.basic;
 import org.lee.common.Assertion;
 import org.lee.common.Utility;
 import org.lee.common.global.SymbolTable;
-import org.lee.generator.expression.statistic.UnrelatedStatistic;
+import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -23,12 +23,16 @@ import java.util.stream.IntStream;
 public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
     Expression generate(TypeTag required);
+
     Expression fallback(TypeTag required);
+
     Expression fallback();
+
+    Expression generate();
 
     default Expression fallbackFor(List<Scalar> anyInputs){
         // todo remove theses all
-        UnrelatedStatistic statistic = new UnrelatedStatistic(anyInputs);
+        GeneratorStatistic statistic = GeneratorStatistic.create(anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
             return anyScalar.toCompleteExpression();

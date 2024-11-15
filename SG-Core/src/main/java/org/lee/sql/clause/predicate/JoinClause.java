@@ -42,11 +42,6 @@ public abstract class JoinClause extends PredicateClause {
     }
 
     @Override
-    public String toString() {
-        return getString();
-    }
-
-    @Override
     public NodeTag getNodeTag() {
         return NodeTag.joinClause;
     }

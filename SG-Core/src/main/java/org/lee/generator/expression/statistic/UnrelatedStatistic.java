@@ -3,8 +3,6 @@ package org.lee.generator.expression.statistic;
 import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
-import org.lee.generator.expression.CommonExpressionGenerator;
-import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -13,7 +11,7 @@ import org.lee.sql.type.TypeTag;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class UnrelatedStatistic implements GeneratorStatistic{
+class UnrelatedStatistic implements GeneratorStatistic{
 
     protected static final UnrelatedStatistic EMPTY = new UnrelatedStatistic();
 
@@ -24,13 +22,15 @@ public class UnrelatedStatistic implements GeneratorStatistic{
     private int hit = 0;
     private int attach = 0;
 
+    private RelatedStatistic relatedCache = null;
+
     // empty
     private UnrelatedStatistic(){
         this.candidateList = Collections.emptyList();
         this.totalSize = 0;
     }
 
-    public UnrelatedStatistic(List<? extends Scalar> candidateList){
+    protected UnrelatedStatistic(List<? extends Scalar> candidateList){
         this.candidateList = Collections.unmodifiableList(candidateList);
         this.totalSize = candidateList.size();
         collect();
@@ -237,7 +237,7 @@ public class UnrelatedStatistic implements GeneratorStatistic{
     }
 
     @Override
-    public List<Scalar> getWholeScopeCandidates() {
+    public List<Scalar> getAllCandidates() {
         return candidateList;
     }
 
@@ -253,5 +253,20 @@ public class UnrelatedStatistic implements GeneratorStatistic{
             LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f%%", attach, hit, getCacheHitRate()*100));
         }
         super.finalize();
+    }
+
+    @Override
+    public GeneratorStatistic toRelated() {
+        if(relatedCache == null){
+            List<? extends  Scalar> all = getAllCandidates();
+            if(all.size() <= 1){
+                return this;
+            }
+            int spliter = all.size() / 2;
+            List<? extends Scalar> left = all.subList(0, spliter);
+            List<? extends Scalar> right = all.subList(spliter, all.size() - 1);
+            relatedCache = new RelatedStatistic(this, left, right);
+        }
+        return relatedCache;
     }
 }

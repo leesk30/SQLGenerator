@@ -76,7 +76,7 @@ public class GeneratorTest {
                 if(sql == null){
                     System.out.println(i);
                 }
-                writer.write("----------->\n" + formatter.format(sql) + "\n");
+                writer.write("----------->\n" + SQLFormatter.formatStatement(sql) + "\n");
                 writer.flush();
             }
             for (SQLGeneratorDefaultThreadWorker worker: workers){

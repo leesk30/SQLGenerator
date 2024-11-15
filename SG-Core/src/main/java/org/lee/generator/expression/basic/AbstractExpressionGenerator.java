@@ -2,6 +2,7 @@ package org.lee.generator.expression.basic;
 
 import org.lee.common.Assertion;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -19,8 +20,13 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
     protected final SQLStatement statement;
     protected final RuntimeConfiguration config;
     protected final GeneratorStatistic statistic;
+    protected final ExpressionLocation expressionLocation;
 
-    protected AbstractExpressionGenerator(SQLStatement statement, GeneratorStatistic statistic){
+    protected AbstractExpressionGenerator(SQLStatement statement){
+        this(ExpressionLocation.unknown, statement);
+    }
+
+    protected AbstractExpressionGenerator(ExpressionLocation expressionLocation, SQLStatement statement, GeneratorStatistic statistic){
         Assertion.requiredNonNull(statistic);
         this.statement = statement;
         if(statement != null){
@@ -29,24 +35,26 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
             this.config = IExpressionGenerator.super.getConfig();
         }
         this.statistic = statistic;
+        this.expressionLocation = expressionLocation;
     }
 
-    protected AbstractExpressionGenerator(SQLStatement statement){
-        this(statement, Collections.emptyList(), Collections.emptyList());
+    protected AbstractExpressionGenerator(ExpressionLocation expressionLocation, SQLStatement statement){
+        this(expressionLocation, statement, Collections.emptyList(), Collections.emptyList());
     }
 
-    protected AbstractExpressionGenerator(SQLStatement statement, List<? extends Scalar> scalars){
-        this(statement, scalars, Collections.emptyList());
+    protected AbstractExpressionGenerator(ExpressionLocation expressionLocation, SQLStatement statement, List<? extends Scalar> scalars){
+        this(expressionLocation, statement, scalars, Collections.emptyList());
     }
 
 
-    protected AbstractExpressionGenerator(SQLStatement statement, List<? extends Scalar> left, List<? extends Scalar> right){
+    protected AbstractExpressionGenerator(ExpressionLocation expressionLocation, SQLStatement statement, List<? extends Scalar> left, List<? extends Scalar> right){
         this.statement = statement;
         if(statement != null){
             this.config = statement.getConfig();
         }else {
             this.config = IExpressionGenerator.super.getConfig();
         }
+        this.expressionLocation = expressionLocation;
         if(left.isEmpty() && right.isEmpty()){
             statistic = GeneratorStatistic.create();
         }else if(left.isEmpty()){
@@ -76,6 +84,11 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
 
     @Override
     public GeneratorStatistic getStatistic() {
-        return null;
+        return statistic;
+    }
+
+    @Override
+    public ExpressionLocation getExpressionLocation() {
+        return expressionLocation;
     }
 }

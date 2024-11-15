@@ -7,10 +7,11 @@ import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.common.global.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
+import org.lee.sql.entry.complex.Record;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.expression.Expression;
 import org.lee.sql.literal.Literal;
-import org.lee.sql.symbol.Aggregation;
 import org.lee.sql.symbol.Function;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.symbol.common.Aggregator;
@@ -40,7 +41,7 @@ public final class Pivot extends Pivoted {
      * */
     private final List<PivotEntry> aggregations = new ArrayList<>();
     private final List<Field> forTarget = new ArrayList<>();
-    private final List<PivotForValueNode> forValue = new ArrayList<>();
+    private final List<PivotLiteralRecord> forValue = new ArrayList<>();
     private String cachedString = null;
 
     public Pivot(RangeTableEntry rawEntry) {
@@ -49,12 +50,10 @@ public final class Pivot extends Pivoted {
 
     private static class PivotEntry implements VoidNode, Scalar {
         private final String name;
-        private final Aggregation aggregation;
-        private final Field targetField;
+        private final Expression aggregation;
         private PivotEntry(Symbol aggregation, Field targetField, String name) {
             assert aggregation instanceof Aggregator && aggregation instanceof Function;
-            this.aggregation = (Aggregation) aggregation;
-            this.targetField = targetField;
+            this.aggregation = new Expression(aggregation).newChild(targetField);
             this.name = name;
         }
 
@@ -64,30 +63,34 @@ public final class Pivot extends Pivoted {
 
         @Override
         public String getString() {
-            return String.format(aggregation.getString(), targetField.getString()) + SPACE + AS + SPACE + name;
+            return aggregation.getString() + SPACE + AS + SPACE + name;
         }
 
         @Override
         public TypeTag getType() {
-            return aggregation.getReturnType();
+            return aggregation.getType();
         }
     }
 
-    private static class PivotForValueNode implements VoidNode {
-        private final List<Literal<?>> literals;
+    private static class PivotLiteralRecord extends Record {
         private final String name;
 
-        private PivotForValueNode(List<Literal<?>> literals, String name){
-            this.literals = literals;
+        private PivotLiteralRecord(List<Literal<?>> literals, String name){
+            super(literals);
+            this.name = name;
+        }
+
+        private PivotLiteralRecord(int initialCapacity, String name){
+            super(initialCapacity);
             this.name = name;
         }
 
         @Override
         public String getString() {
-            if(literals.size() > 1){
-                return LP + nodeArrayToString(literals) + RP + SPACE + AS + SPACE + name;
+            if(size() > 1){
+                return LP + super.getString() + RP + SPACE + AS + SPACE + name;
             }
-            return nodeArrayToString(literals) + SPACE + AS + SPACE + name;
+            return super.getString() + SPACE + AS + SPACE + name;
         }
     }
 
@@ -95,24 +98,18 @@ public final class Pivot extends Pivoted {
         if(cachedString != null){
             return;
         }
-        StringBuilder builder = new StringBuilder(rawEntry.getString());
-        builder.append(SPACE).append(PIVOT)
-                .append(LP) // LP 1
-                .append(nodeArrayToString(aggregations))
-                .append(SPACE).append(FOR).append(SPACE);
+        String head = rawEntry.getString() + SPACE + PIVOT + LP // LP 1
+                + nodeArrayToString(aggregations)
+                + SPACE + FOR + SPACE;
         if(forTarget.size() > 1){
-            builder.append(LP) // LP 1-1
-                    .append(nodeArrayToString(forTarget))
-                    .append(RP); // END LP 1-1
+            head = head + LP + nodeArrayToString(forTarget) + RP; // LP 1-1 & END LP 1-1
         }else {
-            builder.append(forTarget.get(0).getString());
+            head = head + forTarget.get(0).getString();
         }
-        builder.append(SPACE).append(IN).append(SPACE)
-                .append(LP) // LP 2
-                .append(nodeArrayToString(forValue))
-                .append(RP) // END LP 2
-                .append(RP); // END LP 1
-        cachedString = builder.toString();
+        head = head + SPACE + IN + SPACE
+                + LP + nodeArrayToString(forValue) + RP // LP 2 & END LP 2
+                + RP; // END LP 1
+        cachedString = head;
     }
 
     @Override
@@ -139,14 +136,15 @@ public final class Pivot extends Pivoted {
         final RuntimeConfigurationProvider provider = SQLGeneratorContext.getCurrentConfigProvider();
         final boolean shouldConcatName = aggregations.size() >= 2 ||
                 !provider.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
+        final int initialCapacity = forTarget.size();
 
         for(int i=0; i<elementNum; i++){
-            List<Literal<?>> literalList = new ArrayList<>();
-            for(Field field: forTarget){
-                literalList.add(field.getType().asMapped().generate());
-            }
             String newName = Utility.getRandomName("pf_");
-            forValue.add(new PivotForValueNode(literalList, newName));
+            PivotLiteralRecord record = new PivotLiteralRecord(initialCapacity, newName);
+            for(Field field: forTarget){
+                record.add(field.getType().asMapped().generate());
+            }
+            forValue.add(record);
 
             for(PivotEntry pivotEntry: aggregations){
                 Field pivotedField = getPivotField(newName, pivotEntry, shouldConcatName);

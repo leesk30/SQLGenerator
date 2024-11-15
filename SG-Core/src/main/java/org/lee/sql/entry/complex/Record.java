@@ -15,7 +15,7 @@ public class Record extends ArrayList<Scalar> implements Node {
         super(width);
     }
 
-    public Record(List<Scalar> vector){
+    public Record(List<? extends Scalar> vector){
         super(vector);
     }
 

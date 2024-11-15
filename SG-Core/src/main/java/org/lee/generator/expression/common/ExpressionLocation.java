@@ -8,4 +8,5 @@ public enum ExpressionLocation {
     having,
     start_with,
     connect_by,
+    unknown,
 }
