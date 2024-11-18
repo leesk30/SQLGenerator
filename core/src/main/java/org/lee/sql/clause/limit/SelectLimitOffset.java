@@ -1,9 +1,9 @@
 package org.lee.sql.clause.limit;
 
 
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.statement.select.SelectNormalStatement;
 import org.lee.sql.statement.select.SelectStatement;
 
@@ -18,7 +18,7 @@ public class SelectLimitOffset extends LimitOffset {
             SelectNormalStatement normalStatement = (SelectNormalStatement) statement;
             if(normalStatement.getSelectClause().getChildNodes().get(0).isScalarStyle()){
                 if(config.probability(Conf.LIMIT_OFFSET_CLAUSE_FUZZ_PROBABILITY)){
-                    limitNode.set(Utility.randomIntFromRange(1, 100));
+                    limitNode.set(RandomUtils.randomIntFromRange(1, 100));
                 }
                 // Else: do nothing is ok
                 return;
@@ -27,7 +27,7 @@ public class SelectLimitOffset extends LimitOffset {
         limitNode.set(1);
 
         if(config.probability(Conf.LIMIT_OFFSET_WITH_OFFSET_PROBABILITY)){
-            offsetNode.set(Utility.randomIntFromRange(1, 100));
+            offsetNode.set(RandomUtils.randomIntFromRange(1, 100));
         }
     }
 
@@ -39,11 +39,11 @@ public class SelectLimitOffset extends LimitOffset {
         }
 
         if(config.probability(Conf.LIMIT_OFFSET_CLAUSE_FUZZ_PROBABILITY)){
-            limitNode.set(Utility.randomIntFromRange(1, 100));
+            limitNode.set(RandomUtils.randomIntFromRange(1, 100));
         }
 
         if(config.probability(Conf.LIMIT_OFFSET_WITH_OFFSET_PROBABILITY)){
-            offsetNode.set(Utility.randomIntFromRange(1, 100));
+            offsetNode.set(RandomUtils.randomIntFromRange(1, 100));
         }
     }
 }

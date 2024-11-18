@@ -2,13 +2,13 @@ package org.lee.sql;
 
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.config.RuntimeConfigurationProvider;
-import org.lee.common.global.MetaEntry;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.statement.SQLGenerator;
+import org.lee.resource.MetaEntry;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.common.SQLType;
 import org.lee.sql.statement.select.SelectStatement;
@@ -165,7 +165,7 @@ public final class SQLGeneratorContext  {
         }
 
         private SQLStatement adaptiveGenerate(){
-            SQLType sqlType = Utility.randomlyChooseFrom(SQLType.values());
+            SQLType sqlType = RandomUtils.randomlyChooseFrom(SQLType.values());
             SQLStatement statement = getStatement(sqlType);
             Assertion.requiredNonNull(statement);
             assert statement != null;

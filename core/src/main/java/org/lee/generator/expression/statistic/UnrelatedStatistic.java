@@ -1,8 +1,10 @@
 package org.lee.generator.expression.statistic;
 
-import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
+import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.NodeUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -40,7 +42,7 @@ class UnrelatedStatistic implements GeneratorStatistic{
         if(candidateList.isEmpty()){
             return;
         }
-        Utility.groupByType(candidateList, groupByType);
+        NodeUtils.groupByType(candidateList, groupByType);
     }
 
     private Map<TypeTag, Integer> getSignatureNumOfType(Symbol symbol){
@@ -117,10 +119,10 @@ class UnrelatedStatistic implements GeneratorStatistic{
     public Scalar findAny(){
         assert !groupByType.isEmpty();
         Set<TypeTag> keys = groupByType.keySet();
-        TypeTag anyKey = Utility.randomlyChooseFrom(keys);
+        TypeTag anyKey = RandomUtils.randomlyChooseFrom(keys);
         List<Scalar> candidate = groupByType.get(anyKey);
         assert !candidate.isEmpty();
-        return Utility.randomlyChooseFrom(candidate);
+        return RandomUtils.randomlyChooseFrom(candidate);
     }
 
     @Override
@@ -130,8 +132,8 @@ class UnrelatedStatistic implements GeneratorStatistic{
                 .filter(t -> this.findMatch(t).size() >= 2)
                 .collect(Collectors.toSet());
         if(!moreThanOneCandidates.isEmpty()){
-            List<Scalar> candidates = Utility.copyList(this.findMatch(Utility.randomlyChooseFrom(moreThanOneCandidates)));
-            List<Scalar> choose = Utility.randomlyChooseManyFrom(2, candidates);
+            List<Scalar> candidates = CollectionUtils.copyList(this.findMatch(RandomUtils.randomlyChooseFrom(moreThanOneCandidates)));
+            List<Scalar> choose = RandomUtils.randomlyChooseManyFrom(2, candidates);
             return Pair.fromCollection(choose);
         }
         return null;
@@ -152,7 +154,7 @@ class UnrelatedStatistic implements GeneratorStatistic{
     @Override
     public Scalar findAny(TypeTag typeTag) {
         if(groupByType.containsKey(typeTag)){
-            return Utility.randomlyChooseFrom(groupByType.get(typeTag));
+            return RandomUtils.randomlyChooseFrom(groupByType.get(typeTag));
         }
         return null;
     }
@@ -200,13 +202,13 @@ class UnrelatedStatistic implements GeneratorStatistic{
             final List<? extends Scalar> localCandidate = groupByType.get(required);
             final boolean onlyOneCandidate = localCandidate.size() == 1;
             if (localCandidate.size() >= counter.get(required)) {
-                result[i] = Utility.randomlyChooseFrom(groupByType.get(required));
+                result[i] = RandomUtils.randomlyChooseFrom(groupByType.get(required));
                 continue;
             }
 
             if(onlyOneCandidate){
                 oneCandidateMarker.add(required);
-                if(!oneCandidateMarker.contains(required) || Utility.probability(50)){
+                if(!oneCandidateMarker.contains(required) || RandomUtils.probability(50)){
                     result[i] = groupByType.get(required).get(0);
                 }
             }

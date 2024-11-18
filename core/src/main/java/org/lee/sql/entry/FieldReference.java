@@ -1,6 +1,6 @@
 package org.lee.sql.entry;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.entry.scalar.Pseudo;
 import org.lee.sql.entry.scalar.Scalar;

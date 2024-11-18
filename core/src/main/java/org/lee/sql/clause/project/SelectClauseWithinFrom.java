@@ -1,8 +1,8 @@
 package org.lee.sql.clause.project;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.entry.FieldReference;
@@ -50,7 +50,7 @@ public class SelectClauseWithinFrom extends SelectClause{
     private void nonLimitationsProjectionFuzz(){
         final CommonExpressionGenerator generator = createProjectionGenerator();
         final int numOfEntry = retrieveParent().getFromClause().size();
-        final int numOfProjection = Utility.randomIntFromRange(numOfEntry, numOfEntry*2);
+        final int numOfProjection = RandomUtils.randomIntFromRange(numOfEntry, numOfEntry*2);
         for (int i = 0; i < numOfProjection; i++) {
             if(config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY) ||
                     config.probability(Conf.EXPRESSION_RECURSION_PROBABILITY)){

@@ -1,6 +1,6 @@
 package org.lee.sql.clause.modify;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.statement.SQLStatement;

@@ -1,8 +1,8 @@
 package org.lee.sql.clause.project;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.statement.values.ValuesStatement;
 import org.lee.sql.type.TypeTag;
 
@@ -27,8 +27,8 @@ public class ValuesClauseForValues extends ValuesClause{
             width = withLimitations ? limitations.size(): 1;
             Assertion.requiredEquals(width, 1);
         }else {
-            length = Utility.randomIntFromRange(1, 10);
-            width = withLimitations ? limitations.size(): Utility.randomIntFromRange(1, 7);
+            length = RandomUtils.randomIntFromRange(1, 10);
+            width = withLimitations ? limitations.size(): RandomUtils.randomIntFromRange(1, 7);
         }
 
         if(withLimitations){

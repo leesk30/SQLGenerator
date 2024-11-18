@@ -1,6 +1,6 @@
 package org.lee.sql.statement.insert;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.modify.InsertModifyTableClause;
 import org.lee.sql.clause.project.ValuesClauseForInsert;
 import org.lee.sql.entry.complex.Record;
@@ -54,7 +54,7 @@ public final class InsertInitializedStatement extends InsertStatement{
 
         @Override
         public void fuzz() {
-            length = Utility.randomIntFromRange(minLines, maxLines);
+            length = RandomUtils.randomIntFromRange(minLines, maxLines);
             width = InsertInitializedStatement.this.targetRelation.getFields().size();
             generateRecordByTypeDescriptor();
         }

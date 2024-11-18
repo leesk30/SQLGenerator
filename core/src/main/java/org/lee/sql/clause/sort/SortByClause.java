@@ -1,12 +1,12 @@
 package org.lee.sql.clause.sort;
 
 import org.lee.base.Fuzzer;
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.complex.TargetEntry;
@@ -84,16 +84,16 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
 
         @Override
         public void fuzz() {
-            orderOptionAsc = Utility.probability(50);
-            nullOptionLast = Utility.probability(50);
+            orderOptionAsc = RandomUtils.probability(50);
+            nullOptionLast = RandomUtils.probability(50);
             if((isDefaultAsc && orderOptionAsc) || (!isDefaultAsc && !orderOptionAsc)){
-                representOrderOption = Utility.probability(50);
+                representOrderOption = RandomUtils.probability(50);
             }else {
                 representOrderOption = true;
             }
 
             if((isDefaultNullLast && nullOptionLast) || (!isDefaultNullLast && !nullOptionLast)){
-                representNullOption = Utility.probability(50);
+                representNullOption = RandomUtils.probability(50);
             }else {
                 representNullOption = true;
             }
@@ -145,7 +145,7 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
         final Projectable projectable = (Projectable) this.statement;
         final int projectionLength = projectable.width();
         return i -> {
-            final int orderByIndex = Utility.randomIntFromRange(1, projectionLength+1);
+            final int orderByIndex = RandomUtils.randomIntFromRange(1, projectionLength+1);
             final Literal<Integer> literal = new LiteralInt(orderByIndex);
             addSortEntry(new SortEntry(literal, this.statement.getConfig()));
         };
@@ -156,7 +156,7 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
         final List<TargetEntry> targetEntries = projectable.project();
         final RuntimeConfiguration configuration = projectable.getConfig();
         return i -> {
-            final TargetEntry targetEntry = Utility.randomlyChooseFrom(targetEntries);
+            final TargetEntry targetEntry = RandomUtils.randomlyChooseFrom(targetEntries);
             addSortEntry(new SortEntry(targetEntry, configuration));
         };
     }
@@ -184,11 +184,11 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
     }
 
     protected IntStream getStreamer(){
-        return IntStream.range(0, Utility.randomIntFromRange(1, (int)(1.5D * getProjectSize()))).sequential();
+        return IntStream.range(0, RandomUtils.randomIntFromRange(1, (int)(1.5D * getProjectSize()))).sequential();
     }
 
     protected IntConsumer getConsumer(){
-        return Utility.probability(50)? randomlyOrderByIndex(): randomlyOrderByTarget();
+        return RandomUtils.probability(50)? randomlyOrderByIndex(): randomlyOrderByTarget();
     }
 
     protected void forceOrderByAllProjections(){

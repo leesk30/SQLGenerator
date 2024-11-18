@@ -11,7 +11,7 @@
     <modules>
 <!--        <module>SG-Server</module>-->
         <module>core</module>
-<!--        <module>SG-Common</module>-->
+        <module>common</module>
 <!--        <module>SG-Protos</module>-->
 <!--        <module>SG-Client</module>-->
     </modules>
@@ -20,8 +20,12 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.compile.plugin.version>3.8.1</maven.compile.plugin.version>
+
         <grpc.version>1.29.0</grpc.version>
         <protobuf.version>3.11.0</protobuf.version>
+        <org.json.version>20231013</org.json.version>
         <commons.lang3.version>3.15.0</commons.lang3.version>
         <commons.math3.version>3.6</commons.math3.version>
         <commons.configuration2.version>2.11.0</commons.configuration2.version>
@@ -33,7 +37,7 @@
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
         <logging.log4j.version>2.22.0</logging.log4j.version>
 
-        <!-- test scope only -->
+        <!-- test scope -->
         <test.testng.version>7.4.0</test.testng.version>
         <test.inegration.spark.scala.version>2.12</test.inegration.spark.scala.version>
         <test.inegration.spark.version>3.5.0</test.inegration.spark.version>
@@ -46,6 +50,8 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <!-- grpc -->
             <dependency>
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-netty-shaded</artifactId>
@@ -118,6 +124,12 @@
                 <version>${google.guava.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.json</groupId>
+                <artifactId>json</artifactId>
+                <version>${org.json.version}</version>
+            </dependency>
+
             <!-- logs -->
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -171,17 +183,32 @@
 
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compile.plugin.version}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>
+
     </build>
 
     <repositories>

@@ -1,6 +1,6 @@
 package org.lee.sql.type.mapped;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.literal.LiteralDouble;
 import org.lee.sql.type.TypeTag;
 
@@ -16,11 +16,11 @@ public class MappedDouble extends MappedType<Double>{
 
     @Override
     public LiteralDouble generate() {
-        return new LiteralDouble(Utility.randomDoubleFromRange(0, 100));
+        return new LiteralDouble(RandomUtils.randomDoubleFromRange(0, 100));
     }
 
     @Override
     public LiteralDouble generate(int partial) {
-        return new LiteralDouble(Utility.randomDoubleFromRange(partial, partial+100));
+        return new LiteralDouble(RandomUtils.randomDoubleFromRange(partial, partial+100));
     }
 }

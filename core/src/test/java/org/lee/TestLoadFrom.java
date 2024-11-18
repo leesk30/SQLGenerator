@@ -1,7 +1,7 @@
 package org.lee;
 
 import org.json.JSONObject;
-import org.lee.common.global.MetaEntry;
+import org.lee.resource.MetaEntry;
 import org.lee.sql.SQLGeneratorContext;
 import org.testng.annotations.Test;
 

@@ -1,6 +1,6 @@
 package org.lee.sql.literal;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.common.structure.Pair;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;

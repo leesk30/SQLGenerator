@@ -1,6 +1,7 @@
 package org.lee.base;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lee.common.enumeration.NodeTag;
 
 import java.util.Arrays;
 import java.util.Iterator;

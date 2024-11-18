@@ -1,6 +1,6 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.statement.select.SelectStatement;

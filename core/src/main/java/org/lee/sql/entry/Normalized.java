@@ -1,7 +1,7 @@
 package org.lee.sql.entry;
 
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 
 public interface Normalized<N extends Node> extends Node {
     N getWrapped();

@@ -3,11 +3,11 @@ package org.lee.generator.common;
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
 import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.structure.Weighted;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.symbol.Comparator;
@@ -95,10 +95,10 @@ public abstract class WeightedAccessor<IN, OUT> implements Generator<OUT> {
         if(policy == AccessPolicy.singleton){
             return wrappers.get(0).get();
         } else if (policy == AccessPolicy.balance) {
-            return Utility.randomlyChooseFrom(wrappers).get();
+            return RandomUtils.randomlyChooseFrom(wrappers).get();
         }
 
-        int value = Utility.randomIntFromRange(0, sum);
+        int value = RandomUtils.randomIntFromRange(0, sum);
         for(Weighted<IN> weightedElement: wrappers){
             value = value - weightedElement.weight();
             if(value <= 0){

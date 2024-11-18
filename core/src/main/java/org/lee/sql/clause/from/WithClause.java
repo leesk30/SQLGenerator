@@ -1,9 +1,9 @@
 package org.lee.sql.clause.from;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.SQLStatement;
@@ -38,7 +38,7 @@ public class WithClause extends Clause<CTE> {
         if(!config.probability(Conf.WITH_CTE_PROBABILITY)){
             return;
         }
-        final int numOfCTEs = Utility.randomIntFromRange(0, 3);
+        final int numOfCTEs = RandomUtils.randomIntFromRange(0, 3);
         if(numOfCTEs == 0){
             return;
         }

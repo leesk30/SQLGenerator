@@ -1,8 +1,8 @@
 package org.lee.sql.statement.select;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
 import org.lee.common.exception.ValueCheckFailedException;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.from.WithClause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.SelectLimitOffset;
@@ -111,7 +111,7 @@ public final class SelectSetopStatement
     private void generateChildStatement(){
         final ProjectableGenerator generator = new ProjectableGenerator(this);
         if(this.getProjectTypeLimitation().isEmpty()){
-            if(Utility.probability(50)){
+            if(RandomUtils.probability(50)){
                 left = generator.generate();
                 right = generator.generate(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }else {
@@ -130,8 +130,8 @@ public final class SelectSetopStatement
     public void fuzz() {
         withClause.fuzz();
         generateChildStatement();
-        setop = Utility.randomlyChooseFrom(SetOperation.values());
-        all = Utility.probability(50);
+        setop = RandomUtils.randomlyChooseFrom(SetOperation.values());
+        all = RandomUtils.probability(50);
         sortByClause.fuzz();
         limitOffset.fuzz();
     }

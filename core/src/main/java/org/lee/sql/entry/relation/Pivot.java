@@ -2,10 +2,10 @@ package org.lee.sql.entry.relation;
 
 import org.lee.base.VoidNode;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfigurationProvider;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.complex.Record;
 import org.lee.sql.entry.scalar.Field;
@@ -124,22 +124,22 @@ public final class Pivot extends Pivoted {
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         for(Field fieldToAggregation: aggregationCandidates){
             List<Symbol> symbols = symbolTable.getAggregate(fieldToAggregation.getType());
-            Symbol symbol = Utility.randomlyChooseFrom(symbols);
+            Symbol symbol = RandomUtils.randomlyChooseFrom(symbols);
             Assertion.requiredNonNull(symbol);
-            PivotEntry pivotEntry = new PivotEntry(symbol, fieldToAggregation, Utility.getRandomName("pa_"));
+            PivotEntry pivotEntry = new PivotEntry(symbol, fieldToAggregation, RandomUtils.getRandomName("pa_"));
             aggregations.add(pivotEntry);
         }
     }
 
     private void generateFor(){
-        final int elementNum = Utility.randomIntFromRange(2, 7);
+        final int elementNum = RandomUtils.randomIntFromRange(2, 7);
         final RuntimeConfigurationProvider provider = SQLGeneratorContext.getCurrentConfigProvider();
         final boolean shouldConcatName = aggregations.size() >= 2 ||
                 !provider.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
         final int initialCapacity = forTarget.size();
 
         for(int i=0; i<elementNum; i++){
-            String newName = Utility.getRandomName("pf_");
+            String newName = RandomUtils.getRandomName("pf_");
             PivotLiteralRecord record = new PivotLiteralRecord(initialCapacity, newName);
             for(Field field: forTarget){
                 record.add(field.getType().asMapped().generate());
@@ -172,12 +172,12 @@ public final class Pivot extends Pivoted {
         // todo: add parameter to control
         assert candidates.size() >= 2;
         do{
-            aggregationCandidates.add(Utility.randomlyPop(candidates));
-        }while (candidates.size() > 1 && Utility.probability(3));
+            aggregationCandidates.add(RandomUtils.randomlyPop(candidates));
+        }while (candidates.size() > 1 && RandomUtils.probability(3));
 
         do {
-            forTarget.add(Utility.randomlyPop(candidates));
-        }while (!candidates.isEmpty() && Utility.probability(3));
+            forTarget.add(RandomUtils.randomlyPop(candidates));
+        }while (!candidates.isEmpty() && RandomUtils.probability(3));
 
         generateAgg(aggregationCandidates);
         generateFor();

@@ -1,7 +1,8 @@
 package org.lee.generator.expression.statistic;
 
-import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -46,7 +47,7 @@ class RelatedStatistic implements GeneratorStatistic {
 
     @Override
     public Pair<Scalar, Scalar> findSimilarPair() {
-        if(Utility.probability(50)){
+        if(RandomUtils.probability(50)){
             return this.getRelatedCategoryPair();
         }else {
             return this.getRelatedTypePair();
@@ -109,13 +110,13 @@ class RelatedStatistic implements GeneratorStatistic {
     private Pair<Scalar, Scalar> getRelatedCategoryPair(){
         Set<TypeCategory> left = leftHandSideStatistic.getGroupedCategory();
         Set<TypeCategory> right = rightHandSideStatistic.getGroupedCategory();
-        Set<TypeCategory> intersection = Utility.intersect(left, right);
+        Set<TypeCategory> intersection = CollectionUtils.intersect(left, right);
         if(intersection.isEmpty()){
             return null;
         }
-        TypeCategory target = Utility.randomlyChooseFrom(intersection);
-        Scalar s1 = Utility.randomlyChooseFrom(leftHandSideStatistic.findMatched(target));
-        Scalar s2 = Utility.randomlyChooseFrom(rightHandSideStatistic.findMatched(target));
+        TypeCategory target = RandomUtils.randomlyChooseFrom(intersection);
+        Scalar s1 = RandomUtils.randomlyChooseFrom(leftHandSideStatistic.findMatched(target));
+        Scalar s2 = RandomUtils.randomlyChooseFrom(rightHandSideStatistic.findMatched(target));
         return new Pair<>(s1, s2);
     }
 
@@ -123,8 +124,8 @@ class RelatedStatistic implements GeneratorStatistic {
         Set<TypeCategory> left = leftHandSideStatistic.getGroupedCategory();
         Set<TypeCategory> right = rightHandSideStatistic.getGroupedCategory();
         if(left.contains(category) && right.contains(category)){
-            Scalar s1 = Utility.randomlyChooseFrom(leftHandSideStatistic.findMatched(category));
-            Scalar s2 = Utility.randomlyChooseFrom(rightHandSideStatistic.findMatched(category));
+            Scalar s1 = RandomUtils.randomlyChooseFrom(leftHandSideStatistic.findMatched(category));
+            Scalar s2 = RandomUtils.randomlyChooseFrom(rightHandSideStatistic.findMatched(category));
             return new Pair<>(s1, s2);
         }
         return null;
@@ -133,13 +134,13 @@ class RelatedStatistic implements GeneratorStatistic {
     private Pair<Scalar, Scalar> getRelatedTypePair(){
         Set<TypeTag> left = leftHandSideStatistic.getGroupedType();
         Set<TypeTag> right = rightHandSideStatistic.getGroupedType();
-        Set<TypeTag> intersection = Utility.intersect(left, right);
+        Set<TypeTag> intersection = CollectionUtils.intersect(left, right);
         if(intersection.isEmpty()){
             return null;
         }
-        TypeTag target = Utility.randomlyChooseFrom(intersection);
-        Scalar s1 = Utility.randomlyChooseFrom(leftHandSideStatistic.findMatch(target));
-        Scalar s2 = Utility.randomlyChooseFrom(rightHandSideStatistic.findMatch(target));
+        TypeTag target = RandomUtils.randomlyChooseFrom(intersection);
+        Scalar s1 = RandomUtils.randomlyChooseFrom(leftHandSideStatistic.findMatch(target));
+        Scalar s2 = RandomUtils.randomlyChooseFrom(rightHandSideStatistic.findMatch(target));
         return new Pair<>(s1, s2);
     }
 
@@ -147,8 +148,8 @@ class RelatedStatistic implements GeneratorStatistic {
         Set<TypeTag> left = leftHandSideStatistic.getGroupedType();
         Set<TypeTag> right = rightHandSideStatistic.getGroupedType();
         if(left.contains(targetType) && right.contains(targetType)){
-            Scalar s1 = Utility.randomlyChooseFrom(leftHandSideStatistic.findMatch(targetType));
-            Scalar s2 = Utility.randomlyChooseFrom(rightHandSideStatistic.findMatch(targetType));
+            Scalar s1 = RandomUtils.randomlyChooseFrom(leftHandSideStatistic.findMatch(targetType));
+            Scalar s2 = RandomUtils.randomlyChooseFrom(rightHandSideStatistic.findMatch(targetType));
             return new Pair<>(s1, s2);
         }
         return null;

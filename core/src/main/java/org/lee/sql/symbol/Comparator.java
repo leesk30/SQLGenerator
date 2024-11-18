@@ -1,7 +1,7 @@
 package org.lee.sql.symbol;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
@@ -43,14 +43,14 @@ public enum Comparator implements Symbol {
     public final static Comparator[] BASE_EQ = {EQ, NOT_EQ};
 
     public static Comparator fastGetComparatorByCategory(TypeCategory category){
-        if(category == TypeCategory.STRING && Utility.probability(90)){
-            return Utility.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
+        if(category == TypeCategory.STRING && RandomUtils.probability(90)){
+            return RandomUtils.randomlyChooseFrom(Comparator.STRING_USABLE_COMPARATOR);
         }
         final int prob = category == TypeCategory.STRING ? 99: 90;
-        if(category.isComparable() && Utility.probability(prob)){
-            return Utility.randomlyChooseFrom(Comparator.ALL);
+        if(category.isComparable() && RandomUtils.probability(prob)){
+            return RandomUtils.randomlyChooseFrom(Comparator.ALL);
         }else {
-            return Utility.randomlyChooseFrom(Comparator.BASE_EQ);
+            return RandomUtils.randomlyChooseFrom(Comparator.BASE_EQ);
         }
     }
 

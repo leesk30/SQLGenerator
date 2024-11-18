@@ -1,7 +1,7 @@
 package org.lee.sql.entry.relation;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.statement.insert.InsertInitializedStatement;
 

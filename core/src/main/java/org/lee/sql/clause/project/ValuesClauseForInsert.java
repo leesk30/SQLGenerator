@@ -1,6 +1,6 @@
 package org.lee.sql.clause.project;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.statement.insert.InsertStatement;
 
 public class ValuesClauseForInsert extends ValuesClause{
@@ -24,8 +24,8 @@ public class ValuesClauseForInsert extends ValuesClause{
     @Override
     public void fuzz() {
         final int modifyTableMaxWith = this.retrieveParent().getModifyTableClause().getChildNodes().get(0).getFields().size();
-        length = Utility.randomIntFromRange(minLines, maxLines);
-        width = Utility.randomIntFromRange(1, modifyTableMaxWith);
+        length = RandomUtils.randomIntFromRange(minLines, maxLines);
+        width = RandomUtils.randomIntFromRange(1, modifyTableMaxWith);
         generateRecord(getTargetTypeByWidth());
     }
 }

@@ -1,7 +1,7 @@
 package org.lee.sql.entry.scalar;
 
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.statement.Projectable;
 import org.lee.sql.type.TypeTag;

@@ -1,9 +1,9 @@
 package org.lee.generator.expression.common;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.RandomUtils;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.scalar.Scalar;
@@ -58,8 +58,8 @@ public class ExprGeneratorUtils {
         final Literal<T> start = Literal.fromType(typeTag);
         final Qualification qualification = new Qualification(Comparator.BETWEEN_AND).newChild(source);
 
-        if(Utility.probability(50)){
-            if(Utility.probability(50)){
+        if(RandomUtils.probability(50)){
+            if(RandomUtils.probability(50)){
                 return qualification.newChild(compared).newChild(start);
             }
             return qualification.newChild(start).newChild(compared);
@@ -72,34 +72,34 @@ public class ExprGeneratorUtils {
                 .filter(s -> s.argsNum() == 2).collect(Collectors.toList());
 
         if(operators.isEmpty()){
-            if(Utility.probability(50)){
+            if(RandomUtils.probability(50)){
                 return qualification.newChild(compared).newChild(start);
             }
             return qualification.newChild(start).newChild(compared);
         }
         Literal<T> partial = Literal.fromType(typeTag);
-        Expression expression = new Expression(Utility.randomlyChooseFrom(operators));
+        Expression expression = new Expression(RandomUtils.randomlyChooseFrom(operators));
         expression.newChild(compared).newChild(partial);
-        if(Utility.probability(50)){
+        if(RandomUtils.probability(50)){
             return qualification.newChild(expression).newChild(start);
         }
         return qualification.newChild(start).newChild(expression);
     }
 
     public static Qualification tryWithPredicateAddition(final Qualification qualification){
-        if(!Utility.probability(5)){
+        if(!RandomUtils.probability(5)){
             return qualification;
         }
         final List<FieldReference> referenceList = qualification.extractField();
-        final FieldReference addPredicateLhs = Utility.randomlyChooseFrom(referenceList);
+        final FieldReference addPredicateLhs = RandomUtils.randomlyChooseFrom(referenceList);
 
         if(addPredicateLhs == null)
             return qualification;
 
-        final Qualification rhs = Utility.probability(50) ?
+        final Qualification rhs = RandomUtils.probability(50) ?
                 compareToRangeLiteral(addPredicateLhs): compareToLiteral(addPredicateLhs);
 
-        if(Utility.probability(80)){
+        if(RandomUtils.probability(80)){
             return qualification.and(rhs);
         }
         return qualification.or(rhs);
@@ -108,7 +108,7 @@ public class ExprGeneratorUtils {
     public static Optional<Expression> nullableCast(Expression expression, TypeTag targetType){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         final List<Symbol> candidateSymbols = symbolTable.getCaster(expression.getType(), targetType);
-        Symbol symbol = Utility.randomlyChooseFrom(candidateSymbols);
+        Symbol symbol = RandomUtils.randomlyChooseFrom(candidateSymbols);
         if(symbol == null){
             return Optional.empty();
         }

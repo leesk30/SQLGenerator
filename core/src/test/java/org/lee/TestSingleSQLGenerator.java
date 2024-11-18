@@ -1,8 +1,8 @@
 package org.lee;
 
 import org.lee.base.Generator;
-import org.lee.common.global.MetaEntry;
-import org.lee.common.global.SymbolTable;
+import org.lee.resource.MetaEntry;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.statement.select.SelectNormalStatement;
 import org.lee.sql.statement.select.SelectStatement;

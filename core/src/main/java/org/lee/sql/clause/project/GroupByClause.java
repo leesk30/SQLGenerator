@@ -1,10 +1,11 @@
 package org.lee.sql.clause.project;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.complex.TargetEntry;
@@ -60,13 +61,13 @@ public class GroupByClause extends Clause<Scalar> {
                 }
         );
 
-        Set<String> difference = Utility.diff(inAggregate.keySet(), nonAggregate.keySet());
+        Set<String> difference = CollectionUtils.diff(inAggregate.keySet(), nonAggregate.keySet());
 
         if(nonAggregate.isEmpty() && difference.isEmpty()){
             return;
         }
         children.addAll(nonAggregate.values());
-        difference.stream().filter(s -> Utility.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
+        difference.stream().filter(s -> RandomUtils.probability(25)).forEach(key -> children.add(inAggregate.get(key)));
         Collections.shuffle(children);
 
     }

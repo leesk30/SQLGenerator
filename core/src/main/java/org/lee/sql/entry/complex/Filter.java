@@ -2,10 +2,10 @@ package org.lee.sql.entry.complex;
 
 import org.lee.base.Fuzzer;
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -68,7 +68,7 @@ public class Filter extends ArrayList<Qualification> implements Normalized<IExpr
         }
         final List<Qualification> result = new ArrayList<>();
         Collections.shuffle(qualifications);
-        final int splitIndex = Utility.randomIntFromRange(1, qualifications.size() - 1);
+        final int splitIndex = RandomUtils.randomIntFromRange(1, qualifications.size() - 1);
         final List<Qualification> lhs = qualifications.subList(0, splitIndex);
         final List<Qualification> rhs = qualifications.subList(splitIndex, qualifications.size());
         result.addAll(randomlyMerge(lhs));
@@ -77,10 +77,10 @@ public class Filter extends ArrayList<Qualification> implements Normalized<IExpr
     }
 
     private Qualification combine(Qualification left, Qualification right){
-        Qualification qualification = new Qualification(Utility.probability(50) ? PredicateCombiner.AND : PredicateCombiner.OR);
+        Qualification qualification = new Qualification(RandomUtils.probability(50) ? PredicateCombiner.AND : PredicateCombiner.OR);
         final AtomicInteger counter = new AtomicInteger(0);
         java.util.function.Function<Qualification, Qualification> tryToNegative = (qual) -> {
-            if(Utility.probability(3 - counter.get())){
+            if(RandomUtils.probability(3 - counter.get())){
                 counter.set(counter.get() + 1);
                 return qual.toNegative();
             }else {

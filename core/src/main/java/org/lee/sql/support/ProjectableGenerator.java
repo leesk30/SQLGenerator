@@ -1,9 +1,10 @@
 package org.lee.sql.support;
 
 import org.lee.base.Generator;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.utils.DebugUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.SQLStatement;
@@ -95,10 +96,10 @@ public final class ProjectableGenerator implements Generator<Projectable>, SQLSt
         if(total >= 100){
             logger.error("Accept an invalid probability distribution(total >= 100)." +
                     String.format("PValues: %d, PSetop: %d, PClause: %d", PValues, PSetop, PClause));
-            Utility.recordLocalFrameInfo4DebugInLog(logger);
+            DebugUtils.recordLocalFrameInfo4DebugInLog(logger);
         }
 
-        final int randomValue = Utility.randomIntFromRange(0, probEdge);
+        final int randomValue = RandomUtils.randomIntFromRange(0, probEdge);
         if(PValues > randomValue){
             return new ValuesStatement(parent);
         } else if (PSetop > randomValue - PValues) {
@@ -106,7 +107,7 @@ public final class ProjectableGenerator implements Generator<Projectable>, SQLSt
         } else if (PClause > randomValue - PValues - PSetop) {
             return new SelectClauseStatement(parent);
         }else {
-            if(!rejectedSimple && Utility.probability(10)){
+            if(!rejectedSimple && RandomUtils.probability(10)){
                 return new SelectSimpleStatement(parent);
             }
             return new SelectNormalStatement(parent);

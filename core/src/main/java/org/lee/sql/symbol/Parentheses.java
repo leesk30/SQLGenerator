@@ -1,7 +1,7 @@
 package org.lee.sql.symbol;
 
-import org.lee.base.NodeTag;
 import org.lee.common.NamedLoggers;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 

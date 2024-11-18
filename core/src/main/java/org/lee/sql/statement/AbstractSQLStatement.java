@@ -1,10 +1,10 @@
 package org.lee.sql.statement;
 
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
 import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;

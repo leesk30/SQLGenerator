@@ -10,7 +10,6 @@ import java.util.concurrent.BlockingQueue;
 public class SQLGeneratorDefaultThreadWorker
         extends SQLGeneratorWorker<SQLGenerator, SQLStatement>
         implements Runnable{
-    public static final int MAX_WORKERS = Runtime.getRuntime().availableProcessors();
     private final BlockingQueue<SQLStatement> result;
     private final InternalConfig config;
     private final int numOfGenerate;

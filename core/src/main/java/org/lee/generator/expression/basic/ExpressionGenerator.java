@@ -1,9 +1,10 @@
 package org.lee.generator.expression.basic;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -45,7 +46,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         List<TypeTag> arg = new ArrayList<>(2);
         arg.add(left.getType());
         arg.add(right.getType());
-        Operator op = (Operator) Utility.randomlyChooseFrom(symbolTable.getOperator(arg));
+        Operator op = (Operator) RandomUtils.randomlyChooseFrom(symbolTable.getOperator(arg));
         if(op != null){
             return new Expression(op).newChild(left).newChild(right);
         }
@@ -59,7 +60,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     default Expression functionUnit(List<Scalar> scalars){
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         final List<Symbol> candidate = symbolTable.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
-        Function function = (Function) Utility.randomlyChooseFrom(candidate);
+        Function function = (Function) RandomUtils.randomlyChooseFrom(candidate);
         if(function == null){
             return fallbackFor(scalars);
         }
@@ -96,7 +97,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default List<Expression> tryMergeToExpression(List<Scalar> scalars){
-        final List<Scalar> template = Utility.copyListShuffle(scalars);
+        final List<Scalar> template = CollectionUtils.copyListShuffle(scalars);
         if(template.isEmpty()){
             return Collections.singletonList(new Expression(getLiteral()));
         }
@@ -104,7 +105,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         final int maxSize = Math.min(symbolTable.maxFunctionArgWidth(), scalars.size());
         int epoch = 0;
         do {
-            int windowSize = Math.min(template.size(), Utility.randomIntFromRange(1, maxSize));
+            int windowSize = Math.min(template.size(), RandomUtils.randomIntFromRange(1, maxSize));
             epoch++;
             Collections.shuffle(template);
             if(windowSize == 1){
@@ -116,7 +117,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                 if(left.getType().getCategory() == TypeCategory.NUMBER && right.getType().getCategory() == TypeCategory.NUMBER){
                     prob = 75;
                 }
-                if(Utility.probability(prob)){
+                if(RandomUtils.probability(prob)){
                     template.add(generateOperatorExpression(left, right));
                 }else {
                     template.add(functionUnit(left, right));
@@ -131,7 +132,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
                         )
                 );
             }
-        }while (Utility.probability(50/epoch));
+        }while (RandomUtils.probability(50/epoch));
         return template.stream().map(scalar -> scalar instanceof Expression ? (Expression) scalar: new Expression(scalar)).collect(Collectors.toList());
     }
 }
