@@ -33,7 +33,7 @@ public final class SQLGeneratorContext  {
         this.config = config;
         this.provider = RuntimeConfigurationProvider.getProvider(config);
         this.entries = new MetaEntry();
-        this.symbolTable = new SymbolTable();
+        this.symbolTable = new SymbolTable(config.getGeneratePolicy());
         load();
     }
 

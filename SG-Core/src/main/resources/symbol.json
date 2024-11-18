@@ -129,15 +129,15 @@
 
   ],
   "function": [
-    {"body": "current_date()", "return": "date", "args": []},
-    {"body": "current_timestamp()", "return": "timestamp", "args": []},
-    {"body": "unix_timestamp()", "return": "bigint", "args": []},
-    {"body": "now()", "return": "timestamp", "args": []},
+    {"body": "current_date()", "return": "date", "args": [], "immutable": false},
+    {"body": "current_timestamp()", "return": "timestamp", "args": [], "immutable": false},
+    {"body": "unix_timestamp()", "return": "bigint", "args": [], "immutable": false},
+    {"body": "now()", "return": "timestamp", "args": [], "immutable": false},
     {"body": "pi()", "return": "decimal", "args": []},
     {"body": "pi()", "return": "float", "args": []},
     {"body": "e()", "return": "decimal", "args": []},
     {"body": "e()", "return": "float", "args": []},
-    {"body": "reflect('java.util.UUID', 'randomUUID')", "return": "string", "args": []},
+    {"body": "reflect('java.util.UUID', 'randomUUID')", "return": "string", "args": [], "immutable": false},
 
     {"body": "string(%s)", "return": "string", "args": ["decimal"]},
     {"body": "string(%s)", "return": "string", "args": ["char"]},

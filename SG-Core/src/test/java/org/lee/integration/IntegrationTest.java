@@ -16,28 +16,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
-public class IntegrationTest{
+public class IntegrationTest extends SparkClientTestModule{
 
     @Test
     public void testSparkWithoutData(){
-        /** TODO optimize */
-        Client<Dataset<Row>> client = new SparkClient();
-        SQLGeneratorContext context = Simple.getSQLGeneratorContext("tpcds.json");
-        String[] createTables = context.getMetaEntry().toDDLs(true, "USING PARQUET").split(";");
-        for(String ddl: createTables){
-            if(ddl.trim().isEmpty()){
-                continue;
-            }
-            Execution<Dataset<Row>> execution = client.createExecution(ddl);
-            System.out.println("Starting to execute: " + execution.getCode());
-            execution.execute();
-            boolean isSuccess = execution.isSuccess();
-
-            if(!isSuccess){
-                throw new RuntimeException(execution.throwable());
-            }
-        }
-
         SQLGenerator generator = context.getGenerator();
         Map<String, Integer> exceptionCounter = new HashMap<>();
         int total = 500;

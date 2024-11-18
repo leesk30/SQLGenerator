@@ -5,6 +5,8 @@ import com.google.common.collect.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.Utility;
+import org.lee.common.config.InternalConfig;
+import org.lee.common.enumeration.Mode;
 import org.lee.common.structure.TrieTree;
 import org.lee.sql.symbol.Aggregation;
 import org.lee.sql.symbol.Function;
@@ -33,6 +35,7 @@ public class SymbolTable implements Resource<JSONObject> {
     private static final String KEY_ARGS = "args";
     private static final String KEY_PRIORITY = "priority";
     private static final String KEY_RETURN = "return";
+    private static final String KEY_IMMUTABLE = "immutable";
 
     private static class Holder{
         public final TrieTree<TypeTag, Symbol> finder = new TrieTree<>();
@@ -83,7 +86,10 @@ public class SymbolTable implements Resource<JSONObject> {
     }
 
     private boolean isLoad = false;
-    public SymbolTable(){}
+    private final Mode mode;
+    public SymbolTable(Mode mode){
+        this.mode = mode;
+    }
 
     @Override
     public synchronized void init(JSONObject symbols){
@@ -138,6 +144,16 @@ public class SymbolTable implements Resource<JSONObject> {
             String reason = symbol.has(KEY_REASON) ? symbol.getString(KEY_REASON) : "Unknown reason";
             logger.debug("Disable by " + reason);
             return true;
+        }
+        return checkImmutable(symbol);
+    }
+
+    private boolean checkImmutable(JSONObject symbol){
+        if(this.mode == Mode.diff){
+            if(symbol.has(KEY_IMMUTABLE) && !symbol.getBoolean(KEY_IMMUTABLE)){
+                logger.debug("Disable due to immutable symbol in diff mode.");
+                return true;
+            }
         }
         return false;
     }
