@@ -2,7 +2,6 @@ package org.lee.common;
 
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.math3.random.RandomDataGenerator;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ public class Utility {
     public static final Logger LOGGER;
     public static final SecureRandom secureRandom;
     public static final ThreadLocal<SecureRandom> threadLocalSecureRandom;
-    public static final RandomDataGenerator randomDataGenerator;
     public static final short MAX_STRINGS;
     public static final int ACTUALLY_MAX_STRINGS;
     private static final char[] charset;
@@ -221,7 +219,8 @@ public class Utility {
             return beginInclusive;
         }
         int edge = endExclusive - beginInclusive;
-        return beginInclusive + randomDataGenerator.nextBinomial(edge, (double) prob / 100D);
+        // return beginInclusive + randomDataGenerator.nextBinomial(edge, (double) prob / 100D);
+        return 0;
     }
 
     public static String inputStreamToString(InputStream input){
@@ -317,7 +316,6 @@ public class Utility {
         // todo: add thread local initializer for secureRandom
         threadLocalSecureRandom = new ThreadLocal<>();
         threadLocalSecureRandom.set(new SecureRandom());
-        randomDataGenerator = new RandomDataGenerator();
         MAX_STRINGS = 100;
         charset = new char[]{
                 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'g', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
