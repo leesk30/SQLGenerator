@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
     <modules>
 <!--        <module>SG-Server</module>-->
-        <module>SG-Core</module>
+        <module>core</module>
 <!--        <module>SG-Common</module>-->
 <!--        <module>SG-Protos</module>-->
 <!--        <module>SG-Client</module>-->

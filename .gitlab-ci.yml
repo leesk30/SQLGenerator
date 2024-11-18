@@ -4,10 +4,10 @@ workflow:
 variables:
   JDK_MAVEN: base-jdk-8-maven:v381
   SNAPSHOT: 1.0-SNAPSHOT
-  RAW_PKG_NAME: SG-Core-1.0-SNAPSHOT.jar
+  RAW_PKG_NAME: SQLGenerator-Core-1.0-SNAPSHOT.jar
   PKG_NAME: SQLGeneratorCore.jar
   WITH_DEPENDENCIES: WITH-DEPENDENCIES
-  API_URL: projects/238/packages/maven/org/lee/SG-Core
+  API_URL: projects/238/packages/maven/org/lee/core
   API_PARAM: status=default&select=package_file
   TARGET_FILE_PATH: SG-Core/target
 
