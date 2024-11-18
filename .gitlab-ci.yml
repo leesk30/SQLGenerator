@@ -7,9 +7,9 @@ variables:
   RAW_PKG_NAME: SQLGenerator-Core-1.0-SNAPSHOT.jar
   PKG_NAME: SQLGeneratorCore.jar
   WITH_DEPENDENCIES: WITH-DEPENDENCIES
-  API_URL: projects/238/packages/maven/org/lee/core
+  API_URL: projects/238/packages/maven/org/lee/SQLGenerator-Core
   API_PARAM: status=default&select=package_file
-  TARGET_FILE_PATH: SG-Core/target
+  TARGET_FILE_PATH: core/target
 
 default:
   image: registry.cn-beijing.aliyuncs.com/suanchang/$JDK_MAVEN
