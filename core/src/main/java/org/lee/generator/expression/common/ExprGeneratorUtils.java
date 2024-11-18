@@ -13,8 +13,6 @@ import org.lee.sql.literal.Literal;
 import org.lee.sql.symbol.Comparator;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;

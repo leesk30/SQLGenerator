@@ -4,14 +4,12 @@ import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Operator;
 import org.lee.sql.symbol.Parentheses;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;

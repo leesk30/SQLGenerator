@@ -2,9 +2,7 @@ package org.lee.common.config;
 
 import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.EnumMap;
 import java.util.Map;

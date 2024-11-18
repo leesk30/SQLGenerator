@@ -5,14 +5,12 @@ import org.lee.base.NodeTag;
 import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.common.SQLClauseWalker;
 import org.lee.sql.statement.common.SQLType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import java.util.*;

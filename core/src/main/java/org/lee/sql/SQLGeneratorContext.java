@@ -14,7 +14,6 @@ import org.lee.sql.statement.common.SQLType;
 import org.lee.sql.statement.select.SelectStatement;
 import org.lee.sql.statement.select.SelectType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 

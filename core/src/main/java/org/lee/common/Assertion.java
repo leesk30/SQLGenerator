@@ -2,10 +2,8 @@ package org.lee.common;
 
 import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.RangeTableReference;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.function.Supplier;

@@ -10,9 +10,6 @@ import org.lee.sql.expression.Expression;
 import org.lee.sql.statement.SQLStatement;
 
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public abstract class AbstractWeightedExpressionGenerator<T extends Expression>

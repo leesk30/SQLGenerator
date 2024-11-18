@@ -4,9 +4,7 @@ import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.exception.NotImplementedException;
-import org.lee.common.global.SymbolTable;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;

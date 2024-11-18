@@ -6,7 +6,6 @@ import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.sql.SQLGeneratorContext;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Properties;
 

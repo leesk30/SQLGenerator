@@ -3,14 +3,12 @@ package org.lee.generator.expression.basic;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.global.SymbolTable;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.statement.SQLStatement;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;

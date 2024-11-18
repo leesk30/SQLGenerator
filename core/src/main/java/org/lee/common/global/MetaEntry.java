@@ -8,7 +8,6 @@ import org.lee.sql.entry.relation.Relation;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.type.TypeDescriptor;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;

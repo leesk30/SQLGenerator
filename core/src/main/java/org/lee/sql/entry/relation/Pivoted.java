@@ -4,11 +4,9 @@ import org.lee.base.Fuzzer;
 import org.lee.base.NodeTag;
 import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

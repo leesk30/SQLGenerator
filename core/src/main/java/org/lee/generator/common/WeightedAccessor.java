@@ -7,14 +7,12 @@ import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
 import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
-import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Weighted;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.symbol.Comparator;
 import org.lee.sql.symbol.Symbol;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -2,10 +2,8 @@ package org.lee.sql.symbol;
 
 import org.lee.base.NodeTag;
 import org.lee.common.NamedLoggers;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 

@@ -2,11 +2,9 @@ package org.lee.common;
 
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.lang3.StringUtils;
-import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;

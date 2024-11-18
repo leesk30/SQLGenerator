@@ -2,7 +2,6 @@ package org.lee.generator.expression.statistic;
 
 import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.sql.entry.scalar.Scalar;
@@ -11,7 +10,6 @@ import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Optional;

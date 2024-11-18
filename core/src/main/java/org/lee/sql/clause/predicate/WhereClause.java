@@ -8,7 +8,6 @@ import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
-import org.lee.common.global.SymbolTable;
 import org.lee.generator.common.WeightedAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
@@ -19,7 +18,6 @@ import org.lee.sql.expression.Qualification;
 import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.common.SQLType;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;

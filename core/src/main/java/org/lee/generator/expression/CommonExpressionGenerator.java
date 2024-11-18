@@ -15,9 +15,7 @@ import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.symbol.Aggregation;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
-import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;

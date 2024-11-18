@@ -7,10 +7,8 @@ import org.lee.common.Utility;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.exception.InternalError;
-import org.lee.common.global.SymbolTable;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
