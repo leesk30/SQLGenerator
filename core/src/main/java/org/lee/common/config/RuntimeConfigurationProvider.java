@@ -1,8 +1,10 @@
 package org.lee.common.config;
 
+import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.exception.NotImplementedException;
+import org.lee.common.global.SymbolTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 public abstract class RuntimeConfigurationProvider {
-    private final static Logger LOGGER = LoggerFactory.getLogger("ProviderCreator");
+    private final static Logger LOGGER = NamedLoggers.getCoreLogger(RuntimeConfigurationProvider.class);
 
     public final static Properties DEFAULT_PROPERTIES = new Properties();
 
@@ -41,7 +43,7 @@ public abstract class RuntimeConfigurationProvider {
 
     protected final Properties source;
     protected final Map<Rule, Boolean> ruleMapTemplate = new HashMap<>();
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = NamedLoggers.getCoreLogger(this.getClass());
 
     protected RuntimeConfigurationProvider(){
         this.source = null;

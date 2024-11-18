@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ExprGeneratorUtils {
-    final Logger LOGGER = LoggerFactory.getLogger(ExprGeneratorUtils.class);
 
     public static <T> Qualification compareToLiteral(Scalar fieldReference){
         TypeTag typeTag = fieldReference.getType();

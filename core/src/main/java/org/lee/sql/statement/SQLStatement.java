@@ -3,6 +3,7 @@ package org.lee.sql.statement;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.base.Statement;
+import org.lee.common.SQLFormatter;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.common.SQLType;
@@ -27,6 +28,10 @@ public interface SQLStatement extends Statement<Clause<? extends Node>> {
 
     default boolean enableSetop(){
         return true;
+    }
+
+    default String getFormattedString(){
+        return SQLFormatter.formatStatement(this.getString());
     }
 
 }

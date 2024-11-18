@@ -2,3 +2,11 @@
 **/*.log
 **/.idea
 **/target
+
+# generate productions
+core/src/test/resources/temp_init.sql
+core/src/test/resources/temp_result.sql
+
+# temp test files
+core/src/test/java/org/lee/Temp.java
+core/src/test/java/org/lee/TempTest.java

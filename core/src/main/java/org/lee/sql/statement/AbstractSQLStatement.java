@@ -2,8 +2,10 @@ package org.lee.sql.statement;
 
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
+import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
@@ -22,27 +24,43 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     protected final SQLStatement parent;
     protected final RuntimeConfiguration config;
     protected final Map<NodeTag, Clause<? extends Node>> childrenMap = new EnumMap<>(NodeTag.class);
-    protected final UUID uuid;
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final UUID uniqueTraceID;
+    protected final UUID uniqueStatementID;
+    protected final Logger logger = NamedLoggers.getCoreLogger(this.getClass());
 
     protected AbstractSQLStatement(SQLType sqlType){
         this(sqlType, null);
     }
 
     protected AbstractSQLStatement(SQLType sqlType, SQLStatement parentStatement){
+        this.uniqueStatementID = UUID.randomUUID();
         if(parentStatement == null){
-            this.uuid = UUID.randomUUID();
+            this.uniqueTraceID = this.uniqueStatementID;
             this.sqlType = sqlType;
             this.parent = null;
             this.config = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
-            MDC.put("stmtId", uuid.toString().replaceAll("-", ""));
-            logger.info(String.format("Start to build statement for type: %s.", sqlType));
         }else {
-            this.uuid = parentStatement.getUUID();
+            this.uniqueTraceID = parentStatement.getUniqueTraceID();
             this.sqlType = sqlType;
             this.parent = parentStatement;
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
             logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parentStatement.getSQLType()));
+        }
+        initMDCKey();
+    }
+
+    protected final void initMDCKey(){
+        String mdcTraceID = truncate(uniqueTraceID, 8);
+        MDC.put("traceID", mdcTraceID);
+        logger.info(String.format("Start to build statement<%s> tracer<%s> for type: %s.", uniqueStatementID, uniqueTraceID, sqlType));
+    }
+
+    private static String truncate(UUID u, int n){
+        String s = u.toString().replaceAll("-", "");
+        if(s.length() > n){
+            return s.substring(0, n);
+        }else {
+            return s;
         }
     }
 
@@ -107,8 +125,13 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     }
 
     @Override
-    public UUID getUUID() {
-        return uuid;
+    public UUID getUniqueTraceID() {
+        return uniqueTraceID;
+    }
+
+    @Override
+    public UUID getUniqueStatementID() {
+        return uniqueStatementID;
     }
 
     @Override

@@ -3,10 +3,12 @@ package org.lee.sql.clause.predicate;
 import org.lee.base.Generator;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.common.config.Conf;
 import org.lee.common.config.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
+import org.lee.common.global.SymbolTable;
 import org.lee.generator.common.WeightedAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
@@ -24,7 +26,7 @@ import java.util.List;
 
 public class WhereClause extends PredicateClause {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(WhereClause.class);
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(WhereClause.class);
 
     protected WhereClause(SQLStatement statement) {
         super(ExpressionLocation.where, statement);

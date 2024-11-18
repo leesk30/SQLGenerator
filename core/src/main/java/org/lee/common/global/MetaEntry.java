@@ -2,6 +2,7 @@ package org.lee.common.global;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.sql.entry.relation.Relation;
 import org.lee.sql.entry.scalar.Field;
@@ -20,7 +21,7 @@ public class MetaEntry implements Resource<JSONObject> {
     private boolean isInitialized = false;
     private final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
     private final Map<String, Relation> relationMap = new HashMap<>();
-    private final Logger logger = LoggerFactory.getLogger(MetaEntry.class);
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(MetaEntry.class);
 
     public MetaEntry(){}
 
@@ -35,7 +36,7 @@ public class MetaEntry implements Resource<JSONObject> {
     @Override
     public synchronized void init(JSONObject json){
         if(isInitialized){
-            logger.warn("The meta entry has already been initialized!!!");
+            LOGGER.warn("The meta entry has already been initialized!!!");
             return;
         }
         long start = System.currentTimeMillis();
@@ -51,7 +52,7 @@ public class MetaEntry implements Resource<JSONObject> {
                 relationByNamespaceMap.get(namespace).add(relation);
             }
         }
-        logger.info(String.format("MetaEntry initialized %d items. Elapsed time: %d ms", relationMap.size(), System.currentTimeMillis() - start));
+        LOGGER.info(String.format("MetaEntry initialized %d items. Elapsed time: %d ms", relationMap.size(), System.currentTimeMillis() - start));
         isInitialized = true;
     }
 

@@ -1,5 +1,7 @@
 package org.lee.sql.type;
 
+import org.lee.common.NamedLoggers;
+import org.lee.common.global.SymbolTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +14,12 @@ public enum TypeCategory {
     NIL(false, false, 5),
     ;
 
+    private final static Logger LOGGER = NamedLoggers.getCoreLogger(TypeCategory.class);
+
     private final boolean comparable;
     private final boolean computable;
     private final int priority;
+
     private TypeCategory(boolean comparable, boolean computable, int categoryPriority){
         this.comparable = comparable;
         this.computable = computable;
@@ -55,8 +60,7 @@ public enum TypeCategory {
         }
         if(right == NUMBER){
             // almost cannot be here
-            Logger logger = LoggerFactory.getLogger(TypeCategory.class);
-            logger.error("The right category convert to compatible state may has wrong path.");
+            LOGGER.error("The right category convert to compatible state may has wrong path.");
             return NUMBER;
         }
         return NIL;

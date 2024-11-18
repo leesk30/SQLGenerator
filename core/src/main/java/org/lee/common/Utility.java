@@ -2,6 +2,7 @@ package org.lee.common;
 
 import org.apache.commons.codec.digest.MurmurHash3;
 import org.apache.commons.lang3.StringUtils;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
@@ -309,7 +310,7 @@ public class Utility {
     }
 
     static {
-        LOGGER = LoggerFactory.getLogger(Utility.class);
+        LOGGER = NamedLoggers.getCoreLogger(Utility.class);
         timestamps = 1720000000000L;
         timestampsRange = 100 * 24 * 3600000L;
         secureRandom = new SecureRandom();

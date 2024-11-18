@@ -57,7 +57,6 @@ public class GeneratorTest {
         long startAt = System.currentTimeMillis();
         String output = TestSingleSQLGenerator.outputPath();
         System.out.println("Output dir is: " + output);
-        final SQLFormatter formatter = new SQLFormatter();
         final int numOfThread = 4;
         final ExecutorService service = Executors.newFixedThreadPool(numOfThread);
         final SQLGeneratorDefaultThreadWorker[] workers = new SQLGeneratorDefaultThreadWorker[numOfThread];
@@ -72,11 +71,11 @@ public class GeneratorTest {
             for (int i=0; i< 1000; i++){
 //                System.out.printf("Take: %d ", i);
                 SQLStatement statement = queue.take();
-                String sql = statement.getString();
+                String sql = statement.getFormattedString();
                 if(sql == null){
                     System.out.println(i);
                 }
-                writer.write("----------->\n" + SQLFormatter.formatStatement(sql) + "\n");
+                writer.write("----------->\n" + sql + "\n");
                 writer.flush();
             }
             for (SQLGeneratorDefaultThreadWorker worker: workers){

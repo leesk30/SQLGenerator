@@ -2,10 +2,12 @@ package org.lee.generator.common;
 
 import org.lee.base.Generator;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.common.exception.InternalError;
 import org.lee.common.exception.UnreachableError;
 import org.lee.common.exception.ValueCheckFailedException;
+import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Weighted;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.expression.Expression;
@@ -19,7 +21,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public abstract class WeightedAccessor<IN, OUT> implements Generator<OUT> {
-    private static final Logger LOGGER = LoggerFactory.getLogger(WeightedAccessor.class);
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(WeightedAccessor.class);
 
     protected final List<Weighted<IN>> wrappers = new ArrayList<>();
     protected final int defaultWeight;

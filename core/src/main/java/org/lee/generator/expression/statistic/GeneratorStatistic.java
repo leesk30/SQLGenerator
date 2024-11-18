@@ -1,6 +1,8 @@
 package org.lee.generator.expression.statistic;
 
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
+import org.lee.common.global.SymbolTable;
 import org.lee.common.structure.Pair;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.sql.entry.scalar.Scalar;
@@ -15,7 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface GeneratorStatistic {
-    Logger LOGGER = LoggerFactory.getLogger("GeneratorStatistic");
+    Logger LOGGER = NamedLoggers.getCoreLogger(GeneratorStatistic.class);
 
     List<Scalar> getAllCandidates();
 

@@ -4,6 +4,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.enumeration.Mode;
@@ -23,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class SymbolTable implements Resource<JSONObject> {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger logger = NamedLoggers.getCoreLogger(SymbolTable.class);
 
     private static final String KEY_FUNCTION = "function";
     private static final String KEY_OPERATOR = "operator";

@@ -1,6 +1,8 @@
 package org.lee.sql.symbol;
 
 import org.lee.base.NodeTag;
+import org.lee.common.NamedLoggers;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class Parentheses implements Symbol {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Parentheses.class);
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(Parentheses.class);
 
     private final Symbol wrapped;
     public Parentheses(Symbol wrapped){

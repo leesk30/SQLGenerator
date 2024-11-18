@@ -1,6 +1,7 @@
 package org.lee.sql;
 
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
@@ -23,7 +24,7 @@ public final class SQLGeneratorContext  {
     private static SQLGeneratorContext sharedContext = null;
     private final InternalConfig config;
     private final RuntimeConfigurationProvider provider;
-    private final Logger logger = LoggerFactory.getLogger("SQLGeneratorContext");
+    private final Logger logger = NamedLoggers.getCoreLogger(SQLGeneratorContext.class);
     private final SQLGenerator generator = new SQLGeneratorImplement();;
     private final MetaEntry entries;
     private final SymbolTable symbolTable;

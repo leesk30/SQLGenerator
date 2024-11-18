@@ -19,7 +19,8 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
             System.out.println("Remove log file ... ");
             file.delete();
         }
-        MDC.put("stmtId", "main");
+        MDC.put("traceID", "main");
+        MDC.put("statementID", "main");
         load();
     }
 
@@ -40,10 +41,10 @@ public class TestSingleSQLGenerator implements Generator<SelectStatement> {
     }
 
     public static String outputPath(){
-        return "src/test/resources/temp_result.sql";
+        return "core/src/test/resources/temp_result.sql";
     }
 
     public static String outputInitializedPath(){
-        return "src/test/resources/temp_init.sql";
+        return "core/src/test/resources/temp_init.sql";
     }
 }

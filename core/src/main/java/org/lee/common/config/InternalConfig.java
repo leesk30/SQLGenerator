@@ -1,6 +1,7 @@
 package org.lee.common.config;
 
 import org.json.JSONObject;
+import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.sql.SQLGeneratorContext;
@@ -11,7 +12,7 @@ import java.util.Properties;
 
 public interface InternalConfig{
     Version version = Version.instance;
-    Logger LOGGER = LoggerFactory.getLogger("InternalConfig");
+    Logger LOGGER = NamedLoggers.getCoreLogger(InternalConfig.class);
     SyntaxType getSyntaxType();
     Properties getSourceRuntimeConfig();
     Mode getGeneratePolicy();

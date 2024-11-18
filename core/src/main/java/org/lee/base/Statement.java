@@ -11,5 +11,7 @@ public interface Statement<T extends Node>
         Fuzzer,
         Logging {
     Statement<?> getParent();
-    UUID getUUID();
+    UUID getUniqueTraceID();
+
+    UUID getUniqueStatementID();
 }

@@ -3,6 +3,8 @@ package org.lee.sql.expression;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Operator;
 import org.lee.sql.symbol.Parentheses;
@@ -20,7 +22,7 @@ public class Expression implements IExpression<Expression> {
     protected final Node current;
     protected final List<IExpression<Expression>> childNodes;
     protected final boolean isTerminateNode;
-    protected static final Logger LOGGER = LoggerFactory.getLogger(Expression.class.getName());
+    protected static final Logger LOGGER = NamedLoggers.getCoreLogger(Expression.class);
 
     public static Expression newExpression(Node current){
         return new Expression(current);

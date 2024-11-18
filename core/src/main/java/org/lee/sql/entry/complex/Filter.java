@@ -4,7 +4,9 @@ import org.lee.base.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -23,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Filter extends ArrayList<Qualification> implements Normalized<IExpression<Expression>>, IExpression<Expression>, Fuzzer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Filter.class);
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(Filter.class);
     private Qualification combined = null;
     public Filter(){}
 

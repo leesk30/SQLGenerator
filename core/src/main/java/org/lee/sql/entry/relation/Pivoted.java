@@ -2,7 +2,9 @@ package org.lee.sql.entry.relation;
 
 import org.lee.base.Fuzzer;
 import org.lee.base.NodeTag;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
+import org.lee.common.global.SymbolTable;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
 import org.slf4j.Logger;
@@ -12,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Pivoted implements Normalized<RangeTableEntry>, RangeTableEntry, Fuzzer {
-    protected static final Logger LOGGER = LoggerFactory.getLogger(Pivoted.class);
+    protected static final Logger LOGGER = NamedLoggers.getCoreLogger(Pivoted.class);
     protected final RangeTableEntry rawEntry;
     protected final List<Field> fieldList;
     public Pivoted(RangeTableEntry rawEntry){

@@ -1,6 +1,8 @@
 package org.lee.common.config;
 
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
+import org.lee.common.global.SymbolTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,7 +14,8 @@ public class RuntimeConfiguration {
     private final Map<Rule, Boolean> ruleMap = new EnumMap<>(Rule.class);
     private final Map<Conf, String> confMap = new EnumMap<>(Conf.class);
     private final RuntimeConfigurationProvider provider;
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final static Logger LOGGER = NamedLoggers.getCoreLogger(RuntimeConfiguration.class);
+
     public RuntimeConfiguration(RuntimeConfigurationProvider provider){
         this.provider = provider;
         Properties properties = this.provider.getTemplateConfig();
@@ -28,7 +31,7 @@ public class RuntimeConfiguration {
         ruleMap.keySet().stream()
                 .filter(ruleName -> {
                     if(ruleName.isDiffusible()){
-                        logger.debug(String.format("The rule configuration named '%s' diffuse to child runtime configuration. The value is: %s", ruleName, ruleMap.get(ruleName)));
+                        LOGGER.debug(String.format("The rule configuration named '%s' diffuse to child runtime configuration. The value is: %s", ruleName, ruleMap.get(ruleName)));
                         return true;
                     }
                     return false;
@@ -42,7 +45,7 @@ public class RuntimeConfiguration {
             ruleMap.put(name, value);
         }else {
             String errorMessage = String.format("Cannot overwrite frozen attributes. origin %s = %s", name, ruleMap.get(name));
-            logger.error(errorMessage);
+            LOGGER.error(errorMessage);
             throw new UnsupportedOperationException(errorMessage);
         }
     }

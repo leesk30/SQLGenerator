@@ -2,10 +2,12 @@ package org.lee.common.config;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
+import org.lee.common.NamedLoggers;
 import org.lee.common.Utility;
 import org.lee.common.enumeration.Mode;
 import org.lee.common.enumeration.SyntaxType;
 import org.lee.common.exception.InternalError;
+import org.lee.common.global.SymbolTable;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +28,7 @@ public final class InternalConfigs {
     public final static String CONFIG_SOURCE_KEY = "config";
     public final static String NUM = "num";
     public final static String WORKERS = "workers";
-    public final static Logger LOGGER = LoggerFactory.getLogger(InternalConfigs.class);
+    public final static Logger LOGGER = NamedLoggers.getCoreLogger(InternalConfigs.class);
 
     public static CommandLineOptions readCommandLineOptions(){
         return CommandLineOptions.getInstance();
