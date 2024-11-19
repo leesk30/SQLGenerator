@@ -6,17 +6,20 @@
 
     <groupId>org.lee</groupId>
     <artifactId>SQLGenerator</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
     <modules>
-<!--        <module>SG-Server</module>-->
+        <module>server</module>
         <module>core</module>
         <module>common</module>
-<!--        <module>SG-Protos</module>-->
+        <module>protos</module>
 <!--        <module>SG-Client</module>-->
     </modules>
 
     <properties>
+
+        <revision>1.0-SNAPSHOT</revision>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

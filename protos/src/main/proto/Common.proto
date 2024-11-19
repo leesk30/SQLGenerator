@@ -1,0 +1,76 @@
+syntax = "proto3";
+
+option java_outer_classname = "common";
+option java_package = "org.lee.protos.common";
+option java_multiple_files = true;
+
+enum ResponseStatus{
+  success = 0;
+  failed = 1;
+}
+
+enum StatementType{
+  select = 0;
+  insert = 1;
+  update = 2;
+  delete = 3;
+  merge = 4;
+}
+
+enum EntryType{
+  view = 0;
+  table = 1;
+  materialized = 3;
+}
+
+enum PartitionType{
+  hash = 0;
+  list = 1;
+  range = 2;
+  interval = 3;
+
+  unknown = 10000;
+}
+
+enum SymbolType{
+  function = 0;
+  operator = 1;
+  aggregation = 2;
+  window = 3;
+}
+
+message Context{
+  string contextID = 1;
+}
+
+message Field{
+  string name = 1;
+  string type = 2;
+}
+
+message Partition{
+  string partition = 1;
+  string type = 2;
+}
+
+message Entry{
+  string database = 1;
+  string table = 2;
+  repeated Partition partitions = 3;
+  repeated Field fields = 4;
+}
+
+message Symbol{
+  string body = 1;
+  string argNum = 2;
+  string returnType = 3;
+  repeated string argumentTypes = 4;
+  bool immutable = 5;
+  bool isUDF = 6;
+  SymbolType type = 7;
+}
+
+message Parameter{
+  string name = 1;
+  string value = 2;
+}

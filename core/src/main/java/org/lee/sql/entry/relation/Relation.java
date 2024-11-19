@@ -6,6 +6,7 @@ import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.statement.insert.InsertInitializedStatement;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Relation implements RangeTableEntry {
@@ -72,6 +73,13 @@ public class Relation implements RangeTableEntry {
             return concatWithSpace(result, ddlOptions) + ENDING;
         }
         return result + ENDING;
+    }
+
+    public String toTemplateInsert(){
+        String[] placeholders = new String[fields.size()];
+        Arrays.fill(placeholders, "{}");
+        return INSERT + SPACE + INTO + SPACE + getName() + SPACE + LP + nodeArrayToString(",", fields) + RP
+                + SPACE + VALUES  + SPACE + LP + StringUtils.joinWith(", ", placeholders) + RP + ENDING;
     }
 
     public String getInitializedInsert(int maxNumOfValueLines){

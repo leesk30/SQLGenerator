@@ -103,4 +103,12 @@ public class MetaEntry implements Resource<JSONObject> {
         return builder.toString();
     }
 
+    public String toTemplateInserts(){
+        StringBuilder builder = new StringBuilder();
+        relationMap.values().forEach(
+                r -> builder.append(r.toTemplateInsert()).append("\n")
+        );
+        return builder.toString();
+    }
+
 }

@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.lee</groupId>
         <artifactId>SQLGenerator</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>SQLGenerator-Common</artifactId>

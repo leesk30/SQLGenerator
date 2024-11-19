@@ -1,16 +1,12 @@
 package org.lee.server;
 
 import io.grpc.*;
-import io.grpc.stub.StreamObserver;
-//import org.lee.protos.Hello.MyRequest;
-//import org.lee.protos.Hello.MyResponse;
-//import org.lee.protos.MyServiceGrpc;
 import org.lee.session.SessionContext;
 import org.lee.session.SessionContextManager;
 
 import java.io.IOException;
 
-public class SGServer {
+public class SQLGeneratorServer {
     private Server server;
     private final ServerProperty serverProperty = new ServerProperty();
 
@@ -44,7 +40,7 @@ public class SGServer {
                 .addShutdownHook(
                         new Thread(() -> {
                         System.out.println("Shutting down server");
-                        SGServer.this.stop();
+                        SQLGeneratorServer.this.stop();
                         })
                 );
     }
@@ -62,9 +58,9 @@ public class SGServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        SGServer sgServer = new SGServer();
-        sgServer.start();
-        sgServer.blockUntilShutdown();
+        SQLGeneratorServer SQLGeneratorServer = new SQLGeneratorServer();
+        SQLGeneratorServer.start();
+        SQLGeneratorServer.blockUntilShutdown();
     }
 
 //    static class MyServiceImpl extends MyServiceGrpc.MyServiceImplBase {
