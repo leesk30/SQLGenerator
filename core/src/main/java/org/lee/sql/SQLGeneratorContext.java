@@ -28,17 +28,23 @@ public final class SQLGeneratorContext  {
     private final MetaEntry entries;
     private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
+    private final boolean isShared;
 
     private SQLGeneratorContext(InternalConfig config){
+        this(config, false);
+    }
+
+    private SQLGeneratorContext(InternalConfig config, boolean isShared){
         this.config = config;
         this.provider = RuntimeConfigurationProvider.getProvider(config);
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable(config.getGeneratePolicy());
+        this.isShared = isShared;
         load();
     }
 
     private synchronized void load(){
-        logger.info("Starting to loading meta entries and signatures");
+        logger.info(String.format("Starting to loading meta entries and signatures. Shared: %s ID: %s", isShared, uuid));
         this.entries.init(config.getMetaEntry());
         this.symbolTable.init(config.getSymbolTable());
     }
@@ -82,7 +88,10 @@ public final class SQLGeneratorContext  {
     }
 
     public SQLGeneratorContext copy(){
-        return new SQLGeneratorContext(this.config.shallowCopy());
+        if(isShared){
+            return this;
+        }
+        return new SQLGeneratorContext(this.config.shallowCopy(), true);
     }
 
     public void setCurrentToLocal(){
@@ -104,9 +113,7 @@ public final class SQLGeneratorContext  {
     }
 
     private static synchronized void setShared(SQLGeneratorContext context){
-        if(sharedContext == null){
-            sharedContext = context.copy();
-        }
+        sharedContext = context.copy();
     }
 
     private static SQLGeneratorContext getCurrentContext(){
@@ -128,7 +135,6 @@ public final class SQLGeneratorContext  {
         if(contextThreadLocal.get() == null){
             SQLGeneratorContext context = new SQLGeneratorContext(config);
             contextThreadLocal.set(context);
-            setShared(context);
         }
         return contextThreadLocal.get();
     }
@@ -138,7 +144,6 @@ public final class SQLGeneratorContext  {
             InternalConfig config = InternalConfigs.create(inputMetaEntries);
             SQLGeneratorContext context = new SQLGeneratorContext(config);
             contextThreadLocal.set(context);
-            setShared(context);
         }
         return contextThreadLocal.get();
     }
