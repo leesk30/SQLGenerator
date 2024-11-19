@@ -134,7 +134,13 @@ public class CommonExpressionGenerator
     private Expression growth(Symbol symbol, int incrementalDepth, boolean hintChildrenFlagEnableAggregate){
         final Expression expression = new Expression(symbol);
         final Scalar[] scalars = statistic.findMatchedForSignature(symbol);
-        final boolean childrenEnableAggregation = hintChildrenFlagEnableAggregate || !(symbol instanceof Aggregation);
+        final boolean childrenEnableAggregation;
+        // First priority check the hint. If parent hint not allow the children use hint aggregator.
+        if(!hintChildrenFlagEnableAggregate){
+            childrenEnableAggregation = false;
+        }else {
+            childrenEnableAggregation = !(symbol instanceof Aggregation);
+        }
         // The arguments must be ordered.
         for (int i = 0; i < symbol.argsNum(); i++){
             final TypeTag targetType = symbol.getArgumentsTypes().get(i);
