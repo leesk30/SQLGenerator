@@ -21,7 +21,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <maven.plugin.version>3.8.1</maven.plugin.version>
+        <maven.compile.plugin.version>3.8.1</maven.compile.plugin.version>
+        <maven.install.plugin.version>3.1.1</maven.install.plugin.version>
+        <maven.deploy.plugin.version>3.1.1</maven.deploy.plugin.version>
 
         <grpc.version>1.29.0</grpc.version>
         <protobuf.version>3.11.0</protobuf.version>
@@ -188,7 +190,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${maven.plugin.version}</version>
+                    <version>${maven.compile.plugin.version}</version>
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
@@ -198,13 +200,13 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>${maven.plugin.version}</version>
+                    <version>${maven.install.plugin.version}</version>
                 </plugin>
 
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>${maven.plugin.version}</version>
+                    <version>${maven.deploy.plugin.version}</version>
                 </plugin>
 
             </plugins>
