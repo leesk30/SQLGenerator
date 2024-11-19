@@ -1,7 +1,7 @@
 package org.lee;
 
 
-import org.lee.server.SGServer;
+import org.lee.server.SQLGeneratorServer;
 
 import java.io.IOException;
 
@@ -9,9 +9,9 @@ import java.io.IOException;
 public class SGServerMain {
 
     private static void serverStart() throws IOException, InterruptedException {
-        SGServer sgServer = new SGServer();
-        sgServer.start();
-        sgServer.blockUntilShutdown();
+        SQLGeneratorServer SQLGeneratorServer = new SQLGeneratorServer();
+        SQLGeneratorServer.start();
+        SQLGeneratorServer.blockUntilShutdown();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

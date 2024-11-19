@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+option java_outer_classname = "SQLGeneratorService";
+option java_package = "org.lee.protos.generator";
+option java_multiple_files = false;
+
+option py_generic_services = true;
+
+import "Common.proto";
+
+service SQLGenerator {
+  rpc context(ContextRequest) returns (Context) {}
+
+  rpc destroy(Context) returns (ActionResponse) {}
+
+  rpc get(StatementRequest) returns (StatementResponse) {}
+  rpc getMany(StatementRequest) returns (stream StatementResponse) {}
+
+  rpc addEntry(AddEntryRequest) returns (ActionResponse) {}
+  rpc addSymbol(AddSymbolRequest) returns (ActionResponse) {}
+
+  rpc loadEntry(stream LoadJsonResourceRequest) returns (ActionResponse) {}
+  rpc loadSymbol(stream LoadJsonResourceRequest) returns (ActionResponse) {}
+
+  rpc getDDL(GetDDLRequest) returns (StatementResponse) {}
+  rpc getDDLs(Context) returns (stream StatementResponse) {}
+  rpc getInitInserts(Context) returns (stream StatementResponse) {}
+
+  rpc setParameter(Parameter) returns (ActionResponse){}
+}
+
+
+message ContextRequest{
+  repeated Parameter parameters = 3;
+}
+
+
+message StatementRequest {
+  Context context = 1;
+  StatementType statementType = 2;
+  int32 num = 3;
+}
+
+message AddEntryRequest{
+  Context context = 1;
+  Entry entry = 2;
+}
+
+
+message AddSymbolRequest{
+  Context context = 1;
+  Symbol symbol = 2;
+}
+
+message GetDDLRequest{
+  Context context = 1;
+  string database = 2;
+  string entry = 3;
+}
+
+message SetParameterRequest{
+  Context context = 1;
+  repeated Parameter parameters = 2;
+}
+
+message LoadJsonResourceRequest{
+  Context context = 1;
+  string jsonString = 2;
+}
+
+
+message StatementResponse {
+  ResponseStatus status = 1;
+  string message = 2;
+  string sql = 3;
+}
+
+message ActionResponse{
+  ResponseStatus status = 1;
+  string message = 2;
+}

@@ -53,6 +53,15 @@ public class GeneratorTest {
     }
 
     @Test
+    public void generateTemplate() throws IOException {
+        InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
+        InternalConfig config = InternalConfigs.create(Mode.diff, stream);
+        MetaEntry entry = new MetaEntry();
+        entry.init(config.getMetaEntry());
+        System.out.println(entry.toTemplateInserts());
+    }
+
+    @Test
     public void testGenerator() throws IOException {
         long startAt = System.currentTimeMillis();
         String output = TestSingleSQLGenerator.outputPath();
