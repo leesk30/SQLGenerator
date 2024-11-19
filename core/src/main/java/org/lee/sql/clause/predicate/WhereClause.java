@@ -1,14 +1,15 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.Generator;
-import org.lee.base.NodeTag;
+import org.lee.common.generator.Fuzzer;
+import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
-import org.lee.generator.common.WeightedAccessor;
+import org.lee.common.utils.RandomUtils;
+import org.lee.generator.common.CombinerAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.clause.from.FromClause;
@@ -45,7 +46,7 @@ public class WhereClause extends PredicateClause {
         SQLType sqlType = statement.getSQLType();
         switch (sqlType){
             case select:
-                return Utility.randomIntFromRange(0, config.getInt(Conf.MAX_SELECT_WHERE_FILTER_NUM));
+                return RandomUtils.randomIntFromRange(0, config.getInt(Conf.MAX_SELECT_WHERE_FILTER_NUM));
             case values:
             case update:
             case insert:
@@ -58,7 +59,7 @@ public class WhereClause extends PredicateClause {
 
     @Override
     protected Generator<Qualification> createPredicateGenerator() {
-        WeightedAccessor.Combiner<Qualification> generatorCombiner = WeightedAccessor.getCombiner(100);
+        CombinerAccessor<Qualification> generatorCombiner = new CombinerAccessor<>(100);
         List<FieldReference> candidates = new ArrayList<>();
         FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         for(RangeTableReference ref: fromClause.getChildNodes()){

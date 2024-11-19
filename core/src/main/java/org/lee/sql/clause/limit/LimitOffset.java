@@ -1,6 +1,6 @@
 package org.lee.sql.clause.limit;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.literal.Literal;
 import org.lee.sql.literal.LiteralInt;

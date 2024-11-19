@@ -1,8 +1,8 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.Generator;
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
+import org.lee.common.generator.Generator;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.JoinQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.entry.RangeTableReference;
@@ -54,7 +54,7 @@ public abstract class JoinClause extends PredicateClause {
     @Override
     public void fuzz() {
         Generator<Qualification> generator = createPredicateGenerator();
-        int generateNum = Utility.randomIntFromRange(1, 2);
+        int generateNum = RandomUtils.randomIntFromRange(1, 2);
         for(int i = 0; i < generateNum; i++){
             filter.add(generator.generate());
         }

@@ -1,6 +1,6 @@
 package org.lee.sql.clause.project;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.statement.select.SelectClauseStatement;
@@ -24,9 +24,9 @@ public class SelectClauseWithoutFrom extends SelectClause{
         SelectStatement statement = (SelectStatement) retrieveParent();
         final CommonExpressionGenerator generator = createProjectionGenerator();
         if(statement.getProjectTypeLimitation().isEmpty()){
-            final int count = Utility.randomIntFromRange(1, 7);
+            final int count = RandomUtils.randomIntFromRange(1, 7);
             for(int i = 0; i < count; i++){
-                if(Utility.probability(20)){
+                if(RandomUtils.probability(20)){
                     processEntry(generator.getLiteral());
                 }else {
                     processEntry(generator.generate());
@@ -34,7 +34,7 @@ public class SelectClauseWithoutFrom extends SelectClause{
             }
         }else {
             for(TypeTag requiredType : statement.getProjectTypeLimitation()){
-                if(Utility.probability(20)){
+                if(RandomUtils.probability(20)){
                     processEntry(generator.generate(requiredType));
                 }else {
                     processEntry(generator.generate(requiredType));

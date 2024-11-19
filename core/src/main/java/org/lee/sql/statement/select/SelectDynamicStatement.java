@@ -1,6 +1,6 @@
 package org.lee.sql.statement.select;
 
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;

@@ -1,6 +1,6 @@
 package org.lee.sql.type.mapped;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.literal.LiteralDate;
 import org.lee.sql.type.TypeTag;
 
@@ -22,6 +22,6 @@ public class MappedDate extends MappedType<Date> {
 
     @Override
     public LiteralDate generate(int partial) {
-        return new LiteralDate(Utility.randomDate(partial));
+        return new LiteralDate(RandomUtils.randomDate(partial));
     }
 }

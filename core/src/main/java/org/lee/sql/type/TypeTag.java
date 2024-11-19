@@ -1,8 +1,8 @@
 package org.lee.sql.type;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.common.exception.ValueCheckFailedException;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.symbol.Parentheses;
 import org.lee.sql.symbol.Symbol;
@@ -110,11 +110,11 @@ public enum TypeTag {
     }
 
     public static TypeTag randomGenerateTarget(){
-        return Utility.randomlyChooseFrom(GENERATE_PREFER_CHOOSE);
+        return RandomUtils.randomlyChooseFrom(GENERATE_PREFER_CHOOSE);
     }
 
     public static TypeTag randomGenerateScalarTarget(){
-        return Utility.randomlyChooseFrom(SQLGeneratorContext.getCurrentSymbolTable().getAllAggregateReturnType());
+        return RandomUtils.randomlyChooseFrom(SQLGeneratorContext.getCurrentSymbolTable().getAllAggregateReturnType());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package org.lee.unittest;
 
-import org.lee.common.debug.Printer;
+import org.lee.common.utils.NodeUtils;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.SQLGeneratorContext;
@@ -64,48 +64,49 @@ public class ExpressionMethodUnitTest {
     public void testExpressionCasting(){
         CommonExpressionGenerator generator = new CommonExpressionGenerator(ExpressionLocation.project, false, false, null, Collections.emptyList());
         IntStream.range(0, 50).parallel().forEach(
-                i -> {Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
+                i -> {
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
                     System.out.println("=====================================================================");
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
-                    Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));}
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+                    NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));}
         );
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
         System.out.println("=====================================================================");
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
-        Printer.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.bigint, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.char_, TypeTag.int_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.int_, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.date, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.char_, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.timestamp, TypeTag.string, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.boolean_, TypeTag.date, 3));
+        NodeUtils.printList(context.getSymbolTable().findCasterSignatures(TypeTag.date, TypeTag.boolean_, 3));
     }
 }

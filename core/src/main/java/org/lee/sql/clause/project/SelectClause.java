@@ -1,7 +1,7 @@
 package org.lee.sql.clause.project;
 
-import org.lee.base.NodeTag;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.complex.TargetEntry;

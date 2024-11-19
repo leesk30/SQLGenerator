@@ -1,6 +1,6 @@
 package org.lee.sql.type.mapped;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.literal.LiteralTimestamp;
 import org.lee.sql.type.TypeTag;
 
@@ -24,6 +24,6 @@ public final class MappedTimestamp extends MappedType<Timestamp> {
 
     @Override
     public LiteralTimestamp generate(int partial) {
-        return new LiteralTimestamp(Utility.randomTimestamp(partial));
+        return new LiteralTimestamp(RandomUtils.randomTimestamp(partial));
     }
 }

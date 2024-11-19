@@ -2,8 +2,8 @@ package org.lee.sql.entry.relation;
 
 import org.apache.commons.lang3.StringUtils;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.debug.Printer;
+import org.lee.common.utils.NodeUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.type.TypeTag;
 
@@ -11,8 +11,8 @@ import java.util.*;
 
 public final class Unpivot extends Pivoted{
 
-    private final boolean excludedNulls = Utility.probability(50);
-    private final boolean representExcludedNulls = excludedNulls && Utility.probability(50);
+    private final boolean excludedNulls = RandomUtils.probability(50);
+    private final boolean representExcludedNulls = excludedNulls && RandomUtils.probability(50);
     private int groupSize;
 
     private UnpivotNameField unpivotNameField = null;
@@ -38,7 +38,7 @@ public final class Unpivot extends Pivoted{
 
     private List<List<Field>> getUnpivotCandidate(){
         Map<TypeTag, List<Field>> groupBy = new EnumMap<>(TypeTag.class);
-        Utility.groupByType(getCandidateList(), groupBy);
+        NodeUtils.groupByType(getCandidateList(), groupBy);
         Set<TypeTag> groupByKey = groupBy.keySet();
         int i=0, maxSize = 0;
         int[] sizeArr = new int[groupByKey.size()];
@@ -48,7 +48,7 @@ public final class Unpivot extends Pivoted{
             i++;
         }
         // todo: optimize group size
-        groupSize = Utility.randomIntFromRange(1, sizeArr.length);
+        groupSize = RandomUtils.randomIntFromRange(1, sizeArr.length);
         int minSize = Arrays.stream(sizeArr).min().orElse(-1);
         List<List<Field>> candidates = new ArrayList<>();
         for(TypeTag type: groupByKey){
@@ -90,9 +90,9 @@ public final class Unpivot extends Pivoted{
 
         if(!shouldRemovedField.isEmpty()){
             LOGGER.error("The field should be removed is not empty after process!");
-            LOGGER.error("ShouldRemoved: " + Printer.formatNodeList(shouldRemovedField));
-            LOGGER.error("FieldList: " + Printer.formatNodeList(fieldList));
-            LOGGER.error("OriginalFieldList: " + Printer.formatNodeList(getCandidateList()));
+            LOGGER.error("ShouldRemoved: " + NodeUtils.formatNodeList(shouldRemovedField));
+            LOGGER.error("FieldList: " + NodeUtils.formatNodeList(fieldList));
+            LOGGER.error("OriginalFieldList: " + NodeUtils.formatNodeList(getCandidateList()));
         }
 
         fieldList.add(unpivotNameField);
@@ -120,12 +120,12 @@ public final class Unpivot extends Pivoted{
             int factor = Math.max(0, forInFieldGroups.size() - maxGrouped);
             prob = factor == 0 ? 100 : prob /factor;
             forInFieldGroups.add(group);
-        }while (!isEmpty && Utility.probability(prob));
+        }while (!isEmpty && RandomUtils.probability(prob));
 
         Assertion.requiredFalse(forInFieldGroups.isEmpty());
-        unpivotNameField = new UnpivotNameField(Utility.getRandomName("upn_"), TypeTag.string);
+        unpivotNameField = new UnpivotNameField(RandomUtils.getRandomName("upn_"), TypeTag.string);
         for(Field raw: forInFieldGroups.get(0)){
-            unpivotFieldList.add(new UnpivotField(Utility.getRandomName("up_"), raw.getType()));
+            unpivotFieldList.add(new UnpivotField(RandomUtils.getRandomName("up_"), raw.getType()));
         }
         processField(shouldRemovedField);
     }
@@ -149,7 +149,7 @@ public final class Unpivot extends Pivoted{
 
     private String getForLoopString(){
         String loop = StringUtils.joinWith(", ", forInFieldGroups.stream().map(element -> {
-            final String asNewName = SPACE + AS + SPACE + Utility.getRandomName("UPF_");
+            final String asNewName = SPACE + AS + SPACE + RandomUtils.getRandomName("UPF_");
             if(element.size() > 1){
                 return LP + nodeArrayToString(element) + RP + asNewName;
             }

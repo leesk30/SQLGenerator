@@ -1,10 +1,10 @@
 package org.lee.generator.expression.basic;
 
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.Rule;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.complex.AdaptiveRecordScalar;
@@ -35,7 +35,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
     }
 
     default Qualification predicateFieldAndLiteral(){
-        Scalar left = Utility.randomlyChooseFrom(getStatistic().getAllCandidates());
+        Scalar left = RandomUtils.randomlyChooseFrom(getStatistic().getAllCandidates());
         Scalar right = getContextFreeScalar(left.getType());
         Symbol symbol = getCompareOperator(left.getType(), right.getType());
         return new Qualification(symbol).newChild(left).newChild(right);
@@ -83,7 +83,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         final GeneratorStatistic statistic = getStatistic();
         final Scalar scalar = statistic.findAny();
         Assertion.requiredNonNull(scalar);
-        final Comparator comparator = Utility.probability(50) ? Comparator.IS_NULL : Comparator.IS_NOT_NULL;
+        final Comparator comparator = RandomUtils.probability(50) ? Comparator.IS_NULL : Comparator.IS_NOT_NULL;
         return new Qualification(comparator).newChild(scalar);
     }
 
@@ -134,12 +134,12 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         }else {
             targetCandidates = probability(50)? dateCandidates : numberCandidates;
         }
-        Scalar targetField = Utility.randomlyChooseFrom(targetCandidates);
+        Scalar targetField = RandomUtils.randomlyChooseFrom(targetCandidates);
 
         if(targetCandidates.size() <= 1 || probability(50)){
             return ExprGeneratorUtils.compareToRangeLiteral(targetField);
         }
-        return ExprGeneratorUtils.compareToRangeLiteral(targetField, Utility.randomlyChooseFrom(targetCandidates));
+        return ExprGeneratorUtils.compareToRangeLiteral(targetField, RandomUtils.randomlyChooseFrom(targetCandidates));
     }
 
 }

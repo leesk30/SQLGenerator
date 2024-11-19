@@ -1,10 +1,10 @@
 package org.lee.sql.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
@@ -56,7 +56,7 @@ public class TargetEntry implements Normalized<Scalar>, Scalar, Alias {
 
     public static TargetEntry newNamedEntry(TypeTag typeTag){
         return new TargetEntry(new NameProxy(
-                Utility.getRandomName("n_"),
+                RandomUtils.getRandomName("n_"),
                 typeTag
         ));
     }
@@ -76,7 +76,7 @@ public class TargetEntry implements Normalized<Scalar>, Scalar, Alias {
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }
-        alias = Utility.getRandomName("te_");
+        alias = RandomUtils.getRandomName("te_");
     }
 
     @Override

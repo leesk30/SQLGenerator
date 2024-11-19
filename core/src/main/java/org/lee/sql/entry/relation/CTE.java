@@ -1,14 +1,14 @@
 package org.lee.sql.entry.relation;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.statement.Projectable;
 
 public class CTE extends SubRTE {
     protected String cteName;
     public CTE(Projectable statement){
         super(statement);
-        this.cteName = Utility.getRandomName("CTE_");
+        this.cteName = RandomUtils.getRandomName("CTE_");
     }
 
     @Override

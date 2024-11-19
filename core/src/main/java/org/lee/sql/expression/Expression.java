@@ -1,9 +1,9 @@
 package org.lee.sql.expression;
 
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Operator;
 import org.lee.sql.symbol.Parentheses;

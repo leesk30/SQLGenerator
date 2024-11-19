@@ -1,9 +1,9 @@
 package org.lee.sql.support;
 
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.relation.Partition;
 import org.lee.sql.entry.relation.Pivoted;
 import org.lee.sql.entry.relation.RangeTableEntry;
@@ -28,7 +28,7 @@ public interface SupportRangeTableTransform extends SupportRuntimeConfiguration 
             // cannot pass to probability
             return relation;
         }
-        return Utility.randomlyChooseFrom(partitions);
+        return RandomUtils.randomlyChooseFrom(partitions);
     }
 
     default RangeTableEntry randomlyTransformToPivoted(RangeTableEntry entry){

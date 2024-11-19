@@ -1,6 +1,6 @@
 package org.lee.sql.type.mapped;
 
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.literal.LiteralString;
 import org.lee.sql.type.TypeTag;
 
@@ -16,12 +16,12 @@ public class MappedString extends MappedType<String> {
 
     @Override
     public LiteralString generate() {
-        return new LiteralString(Utility.randomStringByLength(10));
+        return new LiteralString(RandomUtils.randomStringByLength(10));
     }
 
     @Override
     public LiteralString generate(int partial) {
-        partial = Math.min(partial, Utility.ACTUALLY_MAX_STRINGS);
-        return new LiteralString(Utility.randomStringByLength(partial));
+        partial = Math.min(partial, RandomUtils.ACTUALLY_MAX_STRINGS);
+        return new LiteralString(RandomUtils.randomStringByLength(partial));
     }
 }

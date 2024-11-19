@@ -1,8 +1,8 @@
 package org.lee.sql.entry;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.base.NodeTag;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.complex.RTEJoin;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.ValuesRelation;
@@ -87,7 +87,7 @@ public final class RangeTableReference implements Normalized<RangeTableEntry>, A
         if(hasAlias()){
             throw new RuntimeException("The alias has already been set.");
         }
-        refName = Utility.getRandomName("r_");
+        refName = RandomUtils.getRandomName("r_");
     }
 
     @Override

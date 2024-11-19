@@ -1,10 +1,10 @@
 package org.lee.sql.clause.from;
 
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.global.MetaEntry;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
+import org.lee.resource.MetaEntry;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.RangeTableReference;
@@ -84,10 +84,10 @@ public abstract class FromClause extends Clause<RangeTableReference>
             if(probability(99)){
                 return currentCTECandidates.remove(0);
             }else {
-                return Utility.randomlyChooseFrom(currentCTECandidates);
+                return RandomUtils.randomlyChooseFrom(currentCTECandidates);
             }
         }
-        return Utility.randomlyChooseFrom(allOfCandidates);
+        return RandomUtils.randomlyChooseFrom(allOfCandidates);
     }
 
     protected void initializeCandidate(){
@@ -97,7 +97,7 @@ public abstract class FromClause extends Clause<RangeTableReference>
             currentCTECandidates.addAll(((SupportCommonTableExpression) this.statement).getCTEs());
         }
         // related cte is prob
-        if(Utility.probability(50)){
+        if(RandomUtils.probability(50)){
             allOfCandidates.addAll(statement.recursiveGetCTEs());
         }
     }

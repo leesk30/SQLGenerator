@@ -1,7 +1,7 @@
 package org.lee.testutils;
 
-import org.lee.common.Utility;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.utils.RandomUtils;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
@@ -15,7 +15,7 @@ public class Convert {
         final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
         final List<Symbol> symbols = new ArrayList<>();
         for(TypeTag target: path){
-            Symbol symbol = Utility.randomlyChooseFrom(symbolTable.getCaster(source, target));
+            Symbol symbol = RandomUtils.randomlyChooseFrom(symbolTable.getCaster(source, target));
             source = target;
             symbols.add(symbol);
         }

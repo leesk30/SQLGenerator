@@ -1,11 +1,11 @@
 package org.lee.sql.support;
 
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.Rule;
 import org.lee.common.exception.BadConfigurationError;
 import org.lee.common.exception.InternalError;
+import org.lee.common.utils.RandomUtils;
 
 public interface SupportRuntimeConfiguration {
     RuntimeConfiguration getConfig();
@@ -19,7 +19,7 @@ public interface SupportRuntimeConfiguration {
 
     default boolean probability(Conf name){
         try {
-            return Utility.probability(getConfig().getShort(name));
+            return RandomUtils.probability(getConfig().getShort(name));
         }catch (NumberFormatException e){
             if(!name.isProb()){
                 // Like an assertion error
@@ -31,11 +31,11 @@ public interface SupportRuntimeConfiguration {
     }
 
     default boolean probability(int prob){
-        return Utility.probability(prob);
+        return RandomUtils.probability(prob);
     }
 
     default boolean probability(short prob){
-        return Utility.probability(prob);
+        return RandomUtils.probability(prob);
     }
 
     default void setConfig(Rule name, boolean value){

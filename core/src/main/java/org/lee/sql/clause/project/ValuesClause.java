@@ -1,8 +1,8 @@
 package org.lee.sql.clause.project;
 
-import org.lee.base.NodeTag;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.complex.Record;
 import org.lee.sql.entry.complex.TargetEntry;
@@ -50,7 +50,7 @@ public abstract class ValuesClause extends Clause<Record> {
         return IntStream.range(0, width)
                 .sequential()
                 .mapToObj(
-                        i -> Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE))
+                        i -> RandomUtils.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE))
                 .collect(Collectors.toList());
     }
 

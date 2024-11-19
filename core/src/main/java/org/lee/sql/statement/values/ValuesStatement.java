@@ -1,7 +1,7 @@
 package org.lee.sql.statement.values;
 
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.ValuesLimitOffset;

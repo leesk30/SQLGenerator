@@ -1,6 +1,6 @@
 package org.lee;
 
-import org.lee.common.global.SymbolTable;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.type.TypeTag;
 

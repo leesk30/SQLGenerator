@@ -1,9 +1,9 @@
 package org.lee.sql.entry.relation;
 
-import org.lee.base.Fuzzer;
-import org.lee.base.NodeTag;
+import org.lee.common.generator.Fuzzer;
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
+import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
 import org.slf4j.Logger;
@@ -43,7 +43,7 @@ public abstract class Pivoted implements Normalized<RangeTableEntry>, RangeTable
     public static Pivoted fuzzy(RangeTableEntry entry){
         Pivoted converted;
         // todo: add configuration for pivot
-        if(Utility.probability(70)){
+        if(RandomUtils.probability(70)){
             converted = new Pivot(entry);
         }else {
             converted = new Unpivot(entry);

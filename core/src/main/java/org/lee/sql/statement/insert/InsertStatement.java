@@ -1,7 +1,7 @@
 package org.lee.sql.statement.insert;
 
 import org.lee.base.Node;
-import org.lee.base.NodeTag;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.modify.ModifyTableClause;
 import org.lee.sql.statement.AbstractSQLStatement;

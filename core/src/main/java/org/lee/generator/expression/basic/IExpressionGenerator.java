@@ -1,13 +1,13 @@
 package org.lee.generator.expression.basic;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
-import org.lee.common.config.Rule;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.enumeration.Rule;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -48,7 +48,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     default Scalar getContextFreeScalar(TypeTag typeTag){
         final SQLStatement statement = retrieveParent();
         final boolean enableScalarSubquery = statement == null || statement.enableSubquery();
-        final int prob = Utility.randomIntFromRange(0, 100);
+        final int prob = RandomUtils.randomIntFromRange(0, 100);
         if(enableScalarSubquery && prob < 1){
             return getScalarSubquery(typeTag);
         }
@@ -58,7 +58,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     default  Scalar getContextSensitiveScalar(TypeTag typeTag){
         final SQLStatement statement = retrieveParent();
         final boolean enableScalarSubquery = statement == null || statement.enableSubquery();
-        final int prob = Utility.randomIntFromRange(0, 100);
+        final int prob = RandomUtils.randomIntFromRange(0, 100);
         if(enableScalarSubquery && prob < 1){
             // context-sensitive generate a related scalar subquery
             return getRelatedScalarSubquery(typeTag);
@@ -114,7 +114,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
         }
         Expression currentExpression = expression;
         for(TypeTag next: paths){
-            Symbol symbol = Utility.randomlyChooseFrom(symbolTable.getCaster(currentExpression.getType(), next));
+            Symbol symbol = RandomUtils.randomlyChooseFrom(symbolTable.getCaster(currentExpression.getType(), next));
             Assertion.requiredNonNull(symbol); // impossible
             currentExpression = new Expression(symbol).newChild(currentExpression);
         }
@@ -129,7 +129,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getLiteral(){
-        return getLiteral(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
+        return getLiteral(RandomUtils.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE));
     }
 
     default Scalar getLiteral(int partial){

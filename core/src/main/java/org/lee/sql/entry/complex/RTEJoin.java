@@ -1,7 +1,7 @@
 package org.lee.sql.entry.complex;
 
 import org.apache.commons.lang3.StringUtils;
-import org.lee.common.Utility;
+import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.predicate.JoinClause;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.RangeTableReference;
@@ -53,7 +53,7 @@ public class RTEJoin extends JoinClause implements RangeTableEntry {
 
     @Override
     public void fuzz() {
-        pattern = Utility.randomlyChooseFrom(Pattern.IGNORE_NATUAL);
+        pattern = RandomUtils.randomlyChooseFrom(Pattern.IGNORE_NATUAL);
         super.fuzz();
     }
 }

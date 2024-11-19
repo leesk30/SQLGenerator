@@ -1,13 +1,14 @@
 package org.lee.generator.expression;
 
-import org.lee.common.Utility;
-import org.lee.common.config.Conf;
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.common.global.SymbolTable;
+import org.lee.common.enumeration.Conf;
+import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.basic.AbstractExpressionGenerator;
 import org.lee.generator.expression.basic.ExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
+import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -47,7 +48,7 @@ public class CommonExpressionGenerator
     }
 
     public List<Symbol> getCandidateSignatures(TypeTag root, boolean childrenFlagEnableAggregate){
-        final List<Symbol> copiedSymbol = Utility.copyList(symbolTable.getFunctionByReturn(root));
+        final List<Symbol> copiedSymbol = CollectionUtils.copyList(symbolTable.getFunctionByReturn(root));
         final List<Symbol> operators = symbolTable.getOperatorByReturn(root);
 
         if(operators != null){
@@ -73,7 +74,7 @@ public class CommonExpressionGenerator
         final List<Symbol> copiedSymbol = getCandidateSignatures(root, childrenFlagEnableAggregate);
         Collections.shuffle(copiedSymbol);
         while (!copiedSymbol.isEmpty()){
-            final Symbol symbol = Utility.pop(copiedSymbol);
+            final Symbol symbol = RandomUtils.pop(copiedSymbol);
             if(symbol == null){
                 return fallback(root);
             }
@@ -97,7 +98,7 @@ public class CommonExpressionGenerator
 
     private boolean suitable(Symbol symbol){
 //        System.out.println(statistic.suitableFactorProb());
-        return Utility.probability(statistic.suitableFactorProb(symbol));
+        return RandomUtils.probability(statistic.suitableFactorProb(symbol));
     }
 
     private boolean preferRecursion(Symbol symbol, int currentDepth){
@@ -148,7 +149,7 @@ public class CommonExpressionGenerator
 
     @Override
     public Expression generate() {
-        return generate(Utility.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE), 0);
+        return generate(RandomUtils.randomlyChooseFrom(TypeTag.GENERATE_PREFER_CHOOSE), 0);
     }
 
     @Override

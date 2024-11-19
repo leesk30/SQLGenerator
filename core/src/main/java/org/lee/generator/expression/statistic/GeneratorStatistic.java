@@ -1,8 +1,8 @@
 package org.lee.generator.expression.statistic;
 
 import org.lee.common.NamedLoggers;
-import org.lee.common.Utility;
 import org.lee.common.structure.Pair;
+import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExprGeneratorUtils;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
@@ -44,7 +44,7 @@ public interface GeneratorStatistic {
     int suitableFactorProb(Symbol symbol);
 
     default Scalar findAny(TypeTag typeTag){
-        return Utility.randomlyChooseFrom(findMatch(typeTag));
+        return RandomUtils.randomlyChooseFrom(findMatch(typeTag));
     }
 
     default Scalar tryFastConvert(Scalar candidate, TypeTag target){
