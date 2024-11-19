@@ -6,6 +6,7 @@ public enum ErrorCode {
     BAD_CONFIGURATION_ERROR(100001, "bad configuration"),
     NOT_IMPLEMENTED_ERROR(100002, "The class or method does not implement yet."),
     UNREACHABLE_ERROR(100003, "Unreachable code"),
+    UNRECOGNIZED_ERROR(100004, "Unrecognized value"),
 
     ;
     private final int code;

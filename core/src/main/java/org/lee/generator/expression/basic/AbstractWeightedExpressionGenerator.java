@@ -1,8 +1,8 @@
 package org.lee.generator.expression.basic;
 
 
-import org.lee.base.Generator;
-import org.lee.generator.common.WeightedAccessor;
+import org.lee.common.generator.Generator;
+import org.lee.common.generator.WeightedAccessor;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;

@@ -2,7 +2,7 @@ package org.lee.integration;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.lee.generator.statement.SQLGenerator;
+import org.lee.generator.SQLGenerator;
 import org.lee.integration.client.Execution;
 import org.lee.sql.statement.select.SelectStatement;
 import org.testng.annotations.Test;

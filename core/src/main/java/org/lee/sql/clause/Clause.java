@@ -1,6 +1,6 @@
 package org.lee.sql.clause;
 
-import org.lee.base.Fuzzer;
+import org.lee.common.generator.Fuzzer;
 import org.lee.base.Node;
 import org.lee.base.TreeNode;
 import org.lee.common.config.RuntimeConfiguration;

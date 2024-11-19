@@ -1,6 +1,6 @@
 package org.lee.sql.entry.relation;
 
-import org.lee.base.Fuzzer;
+import org.lee.common.generator.Fuzzer;
 import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.utils.RandomUtils;

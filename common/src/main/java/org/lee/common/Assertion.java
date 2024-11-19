@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 public class Assertion {
 
     public static final Supplier<UnreachableError> IMPOSSIBLE = UnreachableError::new;
-    private final static Logger logger = NamedLoggers.getCoreLogger(Assertion.class);
+    private final static Logger logger = NamedLoggers.getCommonLogger(Assertion.class);
 
     public static void requiredTrue(final boolean boolValue){
         if(!boolValue){

@@ -1,6 +1,6 @@
 package org.lee.sql.support;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.Conf;
 import org.lee.common.utils.DebugUtils;

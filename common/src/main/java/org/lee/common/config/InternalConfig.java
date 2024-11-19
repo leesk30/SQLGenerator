@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import java.util.Properties;
 
 public interface InternalConfig{
-    Logger LOGGER = NamedLoggers.getCoreLogger(InternalConfig.class);
+    Logger LOGGER = NamedLoggers.getCommonLogger(InternalConfig.class);
     SyntaxType getSyntaxType();
     Properties getSourceRuntimeConfig();
     Mode getGeneratePolicy();

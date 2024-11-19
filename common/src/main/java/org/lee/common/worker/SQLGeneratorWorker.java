@@ -1,10 +1,7 @@
-package org.lee.portal.worker;
-
-import org.lee.common.SQLFormatter;
+package org.lee.common.worker;
 
 public abstract class SQLGeneratorWorker<INPUT, OUTPUT> implements Worker<INPUT, OUTPUT>{
 
-    protected final SQLFormatter formatter = new SQLFormatter();
     protected boolean terminateFlag = true;
 
     @Override

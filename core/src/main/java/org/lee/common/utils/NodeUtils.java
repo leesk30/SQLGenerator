@@ -40,13 +40,13 @@ public class NodeUtils {
     }
 
     public static <T extends Scalar> Map<TypeTag, List<T>> groupByType(final List<T> candidateList, final Map<TypeTag, List<T>> groupByType){
-        candidateList.forEach(scalar -> {
-            TypeTag type = scalar.getType();
+        for(T candidate: candidateList){
+            TypeTag type = candidate.getType();
             if(!groupByType.containsKey(type)){
                 groupByType.put(type, new ArrayList<>());
             }
-            groupByType.get(type).add(scalar);
-        });
+            groupByType.get(type).add(candidate);
+        }
         return groupByType;
     }
 

@@ -1,5 +1,6 @@
 package org.lee.base;
 
+import org.lee.common.generator.Fuzzer;
 import org.lee.sql.support.Logging;
 import org.lee.sql.support.SupportRuntimeConfiguration;
 

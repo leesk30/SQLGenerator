@@ -1,4 +1,4 @@
-package org.lee.base;
+package org.lee.common.generator;
 
 public interface Generator<T> {
     T generate();

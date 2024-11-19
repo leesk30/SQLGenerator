@@ -1,6 +1,6 @@
 package org.lee.generator.expression.basic;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.enumeration.Conf;
 import org.lee.common.enumeration.Rule;

@@ -6,7 +6,7 @@ import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.config.RuntimeConfigurationProvider;
 import org.lee.common.utils.RandomUtils;
-import org.lee.generator.statement.SQLGenerator;
+import org.lee.generator.SQLGenerator;
 import org.lee.resource.MetaEntry;
 import org.lee.resource.SymbolTable;
 import org.lee.sql.statement.SQLStatement;

@@ -1,6 +1,6 @@
 package org.lee.sql.clause.sort;
 
-import org.lee.base.Fuzzer;
+import org.lee.common.generator.Fuzzer;
 import org.lee.common.Assertion;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.Conf;

@@ -1,6 +1,7 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Fuzzer;
+import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Conf;
@@ -8,7 +9,7 @@ import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
 import org.lee.common.utils.RandomUtils;
-import org.lee.generator.common.WeightedAccessor;
+import org.lee.generator.common.CombinerAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.clause.from.FromClause;
@@ -58,7 +59,7 @@ public class WhereClause extends PredicateClause {
 
     @Override
     protected Generator<Qualification> createPredicateGenerator() {
-        WeightedAccessor.Combiner<Qualification> generatorCombiner = WeightedAccessor.getCombiner(100);
+        CombinerAccessor<Qualification> generatorCombiner = new CombinerAccessor<>(100);
         List<FieldReference> candidates = new ArrayList<>();
         FromClause fromClause = (FromClause) statement.getClause(NodeTag.fromClause);
         for(RangeTableReference ref: fromClause.getChildNodes()){

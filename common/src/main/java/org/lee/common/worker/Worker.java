@@ -1,4 +1,4 @@
-package org.lee.portal.worker;
+package org.lee.common.worker;
 
 public interface Worker<IN, OUT>{
     void terminate();

@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 public class IOUtils {
 
-    private final static Logger LOGGER = NamedLoggers.getCoreLogger(IOUtils.class);
+    private final static Logger LOGGER = NamedLoggers.getCommonLogger(IOUtils.class);
 
     public static String inputStreamToString(InputStream input){
         StringBuilder builder = new StringBuilder();

@@ -1,6 +1,6 @@
 package org.lee.sql.entry.complex;
 
-import org.lee.base.Fuzzer;
+import org.lee.common.generator.Fuzzer;
 import org.lee.base.Node;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;

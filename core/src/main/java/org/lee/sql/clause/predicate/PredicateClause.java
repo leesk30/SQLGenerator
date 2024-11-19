@@ -1,6 +1,6 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.complex.Filter;

@@ -1,6 +1,6 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.JoinQualificationGenerator;

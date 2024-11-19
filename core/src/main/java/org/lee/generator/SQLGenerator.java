@@ -1,6 +1,6 @@
-package org.lee.generator.statement;
+package org.lee.generator;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.select.SelectStatement;
 

@@ -1,6 +1,6 @@
 package org.lee;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.resource.MetaEntry;
 import org.lee.resource.SymbolTable;
 import org.lee.sql.SQLGeneratorContext;

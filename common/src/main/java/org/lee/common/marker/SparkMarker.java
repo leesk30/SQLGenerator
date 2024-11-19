@@ -1,4 +1,4 @@
-package org.lee.base.marker;
+package org.lee.common.marker;
 
 public interface SparkMarker {
 }

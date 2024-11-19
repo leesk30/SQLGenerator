@@ -1,6 +1,6 @@
 package org.lee.sql.type;
 
-import org.lee.base.Generator;
+import org.lee.common.generator.Generator;
 import org.lee.base.Node;
 import org.lee.sql.literal.Literal;
 import org.lee.sql.type.mapped.MappedDecimal;

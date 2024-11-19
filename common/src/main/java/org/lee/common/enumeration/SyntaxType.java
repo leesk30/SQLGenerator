@@ -1,5 +1,7 @@
 package org.lee.common.enumeration;
 
+import org.lee.common.exception.UnrecognizedValueException;
+
 public enum SyntaxType {
     spark,
     rain,
@@ -17,6 +19,6 @@ public enum SyntaxType {
             case "postgresql":
                 return postgres;
         }
-        throw new RuntimeException("Unrecognized syntax type: " + syntax);
+        throw new UnrecognizedValueException("Unrecognized syntax type: " + syntax);
     }
 }

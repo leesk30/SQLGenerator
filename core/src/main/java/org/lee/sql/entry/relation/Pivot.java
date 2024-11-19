@@ -1,8 +1,8 @@
 package org.lee.sql.entry.relation;
 
-import org.lee.base.VoidNode;
 import org.lee.common.Assertion;
 import org.lee.common.config.RuntimeConfigurationProvider;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.RandomUtils;
 import org.lee.resource.SymbolTable;
@@ -48,7 +48,7 @@ public final class Pivot extends Pivoted {
         super(rawEntry);
     }
 
-    private static class PivotEntry implements VoidNode, Scalar {
+    private static class PivotEntry implements Scalar {
         private final String name;
         private final Expression aggregation;
         private PivotEntry(Symbol aggregation, Field targetField, String name) {
@@ -69,6 +69,11 @@ public final class Pivot extends Pivoted {
         @Override
         public TypeTag getType() {
             return aggregation.getType();
+        }
+
+        @Override
+        public NodeTag getNodeTag() {
+            return NodeTag.__;
         }
     }
 
