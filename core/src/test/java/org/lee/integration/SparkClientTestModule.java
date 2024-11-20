@@ -4,7 +4,7 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.lee.integration.client.Execution;
 import org.lee.integration.spark.SparkClient;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.testutils.Simple;
 
 public class SparkClientTestModule {

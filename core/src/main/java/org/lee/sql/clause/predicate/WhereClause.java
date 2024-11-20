@@ -1,13 +1,12 @@
 package org.lee.sql.clause.predicate;
 
-import org.lee.common.generator.Fuzzer;
-import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Conf;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.exception.UnrecognizedValueException;
+import org.lee.common.generator.Generator;
 import org.lee.common.utils.RandomUtils;
 import org.lee.generator.common.CombinerAccessor;
 import org.lee.generator.expression.WhereQualificationGenerator;

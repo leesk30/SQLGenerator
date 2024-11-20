@@ -1,10 +1,10 @@
 package org.lee.sql.statement.select;
 
 import org.lee.common.enumeration.NodeTag;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;
-import org.lee.sql.statement.SQLStatement;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +32,8 @@ public final class SelectDynamicStatement extends SelectStatement{
         this(null);
     }
 
-    private SelectDynamicStatement(SQLStatement parent) {
-        super(SelectType.dynamic, parent);
+    private SelectDynamicStatement(SQLGeneratorContext context) {
+        super(SelectType.dynamic, context);
     }
 
     private String rawBody(){

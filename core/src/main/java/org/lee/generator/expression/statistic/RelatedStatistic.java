@@ -3,6 +3,7 @@ package org.lee.generator.expression.statistic;
 import org.lee.common.structure.Pair;
 import org.lee.common.utils.CollectionUtils;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -20,8 +21,10 @@ class RelatedStatistic implements GeneratorStatistic {
     private final UnrelatedStatistic leftHandSideStatistic;
     private final UnrelatedStatistic rightHandSideStatistic;
     private final UnrelatedStatistic summaryUnrelatedStatistic;
+    private final SQLGeneratorContext context;
 
-    protected RelatedStatistic(List<? extends Scalar> left, List<? extends Scalar> right){
+    protected RelatedStatistic(SQLGeneratorContext ctx, List<? extends Scalar> left, List<? extends Scalar> right){
+        context = ctx;
         leftHandSideCandidates = Collections.unmodifiableList(left);
         rightHandSideCandidates = Collections.unmodifiableList(right);
         summaryCandidates = Collections.unmodifiableList(new ArrayList<Scalar>(leftHandSideCandidates.size() + rightHandSideCandidates.size()){
@@ -30,18 +33,19 @@ class RelatedStatistic implements GeneratorStatistic {
                 addAll(rightHandSideCandidates);
             }
         });
-        leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
-        rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
-        summaryUnrelatedStatistic = new UnrelatedStatistic(summaryCandidates);
+        leftHandSideStatistic = new UnrelatedStatistic(context, leftHandSideCandidates);
+        rightHandSideStatistic = new UnrelatedStatistic(context, rightHandSideCandidates);
+        summaryUnrelatedStatistic = new UnrelatedStatistic(context, summaryCandidates);
     }
 
-    protected RelatedStatistic(UnrelatedStatistic summary, List<? extends Scalar> left, List<? extends Scalar> right){
+    protected RelatedStatistic(SQLGeneratorContext ctx, UnrelatedStatistic summary, List<? extends Scalar> left, List<? extends Scalar> right){
+        context = ctx;
         leftHandSideCandidates = Collections.unmodifiableList(left);
         rightHandSideCandidates = Collections.unmodifiableList(right);
         summaryCandidates = Collections.unmodifiableList(summary.getAllCandidates());
 
-        leftHandSideStatistic = new UnrelatedStatistic(leftHandSideCandidates);
-        rightHandSideStatistic = new UnrelatedStatistic(rightHandSideCandidates);
+        leftHandSideStatistic = new UnrelatedStatistic(context, leftHandSideCandidates);
+        rightHandSideStatistic = new UnrelatedStatistic(context, rightHandSideCandidates);
         summaryUnrelatedStatistic = summary;
     }
 
@@ -188,5 +192,10 @@ class RelatedStatistic implements GeneratorStatistic {
     @Override
     public GeneratorStatistic toRelated() {
         return this;
+    }
+
+    @Override
+    public SQLGeneratorContext retrieveContext() {
+        return context;
     }
 }

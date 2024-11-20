@@ -1,4 +1,4 @@
-package org.lee.generator;
+package org.lee.generator.sql;
 
 import org.lee.common.generator.Generator;
 import org.lee.sql.statement.SQLStatement;

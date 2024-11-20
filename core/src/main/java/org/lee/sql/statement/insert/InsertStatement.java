@@ -2,6 +2,7 @@ package org.lee.sql.statement.insert;
 
 import org.lee.base.Node;
 import org.lee.common.enumeration.NodeTag;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.modify.ModifyTableClause;
 import org.lee.sql.statement.AbstractSQLStatement;
@@ -13,8 +14,8 @@ import java.util.List;
 
 public abstract class InsertStatement extends AbstractSQLStatement implements SupportModifyTable {
 
-    protected InsertStatement() {
-        super(SQLType.insert, null);
+    protected InsertStatement(SQLGeneratorContext context) {
+        super(SQLType.insert, context);
     }
 
     @Override

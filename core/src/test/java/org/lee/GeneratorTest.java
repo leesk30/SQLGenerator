@@ -7,7 +7,7 @@ import org.lee.common.utils.NodeUtils;
 import org.lee.common.utils.RandomUtils;
 import org.lee.portal.worker.SQLGeneratorDefaultThreadWorker;
 import org.lee.resource.MetaEntry;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.statement.SQLStatement;
 import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
@@ -41,9 +41,11 @@ public class GeneratorTest {
     }
 
     @Ignore
-    public static void generateDDLAndData() throws IOException {
-        TestSingleSQLGenerator.load();
-        MetaEntry metaEntry = SQLGeneratorContext.getCurrentMetaEntry();
+    public void generateDDLAndData() throws IOException {
+        InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
+        InternalConfig config = InternalConfigs.create(Mode.diff, stream);
+        SQLGeneratorContext context = new SQLGeneratorContext(config);
+        MetaEntry metaEntry = context.getMetaEntry();
         String results = metaEntry.toDDLs(true, "USING PARQUET");
         try (final FileWriter fileWriter = new FileWriter(TestSingleSQLGenerator.outputInitializedPath())){
             fileWriter.write(results);

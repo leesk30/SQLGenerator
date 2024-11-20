@@ -32,12 +32,15 @@
         <grpc.version>1.29.0</grpc.version>
         <protobuf.version>3.11.0</protobuf.version>
         <org.json.version>20231013</org.json.version>
+
         <commons.lang3.version>3.15.0</commons.lang3.version>
         <commons.math3.version>3.6</commons.math3.version>
         <commons.configuration2.version>2.11.0</commons.configuration2.version>
         <commons.beanutils.version>1.9.4</commons.beanutils.version>
         <commons.codec.version>1.16.0</commons.codec.version>
         <commons.io.version>2.14.0</commons.io.version>
+        <commons.pool2.version>2.5.0</commons.pool2.version>
+
         <google.guava.version>30.1-jre</google.guava.version>
         <cache.caffeine.version>2.7.0</cache.caffeine.version>
         <logging.slf4j.version>1.7.30</logging.slf4j.version>
@@ -92,6 +95,12 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-math3</artifactId>
                 <version>${commons.math3.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-pool2</artifactId>
+                <version>${commons.pool2.version}</version>
             </dependency>
 
             <dependency>

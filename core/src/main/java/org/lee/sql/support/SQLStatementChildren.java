@@ -1,12 +1,13 @@
 package org.lee.sql.support;
 
 import org.lee.common.config.RuntimeConfiguration;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.statement.SQLStatement;
-import org.slf4j.Logger;
 
-public interface SQLStatementChildren extends SupportRuntimeConfiguration, Logging{
+public interface SQLStatementChildren extends SupportRuntimeConfiguration{
     SQLStatement retrieveParent();
+
+    SQLGeneratorContext retrieveContext();
 
     @Override
     default RuntimeConfiguration getConfig(){
@@ -14,15 +15,7 @@ public interface SQLStatementChildren extends SupportRuntimeConfiguration, Loggi
         if(statement != null){
             return retrieveParent().getConfig();
         }
-        return SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
+        return retrieveContext().newRuntimeConfiguration();
     }
 
-    @Override
-    default Logger getLogger() {
-        SQLStatement statement = retrieveParent();
-        if(statement != null){
-            return retrieveParent().getLogger();
-        }
-        return SQLGeneratorContext.getCurrentLogger();
-    }
 }

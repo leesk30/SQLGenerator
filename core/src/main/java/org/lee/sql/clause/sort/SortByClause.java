@@ -1,11 +1,12 @@
 package org.lee.sql.clause.sort;
 
-import org.lee.common.generator.Fuzzer;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.Conf;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
+import org.lee.common.generator.Fuzzer;
 import org.lee.common.utils.RandomUtils;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.Normalized;
@@ -18,12 +19,15 @@ import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.Sortable;
 import org.lee.sql.support.Alias;
 import org.lee.sql.type.TypeTag;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.IntConsumer;
 import java.util.stream.IntStream;
 
 public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
+    private final static Logger LOGGER = NamedLoggers.getCoreLogger(SortByClause.class);
+
     public SortByClause(SQLStatement statement) {
         super(statement);
     }
@@ -200,7 +204,7 @@ public abstract class SortByClause extends Clause<SortByClause.SortEntry> {
     @Override
     public void fuzz(){
         if(statement.confirm(Rule.REWRITER_REORDER)){
-            logger.info("SortClause using rewrite-reorder to generate orderBy.");
+            LOGGER.info("SortClause using rewrite-reorder to generate orderBy.");
             forceOrderByAllProjections();
             return;
         }

@@ -5,7 +5,6 @@ import org.lee.common.utils.CollectionUtils;
 import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.resource.SymbolTable;
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.symbol.Function;
@@ -33,7 +32,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
 
     default Expression fallbackFor(List<Scalar> anyInputs){
         // todo remove theses all
-        GeneratorStatistic statistic = GeneratorStatistic.create(anyInputs);
+        GeneratorStatistic statistic = GeneratorStatistic.create(retrieveContext(), anyInputs);
         Scalar anyScalar = statistic.findAny();
         if(anyScalar != null){
             return anyScalar.toCompleteExpression();
@@ -42,7 +41,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression generateOperatorExpression(Scalar left, Scalar right){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final SymbolTable symbolTable = getSymbolTable();
         List<TypeTag> arg = new ArrayList<>(2);
         arg.add(left.getType());
         arg.add(right.getType());
@@ -58,7 +57,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
     }
 
     default Expression functionUnit(List<Scalar> scalars){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final SymbolTable symbolTable = getSymbolTable();
         final List<Symbol> candidate = symbolTable.getFunction(scalars.stream().map(Scalar::getType).collect(Collectors.toList()));
         Function function = (Function) RandomUtils.randomlyChooseFrom(candidate);
         if(function == null){
@@ -81,7 +80,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
             // like max(a) + b
             Assertion.requiredFalse(expression.isIncludingAggregation());
         }
-        SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        SymbolTable symbolTable = getSymbolTable();
         List<Symbol> input = symbolTable.getAggregateByReturn(targetType);
         if(input != null){
 
@@ -101,7 +100,7 @@ public interface ExpressionGenerator extends IExpressionGenerator<Expression> {
         if(template.isEmpty()){
             return Collections.singletonList(new Expression(getLiteral()));
         }
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final SymbolTable symbolTable = getSymbolTable();
         final int maxSize = Math.min(symbolTable.maxFunctionArgWidth(), scalars.size());
         int epoch = 0;
         do {

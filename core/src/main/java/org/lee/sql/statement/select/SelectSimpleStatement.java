@@ -1,16 +1,13 @@
 package org.lee.sql.statement.select;
 
 
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.complex.TargetEntry;
-import org.lee.sql.statement.SQLStatement;
 
 public final class SelectSimpleStatement extends AbstractSimpleSelectStatement {
-    public SelectSimpleStatement() {
-        super(SelectType.simple);
-    }
 
-    public SelectSimpleStatement(SQLStatement parent) {
-        super(SelectType.simple, parent);
+    public SelectSimpleStatement(SQLGeneratorContext context) {
+        super(SelectType.simple, context);
     }
 
     @Override

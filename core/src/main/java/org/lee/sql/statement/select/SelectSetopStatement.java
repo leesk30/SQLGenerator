@@ -3,6 +3,7 @@ package org.lee.sql.statement.select;
 import org.lee.common.Assertion;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.from.WithClause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.SelectLimitOffset;
@@ -12,11 +13,9 @@ import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.statement.Projectable;
-import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.Sortable;
-import org.lee.sql.statement.SupportCommonTableExpression;
+import org.lee.sql.statement.WithCommonTableExpression;
 import org.lee.sql.statement.values.ValuesStatement;
-import org.lee.sql.support.ProjectableGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ import java.util.stream.Collectors;
 
 public final class SelectSetopStatement
         extends SelectStatement
-        implements Sortable, SupportCommonTableExpression {
+        implements Sortable, WithCommonTableExpression {
     private Projectable left;
     private Projectable right;
     private SetOperation setop;
@@ -42,12 +41,8 @@ public final class SelectSetopStatement
     private final SortByClause sortByClause = new SelectOrderByClause(this);
     private final LimitOffset limitOffset = new SelectLimitOffset(this);
 
-    public SelectSetopStatement() {
-        super(SelectType.setop);
-    }
-
-    public SelectSetopStatement(SQLStatement parent) {
-        super(SelectType.setop, parent);
+    public SelectSetopStatement(SQLGeneratorContext context) {
+        super(SelectType.setop, context);
     }
 
     private String wrappedStatementToPretty(String name, Projectable projectable){
@@ -109,19 +104,18 @@ public final class SelectSetopStatement
     }
 
     private void generateChildStatement(){
-        final ProjectableGenerator generator = new ProjectableGenerator(this);
         if(this.getProjectTypeLimitation().isEmpty()){
             if(RandomUtils.probability(50)){
-                left = generator.generate();
-                right = generator.generate(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                left = context.generateProjectable();
+                right = context.generateProjectable(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }else {
-                right = generator.generate();
-                left = generator.generate(right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                right = context.generateProjectable();
+                left = context.generateProjectable(right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }
             // When parent required statement withTypeLimitation shelled statement should tell its children the limitations.
         }else {
-            left = generator.generate(this.getProjectTypeLimitation());
-            right = generator.generate(this.getProjectTypeLimitation());
+            left = context.generateProjectable(this.getProjectTypeLimitation());
+            right = context.generateProjectable(this.getProjectTypeLimitation());
         }
         requireProjectionLeftSimilarWithRight();
     }

@@ -1,5 +1,6 @@
 package org.lee.generator.expression;
 
+import org.lee.common.NamedLoggers;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.Conf;
 import org.lee.common.utils.CollectionUtils;
@@ -9,13 +10,13 @@ import org.lee.generator.expression.basic.ExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.resource.SymbolTable;
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.symbol.Aggregation;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
+import org.slf4j.Logger;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,9 +26,11 @@ public class CommonExpressionGenerator
         extends AbstractExpressionGenerator<Expression>
         implements ExpressionGenerator {
 
+    private static final Logger LOGGER = NamedLoggers.getCoreLogger(CommonExpressionGenerator.class);
+
     private final boolean parentFlagEnableAggregate;
     private final boolean parentFlagEnableWindow;
-    protected final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+    protected final SymbolTable symbolTable = retrieveContext().getSymbolTable();
 
     public CommonExpressionGenerator(ExpressionLocation location, SQLStatement statement, Scalar ... scalars){
         super(location, statement, Arrays.asList(scalars));

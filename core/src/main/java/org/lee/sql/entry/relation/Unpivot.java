@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.lee.common.Assertion;
 import org.lee.common.utils.NodeUtils;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.type.TypeTag;
 
@@ -18,8 +19,9 @@ public final class Unpivot extends Pivoted{
     private UnpivotNameField unpivotNameField = null;
     private final List<UnpivotField> unpivotFieldList = new ArrayList<>();
     private final List<List<Field>> forInFieldGroups = new ArrayList<>();
-    public Unpivot(RangeTableEntry rawEntry) {
-        super(rawEntry);
+
+    public Unpivot(SQLGeneratorContext context, RangeTableEntry rawEntry) {
+        super(context, rawEntry);
     }
 
     private static class UnpivotField extends Field{

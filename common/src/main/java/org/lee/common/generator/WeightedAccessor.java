@@ -7,7 +7,9 @@ import org.lee.common.structure.Weighted;
 import org.lee.common.utils.RandomUtils;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public abstract class WeightedAccessor<IN, OUT> implements Generator<OUT> {
     private static final Logger LOGGER = NamedLoggers.getCommonLogger(WeightedAccessor.class);

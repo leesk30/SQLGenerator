@@ -2,7 +2,6 @@ package org.lee.integration;
 
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
-import org.lee.generator.SQLGenerator;
 import org.lee.integration.client.Execution;
 import org.lee.sql.statement.select.SelectStatement;
 import org.testng.annotations.Test;
@@ -16,12 +15,11 @@ public class IntegrationTest extends SparkClientTestModule{
 
     @Test
     public void testSparkWithoutData(){
-        SQLGenerator generator = context.getGenerator();
         Map<String, Integer> exceptionCounter = new HashMap<>();
         int total = 500;
         int successCount = 0;
         for(int i=0; i < total; i++){
-            SelectStatement statement = generator.generateSelect();
+            SelectStatement statement = context.generateSelect();
             String code = statement.getString();
             System.out.println("Generated: " + code);
             Execution<Dataset<Row>> execution = client.createExecution(code);

@@ -1,27 +1,22 @@
 package org.lee.generator.expression.basic;
 
-import org.lee.common.generator.Generator;
 import org.lee.common.Assertion;
+import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Conf;
-import org.lee.common.enumeration.Rule;
+import org.lee.common.generator.Generator;
 import org.lee.common.utils.RandomUtils;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.resource.SymbolTable;
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.expression.IExpression;
-import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.SQLStatement;
-import org.lee.sql.statement.select.SelectSimpleStatement;
-import org.lee.sql.support.ProjectableGenerator;
 import org.lee.sql.support.SQLStatementChildren;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeTag;
 import org.slf4j.Logger;
 
-import java.util.Collections;
 import java.util.List;
 
 public interface IExpressionGenerator<T extends IExpression<Expression>>
@@ -29,10 +24,16 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
         Generator<T>,
         SQLStatementChildren {
 
+    Logger LOGGER = NamedLoggers.getCoreLogger(IExpressionGenerator.class);
+
     T fallback();
 
     GeneratorStatistic getStatistic();
     ExpressionLocation getExpressionLocation();
+
+    default SymbolTable getSymbolTable(){
+        return retrieveContext().getSymbolTable();
+    }
 
     default Scalar getScalar(TypeTag typeTag){
         if(probability(50)){
@@ -71,12 +72,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveParent());
-        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
-        projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
-        projectable.fuzz();
-        return projectable.toScalar();
+        return retrieveContext().generateScalarSubquery(typeTag).toScalar();
     }
 
     default Scalar getScalarSubquery(){
@@ -85,17 +81,12 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getRelatedScalarSubquery(TypeTag typeTag){
-        Projectable projectable = ProjectableGenerator.newPreparedScalarProjectable(retrieveParent());
-        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
-        projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
-        projectable.setConfig(Rule.PREFER_RELATED,true);
-        projectable.fuzz();
-        return projectable.toScalar();
+        return retrieveContext().generateRelatedScalarSubquery(typeTag).toScalar();
     }
 
     default Scalar getRelatedScalarSubquery(){
-        return getRelatedScalarSubquery(TypeTag.randomGenerateScalarTarget());
+        TypeTag target = RandomUtils.randomlyChooseFrom(getSymbolTable().getAllAggregateReturnType());
+        return getRelatedScalarSubquery(target);
     }
 
     default Scalar getPseudo(){
@@ -104,12 +95,11 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Expression cast(final Expression expression, final TypeTag target){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final SymbolTable symbolTable = getSymbolTable();
         final int maxCastingDepth = getConfig().getInt(Conf.MAX_CASTING_RECURSION_DEPTH);
         final List<TypeTag> paths = symbolTable.findCasterPath(expression.getType(), target, maxCastingDepth);
-        final Logger logger = getLogger();
         if(paths.isEmpty()){
-            logger.error(String.format("Cannot find any caster for '%s' to '%s'. Fallback to generate an context free scalar", expression.getType(), target));
+            LOGGER.error(String.format("Cannot find any caster for '%s' to '%s'. Fallback to generate an context free scalar", expression.getType(), target));
             return getContextFreeScalar(target).toCompleteExpression();
         }
         Expression currentExpression = expression;
@@ -123,8 +113,6 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getLiteral(TypeTag typeTag){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
-
         return typeTag.asMapped().generate();
     }
 

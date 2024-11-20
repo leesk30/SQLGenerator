@@ -1,6 +1,7 @@
 package org.lee.generator.expression.basic;
 
 
+import org.lee.common.NamedLoggers;
 import org.lee.common.generator.Generator;
 import org.lee.common.generator.WeightedAccessor;
 import org.lee.generator.expression.common.ExpressionLocation;
@@ -8,6 +9,7 @@ import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.expression.Expression;
 import org.lee.sql.statement.SQLStatement;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -15,6 +17,7 @@ import java.util.function.Supplier;
 public abstract class AbstractWeightedExpressionGenerator<T extends Expression>
         extends AbstractExpressionGenerator<T>
             implements IExpressionGenerator<T> {
+    private final static Logger LOGGER = NamedLoggers.getCoreLogger(AbstractWeightedExpressionGenerator.class);
 
     private final WeightedMethodInvoker<T> invoker = new WeightedMethodInvoker<>();
 

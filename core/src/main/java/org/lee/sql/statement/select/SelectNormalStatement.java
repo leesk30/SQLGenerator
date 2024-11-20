@@ -1,5 +1,6 @@
 package org.lee.sql.statement.select;
 
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.from.WithClause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.SelectLimitOffset;
@@ -7,25 +8,20 @@ import org.lee.sql.clause.sort.SelectOrderByClause;
 import org.lee.sql.clause.sort.SortByClause;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.CTE;
-import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.Sortable;
-import org.lee.sql.statement.SupportCommonTableExpression;
+import org.lee.sql.statement.WithCommonTableExpression;
 
 import java.util.List;
 
 public class SelectNormalStatement
         extends AbstractSimpleSelectStatement
-        implements Sortable, SupportCommonTableExpression {
+        implements Sortable, WithCommonTableExpression {
     protected final WithClause withClause = new WithClause(this);
     protected final SortByClause sortByClause = new SelectOrderByClause(this);
     protected final LimitOffset limitOffset = new SelectLimitOffset(this);
 
-    public SelectNormalStatement() {
-        this(null);
-    }
-
-    public SelectNormalStatement(SQLStatement parent) {
-        super(SelectType.normal, parent);
+    public SelectNormalStatement(SQLGeneratorContext context) {
+        super(SelectType.normal, context);
         addClause(withClause);
         addClause(sortByClause);
         addClause(limitOffset);

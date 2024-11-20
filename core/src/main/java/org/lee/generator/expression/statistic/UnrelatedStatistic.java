@@ -1,23 +1,33 @@
 package org.lee.generator.expression.statistic;
 
+import com.github.benmanes.caffeine.cache.Cache;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
 import org.lee.common.utils.CollectionUtils;
 import org.lee.common.utils.NodeUtils;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Scalar;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
 import org.lee.sql.type.TypeTag;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 class UnrelatedStatistic implements GeneratorStatistic{
 
-    protected static final UnrelatedStatistic EMPTY = new UnrelatedStatistic();
+    private static final Cache<SQLGeneratorContext, UnrelatedStatistic> CACHE = Caffeine
+            .newBuilder()
+            .expireAfterAccess(10, TimeUnit.SECONDS)
+            .weakKeys()
+            .maximumSize(100)
+            .build();
 
     private final List<Scalar> candidateList;
+    private final SQLGeneratorContext context;
     private final int totalSize;
     private final Map<TypeTag, List<Scalar>> groupByType = new EnumMap<>(TypeTag.class);
     private final TrieTree<TypeTag, Integer> signatureCalculateResultCache = new TrieTree<>();
@@ -27,14 +37,20 @@ class UnrelatedStatistic implements GeneratorStatistic{
     private RelatedStatistic relatedCache = null;
 
     // empty
-    private UnrelatedStatistic(){
+    private UnrelatedStatistic(SQLGeneratorContext ctx){
         this.candidateList = Collections.emptyList();
         this.totalSize = 0;
+        this.context = ctx;
     }
 
-    protected UnrelatedStatistic(List<? extends Scalar> candidateList){
+    public static synchronized UnrelatedStatistic empty(SQLGeneratorContext context){
+        return CACHE.get(context, UnrelatedStatistic::new);
+    }
+
+    protected UnrelatedStatistic(SQLGeneratorContext ctx, List<? extends Scalar> candidateList){
         this.candidateList = Collections.unmodifiableList(candidateList);
         this.totalSize = candidateList.size();
+        this.context = ctx;
         collect();
     }
 
@@ -267,8 +283,13 @@ class UnrelatedStatistic implements GeneratorStatistic{
             int spliter = all.size() / 2;
             List<? extends Scalar> left = all.subList(0, spliter);
             List<? extends Scalar> right = all.subList(spliter, all.size() - 1);
-            relatedCache = new RelatedStatistic(this, left, right);
+            relatedCache = new RelatedStatistic(context, this, left, right);
         }
         return relatedCache;
+    }
+
+    @Override
+    public SQLGeneratorContext retrieveContext() {
+        return context;
     }
 }

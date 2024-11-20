@@ -11,6 +11,10 @@ public class NamedLoggers {
         common,
     }
 
+    public static Logger getServerLogger(Class<?> cls){
+        return getPrettyNamedLogger(Module.server, cls);
+    }
+
     public static Logger getCoreLogger(Class<?> cls){
         return getPrettyNamedLogger(Module.core, cls);
     }

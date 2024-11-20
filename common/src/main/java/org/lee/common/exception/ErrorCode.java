@@ -8,6 +8,9 @@ public enum ErrorCode {
     UNREACHABLE_ERROR(100003, "Unreachable code"),
     UNRECOGNIZED_ERROR(100004, "Unrecognized value"),
 
+
+    SERVER_INTERNAL_ERROR(500001, "An internal server error occur"),
+    SERVER_REQUEST_ERROR(500002, "Whiling handle a server request an exception occur"),
     ;
     private final int code;
     private final String description;

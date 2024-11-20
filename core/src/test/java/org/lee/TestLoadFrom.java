@@ -2,7 +2,7 @@ package org.lee;
 
 import org.json.JSONObject;
 import org.lee.resource.MetaEntry;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class TestLoadFrom {
         InputStream inputStream = TestLoadFrom.class.getClassLoader().getResourceAsStream("table_schema.json");
         String jsonString = Utils.is2String(inputStream);
         JSONObject jsonObject = new JSONObject(jsonString);
-        MetaEntry metaEntry = SQLGeneratorContext.getCurrentMetaEntry();
+        MetaEntry metaEntry = new MetaEntry();
         metaEntry.init(jsonObject);
         System.out.println(MetaEntry.class);
     }

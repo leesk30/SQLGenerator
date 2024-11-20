@@ -3,7 +3,6 @@ package org.lee.sql.type;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.utils.RandomUtils;
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.symbol.Parentheses;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.mapped.MappedType;
@@ -111,10 +110,6 @@ public enum TypeTag {
 
     public static TypeTag randomGenerateTarget(){
         return RandomUtils.randomlyChooseFrom(GENERATE_PREFER_CHOOSE);
-    }
-
-    public static TypeTag randomGenerateScalarTarget(){
-        return RandomUtils.randomlyChooseFrom(SQLGeneratorContext.getCurrentSymbolTable().getAllAggregateReturnType());
     }
 
     @Override

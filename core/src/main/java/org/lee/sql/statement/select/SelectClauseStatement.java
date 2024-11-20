@@ -1,11 +1,11 @@
 package org.lee.sql.statement.select;
 
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.project.SelectClause;
 import org.lee.sql.clause.project.SelectClauseWithoutFrom;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;
-import org.lee.sql.statement.SQLStatement;
 
 import java.util.Collections;
 import java.util.List;
@@ -15,12 +15,8 @@ public final class SelectClauseStatement extends SelectStatement{
 
     private final SelectClause targetList = new SelectClauseWithoutFrom(this);
 
-    public SelectClauseStatement() {
-        this(null);
-    }
-
-    public SelectClauseStatement(SQLStatement parent) {
-        super(SelectType.clause, parent);
+    public SelectClauseStatement(SQLGeneratorContext context) {
+        super(SelectType.clause, context);
         addClause(targetList);
     }
 

@@ -3,6 +3,7 @@ package org.lee.generator.expression.basic;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.lee.common.config.RuntimeConfiguration;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.entry.scalar.Scalar;
@@ -56,20 +57,20 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
         }
         this.expressionLocation = expressionLocation;
         if(left.isEmpty() && right.isEmpty()){
-            statistic = GeneratorStatistic.create();
+            statistic = GeneratorStatistic.create(statement.retrieveContext());
         }else if(left.isEmpty()){
-            statistic = GeneratorStatistic.create(right);
+            statistic = GeneratorStatistic.create(statement.retrieveContext(), right);
         } else if (right.isEmpty()) {
-            statistic = GeneratorStatistic.create(left);
+            statistic = GeneratorStatistic.create(statement.retrieveContext(), left);
         }else {
-            statistic = GeneratorStatistic.create(left, right);
+            statistic = GeneratorStatistic.create(statement.retrieveContext(), left, right);
         }
         Assertion.requiredNonNull(statistic);
     }
 
     @Override
-    public Logger getLogger(){
-        return LOGGER;
+    public SQLGeneratorContext retrieveContext() {
+        return statement.retrieveContext();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package org.lee.implement;
+package org.lee.server.implement;
 
 import org.lee.protos.generator.SQLGeneratorGrpc;
 

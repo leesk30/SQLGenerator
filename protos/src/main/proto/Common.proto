@@ -4,11 +4,6 @@ option java_outer_classname = "common";
 option java_package = "org.lee.protos.common";
 option java_multiple_files = true;
 
-enum ResponseStatus{
-  success = 0;
-  failed = 1;
-}
-
 enum StatementType{
   select = 0;
   insert = 1;
@@ -39,9 +34,7 @@ enum SymbolType{
   window = 3;
 }
 
-message Context{
-  string contextID = 1;
-}
+message RequestContext{}
 
 message Field{
   string name = 1;

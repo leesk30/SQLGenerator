@@ -1,9 +1,10 @@
 package org.lee.sql.entry.relation;
 
-import org.lee.common.generator.Fuzzer;
 import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.NodeTag;
+import org.lee.common.generator.Fuzzer;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.Normalized;
 import org.lee.sql.entry.scalar.Field;
 import org.slf4j.Logger;
@@ -15,7 +16,9 @@ public abstract class Pivoted implements Normalized<RangeTableEntry>, RangeTable
     protected static final Logger LOGGER = NamedLoggers.getCoreLogger(Pivoted.class);
     protected final RangeTableEntry rawEntry;
     protected final List<Field> fieldList;
-    public Pivoted(RangeTableEntry rawEntry){
+    protected final SQLGeneratorContext context;
+    public Pivoted(SQLGeneratorContext context, RangeTableEntry rawEntry){
+        this.context = context;
         this.rawEntry = rawEntry;
         this.fieldList = new ArrayList<>(rawEntry.getFields().size());
     }
@@ -40,13 +43,13 @@ public abstract class Pivoted implements Normalized<RangeTableEntry>, RangeTable
         return new ArrayList<>(rawEntry.getFields());
     }
 
-    public static Pivoted fuzzy(RangeTableEntry entry){
+    public static Pivoted fuzzy(SQLGeneratorContext context, RangeTableEntry entry){
         Pivoted converted;
         // todo: add configuration for pivot
         if(RandomUtils.probability(70)){
-            converted = new Pivot(entry);
+            converted = new Pivot(context, entry);
         }else {
-            converted = new Unpivot(entry);
+            converted = new Unpivot(context, entry);
         }
         converted.fuzz();
         return converted;

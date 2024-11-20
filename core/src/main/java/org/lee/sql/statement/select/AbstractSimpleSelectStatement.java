@@ -1,5 +1,6 @@
 package org.lee.sql.statement.select;
 
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.clause.from.SelectFromClause;
@@ -11,7 +12,6 @@ import org.lee.sql.entry.complex.Filter;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.scalar.Scalar;
-import org.lee.sql.statement.SQLStatement;
 
 import java.util.List;
 
@@ -25,12 +25,8 @@ public abstract class AbstractSimpleSelectStatement extends SelectStatement {
     protected final GroupByClause groupByClause = new GroupByClause(this);
     protected final HavingClause havingClause = new HavingClause(this);
 
-    public AbstractSimpleSelectStatement(SelectType selectType) {
-        this(selectType, null);
-    }
-
-    public AbstractSimpleSelectStatement(SelectType selectType, SQLStatement parent) {
-        super(selectType, parent);
+    public AbstractSimpleSelectStatement(SelectType selectType, SQLGeneratorContext context) {
+        super(selectType, context);
         addClause(targetList);
         addClause(fromClause);
         addClause(whereClause);

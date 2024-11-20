@@ -2,6 +2,7 @@ package org.lee.sql.statement.values;
 
 import org.lee.base.Node;
 import org.lee.common.enumeration.NodeTag;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.ValuesLimitOffset;
@@ -14,7 +15,6 @@ import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.ValuesRelation;
 import org.lee.sql.statement.AbstractSQLStatement;
 import org.lee.sql.statement.Projectable;
-import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.Sortable;
 import org.lee.sql.statement.common.SQLType;
 import org.lee.sql.type.TypeTag;
@@ -33,16 +33,12 @@ public class ValuesStatement extends AbstractSQLStatement implements Projectable
         this(null);
     }
 
-    public ValuesStatement(SQLStatement parentStatement) {
-        super(SQLType.values, parentStatement);
-        withLogicalParentheses = (parentStatement != null && parentStatement.getSQLType() == SQLType.select);
+    public ValuesStatement(SQLGeneratorContext context) {
+        super(SQLType.values, context);
+        withLogicalParentheses = (parent != null && parent.getSQLType() == SQLType.select);
         addClause(valuesClause);
         addClause(sortByClause);
         addClause(limitOffset);
-    }
-
-    public static ValuesStatement newStatement(){
-        return new ValuesStatement();
     }
 
     @Override

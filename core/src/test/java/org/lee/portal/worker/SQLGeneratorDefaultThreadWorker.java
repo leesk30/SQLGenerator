@@ -2,8 +2,8 @@ package org.lee.portal.worker;
 
 import org.lee.common.config.InternalConfig;
 import org.lee.common.worker.SQLGeneratorWorker;
-import org.lee.generator.SQLGenerator;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.generator.sql.SQLGenerator;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.statement.SQLStatement;
 
 import java.util.concurrent.BlockingQueue;
@@ -39,7 +39,7 @@ public class SQLGeneratorDefaultThreadWorker
     @Override
     public void startup() {
         // do thread local initialize
-        generator = SQLGeneratorContext.getOrCreate(config).getGenerator();
+        generator = new SQLGeneratorContext(config);
     }
 
     @Override

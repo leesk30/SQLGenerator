@@ -7,7 +7,7 @@ import org.lee.common.enumeration.Conf;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.RandomUtils;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.SubqueryRelation;
@@ -31,8 +31,8 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
     public SelectStatement(SelectType selectType){
         this(selectType, null);
     }
-    public SelectStatement(SelectType selectType, SQLStatement parent){
-        super(SQLType.select, parent);
+    public SelectStatement(SelectType selectType, SQLGeneratorContext context){
+        super(SQLType.select, context);
         this.selectType = selectType;
         if(parent == null){
             this.subqueryDepth = 0;
@@ -97,12 +97,9 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
         return this.subqueryDepth != 0 || this.setopDepth != 0;
     }
 
-    public static SelectStatement getStatementBySelectType(SelectType selectType){
-        return getStatementBySelectType(selectType, null);
-    }
-
-    public static SelectStatement getStatementBySelectType(SelectType selectType, SQLStatement parent){
+    public static SelectStatement getStatementBySelectType(SelectType selectType, SQLGeneratorContext context){
         // todo
+        SQLStatement parent = context.stack().peek();
         if(selectType == null){
             if(parent != null){
                 if(parent.enableSetop() && parent.probability(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY)){
@@ -111,7 +108,7 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
                     selectType = RandomUtils.randomlyChooseFrom(SelectType.ALL);
                 }
             } else {
-                RuntimeConfiguration configuration = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
+                RuntimeConfiguration configuration = context.getConfigProvider().newRuntimeConfiguration();
                 if(configuration.confirm(Rule.REWRITER_REORDER)){
                     selectType = RandomUtils.probability(5) ? SelectType.setop : SelectType.normal;
                 }else {
@@ -122,25 +119,16 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
 
         switch (selectType){
             case normal:
-                return new SelectNormalStatement(parent);
+                return new SelectNormalStatement(context);
             case setop:
-                return new SelectSetopStatement(parent);
+                return new SelectSetopStatement(context);
             case clause:
-                return new SelectClauseStatement(parent);
+                return new SelectClauseStatement(context);
             case simple:
-                return new SelectSimpleStatement(parent);
+                return new SelectSimpleStatement(context);
             default:
                 throw new RuntimeException("Unexpected token");
         }
-    }
-
-    public static SelectStatement randomlyGetStatement(){
-        return randomlyGetStatement(null);
-    }
-
-    public static SelectStatement randomlyGetStatement(SQLStatement parent){
-//        return getStatementBySelectType(FuzzUtil.randomlyChooseFrom(SelectType.ALL), parent);
-        return getStatementBySelectType(SelectType.normal, parent);
     }
 
     public abstract List<RangeTableEntry> getRawRTEList();

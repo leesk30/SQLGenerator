@@ -1,5 +1,6 @@
 package org.lee.generator.expression.common;
 
+import org.lee.context.SQLGeneratorContext;
 import org.lee.generator.expression.basic.IExpressionGenerator;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.sql.expression.Expression;
@@ -38,5 +39,10 @@ public class ExpressionConverter implements IExpressionGenerator<Expression> {
     @Override
     public SQLStatement retrieveParent() {
         return statement;
+    }
+
+    @Override
+    public SQLGeneratorContext retrieveContext() {
+        return null;
     }
 }

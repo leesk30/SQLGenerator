@@ -1,12 +1,12 @@
 package org.lee.sql.entry.relation;
 
 import org.lee.common.Assertion;
-import org.lee.common.config.RuntimeConfigurationProvider;
+import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.resource.SymbolTable;
-import org.lee.sql.SQLGeneratorContext;
 import org.lee.sql.entry.complex.Record;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.entry.scalar.Scalar;
@@ -44,8 +44,8 @@ public final class Pivot extends Pivoted {
     private final List<PivotLiteralRecord> forValue = new ArrayList<>();
     private String cachedString = null;
 
-    public Pivot(RangeTableEntry rawEntry) {
-        super(rawEntry);
+    public Pivot(SQLGeneratorContext context, RangeTableEntry rawEntry) {
+        super(context, rawEntry);
     }
 
     private static class PivotEntry implements Scalar {
@@ -126,7 +126,7 @@ public final class Pivot extends Pivoted {
     }
 
     private void generateAgg(final List<Field> aggregationCandidates){
-        final SymbolTable symbolTable = SQLGeneratorContext.getCurrentSymbolTable();
+        final SymbolTable symbolTable = context.getSymbolTable();
         for(Field fieldToAggregation: aggregationCandidates){
             List<Symbol> symbols = symbolTable.getAggregate(fieldToAggregation.getType());
             Symbol symbol = RandomUtils.randomlyChooseFrom(symbols);
@@ -138,9 +138,9 @@ public final class Pivot extends Pivoted {
 
     private void generateFor(){
         final int elementNum = RandomUtils.randomIntFromRange(2, 7);
-        final RuntimeConfigurationProvider provider = SQLGeneratorContext.getCurrentConfigProvider();
+        final RuntimeConfiguration config = context.currentFrame().current().getConfig();
         final boolean shouldConcatName = aggregations.size() >= 2 ||
-                !provider.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
+                !config.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
         final int initialCapacity = forTarget.size();
 
         for(int i=0; i<elementNum; i++){

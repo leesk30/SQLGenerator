@@ -4,17 +4,21 @@ public class InternalError extends Error{
     private final ErrorCode errorCode;
 
     public InternalError(String message){
-        super(message);
-        this.errorCode = ErrorCode.RUNTIME_EXCEPTION;
+        this(ErrorCode.OTHER_EXCEPTION_ERROR, message);
     }
+
+    public InternalError(Throwable t){
+        this(ErrorCode.OTHER_EXCEPTION_ERROR, t);
+    }
+
     public InternalError(ErrorCode errorCode, String message) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public InternalError(Throwable t){
+    public InternalError(ErrorCode errorCode, Throwable t){
         super(t);
-        this.errorCode = ErrorCode.OTHER_EXCEPTION_ERROR;
+        this.errorCode = errorCode;
     }
 
     public ErrorCode getErrorCode() {

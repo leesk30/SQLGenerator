@@ -5,7 +5,7 @@ import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.NodeTag;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.common.SQLClauseWalker;
@@ -25,24 +25,27 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     protected final UUID uniqueTraceID;
     protected final UUID uniqueStatementID;
     protected final Logger logger = NamedLoggers.getCoreLogger(this.getClass());
+    protected final SQLGeneratorContext context;
 
-    protected AbstractSQLStatement(SQLType sqlType){
-        this(sqlType, null);
-    }
 
-    protected AbstractSQLStatement(SQLType sqlType, SQLStatement parentStatement){
+    protected AbstractSQLStatement(SQLType sqlType, SQLGeneratorContext context){
         this.uniqueStatementID = UUID.randomUUID();
-        if(parentStatement == null){
+        this.context = context;
+        this.parent = previous();
+
+        if(parent == null){
             this.uniqueTraceID = this.uniqueStatementID;
             this.sqlType = sqlType;
-            this.parent = null;
-            this.config = SQLGeneratorContext.getCurrentConfigProvider().newRuntimeConfiguration();
+            if(context == null){
+                this.config = null;
+            }else {
+                this.config = context.getConfigProvider().newRuntimeConfiguration();
+            }
         }else {
-            this.uniqueTraceID = parentStatement.getUniqueTraceID();
+            this.uniqueTraceID = this.parent.getUniqueTraceID();
             this.sqlType = sqlType;
-            this.parent = parentStatement;
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
-            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parentStatement.getSQLType()));
+            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parent.getSQLType()));
         }
         initMDCKey();
     }
@@ -98,8 +101,8 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     @Override
     public List<CTE> recursiveGetCTEs(){
         List<CTE> parentCTEList = parent!=null ? parent.recursiveGetCTEs() : Collections.emptyList();
-        if(this instanceof SupportCommonTableExpression){
-            List<CTE> cteList = new ArrayList<>(((SupportCommonTableExpression) this).getCTEs());
+        if(this instanceof WithCommonTableExpression){
+            List<CTE> cteList = new ArrayList<>(((WithCommonTableExpression) this).getCTEs());
             if(parentCTEList != null){
                 cteList.addAll(parentCTEList);
             }
@@ -118,8 +121,8 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     }
 
     @Override
-    public Logger getLogger() {
-        return logger;
+    public SQLGeneratorContext retrieveContext() {
+        return context;
     }
 
     @Override

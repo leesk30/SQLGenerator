@@ -3,7 +3,7 @@ package org.lee.unittest;
 import org.lee.common.utils.NodeUtils;
 import org.lee.generator.expression.CommonExpressionGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
-import org.lee.sql.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.RangeTableEntry;
@@ -30,7 +30,7 @@ public class ExpressionMethodUnitTest {
         Field f3 = new Field("c", TypeTag.string);
         this.relation = new Relation("db1", "t1", Arrays.asList(f1, f2, f3));
         this.reference = new RangeTableReference(relation);
-        this.context = SQLGeneratorContext.getOrCreate("src/test/resources/tpcds.json");
+        this.context = SQLGeneratorContext.create("src/test/resources/tpcds.json");
     }
 
     @Test

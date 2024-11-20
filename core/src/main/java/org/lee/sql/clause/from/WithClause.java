@@ -4,10 +4,10 @@ import org.lee.common.enumeration.Conf;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.SQLStatement;
-import org.lee.sql.support.ProjectableGenerator;
 
 public class WithClause extends Clause<CTE> {
     private boolean materialized = false;
@@ -45,9 +45,10 @@ public class WithClause extends Clause<CTE> {
         if(config.confirm(Rule.SUPPORT_CTE_MATERIALIZED) && config.probability(Conf.USING_MATERIALIZED_CTE_PROB)){
             materialized = false;
         }
-        ProjectableGenerator generator = new ProjectableGenerator(this.statement);
+        SQLGeneratorContext context = retrieveContext();
         for (int i = 0; i < numOfCTEs; i++) {
-            children.add(new CTE(generator.generate()));
+            // Notice: we should add children directly.
+            children.add(new CTE(context.generateProjectable()));
         }
     }
 }
