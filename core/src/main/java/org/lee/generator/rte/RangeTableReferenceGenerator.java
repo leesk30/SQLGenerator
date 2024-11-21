@@ -44,7 +44,7 @@ public class RangeTableReferenceGenerator implements Generator<RangeTableReferen
         RangeTableEntry entry;
 
         if(this.statement.enableSubquery() && probability(Conf.USING_SUBQUERY_IN_FROM_PROBABILITY)){
-            entry = context.generateProjectable().toRelation();
+            entry = context.recursive().generateProjectable().toRelation();
         }else {
             entry = randomlyGetRangeTable();
             entry = randomlyConvertToPartition(entry);
@@ -100,7 +100,7 @@ public class RangeTableReferenceGenerator implements Generator<RangeTableReferen
             return transformedEntry;
         }
 
-        return transformedEntry.toShelledSubqueryEntry();
+        return transformedEntry.toShelledSubqueryEntry(context);
     }
 
 

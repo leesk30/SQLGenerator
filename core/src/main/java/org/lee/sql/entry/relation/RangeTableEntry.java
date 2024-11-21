@@ -1,6 +1,7 @@
 package org.lee.sql.entry.relation;
 
 import org.lee.base.Node;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.select.SelectDynamicStatement;
@@ -15,8 +16,8 @@ public interface RangeTableEntry extends Node {
         return getFields().size();
     }
 
-    default RangeTableEntry toShelledSubqueryEntry(){
-        Projectable projectable = SelectDynamicStatement.fromEntry(this);
+    default RangeTableEntry toShelledSubqueryEntry(SQLGeneratorContext context){
+        Projectable projectable = SelectDynamicStatement.fromEntry(context, this);
         return new SubqueryRelation(projectable);
     }
 

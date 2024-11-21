@@ -40,18 +40,20 @@ public class GeneratorTest {
         System.out.println(NodeUtils.stringToLikePattern(res));
     }
 
-    @Ignore
+    @Test
     public void generateDDLAndData() throws IOException {
         InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
         InternalConfig config = InternalConfigs.create(Mode.diff, stream);
         SQLGeneratorContext context = new SQLGeneratorContext(config);
         MetaEntry metaEntry = context.getMetaEntry();
         String results = metaEntry.toDDLs(true, "USING PARQUET");
-        try (final FileWriter fileWriter = new FileWriter(TestSingleSQLGenerator.outputInitializedPath())){
-            fileWriter.write(results);
-            fileWriter.write(metaEntry.toInitializedInserts());
-            fileWriter.flush();
-        }
+//        try (final FileWriter fileWriter = new FileWriter(TestSingleSQLGenerator.outputInitializedPath())){
+//            fileWriter.write(results);
+//            fileWriter.write(metaEntry.toInitializedInserts());
+//            fileWriter.flush();
+//        }
+        System.out.println(results);
+        System.out.println(metaEntry.toInitializedInserts());
     }
 
     @Test

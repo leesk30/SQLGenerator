@@ -125,7 +125,7 @@ public final class Pivot extends Pivoted {
         return cachedString;
     }
 
-    private void generateAgg(final List<Field> aggregationCandidates){
+    private void generateAggregation(final List<Field> aggregationCandidates){
         final SymbolTable symbolTable = context.getSymbolTable();
         for(Field fieldToAggregation: aggregationCandidates){
             List<Symbol> symbols = symbolTable.getAggregate(fieldToAggregation.getType());
@@ -136,11 +136,11 @@ public final class Pivot extends Pivoted {
         }
     }
 
-    private void generateFor(){
+    private void generateForLoops(){
         final int elementNum = RandomUtils.randomIntFromRange(2, 7);
-        final RuntimeConfiguration config = context.currentFrame().current().getConfig();
+        final RuntimeConfiguration config = context.currentFrame().statement().getConfig();
         final boolean shouldConcatName = aggregations.size() >= 2 ||
-                !config.confirm(Rule.ENABLE_PIVOT_CONCAT_WHEN_SINGLE_AGGREGATION);
+                !config.confirm(Rule.ENABLE_PIVOT_CONCAT_NAME_WHEN_SINGLE_AGGREGATION);
         final int initialCapacity = forTarget.size();
 
         for(int i=0; i<elementNum; i++){
@@ -184,8 +184,8 @@ public final class Pivot extends Pivoted {
             forTarget.add(RandomUtils.randomlyPop(candidates));
         }while (!candidates.isEmpty() && RandomUtils.probability(3));
 
-        generateAgg(aggregationCandidates);
-        generateFor();
+        generateAggregation(aggregationCandidates);
+        generateForLoops();
 
         // add left field to project
         fieldList.addAll(candidates);

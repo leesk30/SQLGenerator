@@ -10,7 +10,4 @@ public interface Statement<T extends Node>
         SupportRuntimeConfiguration,
         Fuzzer {
     Statement<?> getParent();
-    UUID getUniqueTraceID();
-
-    UUID getUniqueStatementID();
 }

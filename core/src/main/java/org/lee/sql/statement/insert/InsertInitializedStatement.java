@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public final class InsertInitializedStatement extends InsertStatement{
     private final Relation targetRelation;
     public InsertInitializedStatement(Relation relation, int insertMaxCapacity) {
-        super(null);
+        super();
         this.targetRelation = relation;
         addClause(new StableInsertModifyTable());
         addClause(new StableInsertValuesClause(insertMaxCapacity));

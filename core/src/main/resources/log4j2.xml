@@ -2,7 +2,7 @@
 <Configuration>
     <Properties>
         <!-- 定义日志格式 -->
-        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceID}][%t][%logger{36}:%L] %msg%n</Property>
+        <Property name="log.pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{traceID}-%X{frameID}][%t][%logger{36}:%L] %msg%n</Property>
         <!-- 定义文件名变量 -->
         <Property name="filename">logs/sql-generator.log</Property>
         <Property name="filename.pattern">logs/sql-generator.%i.log</Property>

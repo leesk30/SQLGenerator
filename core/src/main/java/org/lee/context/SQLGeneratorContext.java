@@ -1,28 +1,21 @@
 package org.lee.context;
 
-import org.lee.common.Assertion;
+import com.sun.istack.internal.NotNull;
 import org.lee.common.NamedLoggers;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.config.RuntimeConfigurationProvider;
-import org.lee.common.enumeration.Conf;
-import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.DebugUtils;
-import org.lee.common.utils.RandomUtils;
 import org.lee.generator.sql.SQLGenerator;
 import org.lee.resource.MetaEntry;
 import org.lee.resource.SymbolTable;
-import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.SQLStatement;
-import org.lee.sql.statement.common.SQLType;
-import org.lee.sql.statement.select.*;
-import org.lee.sql.statement.values.ValuesStatement;
-import org.lee.sql.type.TypeTag;
+import org.lee.sql.statement.select.SelectStatement;
 import org.slf4j.Logger;
+import org.slf4j.MDC;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.Stack;
 import java.util.UUID;
 
 
@@ -38,7 +31,9 @@ public final class SQLGeneratorContext implements SQLGenerator {
     private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
 
-    private final SQLGeneratorStack stack = new SQLGeneratorStack();
+    private final Stack<SQLGeneratorFrame> stack = new Stack<>();
+
+    private final RecursiveProjectableGenerator recursiveGenerator = new RecursiveProjectableGenerator(this);
 
     public SQLGeneratorContext(InternalConfig config){
         this.config = config;
@@ -46,14 +41,22 @@ public final class SQLGeneratorContext implements SQLGenerator {
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable(config.getGeneratePolicy());
         load();
+        MDC.put("traceID", DebugUtils.truncate(uuid));
+        MDC.put("frameID", DebugUtils.truncate(uuid));
     }
 
-    public SQLGeneratorStack stack(){
+    public Stack<SQLGeneratorFrame> stack(){
         return stack;
     }
 
-    public SQLGeneratorFrame currentFrame(){
+    public @NotNull SQLGeneratorFrame currentFrame(){
+        // Notice cannot call
+
         return stack.peek();
+    }
+
+    public UUID uuid() {
+        return uuid;
     }
 
     public RuntimeConfiguration newRuntimeConfiguration(){
@@ -93,21 +96,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
         return new SQLGeneratorContext(config);
     }
 
-
-    private SQLStatement getStatement(SQLType sqlType){
-        switch (sqlType){
-            case select:
-                return SelectStatement.getStatementBySelectType(null, this);
-            case values:
-            case update:
-            case insert:
-            case delete:
-            case merge:
-            default:
-                return null;
-        }
-    }
-
     @Override
     public SQLStatement generate() {
         // todo:
@@ -115,155 +103,14 @@ public final class SQLGeneratorContext implements SQLGenerator {
 //            return adaptiveGenerate();
     }
 
+    public RecursiveProjectableGenerator recursive() {
+        return recursiveGenerator;
+    }
+
     public SelectStatement generateSelect(){
-        SelectStatement selectStatement = SelectStatement.getStatementBySelectType(null, this);
-        return (SelectStatement) stack.fuzzy(selectStatement);
+        return recursiveGenerator.generateSelect();
     }
 
-    public Projectable generateProjectable(){
-        Projectable statement = newRandomlyProjectable();
-        return (Projectable) stack.fuzzy(statement);
-    }
-
-    public Projectable generateProjectable(List<TypeTag> limitations){
-        Projectable statement = newRandomlyProjectable();
-        if(!limitations.isEmpty()){
-            statement.withProjectTypeLimitation(limitations);
-        }
-        return (Projectable) stack.fuzzy(statement);
-    }
-
-    public SelectStatement generateSelect(SelectType selectType){
-        SelectStatement selectStatement = SelectStatement.getStatementBySelectType(selectType, this);
-        return (SelectStatement) stack.fuzzy(selectStatement);
-    }
-
-    public Projectable generateScalarSubquery(TypeTag typeTag){
-        ProjectableState state = new ProjectableState(this, false, true, false, false);
-        Projectable projectable = newRandomlyProjectable(state);
-        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
-        projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    public Projectable generateRelatedScalarSubquery(TypeTag typeTag){
-        ProjectableState state = new ProjectableState(this, false, true, false, false);
-        Projectable projectable = newRandomlyProjectable(state);
-        Assertion.requiredFalse(projectable instanceof SelectSimpleStatement);
-        projectable.withProjectTypeLimitation(Collections.singletonList(typeTag));
-        projectable.setConfig(Rule.REQUIRE_SCALA,true);
-        projectable.setConfig(Rule.PREFER_RELATED,true);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    public Projectable generatePredicateExistsSubquery(){
-        ProjectableState state = new ProjectableState(this, true, false, false, true);
-        Projectable projectable = newRandomlyProjectable(state);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    public Projectable generatePredicateExistsRelatedSubquery(){
-        ProjectableState state = new ProjectableState(this, true, false, false, true);
-        Projectable projectable = newRandomlyProjectable(state);
-        projectable.setConfig(Rule.PREFER_RELATED,true);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    public Projectable generatePredicateInSubquery(){
-        return generatePredicateInSubquery(Collections.emptyList());
-    }
-
-    public Projectable generatePredicateInRelatedSubquery(){
-        return generatePredicateInRelatedSubquery(Collections.emptyList());
-    }
-
-    public Projectable generatePredicateInSubquery(List<TypeTag> limitations){
-        ProjectableState state = new ProjectableState(this, false, false, false, true);
-        Projectable projectable = newRandomlyProjectable(state);
-        projectable.withProjectTypeLimitation(limitations);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    public Projectable generatePredicateInRelatedSubquery(List<TypeTag> limitations){
-        ProjectableState state = new ProjectableState(this, false, false, false, true);
-        Projectable projectable = newRandomlyProjectable(state);
-        projectable.setConfig(Rule.PREFER_RELATED,true);
-        projectable.withProjectTypeLimitation(limitations);
-        return (Projectable) stack.fuzzy(projectable);
-    }
-
-    private Projectable newRandomlyProjectable(){
-        return newRandomlyProjectable(new ProjectableState(this, false, false, false, false));
-    }
-
-    private Projectable newRandomlyProjectable(ProjectableState state){
-        final int PValues = state.getValuesProb();
-        final int PSetop = state.getSetopProb();
-        final int PClause = state.getClauseProb();
-        final int total = PValues + PSetop + PClause;
-        final int probEdge = total > 100 ? 2 * total : 100;
-
-        if(total >= 100){
-            logger.error("Accept an invalid probability distribution(total >= 100)." +
-                    String.format("PValues: %d, PSetop: %d, PClause: %d", PValues, PSetop, PClause));
-            DebugUtils.recordLocalFrameInfo4DebugInLog(logger);
-        }
-
-        final int randomValue = RandomUtils.randomIntFromRange(0, probEdge);
-        if(PValues > randomValue){
-            return new ValuesStatement(this);
-        } else if (PSetop > randomValue - PValues) {
-            return new SelectSetopStatement(this);
-        } else if (PClause > randomValue - PValues - PSetop) {
-            return new SelectClauseStatement(this);
-        }else {
-            if(!state.rejectedSimple && RandomUtils.probability(10)){
-                return new SelectSimpleStatement(this);
-            }
-            return new SelectNormalStatement(this);
-        }
-    }
-
-    public static class ProjectableState{
-        private final RuntimeConfiguration config;
-        private final boolean rejectedValues;
-        private final boolean rejectedSimple;
-        private final boolean rejectedSetop;
-        private final boolean rejectedClause;
-
-        public ProjectableState(
-                SQLGeneratorContext context,
-                boolean rejectedValues,
-                boolean rejectedSimple,
-                boolean rejectedSetop,
-                boolean rejectedClause
-        ){
-            SQLStatement parent = context.stack().peek();
-            this.rejectedValues = rejectedValues;
-            this.rejectedSimple = rejectedSimple;
-            this.rejectedClause = rejectedClause;
-            if(parent == null){
-                this.config = context.provider.newRuntimeConfiguration();
-                this.rejectedSetop = rejectedSetop;
-            }else {
-                this.config = parent.getConfig();
-                this.rejectedSetop = rejectedSetop || !parent.enableSetop();
-            }
-        }
-
-        private int getValuesProb(){
-            return rejectedValues ? config.getInt(Conf.VALUES_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0;
-        }
-
-        private int getSetopProb(){
-            return rejectedSetop ? config.getInt(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY) : 0;
-        }
-
-        private int getClauseProb(){
-            return rejectedClause ? config.getInt(Conf.PURE_SELECT_CLAUSE_AS_SUBQUERY_PROBABILITY):0;
-        }
-    }
 
 
 

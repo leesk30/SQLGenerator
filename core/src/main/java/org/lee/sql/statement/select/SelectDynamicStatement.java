@@ -18,18 +18,14 @@ public final class SelectDynamicStatement extends SelectStatement{
     private boolean isScalar = false;
     private String overwriteRawBody;
 
-    public static SelectStatement fromEntry(RangeTableEntry entry){
-        SelectDynamicStatement statement = new SelectDynamicStatement();
+    public static SelectStatement fromEntry(SQLGeneratorContext context, RangeTableEntry entry){
+        SelectDynamicStatement statement = new SelectDynamicStatement(context);
         statement.setWithParentheses(true);
         statement.setProjection(entry.getFields().stream().map(field -> new TargetEntry(field.asNameProxy())).collect(Collectors.toList()));
         statement.setRawEntryList(Collections.singletonList(entry));
         statement.setOverwriteRawBody("SELECT * FROM " + entry.getString());
         statement.setScalar(false);
         return statement;
-    }
-
-    private SelectDynamicStatement() {
-        this(null);
     }
 
     private SelectDynamicStatement(SQLGeneratorContext context) {

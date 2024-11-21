@@ -9,6 +9,7 @@ import org.lee.common.utils.RandomUtils;
 
 public interface SupportRuntimeConfiguration {
     RuntimeConfiguration getConfig();
+
     default boolean confirm(Rule name){
         return getConfig().confirm(name);
     }

@@ -3,6 +3,7 @@ package org.lee.sql.statement.select;
 import org.lee.common.Assertion;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.RecursiveProjectableGenerator;
 import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.from.WithClause;
 import org.lee.sql.clause.limit.LimitOffset;
@@ -104,18 +105,19 @@ public final class SelectSetopStatement
     }
 
     private void generateChildStatement(){
+        RecursiveProjectableGenerator generator = context.recursive();
         if(this.getProjectTypeLimitation().isEmpty()){
             if(RandomUtils.probability(50)){
-                left = context.generateProjectable();
-                right = context.generateProjectable(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                left = generator.generateProjectable();
+                right = generator.generateProjectable(left.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }else {
-                right = context.generateProjectable();
-                left = context.generateProjectable(right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
+                right = generator.generateProjectable();
+                left = generator.generateProjectable(right.project().stream().map(TargetEntry::getType).collect(Collectors.toList()));
             }
             // When parent required statement withTypeLimitation shelled statement should tell its children the limitations.
         }else {
-            left = context.generateProjectable(this.getProjectTypeLimitation());
-            right = context.generateProjectable(this.getProjectTypeLimitation());
+            left = generator.generateProjectable(this.getProjectTypeLimitation());
+            right = generator.generateProjectable(this.getProjectTypeLimitation());
         }
         requireProjectionLeftSimilarWithRight();
     }

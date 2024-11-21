@@ -6,6 +6,7 @@ import org.lee.common.NamedLoggers;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 public class DebugUtils {
     private final static Logger LOGGER = NamedLoggers.getCommonLogger(DebugUtils.class);
@@ -26,5 +27,14 @@ public class DebugUtils {
             logger = LOGGER;
         }
         logger.debug(getLocalFrameInfo(4));
+    }
+
+    public static String truncate(UUID u){
+        String s = u.toString().replaceAll("-", "");
+        if(s.length() > 8){
+            return s.substring(0, 8);
+        }else {
+            return s;
+        }
     }
 }

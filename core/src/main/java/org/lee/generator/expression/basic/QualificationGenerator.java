@@ -175,7 +175,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
 
     default Qualification predicateSubqueryExists(){
         // An exists statement shouldn't have the raw values
-        Projectable statement = retrieveContext().generatePredicateExistsRelatedSubquery();
+        Projectable statement = retrieveContext().recursive().generatePredicateExistsRelatedSubquery();
         AdaptiveRecordScalar adaptiveRecordScalar = statement.toAdaptiveRecordScalar();
         Symbol symbol = probability(50) ? Comparator.EXISTS : Comparator.NOT_EXISTS;
         return new Qualification(symbol).newChild(adaptiveRecordScalar);
@@ -192,7 +192,7 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
             scalars.add(getStatistic().findAny());
         }while (scalars.size() < maxCandidates && probability(Conf.MULTI_FIELD_IN_PREDICATE_SUBQUERY_PROBABILITY));
         AdaptiveRecordScalar left = AdaptiveRecordScalar.adaptScalarList(scalars);
-        Projectable statement = retrieveContext().generatePredicateInSubquery(left.getTypeList());
+        Projectable statement = retrieveContext().recursive().generatePredicateInSubquery(left.getTypeList());
         AdaptiveRecordScalar right = statement.toAdaptiveRecordScalar();
         Symbol symbol = probability(50) ? Comparator.NOT_IN : Comparator.IN;
         return new Qualification(symbol).newChild(left).newChild(right);

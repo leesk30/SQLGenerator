@@ -8,6 +8,7 @@ import org.lee.common.enumeration.NodeTag;
 import org.lee.common.enumeration.Rule;
 import org.lee.common.utils.RandomUtils;
 import org.lee.context.SQLGeneratorContext;
+import org.lee.context.SQLGeneratorFrame;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.SubqueryRelation;
@@ -28,9 +29,6 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
 
     protected final List<TypeTag> limitationsTypes = new ArrayList<>();
 
-    public SelectStatement(SelectType selectType){
-        this(selectType, null);
-    }
     public SelectStatement(SelectType selectType, SQLGeneratorContext context){
         super(SQLType.select, context);
         this.selectType = selectType;
@@ -95,40 +93,6 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
 
     public boolean isSubquery(){
         return this.subqueryDepth != 0 || this.setopDepth != 0;
-    }
-
-    public static SelectStatement getStatementBySelectType(SelectType selectType, SQLGeneratorContext context){
-        // todo
-        SQLStatement parent = context.stack().peek();
-        if(selectType == null){
-            if(parent != null){
-                if(parent.enableSetop() && parent.probability(Conf.SETOP_STATEMENT_AS_SUBQUERY_PROBABILITY)){
-                    selectType = SelectType.setop;
-                }else {
-                    selectType = RandomUtils.randomlyChooseFrom(SelectType.ALL);
-                }
-            } else {
-                RuntimeConfiguration configuration = context.getConfigProvider().newRuntimeConfiguration();
-                if(configuration.confirm(Rule.REWRITER_REORDER)){
-                    selectType = RandomUtils.probability(5) ? SelectType.setop : SelectType.normal;
-                }else {
-                    selectType = RandomUtils.randomlyChooseFrom(SelectType.ALL);
-                }
-            }
-        }
-
-        switch (selectType){
-            case normal:
-                return new SelectNormalStatement(context);
-            case setop:
-                return new SelectSetopStatement(context);
-            case clause:
-                return new SelectClauseStatement(context);
-            case simple:
-                return new SelectSimpleStatement(context);
-            default:
-                throw new RuntimeException("Unexpected token");
-        }
     }
 
     public abstract List<RangeTableEntry> getRawRTEList();

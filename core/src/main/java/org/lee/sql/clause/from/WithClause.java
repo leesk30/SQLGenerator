@@ -48,7 +48,7 @@ public class WithClause extends Clause<CTE> {
         SQLGeneratorContext context = retrieveContext();
         for (int i = 0; i < numOfCTEs; i++) {
             // Notice: we should add children directly.
-            children.add(new CTE(context.generateProjectable()));
+            children.add(new CTE(context.recursive().generateProjectable()));
         }
     }
 }

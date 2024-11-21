@@ -72,7 +72,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getScalarSubquery(TypeTag typeTag){
-        return retrieveContext().generateScalarSubquery(typeTag).toScalar();
+        return retrieveContext().recursive().generateScalarSubquery(typeTag).toScalar();
     }
 
     default Scalar getScalarSubquery(){
@@ -81,7 +81,7 @@ public interface IExpressionGenerator<T extends IExpression<Expression>>
     }
 
     default Scalar getRelatedScalarSubquery(TypeTag typeTag){
-        return retrieveContext().generateRelatedScalarSubquery(typeTag).toScalar();
+        return retrieveContext().recursive().generateRelatedScalarSubquery(typeTag).toScalar();
     }
 
     default Scalar getRelatedScalarSubquery(){
