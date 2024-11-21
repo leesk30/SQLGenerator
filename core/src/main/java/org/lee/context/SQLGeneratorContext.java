@@ -80,6 +80,10 @@ public final class SQLGeneratorContext implements SQLGenerator {
         return new SQLGeneratorContext(config);
     }
 
+    public static SQLGeneratorContext create(final InternalConfig config){
+        return new SQLGeneratorContext(config);
+    }
+
     @Override
     public SQLStatement generate() {
         // todo:
