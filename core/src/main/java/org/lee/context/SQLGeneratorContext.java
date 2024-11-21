@@ -20,9 +20,6 @@ import java.util.UUID;
 
 
 public final class SQLGeneratorContext implements SQLGenerator {
-
-    private static final ThreadLocal<SQLGeneratorContext> contextThreadLocal = new ThreadLocal<>();
-
     private final InternalConfig config;
     private final RuntimeConfigurationProvider provider;
     private final Logger logger = NamedLoggers.getCoreLogger(SQLGeneratorContext.class);
@@ -40,7 +37,8 @@ public final class SQLGeneratorContext implements SQLGenerator {
         this.provider = RuntimeConfigurationProvider.getProvider(config);
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable(config.getGeneratePolicy());
-        load();
+        this.entries.init(config.getMetaEntry());
+        this.symbolTable.init(config.getSymbolTable());
         MDC.put("traceID", DebugUtils.truncate(uuid));
         MDC.put("frameID", DebugUtils.truncate(uuid));
     }
@@ -50,8 +48,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
     }
 
     public @NotNull SQLGeneratorFrame currentFrame(){
-        // Notice cannot call
-
         return stack.peek();
     }
 
@@ -61,12 +57,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
 
     public RuntimeConfiguration newRuntimeConfiguration(){
         return provider.newRuntimeConfiguration();
-    }
-
-    private synchronized void load(){
-        logger.info(String.format("Starting to loading meta entries and signatures. ID: %s", uuid));
-        this.entries.init(config.getMetaEntry());
-        this.symbolTable.init(config.getSymbolTable());
     }
 
     public RuntimeConfigurationProvider getConfigProvider(){
@@ -83,12 +73,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
 
     public SymbolTable getSymbolTable(){
         return this.symbolTable;
-    }
-
-    public void unset(){
-        if(contextThreadLocal.get() == this){
-            contextThreadLocal.remove();
-        }
     }
 
     public static SQLGeneratorContext create(final String inputMetaEntries){

@@ -112,6 +112,10 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     @Override
     public String toString(){
         // for debug
+        String res = getString();
+        if(res == null){
+            return "<unknown>";
+        }
         return SQLFormatter.formatStatement(getString());
     }
 }
