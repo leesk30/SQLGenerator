@@ -1,6 +1,5 @@
 package org.lee.sql.statement;
 
-import com.sun.istack.internal.NotNull;
 import org.lee.base.Node;
 import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
@@ -12,8 +11,8 @@ import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.statement.common.SQLClauseWalker;
 import org.lee.sql.statement.common.SQLType;
 import org.slf4j.Logger;
-import org.slf4j.MDC;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -27,7 +26,7 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     protected final SQLGeneratorContext context;
 
 
-    protected AbstractSQLStatement(@NotNull SQLType sqlType, @NotNull SQLGeneratorContext context){
+    protected AbstractSQLStatement(@Nonnull SQLType sqlType, @Nonnull SQLGeneratorContext context){
         this.context = context;
         this.sqlType = sqlType;
 

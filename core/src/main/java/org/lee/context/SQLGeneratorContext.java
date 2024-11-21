@@ -1,6 +1,5 @@
 package org.lee.context;
 
-import com.sun.istack.internal.NotNull;
 import org.lee.common.NamedLoggers;
 import org.lee.common.config.InternalConfig;
 import org.lee.common.config.InternalConfigs;
@@ -15,6 +14,7 @@ import org.lee.sql.statement.select.SelectStatement;
 import org.slf4j.Logger;
 import org.slf4j.MDC;
 
+import javax.annotation.Nonnull;
 import java.util.Stack;
 import java.util.UUID;
 
@@ -47,7 +47,7 @@ public final class SQLGeneratorContext implements SQLGenerator {
         return stack;
     }
 
-    public @NotNull SQLGeneratorFrame currentFrame(){
+    public @Nonnull SQLGeneratorFrame currentFrame(){
         return stack.peek();
     }
 
