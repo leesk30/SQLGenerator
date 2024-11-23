@@ -12,6 +12,7 @@ import org.lee.resource.MetaEntry;
 import org.lee.resource.SymbolTable;
 import org.lee.sql.entry.relation.Relation;
 import org.lee.sql.statement.SQLStatement;
+import org.lee.sql.statement.insert.InsertInitializedStatement;
 import org.lee.sql.statement.insert.InsertStatement;
 import org.lee.sql.statement.select.SelectStatement;
 import org.slf4j.Logger;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 
 public final class SQLGeneratorContext implements SQLGenerator {
@@ -116,10 +118,25 @@ public final class SQLGeneratorContext implements SQLGenerator {
         for(Relation relation: this.entries.getRelationMap().values()){
             final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
             for(int i=0; i < numOfInsertStatement; i++){
-                statements.add(relation.getInitializedInsert(this, 3));
+                statements.add(this.generateInsert(relation, 3));
             }
         }
         return statements;
+    }
+
+    // friendly visible
+    SQLGeneratorFrame createFrame(Supplier<SQLStatement> supplier){
+        return new SQLGeneratorFrame(this, supplier);
+    }
+
+    public InsertStatement generateInsert(Relation relation){
+        return generateInsert(relation, 3);
+    }
+
+    public InsertStatement generateInsert(Relation relation, int maxNumOfValueLines){
+        return (InsertStatement) this.createFrame(
+                () -> new InsertInitializedStatement(this, relation, maxNumOfValueLines)
+        ).statement();
     }
 
 }

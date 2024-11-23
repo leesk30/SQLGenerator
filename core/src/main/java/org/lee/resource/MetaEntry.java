@@ -92,14 +92,13 @@ public class MetaEntry implements Resource<JSONObject> {
 
     public String toInitializedInserts(){
         StringBuilder builder = new StringBuilder();
-        relationMap.values().forEach(
-                r -> {
-                    final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
-                    IntStream.range(0, numOfInsertStatement).sequential().forEach(
-                            i -> builder.append(r.getInitializedInsert(SQLGeneratorContext.EMPTY,3).getString()).append("\n")
-                    );
-                }
-        );
+        SQLGeneratorContext context = SQLGeneratorContext.EMPTY;
+        for(Relation relation: relationMap.values()){
+            final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
+            IntStream.range(0, numOfInsertStatement).sequential().forEach(
+                    i -> builder.append(context.generateInsert(relation,3).getString()).append("\n")
+            );
+        }
         return builder.toString();
     }
 

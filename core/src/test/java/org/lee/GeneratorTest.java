@@ -70,7 +70,7 @@ public class GeneratorTest {
         long startAt = System.currentTimeMillis();
         String output = TestSingleSQLGenerator.outputPath();
         System.out.println("Output dir is: " + output);
-        final int numOfThread = 4;
+        final int numOfThread = 1;
         final ExecutorService service = Executors.newFixedThreadPool(numOfThread);
         final SQLGeneratorDefaultThreadWorker[] workers = new SQLGeneratorDefaultThreadWorker[numOfThread];
         try (final FileWriter writer = new FileWriter(output)){

@@ -41,6 +41,7 @@ public final class SQLGeneratorFrame implements Fuzzer {
             traceID = frameID;
         }else {
             Assertion.requiredNonNull(previous);
+            assert previous != null;
             traceID = previous.traceID;
         }
 
@@ -51,6 +52,8 @@ public final class SQLGeneratorFrame implements Fuzzer {
         this.statement = supplier.get();
 
         Assertion.requiredNonNull(this.statement.retrieveContext() == context);
+
+        this.fuzz();
     }
 
     private void setMDC(){

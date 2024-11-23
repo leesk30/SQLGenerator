@@ -27,21 +27,15 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
         this.context = context;
     }
 
-    protected SQLGeneratorFrame createFrame(Supplier<SQLStatement> statement){
-        SQLGeneratorFrame frame = new SQLGeneratorFrame(context, statement);
-        frame.fuzz();
-        return frame;
-    }
-
     public SelectStatement generateSelect(){
         Supplier<SQLStatement> supplier = () -> getStatementBySelectType(null);
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (SelectStatement) frame.statement();
     }
 
     public Projectable generateProjectable(){
         Supplier<SQLStatement> supplier = this::newRandomlyProjectable;
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
@@ -53,13 +47,13 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             }
             return statement;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
     public SelectStatement generateSelect(SelectType selectType){
         Supplier<SQLStatement> supplier = () -> getStatementBySelectType(selectType);
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (SelectStatement) frame.statement();
     }
 
@@ -106,7 +100,7 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             projectable.setConfig(Rule.REQUIRE_SCALA,true);
             return projectable;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
@@ -120,14 +114,14 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             projectable.setConfig(Rule.PREFER_RELATED,true);
             return projectable;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
     public Projectable generatePredicateExistsSubquery(){
         final ProjectableState state = new ProjectableState(true, false, false, true);
         Supplier<SQLStatement> supplier = () -> newRandomlyProjectable(state);
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
@@ -138,7 +132,7 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             projectable.setConfig(Rule.PREFER_RELATED,true);
             return projectable;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
@@ -157,7 +151,7 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             projectable.withProjectTypeLimitation(limitations);
             return projectable;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 
@@ -169,7 +163,7 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             projectable.withProjectTypeLimitation(limitations);
             return projectable;
         };
-        SQLGeneratorFrame frame = createFrame(supplier);
+        SQLGeneratorFrame frame = context.createFrame(supplier);
         return (Projectable) frame.statement();
     }
 

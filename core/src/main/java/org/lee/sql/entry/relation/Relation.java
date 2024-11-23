@@ -4,7 +4,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.scalar.Field;
-import org.lee.sql.statement.insert.InsertInitializedStatement;
 import org.lee.sql.statement.insert.InsertStatement;
 
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class Relation implements RangeTableEntry {
                 + SPACE + VALUES  + SPACE + LP + StringUtils.joinWith(", ", placeholders) + RP + ENDING;
     }
 
-    public InsertStatement getInitializedInsert(SQLGeneratorContext context, int maxNumOfValueLines){
-        return new InsertInitializedStatement(context, this, maxNumOfValueLines);
+    public InsertStatement getInsertStatement(SQLGeneratorContext context, int maxNumOfValueLines){
+        return context.generateInsert(this, maxNumOfValueLines);
     }
 }
