@@ -29,8 +29,7 @@ public abstract class SelectClause extends Clause<TargetEntry> {
         if(expression.isIncludingAggregation() && !statement.confirm(Rule.AGGREGATION_REQUIRED_GROUP_BY)){
             statement.getConfig().set(Rule.AGGREGATION_REQUIRED_GROUP_BY, true);
         }
-        TargetEntry entry = new TargetEntry(expression);
-        entry.setAlias();
+        TargetEntry entry = new TargetEntry(expression, true);
         children.add(entry);
     }
 

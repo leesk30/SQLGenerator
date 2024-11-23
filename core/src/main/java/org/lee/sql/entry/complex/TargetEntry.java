@@ -45,6 +45,10 @@ public class TargetEntry implements Normalized<Scalar>, Scalar, Alias {
     }
 
     public TargetEntry(Expression expression){
+        this(expression, false);
+    }
+
+    public TargetEntry(Expression expression, boolean rename){
         Assertion.requiredNonNull(expression);
         Assertion.requiredTrue(expression.isComplete());
         this.target = expression;
@@ -52,6 +56,9 @@ public class TargetEntry implements Normalized<Scalar>, Scalar, Alias {
         this.isTargetEntryAggregate = expression.isCurrentAggregation();
         this.isTargetEntryIncludingAggregate = expression.isIncludingAggregation();
         this.cachedExtracted = expression.extractAggregate();
+        if(rename){
+            this.setAlias();
+        }
     }
 
     public static TargetEntry newNamedEntry(TypeTag typeTag){

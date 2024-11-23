@@ -51,7 +51,9 @@ public class RangeTableReferenceGenerator implements Generator<RangeTableReferen
             rawEntryList.add(entry);
         }
         entry = randomlyTransformToPivoted(entry);
-        return new RangeTableReference(entry);
+        RangeTableReference reference = new RangeTableReference(entry);
+        reference.setAlias();
+        return reference;
     }
 
     private RangeTableEntry randomlyConvertToPartition(RangeTableEntry entry){

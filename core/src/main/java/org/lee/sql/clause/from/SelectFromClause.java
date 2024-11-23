@@ -22,7 +22,6 @@ public final class SelectFromClause extends FromClause {
             candidatesArray[i] = candidates;
             for(int j = 0; j < candidatesArray[i].length; j++){
                 RangeTableReference reference = generator.generate();
-                reference.setAlias();
                 candidates[j] = reference;
             }
         }

@@ -101,4 +101,29 @@ public class GeneratorTest {
         }
         System.out.printf("Generate elapse: %d ms%n", System.currentTimeMillis() - startAt);
     }
+
+    @Test
+    public void testGeneratorOnly() throws InterruptedException {
+        final int numOfGenerate = 100000;
+        final int numOfThread = 1;
+        final ExecutorService service = Executors.newFixedThreadPool(numOfThread);
+        final SQLGeneratorDefaultThreadWorker[] workers = new SQLGeneratorDefaultThreadWorker[numOfThread];
+        final BlockingQueue<SQLStatement> queue = new ArrayBlockingQueue<>(1000);
+        final InputStream stream = this.getClass().getClassLoader().getResourceAsStream("tpcds.json");
+        final InternalConfig config = InternalConfigs.create(Mode.diff, stream);
+        final long startAt = System.currentTimeMillis();
+
+        for(int i=0; i < numOfThread; i++){
+            workers[i] = new SQLGeneratorDefaultThreadWorker(numOfGenerate/numOfThread, config, queue);
+            service.submit(workers[i]);
+        }
+
+        for (int i=0; i< numOfGenerate; i++){
+//                System.out.printf("Take: %d ", i);
+            SQLStatement statement = queue.take();
+            String sql = statement.getFormattedString();
+            System.out.println(sql);
+        }
+        System.out.printf("Generate elapse: %d ms%n", System.currentTimeMillis() - startAt);
+    }
 }
