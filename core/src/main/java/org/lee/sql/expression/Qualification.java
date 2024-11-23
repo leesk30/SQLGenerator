@@ -3,6 +3,9 @@ package org.lee.sql.expression;
 import org.lee.base.Node;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.sql.entry.scalar.Scalar;
+import org.lee.sql.literal.Literal;
+import org.lee.sql.literal.LiteralInt;
+import org.lee.sql.symbol.Comparator;
 import org.lee.sql.symbol.Parentheses;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.symbol.common.PredicateCombiner;
@@ -11,6 +14,10 @@ import org.lee.sql.type.TypeTag;
 import java.util.List;
 
 public class Qualification extends Expression {
+
+    private static final LiteralInt v = new LiteralInt(1);
+    public static final Qualification ALWAYS_TRUE = new Qualification(Comparator.EQ).newChild(v).newChild(v);
+    public static final Qualification ALWAYS_FALSE = new Qualification(Comparator.NOT_EQ).newChild(v).newChild(v);
 
     public Qualification(Node current){
         super(current);

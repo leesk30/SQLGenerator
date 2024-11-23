@@ -56,6 +56,7 @@ public abstract class AbstractExpressionGenerator<T extends Expression>
             this.config = IExpressionGenerator.super.getConfig();
         }
         this.expressionLocation = expressionLocation;
+        SQLGeneratorContext context = statement.retrieveContext();
         if(left.isEmpty() && right.isEmpty()){
             statistic = GeneratorStatistic.create(statement.retrieveContext());
         }else if(left.isEmpty()){

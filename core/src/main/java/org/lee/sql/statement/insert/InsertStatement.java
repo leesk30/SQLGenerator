@@ -18,10 +18,6 @@ public abstract class InsertStatement extends AbstractSQLStatement implements Su
         super(SQLType.insert, context);
     }
 
-    protected InsertStatement() {
-        super(SQLType.insert);
-    }
-
     @Override
     public String getString() {
         return nodeArrayToString(SPACE, this.walk()) + ENDING;

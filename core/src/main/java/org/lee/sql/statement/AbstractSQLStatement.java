@@ -40,14 +40,6 @@ public abstract class AbstractSQLStatement implements SQLStatement {
         }
     }
 
-    protected AbstractSQLStatement(SQLType sqlType){
-        this.context = null;
-        this.sqlType = sqlType;
-        this.parent = null;
-        this.config = null;
-    }
-
-
     @Override
     public SQLStatement getParent() {
         return parent;

@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.lee.common.NamedLoggers;
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.entry.relation.Relation;
 import org.lee.sql.entry.scalar.Field;
 import org.lee.sql.type.TypeDescriptor;
@@ -21,7 +22,6 @@ public class MetaEntry implements Resource<JSONObject> {
     private final Map<String, List<Relation>> relationByNamespaceMap = new HashMap<>();
     private final Map<String, Relation> relationMap = new HashMap<>();
     private static final Logger LOGGER = NamedLoggers.getCoreLogger(MetaEntry.class);
-
     public MetaEntry(){}
 
     public Map<String, List<Relation>> getRelationByNamespaceMap() {
@@ -96,7 +96,7 @@ public class MetaEntry implements Resource<JSONObject> {
                 r -> {
                     final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
                     IntStream.range(0, numOfInsertStatement).sequential().forEach(
-                            i -> builder.append(r.getInitializedInsert(3)).append("\n")
+                            i -> builder.append(r.getInitializedInsert(SQLGeneratorContext.EMPTY,3)).append("\n")
                     );
                 }
         );

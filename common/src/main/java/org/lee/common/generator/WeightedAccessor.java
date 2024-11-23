@@ -57,7 +57,7 @@ public abstract class WeightedAccessor<IN, OUT> implements Generator<OUT> {
         }
     }
 
-    protected void add(Weighted<IN> weighted){
+    public void add(Weighted<IN> weighted){
         wrappers.add(weighted);
         sum += weighted.weight();
         isNewest = false;

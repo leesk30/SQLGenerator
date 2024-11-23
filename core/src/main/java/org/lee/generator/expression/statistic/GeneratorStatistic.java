@@ -47,6 +47,10 @@ public interface GeneratorStatistic {
 
     int suitableFactorProb(Symbol symbol);
 
+    default boolean isEmpty(){
+        return this.getAllCandidates().isEmpty();
+    }
+
     default Scalar findAny(TypeTag typeTag){
         return RandomUtils.randomlyChooseFrom(findMatch(typeTag));
     }

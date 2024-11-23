@@ -3,8 +3,11 @@ package org.lee.generator.expression.basic;
 import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.lee.common.enumeration.Conf;
+import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.structure.Pair;
+import org.lee.common.structure.Weighted;
 import org.lee.common.utils.RandomUtils;
+import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.generator.expression.statistic.GeneratorStatistic;
 import org.lee.resource.SymbolTable;
 import org.lee.sql.entry.FieldReference;
@@ -14,6 +17,7 @@ import org.lee.sql.expression.Expression;
 import org.lee.sql.expression.Qualification;
 import org.lee.sql.literal.Literal;
 import org.lee.sql.statement.Projectable;
+import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.symbol.Comparator;
 import org.lee.sql.symbol.Symbol;
 import org.lee.sql.type.TypeCategory;
@@ -22,6 +26,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public interface QualificationGenerator extends IExpressionGenerator<Qualification> {
@@ -220,5 +225,4 @@ public interface QualificationGenerator extends IExpressionGenerator<Qualificati
         }
         return compareToRangeLiteral(targetField, RandomUtils.randomlyChooseFrom(targetCandidates));
     }
-
 }

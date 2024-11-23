@@ -3,7 +3,7 @@ package org.lee.sql.clause.predicate;
 import org.lee.common.enumeration.NodeTag;
 import org.lee.common.generator.Generator;
 import org.lee.common.utils.RandomUtils;
-import org.lee.generator.expression.JoinQualificationGenerator;
+import org.lee.generator.expression.CommonQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.expression.Qualification;
@@ -48,7 +48,7 @@ public abstract class JoinClause extends PredicateClause {
 
     @Override
     protected Generator<Qualification> createPredicateGenerator() {
-        return new JoinQualificationGenerator(statement, left, right);
+        return new CommonQualificationGenerator(this.predicateLocation, statement, left.getFieldReferences(), right.getFieldReferences());
     }
 
     @Override

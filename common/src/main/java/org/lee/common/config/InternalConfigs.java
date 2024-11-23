@@ -27,6 +27,8 @@ public final class InternalConfigs {
     public final static String WORKERS = "workers";
     public final static Logger LOGGER = NamedLoggers.getCommonLogger(InternalConfigs.class);
 
+    public final static InternalConfig EMPTY = new DefaultPartialInternalConfig(new JSONObject());
+
     public static CommandLineOptions readCommandLineOptions(){
         return CommandLineOptions.getInstance();
     }

@@ -1,15 +1,18 @@
 package org.lee.sql.statement.select;
 
 import org.lee.common.Assertion;
+import org.lee.common.enumeration.NodeTag;
 import org.lee.common.exception.ValueCheckFailedException;
 import org.lee.common.utils.RandomUtils;
 import org.lee.context.RecursiveProjectableGenerator;
 import org.lee.context.SQLGeneratorContext;
+import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.clause.from.WithClause;
 import org.lee.sql.clause.limit.LimitOffset;
 import org.lee.sql.clause.limit.SelectLimitOffset;
 import org.lee.sql.clause.sort.SelectOrderByClause;
 import org.lee.sql.clause.sort.SortByClause;
+import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.entry.complex.TargetEntry;
 import org.lee.sql.entry.relation.CTE;
 import org.lee.sql.entry.relation.RangeTableEntry;
@@ -19,6 +22,7 @@ import org.lee.sql.statement.WithCommonTableExpression;
 import org.lee.sql.statement.values.ValuesStatement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -173,6 +177,13 @@ public final class SelectSetopStatement
     @Override
     public WithClause getWithClause() {
         return withClause;
+    }
+
+    public List<RangeTableReference> getRawReferences(){
+        if(parent == null || !(parent instanceof SelectStatement)){
+            return Collections.emptyList();
+        }
+        return ((SelectStatement)parent).getRawReferences();
     }
 
 }

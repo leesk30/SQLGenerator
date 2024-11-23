@@ -10,6 +10,8 @@ import org.lee.common.utils.RandomUtils;
 import org.lee.context.SQLGeneratorContext;
 import org.lee.context.SQLGeneratorFrame;
 import org.lee.sql.clause.Clause;
+import org.lee.sql.clause.from.FromClause;
+import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.entry.relation.RangeTableEntry;
 import org.lee.sql.entry.relation.SubqueryRelation;
 import org.lee.sql.statement.AbstractSQLStatement;
@@ -19,6 +21,7 @@ import org.lee.sql.statement.common.SQLType;
 import org.lee.sql.type.TypeTag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class SelectStatement extends AbstractSQLStatement implements Projectable {
@@ -123,5 +126,12 @@ public abstract class SelectStatement extends AbstractSQLStatement implements Pr
     @Override
     public boolean enableSubquery() {
         return this.setopDepth < config.getShort(Conf.MAX_SETOP_RECURSION_DEPTH);
+    }
+
+    public List<RangeTableReference> getRawReferences(){
+        if(containsClause(NodeTag.fromClause)){
+            return ((FromClause) getClause(NodeTag.fromClause)).getChildNodes();
+        }
+        return Collections.emptyList();
     }
 }

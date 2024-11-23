@@ -9,14 +9,18 @@ import org.lee.common.exception.UnrecognizedValueException;
 import org.lee.common.generator.Generator;
 import org.lee.common.utils.RandomUtils;
 import org.lee.generator.common.CombinerAccessor;
-import org.lee.generator.expression.WhereQualificationGenerator;
+import org.lee.generator.expression.CommonQualificationGenerator;
 import org.lee.generator.expression.common.ExpressionLocation;
 import org.lee.sql.clause.from.FromClause;
 import org.lee.sql.entry.FieldReference;
 import org.lee.sql.entry.RangeTableReference;
 import org.lee.sql.expression.Qualification;
+import org.lee.sql.statement.Projectable;
 import org.lee.sql.statement.SQLStatement;
 import org.lee.sql.statement.common.SQLType;
+import org.lee.sql.statement.select.AbstractSimpleSelectStatement;
+import org.lee.sql.statement.select.SelectSetopStatement;
+import org.lee.sql.statement.select.SelectStatement;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -64,9 +68,19 @@ public class WhereClause extends PredicateClause {
         for(RangeTableReference ref: fromClause.getChildNodes()){
             candidates.addAll(ref.getFieldReferences());
         }
-        generatorCombiner.add(new WhereQualificationGenerator(statement, candidates));
+        generatorCombiner.add(new CommonQualificationGenerator(this.predicateLocation, statement, candidates));
+
         if(confirm(Rule.PREFER_RELATED)){
-            LOGGER.debug("TODO: add prefer related where qualification generator");
+            SQLStatement parent = (SQLStatement) this.statement.getParent();
+            if(parent instanceof SelectStatement){
+                SelectStatement selectParent = (SelectStatement) parent;
+                List<RangeTableReference> parentReferences = selectParent.getRawReferences();
+                List<FieldReference> parentCandidates = new ArrayList<>();
+                for(RangeTableReference reference: parentReferences){
+                    parentCandidates.addAll(reference.getFieldReferences());
+                }
+                generatorCombiner.add(new CommonQualificationGenerator(this.predicateLocation, statement, candidates, parentCandidates), 5);
+            }
         }
         return generatorCombiner;
     }

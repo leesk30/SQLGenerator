@@ -1,6 +1,7 @@
 package org.lee.sql.statement.insert;
 
 import org.lee.common.utils.RandomUtils;
+import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.modify.InsertModifyTableClause;
 import org.lee.sql.clause.project.ValuesClauseForInsert;
 import org.lee.sql.entry.complex.Record;
@@ -14,8 +15,8 @@ import java.util.stream.Collectors;
 
 public final class InsertInitializedStatement extends InsertStatement{
     private final Relation targetRelation;
-    public InsertInitializedStatement(Relation relation, int insertMaxCapacity) {
-        super();
+    public InsertInitializedStatement(SQLGeneratorContext context, Relation relation, int insertMaxCapacity) {
+        super(context);
         this.targetRelation = relation;
         addClause(new StableInsertModifyTable());
         addClause(new StableInsertValuesClause(insertMaxCapacity));
@@ -40,7 +41,13 @@ public final class InsertInitializedStatement extends InsertStatement{
         }
 
         private void generateRecordByTypeDescriptor(){
-            final List<TypeDescriptor> typeDescriptors = InsertInitializedStatement.this.targetRelation.getFields().stream().map(Field::getDescriptor).collect(Collectors.toList());
+            final List<TypeDescriptor> typeDescriptors = InsertInitializedStatement
+                    .this
+                    .targetRelation
+                    .getFields()
+                    .stream()
+                    .map(Field::getDescriptor)
+                    .collect(Collectors.toList());
             requiredReadyToGenerateRecord(typeDescriptors.size());
             for(int i=0; i<length; i++){
                 final Record record = new Record(width);
