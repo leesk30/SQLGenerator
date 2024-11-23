@@ -96,7 +96,7 @@ public class MetaEntry implements Resource<JSONObject> {
                 r -> {
                     final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
                     IntStream.range(0, numOfInsertStatement).sequential().forEach(
-                            i -> builder.append(r.getInitializedInsert(SQLGeneratorContext.EMPTY,3)).append("\n")
+                            i -> builder.append(r.getInitializedInsert(SQLGeneratorContext.EMPTY,3).getString()).append("\n")
                     );
                 }
         );
