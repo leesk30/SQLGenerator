@@ -98,6 +98,7 @@ public class MetaEntry implements Resource<JSONObject> {
             IntStream.range(0, numOfInsertStatement).sequential().forEach(
                     i -> builder.append(context.generateInsert(relation,3).getString()).append("\n")
             );
+            builder.append("\n");
         }
         return builder.toString();
     }

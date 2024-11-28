@@ -122,7 +122,7 @@ public class GeneratorTest {
 //                System.out.printf("Take: %d ", i);
             SQLStatement statement = queue.take();
             String sql = statement.getFormattedString();
-            System.out.println(sql);
+//            System.out.println(sql);
         }
         System.out.printf("Generate elapse: %d ms%n", System.currentTimeMillis() - startAt);
     }

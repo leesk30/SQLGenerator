@@ -5,6 +5,7 @@ import com.github.benmanes.caffeine.cache.Caffeine;
 import org.lee.common.structure.Pair;
 import org.lee.common.structure.TrieTree;
 import org.lee.common.utils.CollectionUtils;
+import org.lee.common.utils.DebugUtils;
 import org.lee.common.utils.NodeUtils;
 import org.lee.common.utils.RandomUtils;
 import org.lee.context.SQLGeneratorContext;
@@ -264,14 +265,16 @@ class UnrelatedStatistic implements GeneratorStatistic{
         return groupByType.containsKey(typeTag);
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        // todo: debug to log it, we will delete this when release
-        if(attach > 0){
-            LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f%%", attach, hit, getCacheHitRate()*100));
-        }
-        super.finalize();
-    }
+//    @Override
+//    protected void finalize() throws Throwable {
+//        // todo: debug to log it, we will delete this when release
+//        if(DebugUtils.ENABLE_FINALIZER_LOGGER){
+//            if(attach > 0){
+//                LOGGER.debug(String.format("UnrelatedStatistic: attach: %d hit: %d rate: %f%%", attach, hit, getCacheHitRate()*100));
+//            }
+//        }
+//        super.finalize();
+//    }
 
     @Override
     public GeneratorStatistic toRelated() {

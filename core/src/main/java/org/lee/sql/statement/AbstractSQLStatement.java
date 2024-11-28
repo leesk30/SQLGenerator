@@ -5,6 +5,7 @@ import org.lee.common.NamedLoggers;
 import org.lee.common.SQLFormatter;
 import org.lee.common.config.RuntimeConfiguration;
 import org.lee.common.enumeration.NodeTag;
+import org.lee.common.utils.DebugUtils;
 import org.lee.context.SQLGeneratorContext;
 import org.lee.sql.clause.Clause;
 import org.lee.sql.entry.relation.CTE;
@@ -36,7 +37,9 @@ public abstract class AbstractSQLStatement implements SQLStatement {
             this.config = context.getConfigProvider().newRuntimeConfiguration();
         }else {
             this.config = this.parent.getConfig().newChildRuntimeConfiguration();
-            logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parent.getSQLType()));
+            if(DebugUtils.ENABLE_DEV_DEBUG_LOGGER){
+                logger.info(String.format("Start to build subquery for type: %s, parent type: %s.", sqlType, parent.getSQLType()));
+            }
         }
     }
 

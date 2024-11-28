@@ -5,7 +5,10 @@ import org.lee.common.Assertion;
 import org.lee.common.NamedLoggers;
 import org.slf4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Properties;
 import java.util.UUID;
 
 public class DebugUtils {
@@ -36,5 +39,16 @@ public class DebugUtils {
         }else {
             return s;
         }
+    }
+
+    public static final boolean ENABLE_DEV_DEBUG_LOGGER;
+
+    static {
+        InputStream stream = DebugUtils.class.getClassLoader().getResourceAsStream("debug.properties");
+        Properties properties = new Properties();
+        try {
+            properties.load(stream);
+        }catch (IOException ignored){}
+        ENABLE_DEV_DEBUG_LOGGER = Boolean.parseBoolean(properties.getProperty("ENABLE_DEV_DEBUG_LOGGER", "false"));
     }
 }
