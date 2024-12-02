@@ -7,6 +7,7 @@
         <groupId>org.lee</groupId>
         <artifactId>SQLGenerator</artifactId>
         <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>SQLGenerator-Protos</artifactId>
