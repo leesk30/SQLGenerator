@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.lee</groupId>
             <artifactId>SQLGenerator-Common</artifactId>
-            <version>${revision}</version>
+            <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
 
