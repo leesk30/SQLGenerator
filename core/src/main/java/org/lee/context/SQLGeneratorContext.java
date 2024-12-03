@@ -113,15 +113,50 @@ public final class SQLGeneratorContext implements SQLGenerator {
         return new SQLGeneratorContext(this.config);
     }
 
-    public List<InsertStatement> generateEntriesData(){
-        List<InsertStatement> statements = new ArrayList<>();
+    public List<String> generateEntriesData(){
+        List<String> statements = new ArrayList<>();
         for(Relation relation: this.entries.getRelationMap().values()){
             final int numOfInsertStatement = RandomUtils.randomIntFromRange(10, 20);
             for(int i=0; i < numOfInsertStatement; i++){
-                statements.add(this.generateInsert(relation, 3));
+                statements.add(this.generateInsert(relation, 3).toString());
             }
         }
         return statements;
+    }
+
+    public List<String> generateDDL(){
+        return generateDDL(true, true, "");
+    }
+
+    public List<String> generateDDL(String options){
+        return generateDDL(true, true, options);
+    }
+
+    public List<String> generateDDL(boolean ignoreIfExists){
+        return generateDDL(true, ignoreIfExists, "");
+    }
+
+    public List<String> generateDDL(boolean withCreateDatabase, boolean ignoreIfExists){
+        return generateDDL(withCreateDatabase, ignoreIfExists, "");
+    }
+
+    public List<String> generateDDL(boolean withCreateDatabase, boolean ignoreIfExists, String options){
+        List<String> DDLs = new ArrayList<>();
+        if(withCreateDatabase){
+            for(String databaseName: this.entries.getRelationByNamespaceMap().keySet()){
+                StringBuilder builder = new StringBuilder();
+                builder.append("CREATE DATABASE ");
+                if(ignoreIfExists){
+                    builder.append("IF NOT EXISTS ");
+                }
+                builder.append(databaseName).append(";");
+                DDLs.add(builder.toString());
+            }
+        }
+        for(Relation r: this.entries.getRelationMap().values()){
+            DDLs.add(r.toDDL(ignoreIfExists, options));
+        }
+        return DDLs;
     }
 
     // friendly visible
