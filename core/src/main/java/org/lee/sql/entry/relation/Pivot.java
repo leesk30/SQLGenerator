@@ -138,7 +138,7 @@ public final class Pivot extends Pivoted {
 
     private void generateForLoops(){
         final int elementNum = RandomUtils.randomIntFromRange(2, 7);
-        final RuntimeConfiguration config = context.currentFrame().statement().getConfig();
+        final RuntimeConfiguration config = context.currentConfiguration();
         final boolean shouldConcatName = aggregations.size() >= 2 ||
                 !config.confirm(Rule.ENABLE_PIVOT_CONCAT_NAME_WHEN_SINGLE_AGGREGATION);
         final int initialCapacity = forTarget.size();

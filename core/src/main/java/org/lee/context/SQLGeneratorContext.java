@@ -32,7 +32,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
     private final InternalConfig config;
     private final RuntimeConfigurationProvider provider;
     private final Logger logger = NamedLoggers.getCoreLogger(SQLGeneratorContext.class);
-
     private final MetaEntry entries;
     private final SymbolTable symbolTable;
     private final UUID uuid = UUID.randomUUID();
@@ -46,6 +45,10 @@ public final class SQLGeneratorContext implements SQLGenerator {
         this.provider = RuntimeConfigurationProvider.getProvider(config);
         this.entries = new MetaEntry();
         this.symbolTable = new SymbolTable(config.getGeneratePolicy());
+        this.init();
+    }
+
+    private void init(){
         this.entries.init(config.getMetaEntry());
         this.symbolTable.init(config.getSymbolTable());
         MDC.put("traceID", DebugUtils.truncate(uuid));
@@ -56,8 +59,16 @@ public final class SQLGeneratorContext implements SQLGenerator {
         return stack;
     }
 
-    public @Nonnull SQLGeneratorFrame currentFrame(){
+    @Nonnull SQLGeneratorFrame currentFrame(){
         return stack.peek();
+    }
+
+    public RuntimeConfiguration currentConfiguration(){
+        return currentFrame().statement().getConfig();
+    }
+
+    public SQLStatement currentParentStatement(){
+        return currentFrame().previousStatement();
     }
 
     public UUID uuid() {
@@ -70,10 +81,6 @@ public final class SQLGeneratorContext implements SQLGenerator {
 
     public RuntimeConfigurationProvider getConfigProvider(){
         return this.provider;
-    }
-
-    public Logger getLogger(){
-        return this.logger;
     }
 
     public MetaEntry getMetaEntry(){

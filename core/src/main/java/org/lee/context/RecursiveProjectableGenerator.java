@@ -190,12 +190,12 @@ public class RecursiveProjectableGenerator implements Generator<Projectable> {
             return new SelectSetopStatement(this.context);
         } else if (PClause > randomValue - PValues - PSetop) {
             return new SelectClauseStatement(this.context);
-        }else {
-            if(!state.rejectedSimple && RandomUtils.probability(10)){
-                return new SelectSimpleStatement(this.context);
-            }
-            return new SelectNormalStatement(this.context);
         }
+        // else
+        if(!state.rejectedSimple && RandomUtils.probability(10)){
+            return new SelectSimpleStatement(this.context);
+        }
+        return new SelectNormalStatement(this.context);
     }
 
     @Override

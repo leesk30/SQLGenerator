@@ -31,7 +31,7 @@ public abstract class AbstractSQLStatement implements SQLStatement {
         this.context = context;
         this.sqlType = sqlType;
 
-        this.parent = context.currentFrame().previousStatement();
+        this.parent = context.currentParentStatement();
 
         if(parent == null){
             this.config = context.getConfigProvider().newRuntimeConfiguration();
@@ -107,9 +107,6 @@ public abstract class AbstractSQLStatement implements SQLStatement {
     public String toString(){
         // for debug
         String res = getString();
-        if(res == null){
-            return "<unknown>";
-        }
-        return SQLFormatter.formatStatement(getString());
+        return res == null ? "<unknown>": SQLFormatter.formatStatement(res);
     }
 }

@@ -15,7 +15,7 @@ import java.util.Stack;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public final class SQLGeneratorFrame implements Fuzzer {
+final class SQLGeneratorFrame implements Fuzzer {
     private final Logger LOGGER = NamedLoggers.getCoreLogger(SQLGeneratorFrame.class);
     private final SQLGeneratorContext context;
     private final Stack<SQLGeneratorFrame> stack;
